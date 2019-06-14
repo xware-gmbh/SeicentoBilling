@@ -49,6 +49,7 @@ public class JasperManager {
 	public static String ExpenseReport1 = "Seicento_Spesen";
 	public static String BillReport1 = "Rechnung_Seicento";
 	public static String ProjectLineReport1 = "Seicento_ProjectReport";
+	public static String ContactDetails1 = "Nested/Seicento_Contacts_Details";
 
 	public void addParameter(final String name, final String value) {
 		this.keys.add(name);
@@ -67,10 +68,10 @@ public class JasperManager {
 
 		String uri = cmp.getCmpJasperUri().trim();
 		if (cmp.getCmpReportUsr() != null) {
-			uri = uri.replace("{user}", cmp.getCmpReportUsr());
+			uri = uri.replace("{user}", cmp.getCmpReportUsr().trim());
 		}
 		if (cmp.getCmpReportPwd() != null) {
-			uri = uri.replace("{password}", cmp.getCmpReportPwd());
+			uri = uri.replace("{password}", cmp.getCmpReportPwd().trim());
 		}
 		uri = MessageFormat.format(uri, report);
 
@@ -267,8 +268,13 @@ public class JasperManager {
 	}
 
 	private void addDefaultParams(final Company cmp) {
-		addParameter("j_username", cmp.getCmpReportUsr());
-		addParameter("j_password", cmp.getCmpReportPwd());
+		if (cmp.getCmpReportUsr() != null) {
+			addParameter("j_username", cmp.getCmpReportUsr().trim());
+		}
+		if (cmp.getCmpReportPwd() != null) {
+			addParameter("j_password", cmp.getCmpReportPwd().trim());
+		}
+
 		addParameter("userLocale", "de_CH");
 	}
 

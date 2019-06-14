@@ -313,11 +313,10 @@ public class CustomerTabView extends XdevView {
 		final Customer bean = this.table.getSelectedItem().getBean();
 
 		final JasperManager jsp = new JasperManager();
-		jsp.addParameter("Customer_Number", "" + bean.getCusNumber());
-//		jsp.addParameter("Param_DateTo", sal.getSlrDate().toString());
-//		jsp.addParameter("EmployeeId", "" + sal.getEmployee().getEmpId());
+		//jsp.addParameter("Customer_Number", "" + bean.getCusNumber());
+		jsp.addParameter("CustomerId", "" + bean.getCusId());
 
-		Page.getCurrent().open(jsp.getUri(JasperManager.CustomerReport1), "_blank");
+		Page.getCurrent().open(jsp.getUri(JasperManager.ContactDetails1), "_blank");
 	}
 
 	/**
