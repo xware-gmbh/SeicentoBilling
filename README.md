@@ -32,3 +32,8 @@ Folgende Voraussetzungen müssen erfüllt sein für die Installation:
 
 Optional:
 * Setup Jasperserver/Reports ([Anleitung](https://github.com/xware-gmbh/SeicentoBilling/tree/master/docs/jasperserver))
+
+## Features
+Folgende Module/Features werden durch SeicentoBilling behandelt:
+![Features](https://github.com/xware-gmbh/SeicentoBilling/blob/master/docs/images/billing_modules.PNG "Logo")
+
