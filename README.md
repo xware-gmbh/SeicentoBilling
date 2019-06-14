@@ -1,6 +1,7 @@
-# SeicentoBilling ![xwr.ch](https://github.com/xware-gmbh/SeicentoBilling/tree/master/docs/images/XWareLogo.png "xwr.ch")
-![Produktlogo](https://github.com/xware-gmbh/SeicentoBilling/tree/master/docs/images/seicento_billing.png "Logo") [![Build status](https://xwr.visualstudio.com/XWare/_apis/build/status/Dockerhub%20SeicentoSalary-FromTemplate-Task)](https://xwr.visualstudio.com/XWare/_build/latest?definitionId=22)         
-SeicentoBilling ist eine einfache Weblösung für Lesitungsrapportierung, Spesen und Rechnungsstellung. Die App ist seit mehreren Jahren produktiv im Einsatz.  
+# SeicentoBilling ![xwr.ch](https://github.com/xware-gmbh/SeicentoBilling/blob/master/docs/images/XWareLogo.png "xwr.ch")
+![Produktlogo](https://github.com/xware-gmbh/SeicentoBilling/blob/master/docs/images/seicento_billing.png "Logo") [![Build status](https://xwr.visualstudio.com/XWare/_apis/build/status/Dockerhub%20SeicentoBilling-FromTemplate)](https://xwr.visualstudio.com/XWare/_build/latest?definitionId=23)
+         
+SeicentoBilling ist eine einfache Weblösung für Leistungsrapportierung, Spesen und Rechnungsstellung. Die App ist seit mehreren Jahren produktiv im Einsatz.  
 
 Die Sourcen der Lösung sind auf [Github](https://github.com/xware-gmbh/SeicentoBilling) unter der Apache 2.0 Lizenz verfügbar.
 Ein Docker Image kann von [Dockerhub](https://cloud.docker.com/repository/docker/jmurihub/seicentobilling/general) bezogen werden.
