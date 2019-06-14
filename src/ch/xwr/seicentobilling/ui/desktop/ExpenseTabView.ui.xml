@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+
+<?xdevuiml version="1.0"?>
+<?template BROWSER_XGA?>
+<?import ch.xwr.seicentobilling.business.LovState.ExpType?>
+<?import ch.xwr.seicentobilling.business.LovState.ExpUnit?>
+<?import ch.xwr.seicentobilling.business.LovState.State?>
+<?import ch.xwr.seicentobilling.entities.Expense?>
+<?import ch.xwr.seicentobilling.entities.Periode?>
+<?import com.xdev.ui.XdevButton?>
+<?import com.xdev.ui.XdevHorizontalLayout?>
+<?import com.xdev.ui.XdevHorizontalSplitPanel?>
+<?import com.xdev.ui.XdevTabSheet?>
+<?import com.xdev.ui.XdevVerticalLayout?>
+<?import com.xdev.ui.XdevView?>
+<?import com.xdev.ui.entitycomponent.table.XdevTable?>
+<?import com.xdev.ui.filter.XdevContainerFilterComponent?>
+<?import java.lang.Boolean?>
+<?import java.lang.Double?>
+<?import java.lang.Integer?>
+<?import java.lang.Short?>
+<?import java.lang.String?>
+<?import java.util.Date?>
+<XdevView xmlns:x="http://xml.xdev-software.com/xdevuiml" x:name="ExpenseTabView">
+    <x:constraints zpos="0" width="100%" height="100%" />
+    <XdevHorizontalSplitPanel styleName="large" x:splitPosition="40.0" x:name="horizontalSplitPanel">
+        <x:constraints zpos="0" width="100%" height="100%" />
+        <XdevVerticalLayout x:name="verticalLayoutLeft" margin="">
+            <x:constraints splitPos="FIRST" width="100%" height="100%" />
+            <XdevContainerFilterComponent x:searchableProperties="perName,costAccount.csaName,costAccount.csaCode" x:name="containerFilterComponent" x:filterableProperties="perYear,perMonth,costAccount,perBookedExpense,perBookedProject,perState,costAccount.csaCode,costAccount.csaName" x:container="table">
+                <x:constraints top="-12px" left="1874px" weighty="0.0" width="100%" height="0%" />
+            </XdevContainerFilterComponent>
+            <XdevHorizontalLayout spacing="false" x:name="actionLayout" margin="">
+                <x:constraints top="-12px" left="1874px" weighty="0.0" width="0px" alignment="MIDDLE_LEFT" height="0px" />
+                <XdevButton icon="WebContent/WEB-INF/resources/images/new1_16.png" description="Neuen Datensatz anlegen" x:name="cmdNew">
+                    <x:constraints weightx="0.0" width="0px" height="0px" />
+                    <x:event>click.buttonClick</x:event>
+                    <x:event>focus.focus</x:event>
+                </XdevButton>
+                <XdevButton icon="WebContent/WEB-INF/resources/images/delete3_16.png" description="Datensatz löschen" x:name="cmdDelete">
+                    <x:constraints weightx="0.0" width="0px" height="0px" />
+                    <x:event>click.buttonClick</x:event>
+                </XdevButton>
+                <XdevButton icon="WebContent/WEB-INF/resources/images/edit1.png" description="Periode bearbeiten..." x:name="cmdUpdate">
+                    <x:constraints top="-150px" left="462px" weightx="0.0" width="0px" height="0px" />
+                    <x:event>click.buttonClick</x:event>
+                </XdevButton>
+                <XdevButton icon="WebContent/WEB-INF/resources/images/reload2.png" x:name="cmdReload">
+                    <x:constraints weightx="0.0" width="0px" height="0px" />
+                    <x:event>click.buttonClick</x:event>
+                </XdevButton>
+                <XdevButton icon="WebContent/WEB-INF/resources/images/copy1.png" description="Alle Spesen einer Periode kopieren" x:name="cmdCopyExpenses">
+                    <x:constraints top="46px" left="-1px" weightx="0.0" width="0px" height="0px" />
+                    <x:event>click.buttonClick</x:event>
+                </XdevButton>
+                <XdevButton icon="WebContent/WEB-INF/resources/images/Printer_black_18.png" description="Jasper Report starten" x:name="cmdReport">
+                    <x:constraints top="93px" left="-1px" weightx="0.0" width="0px" height="0px" />
+                    <x:event>click.buttonClick</x:event>
+                </XdevButton>
+                <XdevButton icon="WebContent/WEB-INF/resources/images/info_small.jpg" description="Objektinfo" x:name="cmdInfo">
+                    <x:constraints weightx="0.0" width="0px" height="0px" />
+                    <x:event>click.buttonClick</x:event>
+                </XdevButton>
+            </XdevHorizontalLayout>
+            <XdevTable columnReorderingAllowed="true" x:name="table" columnCollapsingAllowed="true" x:entity="Periode" x:autoQuery="false">
+                <x:entityProperties>
+                    <entry type="String" property="perName" caption="Periode" />
+                    <entry type="Integer" property="perYear" caption="Jahr" collapsed="true">
+                        <converter numberType="Integer" numberFormatType="number" currency="default" converterType="STRING_TO_NUMBER" locale="default" />
+                    </entry>
+                    <entry type="Integer" property="perMonth" caption="Monat" collapsed="true" />
+                    <entry type="Short" property="perBookedExpense" caption="Buchhaltung" />
+                    <entry type="Short" property="perBookedProject" caption="Gebucht Projekt" collapsed="true" />
+                    <entry type="State" property="perState" caption="Status" collapsed="true" />
+                    <entry type="String" property="costAccount.csaName" caption="Kostenstelle" collapsed="true" />
+                </x:entityProperties>
+                <x:constraints top="-1px" left="942px" weighty="1.0" width="100%" height="100%" />
+                <x:typeArguments>
+                    <typeArgument type="Periode" />
+                </x:typeArguments>
+                <x:data methodName="findAll" />
+                <x:event>valueChange.valueChange</x:event>
+            </XdevTable>
+        </XdevVerticalLayout>
+        <XdevVerticalLayout x:name="verticalLayoutRight" margin="">
+            <x:constraints splitPos="SECOND" width="100%" height="100%" />
+            <XdevTabSheet styleName="framed" x:name="tabSheet" x:selectedTabIndex="0" immediate="false">
+                <x:constraints weighty="1.0" width="100%" alignment="TOP_LEFT" height="100%" />
+                <XdevVerticalLayout caption="{$verticalLayoutExpense.caption}" x:name="verticalLayoutExpense" margin="">
+                    <x:constraints splitPos="SECOND" weighty="0.0" alignment="MIDDLE_CENTER" />
+                    <XdevHorizontalLayout spacing="false" x:name="horizontalLayout" margin="" immediate="true">
+                        <x:constraints weighty="0.0" width="0px" alignment="MIDDLE_LEFT" height="0px" />
+                        <XdevButton icon="WebContent/WEB-INF/resources/images/new1_16.png" caption="{$cmdNewExpense.caption}" x:name="cmdNewExpense" x:shortcut="CTRL+N">
+                            <x:constraints top="-150px" left="462px" weightx="0.0" width="0px" height="0px" />
+                            <x:event>click.buttonClick</x:event>
+                        </XdevButton>
+                        <XdevButton icon="WebContent/WEB-INF/resources/images/delete3_16.png" caption="{$cmdDeleteExpense.caption}" x:name="cmdDeleteExpense">
+                            <x:constraints top="-150px" left="462px" weightx="0.0" width="0px" height="0px" />
+                            <x:event>click.buttonClick</x:event>
+                        </XdevButton>
+                        <XdevButton icon="WebContent/WEB-INF/resources/images/edit1.png" caption="{$cmdUpdateExpense.caption}" x:name="cmdUpdateExpense">
+                            <x:constraints top="-150px" left="462px" weightx="0.0" width="0px" height="0px" />
+                            <x:event>click.buttonClick</x:event>
+                        </XdevButton>
+                        <XdevButton icon="WebContent/WEB-INF/resources/images/copy1.png" description="Markierten Datensatz kopieren" x:name="cmdCopySingle">
+                            <x:constraints top="76px" left="705px" weightx="0.0" width="0px" height="0px" />
+                            <x:event>click.buttonClick</x:event>
+                        </XdevButton>
+                        <XdevButton icon="WebContent/WEB-INF/resources/images/info_small.jpg" x:name="cmdInfoExpense">
+                            <x:constraints top="29px" left="705px" weightx="0.0" width="0px" height="0px" />
+                            <x:event>click.buttonClick</x:event>
+                        </XdevButton>
+                        <XdevButton icon="" styleName="tiny" enabled="false" x:name="cmdToggleEdit" visible="false">
+                            <x:constraints top="19px" left="483px" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+                            <x:event>click.buttonClick</x:event>
+                        </XdevButton>
+                    </XdevHorizontalLayout>
+                    <XdevTable columnReorderingAllowed="true" x:name="tableLine" columnCollapsingAllowed="true" x:entity="Expense" x:autoQuery="false">
+                        <x:entityProperties>
+                            <entry type="Date" property="expDate" caption="Datum">
+                                <converter dateStyle="DEFAULT" timeStyle="DEFAULT" currency="default" converterType="STRING_TO_DATE" locale="default" dateFormatType="DATE" />
+                            </entry>
+                            <entry type="String" property="expAccount" caption="Konto" collapsed="true" />
+                            <entry type="Boolean" property="expFlagCostAccount" caption="KST">
+                                <converter trueString="Ja" currency="default" converterType="STRING_TO_BOOLEAN" locale="default" falseString="Nein" />
+                            </entry>
+                            <entry type="ExpType" property="expFlagGeneric" caption="Pauschal" />
+                            <entry type="double" property="expAmount" caption="Betrag" alignment="RIGHT">
+                                <converter numberType="Double" numberFormatType="currency" currency="default" converterType="STRING_TO_NUMBER" locale="default" />
+                            </entry>
+                            <entry type="String" property="vat.vatSign" caption="Mwst" />
+                            <entry type="String" property="vat.vatName" caption="Bezeichnung" collapsed="true" />
+                            <entry type="String" property="expText" caption="Text" expandRatio="2.0" />
+                            <entry type="String" property="project.proName" caption="Projekt" />
+                            <entry type="State" property="expState" caption="Status" />
+                            <entry type="ExpUnit" property="expUnit" caption="Einheit" collapsed="true" />
+                            <entry type="Double" property="expQuantity" caption="Menge" collapsed="true" />
+                            <entry type="Date" property="expBooked" caption="Gebucht" collapsed="true" />
+                        </x:entityProperties>
+                        <x:constraints weighty="1.0" width="100%" height="100%" />
+                        <x:typeArguments>
+                            <typeArgument type="Expense" />
+                        </x:typeArguments>
+                        <x:event>itemClick.itemClick</x:event>
+                    </XdevTable>
+                </XdevVerticalLayout>
+            </XdevTabSheet>
+        </XdevVerticalLayout>
+    </XdevHorizontalSplitPanel>
+</XdevView>
+

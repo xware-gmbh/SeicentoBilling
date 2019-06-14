@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+
+<?xdevuiml version="1.0"?>
+<?template BROWSER_XGA?>
+<?import ??>
+<?import ch.xwr.seicentobilling.entities.Periode?>
+<?import ch.xwr.seicentobilling.entities.Project?>
+<?import ch.xwr.seicentobilling.entities.ProjectLine?>
+<?import com.xdev.ui.XdevButton?>
+<?import com.xdev.ui.XdevFieldGroup?>
+<?import com.xdev.ui.XdevGridLayout?>
+<?import com.xdev.ui.XdevHorizontalLayout?>
+<?import com.xdev.ui.XdevLabel?>
+<?import com.xdev.ui.XdevPopupDateField?>
+<?import com.xdev.ui.XdevTextField?>
+<?import com.xdev.ui.XdevView?>
+<?import com.xdev.ui.entitycomponent.combobox.XdevComboBox?>
+<?import java.lang.String?>
+<XdevView xmlns:x="http://xml.xdev-software.com/xdevuiml" x:name="ProjectLinePopup">
+    <x:constraints zpos="0" width="100%" height="100%" />
+    <XdevGridLayout x:name="form">
+        <x:constraints zpos="0" width="100%" height="100%" />
+        <XdevLabel x:name="lblPeriode" value="{$lblPeriode.value}">
+            <x:constraints gridx="1" gridy="1" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+        </XdevLabel>
+        <XdevComboBox tabIndex="51" x:name="cmbPeriode" x:entity="Periode">
+            <x:constraints gridx="2" gridy="1" weighty="0.0" weightx="1.0" width="100%" height="0px" />
+            <x:entityProperty>
+                <entry type="String" property="perName" />
+            </x:entityProperty>
+            <x:typeArguments>
+                <typeArgument type="Periode" />
+            </x:typeArguments>
+            <x:data methodName="findAll" />
+        </XdevComboBox>
+        <XdevLabel x:name="lblPrlReportDate" value="{$lblPrlReportDate.value}">
+            <x:constraints gridx="1" gridy="2" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+        </XdevLabel>
+        <XdevPopupDateField tabIndex="52" x:name="datePrlReportDate">
+            <x:constraints gridx="2" gridy="2" weighty="0.0" weightx="1.0" width="0px" height="0px" />
+        </XdevPopupDateField>
+        <XdevLabel x:name="lblProject" value="{$lblProject.value}">
+            <x:constraints gridx="1" gridy="3" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+        </XdevLabel>
+        <XdevComboBox tabIndex="53" x:name="cmbProject" x:entity="Project">
+            <x:constraints gridx="2" gridy="3" weighty="0.0" weightx="1.0" width="100%" height="0px" />
+            <x:entityProperty>
+                <entry type="String" property="proName" />
+            </x:entityProperty>
+            <x:typeArguments>
+                <typeArgument type="Project" />
+            </x:typeArguments>
+            <x:data methodName="findAll" />
+            <x:event>valueChange.valueChange</x:event>
+        </XdevComboBox>
+        <XdevLabel x:name="lblPrlHours" value="{$lblPrlHours.value}">
+            <x:constraints gridx="1" gridy="4" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+        </XdevLabel>
+        <XdevTextField columns="5" tabIndex="54" x:name="txtPrlHours">
+            <converter numberType="Double" numberFormatType="number" currency="default" converterType="STRING_TO_NUMBER" locale="default" />
+            <x:constraints gridx="2" gridy="4" weighty="0.0" weightx="1.0" width="100%" height="0px" />
+        </XdevTextField>
+        <XdevLabel x:name="lblPrlRate" value="{$lblPrlRate.value}">
+            <x:constraints gridx="3" gridy="4" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+        </XdevLabel>
+        <XdevTextField columns="5" tabIndex="55" x:name="txtPrlRate">
+            <converter numberType="Double" numberFormatType="currency" currency="default" converterType="STRING_TO_NUMBER" locale="default" />
+            <x:constraints gridx="4" gridy="4" weighty="0.0" weightx="1.0" width="100%" height="0px" />
+        </XdevTextField>
+        <XdevLabel x:name="lblPrlText" value="{$lblPrlText.value}">
+            <x:constraints gridx="1" gridy="5" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+        </XdevLabel>
+        <XdevTextField columns="5" tabIndex="56" x:name="txtPrlText" maxLength="384">
+            <x:constraints gridx="2" gridy="5" weighty="0.0" weightx="1.0" width="100%" gridWidth="3" height="0px" />
+        </XdevTextField>
+        <XdevLabel x:name="lblPrlWorkType" value="{$lblPrlWorkType.value}">
+            <x:constraints gridx="1" gridy="6" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+        </XdevLabel>
+        <XdevComboBox tabIndex="57" x:name="comboBoxWorktype">
+            <x:constraints gridx="2" gridy="6" weighty="0.0" weightx="1.0" width="0px" height="0px" />
+            <x:typeArguments>
+                <typeArgument type="?" />
+            </x:typeArguments>
+        </XdevComboBox>
+        <XdevLabel x:name="lblPrlState" value="{$lblPrlState.value}">
+            <x:constraints gridx="3" gridy="6" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+        </XdevLabel>
+        <XdevComboBox tabIndex="58" x:name="comboBoxState">
+            <x:constraints gridx="4" gridy="6" weighty="0.0" weightx="1.0" width="0px" height="0px" />
+            <x:typeArguments>
+                <typeArgument type="?" />
+            </x:typeArguments>
+        </XdevComboBox>
+        <XdevHorizontalLayout x:name="horizontalLayout2" margin="">
+            <x:constraints gridx="1" gridy="8" weighty="0.0" weightx="0.0" width="100%" gridWidth="3" height="-1px" />
+            <XdevButton caption="K1" description="CTRL + 1" styleName="borderless tiny" x:name="cmdAction01" x:shortcut="CTRL+NUM1">
+                <x:constraints gridHeight="1" gridx="4" gridy="7" weighty="0.0" weightx="0.0" width="0px" alignment="MIDDLE_RIGHT" gridWidth="1" height="0px" />
+                <x:event>click.buttonClick</x:event>
+            </XdevButton>
+            <XdevButton caption="K2" description="CTRL + 2" styleName="borderless tiny" x:name="cmdAction02" x:shortcut="CTRL+NUM2">
+                <x:constraints gridHeight="1" gridx="4" gridy="7" top="46px" left="-1px" weighty="0.0" weightx="0.0" width="0px" alignment="MIDDLE_RIGHT" gridWidth="1" height="0px" />
+                <x:event>click.buttonClick</x:event>
+            </XdevButton>
+            <XdevButton caption="K3" description="CTRL + 3" styleName="borderless tiny" x:name="cmdAction03" x:shortcut="CTRL+NUM3">
+                <x:constraints gridHeight="1" gridx="4" gridy="7" top="93px" left="-1px" weighty="0.0" weightx="0.0" width="0px" alignment="MIDDLE_RIGHT" gridWidth="1" height="0px" />
+                <x:event>click.buttonClick</x:event>
+            </XdevButton>
+            <XdevButton caption="K4" description="CTRL + 4" styleName="borderless tiny" x:name="cmdAction04" x:shortcut="CTRL+NUM4">
+                <x:constraints gridHeight="1" gridx="4" gridy="7" top="131px" left="-1px" weighty="0.0" weightx="0.0" width="0px" alignment="MIDDLE_RIGHT" gridWidth="1" height="0px" />
+                <x:event>click.buttonClick</x:event>
+            </XdevButton>
+            <XdevButton caption="K5" description="CTRL + 5" styleName="borderless tiny" x:name="cmdAction05" x:shortcut="CTRL+NUM5">
+                <x:constraints gridHeight="1" gridx="4" gridy="7" top="169px" left="-1px" weighty="0.0" weightx="0.0" width="0px" alignment="MIDDLE_RIGHT" gridWidth="1" height="0px" />
+                <x:event>click.buttonClick</x:event>
+            </XdevButton>
+            <XdevButton caption="K6" description="CTRL + 6" styleName="borderless tiny" x:name="cmdAction06" x:shortcut="CTRL+NUM6">
+                <x:constraints gridHeight="1" gridx="4" gridy="7" top="207px" left="-1px" weighty="0.0" weightx="0.0" width="0px" alignment="MIDDLE_RIGHT" gridWidth="1" height="0px" />
+                <x:event>click.buttonClick</x:event>
+            </XdevButton>
+            <XdevButton caption="K7" description="CTRL + 7" styleName="borderless tiny" x:name="cmdAction" x:shortcut="CTRL+NUM7">
+                <x:constraints gridHeight="1" gridx="4" gridy="7" top="245px" left="-1px" weighty="0.0" weightx="0.0" width="0px" alignment="MIDDLE_RIGHT" gridWidth="1" height="0px" />
+                <x:event>click.buttonClick</x:event>
+            </XdevButton>
+            <XdevButton caption="K8" description="CTRL + 8" styleName="borderless tiny" x:name="cmdAction2" x:shortcut="CTRL+NUM8">
+                <x:constraints gridHeight="1" gridx="4" gridy="7" top="283px" left="-1px" weighty="0.0" weightx="0.0" width="0px" alignment="MIDDLE_RIGHT" gridWidth="1" height="0px" />
+                <x:event>click.buttonClick</x:event>
+            </XdevButton>
+            <XdevButton caption="K9" description="CTRL + 9" styleName="borderless tiny" x:name="cmdAction3" x:shortcut="CTRL+NUM9">
+                <x:constraints gridHeight="1" gridx="4" gridy="7" top="321px" left="-1px" weighty="0.0" weightx="0.0" width="0px" alignment="MIDDLE_RIGHT" gridWidth="1" height="0px" />
+                <x:event>click.buttonClick</x:event>
+            </XdevButton>
+            <XdevButton caption="K10" description="CTRL + 0" styleName="borderless tiny" x:name="cmdAction4" x:shortcut="CTRL+NUM0">
+                <x:constraints gridHeight="1" gridx="4" gridy="7" top="359px" left="-1px" weighty="0.0" weightx="0.0" width="0px" alignment="MIDDLE_RIGHT" gridWidth="1" height="0px" />
+                <x:event>click.buttonClick</x:event>
+            </XdevButton>
+        </XdevHorizontalLayout>
+        <XdevFieldGroup x:name="fieldGroup" x:entityType="ProjectLine">
+            <x:typeArguments>
+                <typeArgument type="ProjectLine" />
+            </x:typeArguments>
+            <x:fields>
+                <entry name="cmbPeriode" property="periode" />
+                <entry name="datePrlReportDate" property="prlReportDate" />
+                <entry name="txtPrlHours" property="prlHours" />
+                <entry name="txtPrlText" property="prlText" />
+                <entry name="txtPrlRate" property="prlRate" />
+                <entry name="cmbProject" property="project" />
+                <entry name="txtPrlitmId" property="prlitmId" />
+                <entry name="comboBoxWorktype" property="prlWorkType" />
+                <entry name="comboBoxState" property="prlState" />
+            </x:fields>
+        </XdevFieldGroup>
+        <XdevHorizontalLayout x:name="horizontalLayout" margin="">
+            <x:constraints gridx="1" gridy="7" weighty="0.0" weightx="0.0" width="100%" alignment="MIDDLE_CENTER" gridWidth="4" height="0px" />
+            <XdevButton icon="WebContent/WEB-INF/resources/images/save1.png" caption="{$cmdSave.caption}" x:name="cmdSave" x:shortcut="ENTER">
+                <x:constraints weightx="0.0" width="0px" alignment="MIDDLE_LEFT" height="0px" />
+                <x:event>click.buttonClick</x:event>
+            </XdevButton>
+            <XdevButton icon="WebContent/WEB-INF/resources/images/cancel1.png" caption="{$cmdCancel.caption}" x:name="cmdCancel" x:shortcut="ESCAPE">
+                <x:constraints weightx="0.0" width="0px" alignment="MIDDLE_LEFT" height="0px" />
+                <x:event>click.buttonClick</x:event>
+            </XdevButton>
+        </XdevHorizontalLayout>
+    </XdevGridLayout>
+</XdevView>
+

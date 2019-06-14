@@ -1,0 +1,4 @@
+eclipse.preferences.version=1
+problem.PERSISTENCE_MULTIPLE_PERSISTENCE_UNITS=ignore
+problem.PERSISTENCE_NO_PERSISTENCE_UNIT=warning
+workspace_validation_preferences_overridden=true

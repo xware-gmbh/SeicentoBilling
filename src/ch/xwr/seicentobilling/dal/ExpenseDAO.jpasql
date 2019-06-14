@@ -1,0 +1,7 @@
+import ch.xwr.seicentobilling.entities.Expense
+import ch.xwr.seicentobilling.entities.Periode
+
+findByPeriode(Periode dao)
+{
+	select * from Expense where periode = :dao order by expDate desc, expFlagGeneric desc
+}

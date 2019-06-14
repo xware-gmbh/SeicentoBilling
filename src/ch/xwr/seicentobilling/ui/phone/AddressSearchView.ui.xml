@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+
+<?xdevuiml version="1.0"?>
+<?template BROWSER_XGA?>
+<?import ch.xwr.seicentobilling.entities.Customer?>
+<?import com.xdev.ui.XdevVerticalLayout?>
+<?import com.xdev.ui.XdevView?>
+<?import com.xdev.ui.entitycomponent.table.XdevTable?>
+<?import com.xdev.ui.filter.XdevContainerFilterComponent?>
+<?import java.lang.Integer?>
+<?import java.lang.String?>
+<XdevView xmlns:x="http://xml.xdev-software.com/xdevuiml" x:name="ProjectLineListView">
+    <x:constraints zpos="0" width="100%" height="100%" />
+    <XdevVerticalLayout spacing="false" x:name="verticalLayout" margin="">
+        <x:constraints zpos="0" width="100%" height="100%" />
+        <x:event>attach.attach</x:event>
+        <XdevContainerFilterComponent x:searchableProperties="cusName,cusFirstName,cusCompany,city.ctyName" x:name="containerFilterComponent" x:filterableProperties="cusNumber,cusName,cusFirstName,cusCompany,cusAddress,city.ctyName" x:container="table">
+            <x:constraints weighty="0.0" width="100%" height="0%" />
+        </XdevContainerFilterComponent>
+        <XdevTable x:name="table" x:entity="Customer" x:autoQuery="false">
+            <x:entityProperties>
+                <entry type="int" property="cusNumber" caption="Nummer" />
+                <entry type="String" property="cusName" caption="Name" />
+                <entry type="String" property="cusFirstName" caption="Vorname" />
+                <entry type="String" property="cusCompany" caption="Firma" />
+                <entry type="Integer" property="city.ctyZip" caption="PLZ" />
+                <entry type="String" property="city.ctyName" caption="Ort" />
+            </x:entityProperties>
+            <x:constraints weighty="1.0" width="100%" height="100%" />
+            <x:typeArguments>
+                <typeArgument type="Customer" />
+            </x:typeArguments>
+            <x:event>itemClick.itemClick</x:event>
+            <x:event>valueChange.valueChange</x:event>
+        </XdevTable>
+    </XdevVerticalLayout>
+</XdevView>
+

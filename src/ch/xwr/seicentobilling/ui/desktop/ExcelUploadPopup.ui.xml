@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+
+<?xdevuiml version="1.0"?>
+<?template BROWSER_XGA?>
+<?import com.xdev.ui.XdevGridLayout?>
+<?import com.xdev.ui.XdevImage?>
+<?import com.xdev.ui.XdevLabel?>
+<?import com.xdev.ui.XdevTextField?>
+<?import com.xdev.ui.XdevUpload?>
+<?import com.xdev.ui.XdevView?>
+<XdevView xmlns:x="http://xml.xdev-software.com/xdevuiml" x:name="ExcelUploadPopup">
+    <x:constraints zpos="0" width="100%" height="100%" />
+    <XdevGridLayout x:name="gridLayout" margin="rbl">
+        <x:constraints zpos="0" width="100%" height="100%" />
+        <XdevImage source="WebContent/WEB-INF/resources/images/excel24.png" x:name="image">
+            <x:constraints gridx="1" gridy="1" weighty="0.0" weightx="0.0" alignment="MIDDLE_LEFT" />
+        </XdevImage>
+        <XdevLabel styleName="h3" x:name="label" value="Excel Datei hochladen">
+            <x:constraints gridx="2" gridy="1" weighty="0.0" weightx="0.2" />
+        </XdevLabel>
+        <XdevLabel x:name="label2" value="Arbeitsblatt">
+            <x:constraints gridx="1" gridy="2" weighty="0.0" weightx="0.0" />
+        </XdevLabel>
+        <XdevTextField columns="5" description="Welches Arbeitsblatt in Excel beginnend mit 0" x:name="textFieldSheet" value="2">
+            <x:constraints gridx="2" gridy="2" weighty="0.0" weightx="0.2" />
+        </XdevTextField>
+        <XdevLabel x:name="label3" value="Offset Zeile">
+            <x:constraints gridx="1" gridy="3" weighty="0.0" weightx="0.0" />
+        </XdevLabel>
+        <XdevTextField columns="5" description="Startzeile der Rapporte beginnend bei 0" enabled="false" x:name="textFieldRow" value="15">
+            <x:constraints gridx="2" gridy="3" weighty="0.0" weightx="0.2" />
+        </XdevTextField>
+        <XdevUpload buttonCaption="Start Prozess" x:name="upload">
+            <x:constraints gridx="1" gridy="4" weighty="0.0" weightx="0.0" gridWidth="2" />
+        </XdevUpload>
+    </XdevGridLayout>
+</XdevView>
+

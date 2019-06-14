@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+
+<?xdevuiml version="1.0"?>
+<?template NONE?>
+<?import?>
+<?import ch.xwr.seicentobilling.business.LovState.State?>
+<?import ch.xwr.seicentobilling.business.LovState.ValueType?>
+<?import ch.xwr.seicentobilling.entities.DatabaseVersion?>
+<?import ch.xwr.seicentobilling.entities.Entity?>
+<?import ch.xwr.seicentobilling.entities.Language?>
+<?import ch.xwr.seicentobilling.entities.RowImage?>
+<?import ch.xwr.seicentobilling.entities.RowObject?>
+<?import ch.xwr.seicentobilling.entities.RowParameter?>
+<?import ch.xwr.seicentobilling.entities.RowText?>
+<?import com.xdev.ui.XdevButton?>
+<?import com.xdev.ui.XdevFieldGroup?>
+<?import com.xdev.ui.XdevGridLayout?>
+<?import com.xdev.ui.XdevHorizontalLayout?>
+<?import com.xdev.ui.XdevLabel?>
+<?import com.xdev.ui.XdevPanel?>
+<?import com.xdev.ui.XdevPopupDateField?>
+<?import com.xdev.ui.XdevTabSheet?>
+<?import com.xdev.ui.XdevTextField?>
+<?import com.xdev.ui.XdevVerticalLayout?>
+<?import com.xdev.ui.XdevVerticalSplitPanel?>
+<?import com.xdev.ui.XdevView?>
+<?import com.xdev.ui.entitycomponent.combobox.XdevComboBox?>
+<?import com.xdev.ui.entitycomponent.table.XdevTable?>
+<?import java.lang.Integer?>
+<?import java.lang.String?>
+<XdevView xmlns:x="http://xml.xdev-software.com/xdevuiml" caption="{$RowObjectView.caption}" x:name="RowObjectView">
+    <x:constraints zpos="0" width="100%" height="100%" />
+    <XdevVerticalSplitPanel x:splitPosition="33.0" x:name="verticalSplitPanel">
+        <x:constraints zpos="0" width="100%" height="100%" />
+        <XdevPanel x:name="panel">
+            <x:constraints splitPos="FIRST" width="100%" height="100%" />
+            <XdevGridLayout x:name="form">
+                <x:constraints zpos="0" width="-1px" height="100%" />
+                <XdevFieldGroup x:name="fieldGroup" x:entityType="RowObject" readOnly="true">
+                    <x:typeArguments>
+                        <typeArgument type="RowObject" />
+                    </x:typeArguments>
+                    <x:fields>
+                        <entry name="txtObjId" property="objId" />
+                        <entry name="cmbEntity" property="entity" />
+                        <entry name="txtObjRowId" property="objRowId" />
+                        <entry name="txtObjChngcnt" property="objChngcnt" />
+                        <entry name="dateObjAdded" property="objAdded" />
+                        <entry name="txtObjAddedBy" property="objAddedBy" />
+                        <entry name="dateObjChanged" property="objChanged" />
+                        <entry name="txtObjChangedBy" property="objChangedBy" />
+                        <entry name="dateObjDeleted" property="objDeleted" />
+                        <entry name="txtObjDeletedBy" property="objDeletedBy" />
+                        <entry name="cmbDatabaseVersion" property="databaseVersion" />
+                        <entry name="txtObjState" property="objState" />
+                    </x:fields>
+                </XdevFieldGroup>
+                <XdevLabel x:name="lblObjId" value="{$lblObjId.value}">
+                    <x:constraints gridx="1" gridy="1" weighty="0.0" weightx="0.0" />
+                </XdevLabel>
+                <XdevTextField columns="5" tabIndex="1" x:name="txtObjId">
+                    <x:constraints gridx="2" gridy="1" weighty="0.0" weightx="0.6" />
+                </XdevTextField>
+                <XdevLabel x:name="lblObjAdded" value="{$lblObjAdded.value}">
+                    <x:constraints gridx="3" gridy="1" weighty="0.0" weightx="0.0" />
+                </XdevLabel>
+                <XdevPopupDateField tabIndex="5" x:name="dateObjAdded">
+                    <x:constraints gridx="4" gridy="1" weighty="0.0" weightx="0.9" width="100%" />
+                </XdevPopupDateField>
+                <XdevLabel x:name="lblObjDeleted" value="{$lblObjDeleted.value}">
+                    <x:constraints gridx="5" gridy="1" weighty="0.0" weightx="0.0" />
+                </XdevLabel>
+                <XdevPopupDateField tabIndex="9" x:name="dateObjDeleted">
+                    <x:constraints gridx="6" gridy="1" weighty="0.0" weightx="0.8" width="100%" />
+                </XdevPopupDateField>
+                <XdevLabel x:name="lblEntity" value="{$lblEntity.value}">
+                    <x:constraints gridx="1" gridy="2" weighty="0.0" weightx="0.0" />
+                </XdevLabel>
+                <XdevComboBox tabIndex="2" x:name="cmbEntity" x:entity="Entity">
+                    <x:constraints gridx="2" gridy="2" weighty="0.0" weightx="0.6" />
+                    <x:entityProperty>
+                        <entry type="String" property="entName" />
+                    </x:entityProperty>
+                    <x:typeArguments>
+                        <typeArgument type="Entity" />
+                    </x:typeArguments>
+                    <x:data methodName="findAll" />
+                </XdevComboBox>
+                <XdevLabel x:name="lblObjAddedBy" value="{$lblObjAddedBy.value}">
+                    <x:constraints gridx="3" gridy="2" weighty="0.0" weightx="0.0" />
+                </XdevLabel>
+                <XdevTextField columns="5" tabIndex="6" x:name="txtObjAddedBy">
+                    <x:constraints gridx="4" gridy="2" weighty="0.0" weightx="0.9" width="100%" />
+                </XdevTextField>
+                <XdevLabel x:name="lblObjDeletedBy" value="{$lblObjDeletedBy.value}">
+                    <x:constraints gridx="5" gridy="2" weighty="0.0" weightx="0.0" />
+                </XdevLabel>
+                <XdevTextField columns="5" tabIndex="10" x:name="txtObjDeletedBy">
+                    <x:constraints gridx="6" gridy="2" weighty="0.0" weightx="0.8" width="100%" />
+                </XdevTextField>
+                <XdevLabel x:name="lblObjRowId" value="{$lblObjRowId.value}">
+                    <x:constraints gridx="1" gridy="3" weighty="0.0" weightx="0.0" />
+                </XdevLabel>
+                <XdevTextField columns="5" tabIndex="3" x:name="txtObjRowId">
+                    <x:constraints gridx="2" gridy="3" weighty="0.0" weightx="0.6" />
+                </XdevTextField>
+                <XdevLabel x:name="lblObjChanged" value="{$lblObjChanged.value}">
+                    <x:constraints gridx="3" gridy="3" weighty="0.0" weightx="0.0" />
+                </XdevLabel>
+                <XdevPopupDateField tabIndex="7" x:name="dateObjChanged">
+                    <x:constraints gridx="4" gridy="3" weighty="0.0" weightx="0.9" width="100%" />
+                </XdevPopupDateField>
+                <XdevLabel x:name="lblDatabaseVersion" value="{$lblDatabaseVersion.value}">
+                    <x:constraints gridx="5" gridy="3" weighty="0.0" weightx="0.0" />
+                </XdevLabel>
+                <XdevComboBox tabIndex="11" x:name="cmbDatabaseVersion" x:entity="DatabaseVersion">
+                    <x:constraints gridx="6" gridy="3" weighty="0.0" weightx="0.8" width="100%" />
+                    <x:entityProperty>
+                        <entry type="String" property="dbvMicro" />
+                    </x:entityProperty>
+                    <x:typeArguments>
+                        <typeArgument type="DatabaseVersion" />
+                    </x:typeArguments>
+                    <x:data methodName="findAll" />
+                </XdevComboBox>
+                <XdevLabel x:name="lblObjChngcnt" value="{$lblObjChngcnt.value}">
+                    <x:constraints gridx="1" gridy="4" weighty="0.0" weightx="0.0" />
+                </XdevLabel>
+                <XdevTextField columns="5" tabIndex="4" x:name="txtObjChngcnt">
+                    <x:constraints gridx="2" gridy="4" weighty="0.0" weightx="0.6" />
+                </XdevTextField>
+                <XdevLabel x:name="lblObjChangedBy" value="{$lblObjChangedBy.value}">
+                    <x:constraints gridx="3" gridy="4" weighty="0.0" weightx="0.0" />
+                </XdevLabel>
+                <XdevTextField columns="5" tabIndex="8" x:name="txtObjChangedBy">
+                    <x:constraints gridx="4" gridy="4" weighty="0.0" weightx="0.9" width="100%" />
+                </XdevTextField>
+                <XdevLabel x:name="lblObjState" value="{$lblObjState.value}">
+                    <x:constraints gridx="5" gridy="4" weighty="0.0" weightx="0.0" />
+                </XdevLabel>
+                <XdevTextField columns="5" tabIndex="12" x:name="txtObjState">
+                    <x:constraints gridx="6" gridy="4" weighty="0.0" weightx="0.8" width="100%" />
+                </XdevTextField>
+            </XdevGridLayout>
+        </XdevPanel>
+        <XdevTabSheet styleName="framed" x:name="tabSheet" x:selectedTabIndex="1">
+            <x:constraints splitPos="SECOND" width="100%" height="100%" />
+            <XdevVerticalLayout caption="Text" x:name="verticalLayoutText">
+                <x:constraints width="100%" height="100%" />
+                <XdevHorizontalLayout spacing="false" x:name="horizontalLayout2" margin="r">
+                    <x:constraints weighty="0.0" width="100%" />
+                    <XdevButton icon="WebContent/WEB-INF/resources/images/new1_16.png" caption="New" x:name="cmdNewText">
+                        <x:constraints weightx="0.0" />
+                        <x:event>click.buttonClick</x:event>
+                    </XdevButton>
+                    <XdevButton icon="WebContent/WEB-INF/resources/images/delete3_16.png" caption="{$cmdDeleteText.caption}" x:name="cmdDeleteText">
+                        <x:constraints weightx="0.0" />
+                        <x:event>click.buttonClick</x:event>
+                    </XdevButton>
+                    <XdevButton icon="WebContent/WEB-INF/resources/images/edit1.png" caption="{$cmdUpdateText.caption}" x:name="cmdUpdateText">
+                        <x:constraints weightx="0.0" />
+                        <x:event>click.buttonClick</x:event>
+                    </XdevButton>
+                </XdevHorizontalLayout>
+                <XdevTable x:name="tableText" x:entity="RowText">
+                    <x:entityProperties>
+                        <entry type="Integer" property="txtNumber" caption="Nbr" />
+                        <entry type="String" property="txtFreetext" caption="Text" />
+                        <entry type="Language" property="language" caption="Sprache" />
+                        <entry type="State" property="txtState" caption="Status" />
+                    </x:entityProperties>
+                    <x:constraints weighty="1.0" width="100%" height="100%" />
+                    <x:typeArguments>
+                        <typeArgument type="RowText" />
+                    </x:typeArguments>
+                    <x:event>valueChange.valueChange</x:event>
+                </XdevTable>
+            </XdevVerticalLayout>
+            <XdevVerticalLayout caption="Dateien" x:name="verticalLayoutFile">
+                <x:constraints width="100%" height="100%" />
+                <XdevHorizontalLayout spacing="false" x:name="actionLayout" margin="r">
+                    <x:constraints weighty="0.0" alignment="MIDDLE_LEFT" />
+                    <XdevButton icon="WebContent/WEB-INF/resources/images/new1_16.png" caption="{$cmdNewFile.caption}" x:name="cmdNewFile">
+                        <x:constraints weightx="0.0" alignment="MIDDLE_LEFT" />
+                        <x:event>click.buttonClick</x:event>
+                    </XdevButton>
+                    <XdevButton icon="WebContent/WEB-INF/resources/images/delete3_16.png" caption="{$cmdDeleteFile.caption}" x:name="cmdDeleteFile">
+                        <x:constraints weightx="0.0" />
+                        <x:event>click.buttonClick</x:event>
+                    </XdevButton>
+                    <XdevButton icon="WebContent/WEB-INF/resources/images/edit1.png" caption="{$cmdUpdateFile.caption}" x:name="cmdUpdateFile">
+                        <x:constraints weightx="0.0" />
+                        <x:event>click.buttonClick</x:event>
+                    </XdevButton>
+                </XdevHorizontalLayout>
+                <XdevTable x:name="tableRowImage" x:entity="RowImage">
+                    <x:entityProperties>
+                        <entry type="int" property="rimNumber" caption="Nbr" />
+                        <entry type="String" property="rimName" caption="Name" />
+                        <entry type="String" property="rimSize" caption="Grösse" />
+                        <entry type="short" property="rimType" caption="Typ" />
+                        <entry type="String" property="rimMimetype" caption="Mime Typ" />
+                        <entry type="State" property="rimState" caption="Status" />
+                        <entry type="" property="generated" caption="..." generator="ch.xwr.seicentobilling.ui.desktop.FunctionUpDownloadRowFile.Generator" />
+                    </x:entityProperties>
+                    <x:constraints weighty="1.0" width="100%" height="100%" />
+                    <x:typeArguments>
+                        <typeArgument type="RowImage" />
+                    </x:typeArguments>
+                    <x:event>valueChange.valueChange</x:event>
+                </XdevTable>
+            </XdevVerticalLayout>
+            <XdevVerticalLayout caption="Parameter" x:name="verticalLayoutParam">
+                <x:constraints width="100%" height="100%" />
+                <XdevHorizontalLayout spacing="false" x:name="actionLayoutParam" margin="r">
+                    <x:constraints top="-148px" left="971px" weighty="0.0" alignment="MIDDLE_LEFT" />
+                    <XdevButton icon="WebContent/WEB-INF/resources/images/new1_16.png" caption="{$cmdNewFile.caption}" x:name="cmdNewParam">
+                        <x:constraints weightx="0.0" alignment="MIDDLE_LEFT" />
+                        <x:event>click.buttonClick</x:event>
+                    </XdevButton>
+                    <XdevButton icon="WebContent/WEB-INF/resources/images/delete3_16.png" caption="{$cmdDeleteFile.caption}" x:name="cmdDeleteParam">
+                        <x:constraints weightx="0.0" />
+                        <x:event>click.buttonClick</x:event>
+                    </XdevButton>
+                    <XdevButton icon="WebContent/WEB-INF/resources/images/edit1.png" caption="{$cmdUpdateFile.caption}" x:name="cmdUpdateParam">
+                        <x:constraints weightx="0.0" />
+                        <x:event>click.buttonClick</x:event>
+                    </XdevButton>
+                </XdevHorizontalLayout>
+                <XdevTable columnReorderingAllowed="true" x:name="tableRowParam" columnCollapsingAllowed="true" x:entity="RowParameter">
+                    <x:entityProperties>
+                        <entry type="String" property="prmValue" caption="Wert" />
+                        <entry type="String" property="prmGroup" caption="Gruppe" />
+                        <entry type="String" property="prmSubGroup" caption="Untergruppe" />
+                        <entry type="String" property="prmKey" caption="Schlüssel" />
+                        <entry type="ValueType" property="prmValueType" caption="Type" collapsed="true" />
+                        <entry type="State" property="prmState" caption="Status" collapsed="true" />
+                        <entry type="String" property="rowObject.entity.entName" caption="Tabelle" collapsed="true" />
+                    </x:entityProperties>
+                    <x:constraints top="-148px" left="971px" weighty="1.0" width="100%" height="100%" />
+                    <x:typeArguments>
+                        <typeArgument type="RowParameter" />
+                    </x:typeArguments>
+                </XdevTable>
+            </XdevVerticalLayout>
+        </XdevTabSheet>
+    </XdevVerticalSplitPanel>
+</XdevView>
+

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+
+<?xdevuiml version="1.0"?>
+<?template NONE?>
+<?import ch.xwr.seicentobilling.ui.desktop.MainView?>
+<?import ch.xwr.seicentobilling.ui.phone.AddressSearchView?>
+<?import ch.xwr.seicentobilling.ui.phone.ExpenseListView?>
+<?import ch.xwr.seicentobilling.ui.phone.ExpenseView?>
+<?import ch.xwr.seicentobilling.ui.phone.PeriodeView?>
+<?import ch.xwr.seicentobilling.ui.phone.ProjectLineListView?>
+<?import ch.xwr.seicentobilling.ui.tablet.AuthView?>
+<?import com.xdev.security.authentication.ui.XdevAuthenticationNavigator?>
+<?import com.xdev.ui.XdevUI?>
+<XdevUI xmlns:x="http://xml.xdev-software.com/xdevuiml" x:name="TabletUI">
+    <x:constraints zpos="0" width="100%" height="100%" />
+    <XdevAuthenticationNavigator redirectViewName="home" x:target="TabletUI" x:name="navigator" x:singleComponentContainer="TabletUI">
+        <x:views>
+            <entry path="" class="AuthView" />
+            <entry path="home" class="MainView" />
+            <entry path="periodeView" class="PeriodeView" />
+            <entry path="projectLineListView" class="ProjectLineListView" />
+            <entry path="expenseView" class="ExpenseView" />
+            <entry path="expenseListView" class="ExpenseListView" />
+            <entry path="addressSearchView" class="AddressSearchView" />
+        </x:views>
+    </XdevAuthenticationNavigator>
+</XdevUI>
+

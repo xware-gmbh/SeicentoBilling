@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+
+<?xdevuiml version="1.0"?>
+<?template BROWSER_XGA?>
+<?import ch.xwr.seicentobilling.business.LovState.State?>
+<?import ch.xwr.seicentobilling.entities.Periode?>
+<?import ch.xwr.seicentobilling.entities.Project?>
+<?import ch.xwr.seicentobilling.entities.ProjectLine?>
+<?import com.xdev.ui.XdevButton?>
+<?import com.xdev.ui.XdevHorizontalLayout?>
+<?import com.xdev.ui.XdevHorizontalSplitPanel?>
+<?import com.xdev.ui.XdevTabSheet?>
+<?import com.xdev.ui.XdevVerticalLayout?>
+<?import com.xdev.ui.XdevView?>
+<?import com.xdev.ui.entitycomponent.table.XdevTable?>
+<?import com.xdev.ui.filter.XdevContainerFilterComponent?>
+<?import java.lang.Double?>
+<?import java.lang.Integer?>
+<?import java.lang.Short?>
+<?import java.lang.String?>
+<?import java.util.Date?>
+<XdevView xmlns:x="http://xml.xdev-software.com/xdevuiml" x:name="ProjectLineTabView">
+    <x:constraints zpos="0" width="100%" height="100%" />
+    <XdevHorizontalSplitPanel styleName="large" x:splitPosition="40.0" x:name="horizontalSplitPanel">
+        <x:constraints zpos="0" width="100%" height="100%" />
+        <XdevVerticalLayout x:name="verticalLayout" margin="">
+            <x:constraints splitPos="FIRST" width="100%" height="100%" />
+            <XdevContainerFilterComponent x:searchableProperties="perName,costAccount.csaName,costAccount.csaCode" x:name="containerFilterComponent" x:filterableProperties="perYear,perMonth,costAccount,perBookedExpense,perBookedProject,perState" x:container="table" immediate="true">
+                <x:constraints top="-13px" left="1886px" weighty="0.0" width="100%" height="0%" />
+            </XdevContainerFilterComponent>
+            <XdevHorizontalLayout spacing="false" x:name="actionLayout" margin="">
+                <x:constraints top="-13px" left="1886px" weighty="0.0" width="100%" height="0px" />
+                <XdevButton icon="WebContent/WEB-INF/resources/images/new1_16.png" description="{$cmdNew.description}" tabIndex="1" x:name="cmdNew">
+                    <x:constraints weightx="0.0" width="0px" height="0px" />
+                    <x:event>click.buttonClick</x:event>
+                    <x:event>focus.focus</x:event>
+                </XdevButton>
+                <XdevButton icon="WebContent/WEB-INF/resources/images/delete3_16.png" tabIndex="2" x:name="cmdDelete">
+                    <x:constraints weightx="0.0" width="0px" height="0px" />
+                    <x:event>click.buttonClick</x:event>
+                </XdevButton>
+                <XdevButton icon="WebContent/WEB-INF/resources/images/edit1.png" description="Periode bearbeiten..." x:name="cmdUpdate">
+                    <x:constraints top="-150px" left="462px" weightx="0.0" width="0px" height="0px" />
+                    <x:event>click.buttonClick</x:event>
+                </XdevButton>
+                <XdevButton icon="WebContent/WEB-INF/resources/images/reload2.png" description="Tabelle neu laden" tabIndex="3" x:name="cmdReload">
+                    <x:constraints weightx="0.0" width="0px" height="0px" />
+                    <x:event>click.buttonClick</x:event>
+                </XdevButton>
+                <XdevButton icon="WebContent/WEB-INF/resources/images/Printer_black_18.png" description="Jasper Report starten" x:name="cmdReport">
+                    <x:constraints top="46px" left="-1px" weightx="0.0" width="0px" height="0px" />
+                    <x:event>click.buttonClick</x:event>
+                </XdevButton>
+                <XdevButton icon="WebContent/WEB-INF/resources/images/info_small.jpg" description="Objektinfo" tabIndex="4" x:name="cmdInfo">
+                    <x:constraints weightx="0.0" width="0px" height="0px" />
+                    <x:event>click.buttonClick</x:event>
+                </XdevButton>
+            </XdevHorizontalLayout>
+            <XdevTable columnReorderingAllowed="true" tabIndex="5" x:name="table" columnCollapsingAllowed="true" x:entity="Periode" x:autoQuery="false">
+                <x:entityProperties>
+                    <entry type="String" property="perName" caption="Periode" />
+                    <entry type="Integer" property="perYear" caption="Jahr" collapsed="true">
+                        <converter numberType="Integer" numberFormatType="number" currency="default" converterType="STRING_TO_NUMBER" locale="default" />
+                    </entry>
+                    <entry type="Integer" property="perMonth" caption="Monat" collapsed="true" />
+                    <entry type="Short" property="perBookedExpense" caption="Buchhaltung" />
+                    <entry type="Short" property="perBookedProject" caption="Gebucht Projekt" collapsed="true" />
+                    <entry type="State" property="perState" caption="Status" collapsed="true" />
+                    <entry type="String" property="costAccount.csaName" caption="Kostenstelle" collapsed="true" />
+                </x:entityProperties>
+                <x:constraints top="-2px" left="954px" weighty="1.0" width="100%" height="100%" />
+                <x:typeArguments>
+                    <typeArgument type="Periode" />
+                </x:typeArguments>
+                <x:data methodName="findAll" />
+                <x:event>valueChange.valueChange</x:event>
+            </XdevTable>
+        </XdevVerticalLayout>
+        <XdevVerticalLayout x:name="verticalLayoutRight" margin="">
+            <x:constraints splitPos="SECOND" width="100%" height="100%" />
+            <XdevTabSheet tabIndex="6" styleName="framed" x:name="tabSheet" x:selectedTabIndex="0" immediate="false">
+                <x:constraints weighty="1.0" width="100%" alignment="TOP_LEFT" height="100%" />
+                <XdevVerticalLayout caption="Rapportzeilen" x:name="verticalLayoutReports" margin="">
+                    <x:constraints splitPos="SECOND" weighty="0.0" alignment="MIDDLE_CENTER" />
+                    <XdevContainerFilterComponent x:searchableProperties="prlText,project.proName,project.proExtReference" x:name="containerFilterComponent2" x:filterableProperties="prlReportDate,prlText,prlHours,prlRate,prlWorkType,project,prlState" x:container="tableLine">
+                        <x:constraints weighty="0.0" weightx="1.0" width="100%" height="0%" />
+                    </XdevContainerFilterComponent>
+                    <XdevHorizontalLayout spacing="false" x:name="horizontalLayout" margin="" immediate="true">
+                        <x:constraints weighty="0.0" width="0px" alignment="MIDDLE_LEFT" height="0px" />
+                        <XdevButton icon="WebContent/WEB-INF/resources/images/new1_16.png" caption="Neu" description="Rapportzeile hinzufügen" x:name="cmdNewLine" x:shortcut="CTRL+N">
+                            <x:constraints top="-150px" left="462px" weightx="0.0" width="0px" height="0px" />
+                            <x:event>click.buttonClick</x:event>
+                        </XdevButton>
+                        <XdevButton icon="WebContent/WEB-INF/resources/images/delete3_16.png" caption="" description="Rapportzeile löschen" x:name="cmdDeleteLine">
+                            <x:constraints top="-150px" left="462px" weightx="0.0" width="0px" height="0px" />
+                            <x:event>click.buttonClick</x:event>
+                        </XdevButton>
+                        <XdevButton icon="WebContent/WEB-INF/resources/images/edit1.png" caption="" description="Rapportzeile bearbeiten" x:name="cmdUpdateLine">
+                            <x:constraints top="-150px" left="462px" weightx="0.0" width="0px" height="0px" />
+                            <x:event>click.buttonClick</x:event>
+                        </XdevButton>
+                        <XdevButton icon="WebContent/WEB-INF/resources/images/import24.png" caption="Import Excel" description="Rapporte aus Excel importieren" x:name="cmdExcel">
+                            <x:constraints top="110px" left="713px" weightx="0.0" width="0px" height="0px" />
+                            <x:event>click.buttonClick</x:event>
+                        </XdevButton>
+                        <XdevButton icon="WebContent/WEB-INF/resources/images/copy1.png" description="Einzelne Zeile kopieren" x:name="cmdCopyLine">
+                            <x:constraints top="110px" left="713px" weightx="0.0" width="0px" height="0px" />
+                            <x:event>click.buttonClick</x:event>
+                        </XdevButton>
+                        <XdevButton icon="WebContent/WEB-INF/resources/images/export24.png" caption="Export" description="Excel Export" x:name="cmdExport">
+                            <x:constraints top="157px" left="713px" weightx="0.0" width="0px" height="0px" />
+                            <x:event>click.buttonClick</x:event>
+                        </XdevButton>
+                        <XdevButton icon="WebContent/WEB-INF/resources/images/info_small.jpg" description="Objektinfo" x:name="cmdInfoLine">
+                            <x:constraints top="63px" left="713px" weightx="0.0" width="0px" height="0px" />
+                            <x:event>click.buttonClick</x:event>
+                        </XdevButton>
+                    </XdevHorizontalLayout>
+                    <XdevTable columnReorderingAllowed="true" x:name="tableLine" columnCollapsingAllowed="true" x:entity="ProjectLine" x:autoQuery="false">
+                        <x:entityProperties>
+                            <entry type="Date" property="prlReportDate" caption="Datum">
+                                <converter dateStyle="DEFAULT" timeStyle="DEFAULT" currency="default" converterType="STRING_TO_DATE" locale="default" dateFormatType="DATE" />
+                            </entry>
+                            <entry type="String" property="prlText" caption="Text" />
+                            <entry type="Double" property="prlHours" caption="Stunden" alignment="RIGHT">
+                                <converter maximumFractionDigits="2" numberType="Double" numberFormatType="number" minimumFractionDigits="2" currency="default" converterType="STRING_TO_NUMBER" locale="default" />
+                            </entry>
+                            <entry type="Double" property="prlRate" caption="Ansatz" alignment="RIGHT">
+                                <converter numberType="Double" numberFormatType="currency" currency="default" converterType="STRING_TO_NUMBER" locale="default" />
+                            </entry>
+                            <entry type="Short" property="prlWorkType" caption="Typ" />
+                            <entry type="String" property="project.proName" caption="Projektname" />
+                            <entry type="Project" property="project" caption="Projekt" collapsed="true" />
+                            <entry type="Short" property="prlState" caption="Status" />
+                        </x:entityProperties>
+                        <x:constraints weighty="1.0" width="100%" height="100%" />
+                        <x:typeArguments>
+                            <typeArgument type="ProjectLine" />
+                        </x:typeArguments>
+                        <x:event>itemClick.itemClick</x:event>
+                    </XdevTable>
+                </XdevVerticalLayout>
+            </XdevTabSheet>
+        </XdevVerticalLayout>
+    </XdevHorizontalSplitPanel>
+</XdevView>
+

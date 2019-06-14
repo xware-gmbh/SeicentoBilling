@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<faceted-project>
+  <fixed facet="wst.jsdt.web"/>
+  <fixed facet="xdev.eclipse.server.ui.facet"/>
+  <fixed facet="java"/>
+  <fixed facet="xdev.eclipse.server.core.facet"/>
+  <fixed facet="jst.web"/>
+  <installed facet="java" version="1.8"/>
+  <installed facet="jst.web" version="3.1"/>
+  <installed facet="xdev.eclipse.server.core.facet" version="1.0"/>
+  <installed facet="xdev.eclipse.server.ui.facet" version="1.0"/>
+  <installed facet="wst.jsdt.web" version="1.0"/>
+  <installed facet="xdev.eclipse.server.aa.facet" version="1.0"/>
+  <installed facet="xdev.eclipse.server.aa.ui.facet" version="1.0"/>
+  <installed facet="xdev.eclipse.server.reports.facet" version="1.0"/>
+</faceted-project>

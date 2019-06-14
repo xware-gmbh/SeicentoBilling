@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+
+<?xdevuiml version="1.0"?>
+<?template BROWSER_XGA?>
+<?import ch.xwr.seicentobilling.entities.CostAccount?>
+<?import ch.xwr.seicentobilling.entities.Periode?>
+<?import com.xdev.ui.XdevButton?>
+<?import com.xdev.ui.XdevCheckBox?>
+<?import com.xdev.ui.XdevGridLayout?>
+<?import com.xdev.ui.XdevHorizontalSplitPanel?>
+<?import com.xdev.ui.XdevLabel?>
+<?import com.xdev.ui.XdevPanel?>
+<?import com.xdev.ui.XdevPopupDateField?>
+<?import com.xdev.ui.XdevTabSheet?>
+<?import com.xdev.ui.XdevTextField?>
+<?import com.xdev.ui.XdevTreeTable?>
+<?import com.xdev.ui.XdevVerticalLayout?>
+<?import com.xdev.ui.XdevView?>
+<?import com.xdev.ui.entitycomponent.combobox.XdevComboBox?>
+<XdevView xmlns:x="http://xml.xdev-software.com/xdevuiml" x:name="OrderGenerateTabView">
+    <x:constraints zpos="0" width="100%" height="100%" />
+    <XdevHorizontalSplitPanel styleName="large" x:name="horizontalSplitPanel">
+        <x:constraints zpos="0" width="100%" height="100%" />
+        <XdevVerticalLayout x:name="verticalLayoutLeft" margin="">
+            <x:constraints splitPos="FIRST" width="100%" height="100%" />
+            <XdevPanel caption="Rechnungen generieren" x:name="panel">
+                <x:constraints weighty="0.1" width="100%" height="100%" />
+                <XdevTabSheet styleName="framed" x:name="tabSheet" x:selectedTabIndex="0">
+                    <x:constraints zpos="0" weighty="1.0" width="100%" alignment="MIDDLE_CENTER" height="100%" />
+                    <XdevGridLayout caption="Main" x:name="gridLayout">
+                        <x:constraints width="100%" height="100%" />
+                        <XdevLabel x:name="label" value="Kostenstelle">
+                            <x:constraints gridx="1" gridy="1" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+                        </XdevLabel>
+                        <XdevComboBox x:name="comboBoxCostAccount" x:entity="CostAccount" x:autoQuery="false">
+                            <x:constraints gridx="2" gridy="1" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+                            <x:typeArguments>
+                                <typeArgument type="CostAccount" />
+                            </x:typeArguments>
+                            <x:event>valueChange.valueChange</x:event>
+                        </XdevComboBox>
+                        <XdevLabel x:name="label2" value="Periode wählen">
+                            <x:constraints gridx="1" gridy="2" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+                        </XdevLabel>
+                        <XdevComboBox x:name="comboBoxPeriode" x:entity="Periode" x:autoQuery="false">
+                            <x:constraints gridx="2" gridy="2" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+                            <x:typeArguments>
+                                <typeArgument type="Periode" />
+                            </x:typeArguments>
+                        </XdevComboBox>
+                        <XdevLabel x:name="label3" value="Rechnungsdatum">
+                            <x:constraints gridx="1" gridy="3" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+                        </XdevLabel>
+                        <XdevPopupDateField x:name="dateBilldate">
+                            <x:constraints gridx="2" gridy="3" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+                        </XdevPopupDateField>
+                        <XdevCheckBox caption="Text von letzer Rechnung" x:name="checkBoxTextLast">
+                            <x:constraints gridx="2" gridy="4" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+                        </XdevCheckBox>
+                        <XdevButton caption="Vorschlag generieren" x:name="cmdPropose">
+                            <x:constraints gridx="2" gridy="5" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+                            <x:event>click.buttonClick</x:event>
+                        </XdevButton>
+                        <XdevButton caption="Rechnungen erstellen" enabled="false" x:name="cmdGenerate">
+                            <x:constraints gridx="2" gridy="6" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+                            <x:event>click.buttonClick</x:event>
+                        </XdevButton>
+                    </XdevGridLayout>
+                    <XdevGridLayout caption="Texte" x:name="gridLayoutTexte">
+                        <x:constraints width="100%" height="100%" />
+                        <XdevLabel icon="FontAwesome.INFO_CIRCLE" description="Es ist ein Tooltip vorhanden auf den Labeln und dem Button." x:name="labelInfoToolTip">
+                            <x:constraints gridx="1" gridy="1" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+                        </XdevLabel>
+                        <XdevLabel description="Rechnungstext - mögliche Platzhalter {proExtReference} {proName}, {proContact}, {csaName}" x:name="label5" value="Textzeile Rechnung">
+                            <x:constraints gridx="1" gridy="2" weighty="0.0" weightx="0.0" width="0px" height="-1px" />
+                        </XdevLabel>
+                        <XdevTextField columns="5" x:name="textFieldOrderText">
+                            <x:constraints gridx="2" gridy="2" weighty="0.0" weightx="0.1" width="100%" height="-1px" />
+                        </XdevTextField>
+                        <XdevLabel description="mögliche Platzhalter: {csaName}, {csaCode}" x:name="label6" value="Textzeile Dienstleistung">
+                            <x:constraints gridx="1" gridy="3" top="55px" left="-1px" weighty="0.0" weightx="0.0" width="0px" height="-1px" />
+                        </XdevLabel>
+                        <XdevTextField columns="5" x:name="textFieldProjectLine">
+                            <x:constraints gridx="2" gridy="3" top="55px" left="-1px" weighty="0.0" weightx="0.1" width="100%" height="-1px" />
+                        </XdevTextField>
+                        <XdevLabel x:name="label7" value="Textzeile Spesen">
+                            <x:constraints gridx="1" gridy="4" top="111px" left="-1px" weighty="0.0" weightx="0.0" width="0px" height="-1px" />
+                        </XdevLabel>
+                        <XdevTextField columns="5" x:name="textFieldExpenseLine">
+                            <x:constraints gridx="2" gridy="4" top="111px" left="-1px" weighty="0.0" weightx="0.1" width="100%" height="-1px" />
+                        </XdevTextField>
+                        <XdevLabel x:name="label8" value="Textzeile Reisezeit">
+                            <x:constraints gridx="1" gridy="5" top="167px" left="-1px" weighty="0.0" weightx="0.0" width="0px" height="-1px" />
+                        </XdevLabel>
+                        <XdevTextField columns="5" x:name="textFieldJourneyLine">
+                            <x:constraints gridx="2" gridy="5" top="167px" left="-1px" weighty="0.0" weightx="0.1" width="100%" height="-1px" />
+                        </XdevTextField>
+                        <XdevButton caption="Texte speichern" description="Speichert die Texte als persönliche Einstellungen." x:name="cmdSaveText">
+                            <x:constraints gridx="2" gridy="6" weighty="0.0" weightx="0.1" width="0px" height="0px" />
+                            <x:event>click.buttonClick</x:event>
+                        </XdevButton>
+                    </XdevGridLayout>
+                    <XdevGridLayout caption="Artikel" x:name="gridLayoutArtikel">
+                        <x:constraints top="680px" left="-1px" width="100%" height="100%" />
+                        <XdevLabel x:name="label11" value="Artikel Dienstleistung">
+                            <x:constraints gridx="1" gridy="1" top="55px" left="-1px" weighty="0.0" weightx="0.0" width="0px" height="-1px" />
+                        </XdevLabel>
+                        <XdevTextField columns="5" x:name="textFieldItemProject">
+                            <x:constraints gridx="2" gridy="1" top="55px" left="-1px" weighty="0.0" weightx="0.1" width="100%" height="-1px" />
+                        </XdevTextField>
+                        <XdevLabel x:name="label12" value="Artikel Spesen">
+                            <x:constraints gridx="1" gridy="2" top="111px" left="-1px" weighty="0.0" weightx="0.0" width="0px" height="-1px" />
+                        </XdevLabel>
+                        <XdevTextField columns="5" x:name="textFieldItemExpense">
+                            <x:constraints gridx="2" gridy="2" top="111px" left="-1px" weighty="0.0" weightx="0.1" width="100%" height="-1px" />
+                        </XdevTextField>
+                        <XdevLabel x:name="label13" value="Artikel Reisezeit">
+                            <x:constraints gridx="1" gridy="3" top="167px" left="-1px" weighty="0.0" weightx="0.0" width="0px" height="-1px" />
+                        </XdevLabel>
+                        <XdevTextField columns="5" x:name="textFieldItemJourney">
+                            <x:constraints gridx="2" gridy="3" top="167px" left="-1px" weighty="0.0" weightx="0.1" width="100%" height="-1px" />
+                        </XdevTextField>
+                    </XdevGridLayout>
+                </XdevTabSheet>
+            </XdevPanel>
+        </XdevVerticalLayout>
+        <XdevVerticalLayout x:name="verticalLayoutRight" margin="b">
+            <x:constraints splitPos="SECOND" width="100%" height="100%" />
+            <XdevTreeTable selectable="true" x:name="treeGrid" multiSelect="true">
+                <x:constraints weighty="1.0" width="100%" height="100%" />
+            </XdevTreeTable>
+        </XdevVerticalLayout>
+    </XdevHorizontalSplitPanel>
+</XdevView>
+

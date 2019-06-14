@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+
+<?xdevuiml version="1.0"?>
+<?template BROWSER_XGA?>
+<?import ??>
+<?import ch.xwr.seicentobilling.entities.Project?>
+<?import ch.xwr.seicentobilling.entities.ProjectLine?>
+<?import com.xdev.ui.XdevButton?>
+<?import com.xdev.ui.XdevFieldGroup?>
+<?import com.xdev.ui.XdevGridLayout?>
+<?import com.xdev.ui.XdevHorizontalLayout?>
+<?import com.xdev.ui.XdevLabel?>
+<?import com.xdev.ui.XdevPanel?>
+<?import com.xdev.ui.XdevPopupDateField?>
+<?import com.xdev.ui.XdevTextField?>
+<?import com.xdev.ui.XdevVerticalLayout?>
+<?import com.xdev.ui.XdevView?>
+<?import com.xdev.ui.entitycomponent.combobox.XdevComboBox?>
+<?import java.lang.String?>
+<XdevView xmlns:x="http://xml.xdev-software.com/xdevuiml" x:name="ProjectListView">
+    <x:constraints zpos="0" width="100%" height="100%" />
+    <XdevPanel x:name="panel" scrollLeft="1" scrollTop="1">
+        <x:constraints zpos="0" width="100%" height="100%" />
+        <XdevVerticalLayout spacing="false" x:name="verticalLayout" margin="">
+            <x:constraints zpos="0" width="100%" height="100%" />
+            <XdevHorizontalLayout styleName="dark" x:name="horizontalLayout" margin="">
+                <x:constraints weighty="0.0" width="100%" alignment="TOP_LEFT" height="0px" />
+                <XdevButton icon="WebContent/WEB-INF/resources/images/greenarrow_left32.png" caption="{$cmdBack.caption}" x:name="cmdBack">
+                    <x:constraints weightx="0.1" width="0px" alignment="MIDDLE_LEFT" height="0px" />
+                    <x:event>click.buttonClick</x:event>
+                </XdevButton>
+                <XdevLabel styleName="colored h2 bold" x:name="label" value="Rapport">
+                    <x:constraints weightx="0.1" width="0px" height="0px" />
+                </XdevLabel>
+                <XdevButton icon="WebContent/WEB-INF/resources/images/delete3_16.png" caption="{$cmdDelete.caption}" x:name="cmdDelete">
+                    <x:constraints weightx="0.1" width="0px" alignment="MIDDLE_RIGHT" height="0px" />
+                    <x:event>click.buttonClick</x:event>
+                </XdevButton>
+            </XdevHorizontalLayout>
+            <XdevGridLayout x:name="form" margin="rbl">
+                <x:constraints weighty="0.0" width="100%" alignment="MIDDLE_LEFT" height="0px" />
+                <XdevLabel x:name="lblPrlReportDate" value="{$lblPrlReportDate.value}">
+                    <x:constraints gridx="1" gridy="1" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+                </XdevLabel>
+                <XdevPopupDateField tabIndex="1" x:name="datePrlReportDate">
+                    <x:constraints gridx="2" gridy="1" weighty="0.0" weightx="0.1" width="-1px" height="0px" />
+                </XdevPopupDateField>
+                <XdevLabel x:name="lblProject" value="{$lblProject.value}">
+                    <x:constraints gridx="1" gridy="2" weighty="0.0" weightx="0.0" width="0px" height="-1px" />
+                </XdevLabel>
+                <XdevComboBox tabIndex="2" x:name="cmbProject" x:entity="Project">
+                    <x:constraints gridx="2" gridy="2" weighty="0.0" weightx="0.1" width="100%" height="-1px" />
+                    <x:entityProperty>
+                        <entry type="String" property="proName" />
+                    </x:entityProperty>
+                    <x:typeArguments>
+                        <typeArgument type="Project" />
+                    </x:typeArguments>
+                    <x:data methodName="findAll" />
+                    <x:event>valueChange.valueChange</x:event>
+                </XdevComboBox>
+                <XdevLabel x:name="lblPrlHours" value="{$lblPrlHours.value}">
+                    <x:constraints gridx="1" gridy="3" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+                </XdevLabel>
+                <XdevTextField columns="5" tabIndex="3" x:name="txtPrlHours">
+                    <x:constraints gridx="2" gridy="3" weighty="0.0" weightx="0.1" width="-1px" height="0px" />
+                </XdevTextField>
+                <XdevLabel x:name="lblPrlText" value="{$lblPrlText.value}">
+                    <x:constraints gridx="1" gridy="4" weighty="0.0" weightx="0.0" width="0px" height="-1px" />
+                </XdevLabel>
+                <XdevTextField columns="5" tabIndex="4" x:name="txtPrlText">
+                    <x:constraints gridx="2" gridy="4" weighty="0.0" weightx="0.1" width="100%" height="-1px" />
+                </XdevTextField>
+                <XdevLabel x:name="lblPrlWorkType" value="{$lblPrlWorkType.value}">
+                    <x:constraints gridx="1" gridy="5" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+                </XdevLabel>
+                <XdevComboBox x:name="comboBoxWorktype">
+                    <x:constraints gridx="2" gridy="5" weighty="0.0" weightx="0.1" width="-1px" height="0px" />
+                    <x:typeArguments>
+                        <typeArgument type="?" />
+                    </x:typeArguments>
+                </XdevComboBox>
+                <XdevTextField columns="5" tabIndex="6" x:name="txtPrlRate">
+                    <x:constraints gridx="2" gridy="6" weighty="0.0" weightx="0.1" width="-1px" height="0px" />
+                </XdevTextField>
+                <XdevHorizontalLayout x:name="horizontalLayoutTemplate" margin="tr">
+                    <x:constraints gridx="2" gridy="7" weighty="0.0" weightx="0.1" width="100%" alignment="MIDDLE_RIGHT" height="-1px" />
+                    <XdevButton caption="Key 1" x:name="btnKey01">
+                        <x:constraints weightx="0.0" width="0px" alignment="MIDDLE_RIGHT" height="0px" />
+                        <x:event>click.buttonClick</x:event>
+                    </XdevButton>
+                    <XdevButton caption="Key 2" x:name="btnKey02">
+                        <x:constraints weightx="0.0" width="0px" alignment="MIDDLE_RIGHT" height="0px" />
+                        <x:event>click.buttonClick</x:event>
+                    </XdevButton>
+                    <XdevButton caption="Key 3" x:name="btnKey03">
+                        <x:constraints top="46px" left="-1px" weightx="0.0" width="-1px" height="0px" />
+                        <x:event>click.buttonClick</x:event>
+                    </XdevButton>
+                </XdevHorizontalLayout>
+                <XdevFieldGroup x:name="fieldGroup" x:entityType="ProjectLine">
+                    <x:typeArguments>
+                        <typeArgument type="ProjectLine" />
+                    </x:typeArguments>
+                    <x:fields>
+                        <entry name="datePrlReportDate" property="prlReportDate" />
+                        <entry name="cmbProject" property="project" />
+                        <entry name="txtPrlHours" property="prlHours" />
+                        <entry name="txtPrlText" property="prlText" />
+                        <entry name="comboBoxWorktype" property="prlWorkType" />
+                        <entry name="txtPrlRate" property="prlRate" />
+                    </x:fields>
+                </XdevFieldGroup>
+                <XdevLabel x:name="lblPrlRate" value="{$lblPrlRate.value}">
+                    <x:constraints gridx="1" gridy="6" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+                </XdevLabel>
+                <XdevHorizontalLayout x:name="horizontalLayoutAction" margin="">
+                    <x:constraints gridx="1" gridy="8" weighty="0.0" weightx="0.0" width="0px" alignment="TOP_CENTER" gridWidth="2" height="0px" />
+                    <XdevButton icon="WebContent/WEB-INF/resources/images/save1.png" caption="{$cmdSave.caption}" tabIndex="8" x:name="cmdSave">
+                        <x:constraints weightx="0.0" width="0px" alignment="MIDDLE_LEFT" height="0px" />
+                        <x:event>click.buttonClick</x:event>
+                    </XdevButton>
+                    <XdevButton icon="WebContent/WEB-INF/resources/images/cancel1.png" caption="{$cmdReset.caption}" tabIndex="7" x:name="cmdReset">
+                        <x:constraints weightx="0.0" width="0px" alignment="MIDDLE_LEFT" height="0px" />
+                        <x:event>click.buttonClick</x:event>
+                    </XdevButton>
+                </XdevHorizontalLayout>
+            </XdevGridLayout>
+        </XdevVerticalLayout>
+    </XdevPanel>
+</XdevView>
+

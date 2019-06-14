@@ -1,0 +1,7 @@
+import ch.xwr.seicentobilling.entities.Item
+
+findByIdent(String ident)
+{
+	select * from Item where itmIdent = :ident
+	//select * from Company where cmpId = 1
+}

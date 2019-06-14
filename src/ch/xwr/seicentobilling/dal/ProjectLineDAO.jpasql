@@ -1,0 +1,7 @@
+import ch.xwr.seicentobilling.entities.ProjectLine
+import ch.xwr.seicentobilling.entities.Periode
+
+findByPeriode(Periode dao)
+{
+	select * from ProjectLine where periode = :dao order by prlReportDate desc
+}

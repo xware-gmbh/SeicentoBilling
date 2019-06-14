@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+
+<?xdevuiml version="1.0"?>
+<?template BROWSER_XGA?>
+<?import ??>
+<?import ch.xwr.seicentobilling.entities.CostAccount?>
+<?import ch.xwr.seicentobilling.entities.Item?>
+<?import ch.xwr.seicentobilling.entities.Order?>
+<?import ch.xwr.seicentobilling.entities.OrderLine?>
+<?import ch.xwr.seicentobilling.entities.Vat?>
+<?import com.xdev.ui.XdevButton?>
+<?import com.xdev.ui.XdevFieldGroup?>
+<?import com.xdev.ui.XdevGridLayout?>
+<?import com.xdev.ui.XdevHorizontalLayout?>
+<?import com.xdev.ui.XdevLabel?>
+<?import com.xdev.ui.XdevTextField?>
+<?import com.xdev.ui.XdevView?>
+<?import com.xdev.ui.entitycomponent.combobox.XdevComboBox?>
+<?import java.lang.String?>
+<XdevView xmlns:x="http://xml.xdev-software.com/xdevuiml" x:name="OrderLinePopup">
+    <x:constraints zpos="0" width="100%" height="100%" />
+    <XdevGridLayout x:name="form">
+        <x:constraints zpos="0" width="100%" height="100%" />
+        <XdevComboBox tabIndex="12" x:name="comboBoxState">
+            <x:constraints gridx="2" gridy="9" weighty="0.0" weightx="1.0" />
+            <x:typeArguments>
+                <typeArgument type="?" />
+            </x:typeArguments>
+        </XdevComboBox>
+        <XdevFieldGroup x:name="fieldGroup" x:entityType="OrderLine">
+            <x:typeArguments>
+                <typeArgument type="OrderLine" />
+            </x:typeArguments>
+            <x:fields>
+                <entry name="cmbOrder" property="orderhdr" />
+                <entry name="txtOdlNumber" property="odlNumber" />
+                <entry name="cmbItem" property="item" />
+                <entry name="txtOdlQuantity" property="odlQuantity" />
+                <entry name="cmbCostAccount" property="costAccount" />
+                <entry name="txtOdlPrice" property="odlPrice" />
+                <entry name="cmbVat" property="vat" />
+                <entry name="txtOdlAmountBrut" property="odlAmountBrut" />
+                <entry name="txtOdlAmountNet" property="odlAmountNet" />
+                <entry name="txtOdlText" property="odlText" />
+                <entry name="txtOdlVatAmount" property="odlVatAmount" />
+                <entry name="comboBoxState" property="odlState" />
+            </x:fields>
+        </XdevFieldGroup>
+        <XdevLabel x:name="lblOrder" value="{$lblOrder.value}">
+            <x:constraints gridx="1" gridy="1" weighty="0.0" weightx="0.0" />
+        </XdevLabel>
+        <XdevComboBox tabIndex="1" itemCaptionFromAnnotation="false" x:name="cmbOrder" x:entity="Order">
+            <x:constraints gridx="2" gridy="1" weighty="0.0" weightx="1.0" width="100%" />
+            <x:entityProperty>
+                <entry type="int" property="ordNumber" />
+            </x:entityProperty>
+            <x:typeArguments>
+                <typeArgument type="Order" />
+            </x:typeArguments>
+            <x:data methodName="findAll" />
+        </XdevComboBox>
+        <XdevLabel x:name="lblOdlNumber" value="{$lblOdlNumber.value}">
+            <x:constraints gridx="1" gridy="2" weighty="0.0" weightx="0.0" />
+        </XdevLabel>
+        <XdevTextField columns="5" tabIndex="2" x:name="txtOdlNumber">
+            <x:constraints gridx="2" gridy="2" weighty="0.0" weightx="1.0" />
+        </XdevTextField>
+        <XdevLabel x:name="lblItem" value="{$lblItem.value}">
+            <x:constraints gridx="1" gridy="3" weighty="0.0" weightx="0.0" />
+        </XdevLabel>
+        <XdevComboBox tabIndex="3" required="true" itemCaptionFromAnnotation="false" x:name="cmbItem" x:entity="Item">
+            <x:constraints gridx="2" gridy="3" weighty="0.0" weightx="1.0" width="100%" />
+            <x:entityProperty>
+                <entry type="String" property="prpShortName" />
+            </x:entityProperty>
+            <x:typeArguments>
+                <typeArgument type="Item" />
+            </x:typeArguments>
+            <x:data methodName="findAll" />
+            <x:event>valueChange.valueChange</x:event>
+        </XdevComboBox>
+        <XdevLabel x:name="lblVat" value="{$lblVat.value}">
+            <x:constraints gridx="3" gridy="3" weighty="0.0" weightx="0.0" />
+        </XdevLabel>
+        <XdevComboBox tabIndex="4" itemCaptionFromAnnotation="false" x:name="cmbVat" x:entity="Vat">
+            <x:constraints gridx="4" gridy="3" weighty="0.0" weightx="1.0" width="100%" />
+            <x:entityProperty>
+                <entry type="String" property="fullName" />
+            </x:entityProperty>
+            <x:typeArguments>
+                <typeArgument type="Vat" />
+            </x:typeArguments>
+            <x:data methodName="findAll" />
+            <x:event>valueChange.valueChange</x:event>
+        </XdevComboBox>
+        <XdevLabel x:name="lblOdlQuantity" value="{$lblOdlQuantity.value}">
+            <x:constraints gridx="1" gridy="4" weighty="0.0" weightx="0.0" />
+        </XdevLabel>
+        <XdevTextField columns="5" tabIndex="5" x:name="txtOdlQuantity">
+            <converter maximumFractionDigits="2" numberType="Double" numberFormatType="number" minimumFractionDigits="1" currency="default" converterType="STRING_TO_NUMBER" locale="default" />
+            <x:constraints gridx="2" gridy="4" weighty="0.0" weightx="1.0" />
+            <x:event>valueChange.valueChange</x:event>
+        </XdevTextField>
+        <XdevLabel x:name="lblOdlPrice" value="{$lblOdlPrice.value}">
+            <x:constraints gridx="3" gridy="4" weighty="0.0" weightx="0.0" />
+        </XdevLabel>
+        <XdevTextField columns="5" tabIndex="6" x:name="txtOdlPrice">
+            <converter maximumFractionDigits="2" numberType="Double" numberFormatType="number" minimumFractionDigits="2" currency="default" converterType="STRING_TO_NUMBER" locale="default" />
+            <x:constraints gridx="4" gridy="4" weighty="0.0" weightx="1.0" />
+            <x:event>valueChange.valueChange</x:event>
+        </XdevTextField>
+        <XdevLabel x:name="lblOdlText" value="{$lblOdlText.value}">
+            <x:constraints gridx="1" gridy="5" weighty="0.0" weightx="0.0" />
+        </XdevLabel>
+        <XdevTextField columns="5" tabIndex="7" x:name="txtOdlText">
+            <x:constraints gridx="2" gridy="5" weighty="0.0" weightx="1.0" width="100%" gridWidth="3" />
+        </XdevTextField>
+        <XdevLabel x:name="lblCostAccount" value="{$lblCostAccount.value}">
+            <x:constraints gridx="1" gridy="6" weighty="0.0" weightx="0.0" />
+        </XdevLabel>
+        <XdevComboBox tabIndex="8" required="true" itemCaptionFromAnnotation="false" x:name="cmbCostAccount" x:entity="CostAccount">
+            <x:constraints gridx="2" gridy="6" weighty="0.0" weightx="1.0" width="100%" />
+            <x:entityProperty>
+                <entry type="String" property="csaName" />
+            </x:entityProperty>
+            <x:typeArguments>
+                <typeArgument type="CostAccount" />
+            </x:typeArguments>
+            <x:data methodName="findAll" />
+        </XdevComboBox>
+        <XdevLabel x:name="lblOdlAmountBrut" value="{$lblOdlAmountBrut.value}">
+            <x:constraints gridx="1" gridy="7" weighty="0.0" weightx="0.0" />
+        </XdevLabel>
+        <XdevTextField columns="5" tabIndex="9" x:name="txtOdlAmountBrut">
+            <converter numberType="Double" numberFormatType="currency" currency="default" converterType="STRING_TO_NUMBER" locale="default" />
+            <x:constraints gridx="2" gridy="7" weighty="0.0" weightx="1.0" />
+        </XdevTextField>
+        <XdevLabel x:name="lblOdlVatAmount" value="{$lblOdlVatAmount.value}">
+            <x:constraints gridx="3" gridy="7" weighty="0.0" weightx="0.0" />
+        </XdevLabel>
+        <XdevTextField columns="5" tabIndex="11" x:name="txtOdlVatAmount">
+            <converter numberType="Double" numberFormatType="currency" currency="default" converterType="STRING_TO_NUMBER" locale="default" />
+            <x:constraints gridx="4" gridy="7" weighty="0.0" weightx="1.0" />
+        </XdevTextField>
+        <XdevLabel x:name="lblOdlAmountNet" value="{$lblOdlAmountNet.value}">
+            <x:constraints gridx="1" gridy="8" weighty="0.0" weightx="0.0" />
+        </XdevLabel>
+        <XdevTextField columns="5" tabIndex="10" x:name="txtOdlAmountNet">
+            <converter numberType="Double" numberFormatType="currency" currency="default" converterType="STRING_TO_NUMBER" locale="default" />
+            <x:constraints gridx="2" gridy="8" weighty="0.0" weightx="1.0" />
+        </XdevTextField>
+        <XdevLabel x:name="lblOdlState" value="{$lblOdlState.value}">
+            <x:constraints gridx="1" gridy="9" weighty="0.0" weightx="0.0" />
+        </XdevLabel>
+        <XdevHorizontalLayout x:name="horizontalLayout" margin="">
+            <x:constraints gridx="1" gridy="10" weighty="0.0" weightx="0.0" alignment="MIDDLE_CENTER" gridWidth="2" />
+            <XdevButton icon="WebContent/WEB-INF/resources/images/save1.png" caption="{$cmdSave.caption}" tabIndex="13" x:name="cmdSave" x:shortcut="ENTER">
+                <x:constraints weightx="0.0" />
+                <x:event>click.buttonClick</x:event>
+            </XdevButton>
+            <XdevButton icon="WebContent/WEB-INF/resources/images/cancel1.png" caption="{$cmdReset.caption}" tabIndex="14" x:name="cmdReset" x:shortcut="ESCAPE">
+                <x:constraints weightx="0.0" />
+                <x:event>click.buttonClick</x:event>
+            </XdevButton>
+        </XdevHorizontalLayout>
+    </XdevGridLayout>
+</XdevView>
+

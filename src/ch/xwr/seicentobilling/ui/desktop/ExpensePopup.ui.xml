@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+
+<?xdevuiml version="1.0"?>
+<?template BROWSER_XGA?>
+<?import ??>
+<?import ch.xwr.seicentobilling.entities.Expense?>
+<?import ch.xwr.seicentobilling.entities.LovAccount?>
+<?import ch.xwr.seicentobilling.entities.Periode?>
+<?import ch.xwr.seicentobilling.entities.Project?>
+<?import ch.xwr.seicentobilling.entities.Vat?>
+<?import com.xdev.ui.XdevButton?>
+<?import com.xdev.ui.XdevCheckBox?>
+<?import com.xdev.ui.XdevFieldGroup?>
+<?import com.xdev.ui.XdevGridLayout?>
+<?import com.xdev.ui.XdevHorizontalLayout?>
+<?import com.xdev.ui.XdevLabel?>
+<?import com.xdev.ui.XdevPopupDateField?>
+<?import com.xdev.ui.XdevTextField?>
+<?import com.xdev.ui.XdevView?>
+<?import com.xdev.ui.entitycomponent.combobox.XdevComboBox?>
+<?import java.lang.String?>
+<XdevView xmlns:x="http://xml.xdev-software.com/xdevuiml" x:name="ExpensePopup">
+    <x:constraints zpos="0" width="100%" height="100%" />
+    <XdevGridLayout x:name="form">
+        <x:constraints zpos="0" width="100%" height="100%" />
+        <XdevLabel x:name="lblPeriode" value="{$lblPeriode.value}">
+            <x:constraints gridx="1" gridy="1" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+        </XdevLabel>
+        <XdevComboBox tabIndex="1" x:name="cmbPeriode" x:entity="Periode">
+            <x:constraints gridx="2" gridy="1" weighty="0.0" weightx="0.7" width="100%" height="0px" />
+            <x:entityProperty>
+                <entry type="String" property="perName" />
+            </x:entityProperty>
+            <x:typeArguments>
+                <typeArgument type="Periode" />
+            </x:typeArguments>
+            <x:data methodName="findAll" />
+        </XdevComboBox>
+        <XdevLabel x:name="lblExpBooked" value="{$lblExpBooked.value}">
+            <x:constraints gridx="3" gridy="1" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+        </XdevLabel>
+        <XdevPopupDateField tabIndex="2" x:name="dateExpBooked">
+            <x:constraints gridx="4" gridy="1" weighty="0.0" weightx="1.0" width="0px" height="0px" />
+        </XdevPopupDateField>
+        <XdevLabel x:name="lblExpDate" value="{$lblExpDate.value}">
+            <x:constraints gridx="1" gridy="2" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+        </XdevLabel>
+        <XdevPopupDateField tabIndex="3" required="true" x:name="dateExpDate">
+            <x:constraints gridx="2" gridy="2" weighty="0.0" weightx="0.7" width="0px" height="0px" />
+        </XdevPopupDateField>
+        <XdevLabel x:name="lblExpText" value="{$lblExpText.value}">
+            <x:constraints gridx="1" gridy="3" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+        </XdevLabel>
+        <XdevTextField columns="5" tabIndex="4" x:name="txtExpText" maxLength="128">
+            <x:constraints gridx="2" gridy="3" weighty="0.0" weightx="0.7" width="100%" gridWidth="3" height="0px" />
+        </XdevTextField>
+        <XdevLabel x:name="lblExpAmount" value="{$lblExpAmount.value}">
+            <x:constraints gridx="1" gridy="4" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+        </XdevLabel>
+        <XdevTextField columns="5" tabIndex="5" required="true" x:name="txtExpAmount">
+            <x:constraints gridx="2" gridy="4" weighty="0.0" weightx="0.7" width="0px" height="0px" />
+        </XdevTextField>
+        <XdevLabel x:name="lblVat" value="{$lblVat.value}">
+            <x:constraints gridx="1" gridy="5" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+        </XdevLabel>
+        <XdevComboBox tabIndex="6" required="true" itemCaptionFromAnnotation="false" x:name="cmbVat" x:entity="Vat">
+            <x:constraints gridx="2" gridy="5" weighty="0.0" weightx="0.7" width="100%" height="0px" />
+            <x:entityProperty>
+                <entry type="String" property="fullName" />
+            </x:entityProperty>
+            <x:typeArguments>
+                <typeArgument type="Vat" />
+            </x:typeArguments>
+            <x:data methodName="findAll" />
+        </XdevComboBox>
+        <XdevLabel x:name="lblExpAccount" value="{$lblExpAccount.value}">
+            <x:constraints gridx="1" gridy="6" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+        </XdevLabel>
+        <XdevComboBox tabIndex="7" required="true" itemCaptionFromAnnotation="false" x:name="comboBoxAccount" x:entity="LovAccount" x:autoQuery="false">
+            <x:constraints gridx="2" gridy="6" weighty="0.0" weightx="0.7" width="0px" height="0px" />
+            <x:entityProperty>
+                <entry type="String" property="name" />
+            </x:entityProperty>
+            <x:typeArguments>
+                <typeArgument type="LovAccount" />
+            </x:typeArguments>
+            <x:data methodName="findAllMine" />
+        </XdevComboBox>
+        <XdevLabel x:name="lblProject" value="{$lblProject.value}">
+            <x:constraints gridx="3" gridy="6" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+        </XdevLabel>
+        <XdevComboBox tabIndex="8" required="true" x:name="cmbProject" x:entity="Project">
+            <x:constraints gridx="4" gridy="6" weighty="0.0" weightx="0.7" width="100%" height="0px" />
+            <x:entityProperty>
+                <entry type="String" property="proName" />
+            </x:entityProperty>
+            <x:typeArguments>
+                <typeArgument type="Project" />
+            </x:typeArguments>
+            <x:data methodName="findAll" />
+        </XdevComboBox>
+        <XdevLabel x:name="lblExpFlagGeneric" value="{$lblExpFlagGeneric.value}">
+            <x:constraints gridx="1" gridy="7" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+        </XdevLabel>
+        <XdevComboBox tabIndex="9" x:name="comboBoxGeneric">
+            <x:constraints gridx="2" gridy="7" weighty="0.0" weightx="0.7" width="0px" height="0px" />
+            <x:typeArguments>
+                <typeArgument type="?" />
+            </x:typeArguments>
+        </XdevComboBox>
+        <XdevLabel x:name="lblExpFlagCostAccount" value="{$lblExpFlagCostAccount.value}">
+            <x:constraints gridx="3" gridy="7" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+        </XdevLabel>
+        <XdevCheckBox caption="" tabIndex="10" x:name="chkExpFlagCostAccount">
+            <x:constraints gridx="4" gridy="7" weighty="0.0" weightx="0.8" width="100%" height="0px" />
+        </XdevCheckBox>
+        <XdevLabel x:name="lblExpUnit" value="{$lblExpUnit.value}">
+            <x:constraints gridx="1" gridy="8" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+        </XdevLabel>
+        <XdevComboBox tabIndex="11" x:name="comboBoxUnit">
+            <x:constraints gridx="2" gridy="8" weighty="0.0" weightx="0.7" width="0px" height="0px" />
+            <x:typeArguments>
+                <typeArgument type="?" />
+            </x:typeArguments>
+        </XdevComboBox>
+        <XdevLabel x:name="lblExpQuantity" value="{$lblExpQuantity.value}">
+            <x:constraints gridx="3" gridy="8" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+        </XdevLabel>
+        <XdevTextField columns="5" tabIndex="12" x:name="txtExpQuantity">
+            <x:constraints gridx="4" gridy="8" weighty="0.0" weightx="0.8" width="100%" height="0px" />
+        </XdevTextField>
+        <XdevLabel x:name="lblExpState" value="{$lblExpState.value}">
+            <x:constraints gridx="1" gridy="9" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+        </XdevLabel>
+        <XdevComboBox tabIndex="13" x:name="comboBoxState">
+            <x:constraints gridx="2" gridy="9" weighty="0.0" weightx="0.7" width="0px" height="0px" />
+            <x:typeArguments>
+                <typeArgument type="?" />
+            </x:typeArguments>
+        </XdevComboBox>
+        <XdevHorizontalLayout x:name="horizontalLayout2" margin="">
+            <x:constraints gridx="2" gridy="11" weighty="0.0" weightx="0.7" width="100%" gridWidth="3" height="-1px" />
+            <XdevButton caption="K1" description="CTRL + 1" styleName="borderless tiny" x:name="cmdAction01" x:shortcut="CTRL+NUM1">
+                <x:constraints gridHeight="1" gridx="4" gridy="7" weighty="0.0" weightx="0.0" width="0px" alignment="MIDDLE_RIGHT" gridWidth="1" height="0px" />
+                <x:event>click.buttonClick</x:event>
+            </XdevButton>
+            <XdevButton icon="" caption="K2" description="CTRL + 2" styleName="borderless tiny" x:name="cmdAction02" x:shortcut="CTRL+NUM2">
+                <x:constraints gridHeight="1" gridx="4" gridy="7" top="37px" left="-1px" weighty="0.0" weightx="0.0" width="0px" alignment="MIDDLE_RIGHT" gridWidth="1" height="0px" />
+                <x:event>click.buttonClick</x:event>
+            </XdevButton>
+            <XdevButton caption="K3" description="CTRL + 3" styleName="borderless tiny" x:name="cmdAction03" x:shortcut="CTRL+NUM3">
+                <x:constraints gridHeight="1" gridx="4" gridy="7" top="16px" left="407px" weighty="0.0" weightx="0.0" width="0px" alignment="MIDDLE_RIGHT" gridWidth="1" height="0px" />
+                <x:event>click.buttonClick</x:event>
+            </XdevButton>
+            <XdevButton caption="K4" description="CTRL + 4" styleName="borderless tiny" x:name="cmdAction04" x:shortcut="CTRL+NUM4">
+                <x:constraints gridHeight="1" gridx="4" gridy="7" top="54px" left="407px" weighty="0.0" weightx="0.0" width="0px" alignment="MIDDLE_RIGHT" gridWidth="1" height="0px" />
+                <x:event>click.buttonClick</x:event>
+            </XdevButton>
+            <XdevButton caption="K5" description="CTRL + 5" styleName="borderless tiny" x:name="cmdAction05" x:shortcut="CTRL+NUM5">
+                <x:constraints gridHeight="1" gridx="4" gridy="7" top="92px" left="407px" weighty="0.0" weightx="0.0" width="0px" alignment="MIDDLE_RIGHT" gridWidth="1" height="0px" />
+                <x:event>click.buttonClick</x:event>
+            </XdevButton>
+            <XdevButton caption="K6" description="CTRL + 6" styleName="borderless tiny" x:name="cmdAction06" x:shortcut="CTRL+NUM6">
+                <x:constraints gridHeight="1" gridx="4" gridy="7" top="130px" left="407px" weighty="0.0" weightx="0.0" width="0px" alignment="MIDDLE_RIGHT" gridWidth="1" height="0px" />
+                <x:event>click.buttonClick</x:event>
+            </XdevButton>
+            <XdevButton caption="K7" description="CTRL + 7" styleName="borderless tiny" x:name="cmdAction" x:shortcut="CTRL+NUM7">
+                <x:constraints gridHeight="1" gridx="4" gridy="7" top="168px" left="407px" weighty="0.0" weightx="0.0" width="0px" alignment="MIDDLE_RIGHT" gridWidth="1" height="0px" />
+                <x:event>click.buttonClick</x:event>
+            </XdevButton>
+            <XdevButton caption="K8" description="CTRL + 8" styleName="borderless tiny" x:name="cmdAction2" x:shortcut="CTRL+NUM8">
+                <x:constraints gridHeight="1" gridx="4" gridy="7" top="206px" left="407px" weighty="0.0" weightx="0.0" width="0px" alignment="MIDDLE_RIGHT" gridWidth="1" height="0px" />
+                <x:event>click.buttonClick</x:event>
+            </XdevButton>
+            <XdevButton caption="K9" description="CTRL + 9" styleName="borderless tiny" x:name="cmdAction3" x:shortcut="CTRL+NUM9">
+                <x:constraints gridHeight="1" gridx="4" gridy="7" top="244px" left="407px" weighty="0.0" weightx="0.0" width="0px" alignment="MIDDLE_RIGHT" gridWidth="1" height="0px" />
+                <x:event>click.buttonClick</x:event>
+            </XdevButton>
+            <XdevButton caption="K10" description="CTRL + 0" styleName="borderless tiny" x:name="cmdAction4" x:shortcut="CTRL+NUM0">
+                <x:constraints gridHeight="1" gridx="4" gridy="7" top="282px" left="407px" weighty="0.0" weightx="0.0" width="0px" alignment="MIDDLE_RIGHT" gridWidth="1" height="0px" />
+                <x:event>click.buttonClick</x:event>
+            </XdevButton>
+        </XdevHorizontalLayout>
+        <XdevFieldGroup x:name="fieldGroup" x:entityType="Expense">
+            <x:typeArguments>
+                <typeArgument type="Expense" />
+            </x:typeArguments>
+            <x:fields>
+                <entry name="cmbPeriode" property="periode" />
+                <entry name="dateExpBooked" property="expBooked" />
+                <entry name="dateExpDate" property="expDate" />
+                <entry name="txtExpText" property="expText" />
+                <entry name="cmbProject" property="project" />
+                <entry name="txtExpAmount" property="expAmount" />
+                <entry name="cmbVat" property="vat" />
+                <entry name="chkExpFlagCostAccount" property="expFlagCostAccount" />
+                <entry name="comboBoxGeneric" property="expFlagGeneric" />
+                <entry name="comboBoxUnit" property="expUnit" />
+                <entry name="txtExpQuantity" property="expQuantity" />
+                <entry name="comboBoxState" property="expState" />
+            </x:fields>
+        </XdevFieldGroup>
+        <XdevHorizontalLayout x:name="horizontalLayout" margin="">
+            <x:constraints gridx="2" gridy="10" weighty="0.0" weightx="0.0" width="100%" alignment="TOP_RIGHT" gridWidth="3" height="0px" />
+            <XdevButton icon="WebContent/WEB-INF/resources/images/save1.png" caption="{$cmdSave.caption}" tabIndex="14" x:name="cmdSave" x:shortcut="ENTER">
+                <x:constraints weightx="0.0" width="0px" alignment="MIDDLE_RIGHT" height="0px" />
+                <x:event>click.buttonClick</x:event>
+            </XdevButton>
+            <XdevButton icon="WebContent/WEB-INF/resources/images/cancel1.png" caption="{$cmdReset.caption}" tabIndex="15" x:name="cmdReset" x:shortcut="ESCAPE">
+                <x:constraints weightx="0.0" width="0px" alignment="MIDDLE_RIGHT" height="0px" />
+                <x:event>click.buttonClick</x:event>
+            </XdevButton>
+        </XdevHorizontalLayout>
+    </XdevGridLayout>
+</XdevView>
+

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+
+<?xdevuiml version="1.0"?>
+<?template BROWSER_XGA?>
+<?import com.xdev.ui.XdevButton?>
+<?import com.xdev.ui.XdevGridLayout?>
+<?import com.xdev.ui.XdevHorizontalLayout?>
+<?import com.xdev.ui.XdevLabel?>
+<?import com.xdev.ui.XdevPanel?>
+<?import com.xdev.ui.XdevTabSheet?>
+<?import com.xdev.ui.XdevVerticalLayout?>
+<?import com.xdev.ui.XdevView?>
+<XdevView xmlns:x="http://xml.xdev-software.com/xdevuiml" x:name="UserInfoPopup">
+    <x:constraints zpos="0" width="100%" height="100%" />
+    <XdevPanel x:name="panel">
+        <x:constraints zpos="0" width="100%" height="100%" />
+        <XdevVerticalLayout x:name="verticalLayout">
+            <x:constraints zpos="0" width="100%" height="100%" />
+            <XdevTabSheet styleName="framed" x:name="tabSheet" x:selectedTabIndex="0">
+                <x:constraints top="-9px" left="1037px" weighty="0.1" width="100%" height="100%" />
+                <XdevGridLayout caption="Application" x:name="gridLayoutApp" margin="trl">
+                    <x:constraints width="100%" height="100%" />
+                    <x:event>attach.attach</x:event>
+                    <XdevLabel x:name="label" value="Country">
+                        <x:constraints gridx="1" gridy="1" weighty="0.0" weightx="0.0" />
+                    </XdevLabel>
+                    <XdevLabel x:name="labelCountry" value="Version">
+                        <x:constraints gridx="2" gridy="1" top="135px" left="-1px" weighty="0.0" weightx="0.0" />
+                    </XdevLabel>
+                    <XdevLabel x:name="label2" value="Language">
+                        <x:constraints gridx="1" gridy="2" top="33px" left="-1px" weighty="0.0" weightx="0.0" />
+                    </XdevLabel>
+                    <XdevLabel x:name="labelLanguage" value="Version">
+                        <x:constraints gridx="2" gridy="2" top="169px" left="-1px" weighty="0.0" weightx="0.0" />
+                    </XdevLabel>
+                    <XdevLabel x:name="label3" value="Time Zone">
+                        <x:constraints gridx="1" gridy="3" top="67px" left="-1px" weighty="0.0" weightx="0.0" />
+                    </XdevLabel>
+                    <XdevLabel x:name="labelTimeZone" value="Version">
+                        <x:constraints gridx="2" gridy="3" top="203px" left="-1px" weighty="0.0" weightx="0.0" />
+                    </XdevLabel>
+                    <XdevLabel x:name="label4" value="Version">
+                        <x:constraints gridx="1" gridy="4" top="101px" left="-1px" weighty="0.0" weightx="0.0" />
+                    </XdevLabel>
+                    <XdevLabel x:name="labelVersion" value="0.6">
+                        <x:constraints gridx="2" gridy="4" top="237px" left="-1px" weighty="0.0" weightx="0.0" />
+                    </XdevLabel>
+                    <XdevLabel x:name="labelArtifact" value="0.6">
+                        <x:constraints gridx="2" gridy="5" top="237px" left="-1px" weighty="0.0" weightx="0.0" />
+                    </XdevLabel>
+                    <XdevLabel x:name="label5" value="Username">
+                        <x:constraints gridx="1" gridy="6" top="135px" left="-1px" weighty="0.0" weightx="0.0" />
+                    </XdevLabel>
+                    <XdevLabel x:name="labelUsername" value="Version">
+                        <x:constraints gridx="2" gridy="6" top="237px" left="-1px" weighty="0.0" weightx="0.0" />
+                    </XdevLabel>
+                </XdevGridLayout>
+                <XdevGridLayout caption="UserInfo" x:name="gridLayoutUsr" margin="trl">
+                    <x:constraints width="100%" height="100%" />
+                    <x:event>attach.attach</x:event>
+                </XdevGridLayout>
+            </XdevTabSheet>
+            <XdevHorizontalLayout x:name="horizontalLayout" margin="rbl">
+                <x:constraints weighty="0.05" />
+                <XdevButton caption="Schliessen" x:name="button">
+                    <x:constraints weightx="0.0" />
+                    <x:event>click.buttonClick</x:event>
+                </XdevButton>
+            </XdevHorizontalLayout>
+        </XdevVerticalLayout>
+    </XdevPanel>
+</XdevView>
+

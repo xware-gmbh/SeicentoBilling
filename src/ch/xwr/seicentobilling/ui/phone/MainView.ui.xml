@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+
+<?xdevuiml version="1.0"?>
+<?template BROWSER_XGA?>
+<?import com.xdev.ui.XdevButton?>
+<?import com.xdev.ui.XdevGridLayout?>
+<?import com.xdev.ui.XdevView?>
+<XdevView xmlns:x="http://xml.xdev-software.com/xdevuiml" x:name="MainView">
+    <x:constraints zpos="0" width="100%" height="100%" />
+    <XdevGridLayout x:name="gridLayout" responsive="true">
+        <x:constraints zpos="0" width="100%" height="100%" />
+        <x:event>attach.attach</x:event>
+        <XdevButton icon="WebContent/WEB-INF/resources/images/expense48.png" caption="Spesen" x:name="cmdExpense">
+            <x:constraints gridx="1" gridy="1" weighty="0.2" weightx="0.1" width="150px" alignment="MIDDLE_LEFT" height="150px" />
+            <x:event>click.buttonClick</x:event>
+        </XdevButton>
+        <XdevButton icon="WebContent/WEB-INF/resources/images/TimeMaterial48.png" caption="Rapporte" x:name="cmdProjectLine">
+            <x:constraints gridx="2" gridy="1" weighty="0.2" weightx="0.1" width="150px" alignment="MIDDLE_LEFT" height="150px" />
+            <x:event>click.buttonClick</x:event>
+        </XdevButton>
+        <XdevButton icon="WebContent/WEB-INF/resources/images/Customers-48.png" caption="Adressen" x:name="cmdAddress">
+            <x:constraints gridx="1" gridy="2" top="159px" left="-1px" weighty="0.2" weightx="0.1" width="150px" height="150px" />
+            <x:event>click.buttonClick</x:event>
+        </XdevButton>
+    </XdevGridLayout>
+</XdevView>
+

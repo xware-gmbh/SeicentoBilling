@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+
+<?xdevuiml version="1.0"?>
+<?template NONE?>
+<?import ch.xwr.seicentobilling.ui.phone.AddressSearchView?>
+<?import ch.xwr.seicentobilling.ui.phone.AddressView?>
+<?import ch.xwr.seicentobilling.ui.phone.AuthView?>
+<?import ch.xwr.seicentobilling.ui.phone.ExpenseListView?>
+<?import ch.xwr.seicentobilling.ui.phone.ExpenseView?>
+<?import ch.xwr.seicentobilling.ui.phone.MainView?>
+<?import ch.xwr.seicentobilling.ui.phone.PeriodeView?>
+<?import ch.xwr.seicentobilling.ui.phone.ProjectLineListView?>
+<?import ch.xwr.seicentobilling.ui.phone.ProjectLineView?>
+<?import com.xdev.security.authentication.ui.XdevAuthenticationNavigator?>
+<?import com.xdev.ui.XdevButton?>
+<?import com.xdev.ui.XdevHorizontalLayout?>
+<?import com.xdev.ui.XdevImage?>
+<?import com.xdev.ui.XdevUI?>
+<?import com.xdev.ui.XdevVerticalLayout?>
+<XdevUI xmlns:x="http://xml.xdev-software.com/xdevuiml" x:name="PhoneUI">
+    <x:constraints zpos="0" width="100%" height="100%" />
+    <XdevVerticalLayout spacing="false" x:name="verticalLayout" margin="">
+        <x:constraints zpos="0" width="100%" height="100%" />
+        <XdevHorizontalLayout x:name="horizontalLayoutTitle" margin="">
+            <x:constraints weighty="0.0" width="100%" alignment="MIDDLE_LEFT" height="0px" />
+            <XdevImage source="WebContent/WEB-INF/resources/images/Seicento_Billing.png" x:name="image">
+                <x:constraints weightx="0.1" width="0px" alignment="TOP_LEFT" height="0px" />
+            </XdevImage>
+            <XdevButton icon="WebContent/WEB-INF/resources/images/home32.png" x:name="button">
+                <x:constraints weightx="0.1" width="0px" alignment="TOP_RIGHT" height="0px" />
+                <x:event>click.buttonClick</x:event>
+            </XdevButton>
+        </XdevHorizontalLayout>
+        <XdevVerticalLayout x:name="container" margin="">
+            <x:constraints weighty="0.1" width="100%" height="100%" />
+        </XdevVerticalLayout>
+    </XdevVerticalLayout>
+    <XdevAuthenticationNavigator redirectViewName="home" x:target="container" x:name="navigator" x:singleComponentContainer="PhoneUI">
+        <x:views>
+            <entry path="" class="AuthView" />
+            <entry path="home" class="MainView" />
+            <entry path="periodeView" class="PeriodeView" />
+            <entry path="projectLineListView" class="ProjectLineListView" />
+            <entry path="expenseListView" class="ExpenseListView" />
+            <entry path="expenseView" class="ExpenseView" />
+            <entry path="projectLineView" class="ProjectLineView" />
+            <entry path="addressSearchView" class="AddressSearchView" />
+            <entry path="customerView" class="AddressView" />
+        </x:views>
+    </XdevAuthenticationNavigator>
+</XdevUI>
+

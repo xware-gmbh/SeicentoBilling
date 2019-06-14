@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+
+<?xdevuiml version="1.0"?>
+<?template NONE?>
+<?import com.xdev.ui.XdevButton?>
+<?import com.xdev.ui.XdevHorizontalLayout?>
+<XdevHorizontalLayout xmlns:x="http://xml.xdev-software.com/xdevuiml" spacing="false" x:name="FunctionUpDownloadRowFile" margin="">
+    <x:constraints zpos="0" width="-1px" height="-1px" />
+    <x:event>layoutClick.layoutClick</x:event>
+    <XdevButton icon="WebContent/WEB-INF/resources/images/Download1.png" caption="Download" x:name="btnDownload">
+        <x:constraints weightx="0.0" />
+        <x:event>click.buttonClick</x:event>
+    </XdevButton>
+</XdevHorizontalLayout>
+

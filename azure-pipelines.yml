@@ -1,0 +1,61 @@
+# Maven
+# Build your Java projects and run tests with Apache Maven.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/java
+resources:
+- repo: self
+
+pool:
+  vmImage: 'Ubuntu 16.04'
+
+steps:
+
+- task: Maven@3
+  inputs:
+    mavenPomFile: './SeicentoBilling/pom.xml'
+    mavenOptions: '-Xmx3072m'
+    javaHomeOption: 'JDKVersion'
+    jdkVersionOption: '1.10'
+    jdkArchitectureOption: 'x64'
+    publishJUnitResults: false
+    testResultsFiles: '**/TEST-*.xml'
+    goals: 'package'
+    
+- task: CopyFiles@2
+  displayName: 'Copy Files to: /docker'
+  inputs:
+    SourceFolder: SeicentoBilling/target
+    Contents: '*.war'
+    TargetFolder: SeicentoBilling/docker
+        
+- task: CopyFiles@2
+  displayName: 'Copy Files to: drop'
+  inputs:
+    SourceFolder: SeicentoBilling/target
+    Contents: '*.war'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'     
+    
+- task: PublishBuildArtifacts@1
+  inputs:
+    artifactName: 'war'
+    pathToPublish: '$(Build.ArtifactStagingDirectory)'
+    
+- task: Docker@1
+  displayName: 'Build an image'
+  inputs:
+    azureSubscriptionEndpoint: 'MSDN Action-Pack (479dd42f-03df-4e73-a11b-9980e593358b)'
+    azureContainerRegistry: 'dockregxwr-on.azurecr.io'
+    dockerFile: SeicentoBilling/docker/Dockerfile
+    imageName: seicentobilling:latest    
+
+#- task: Docker@1
+#  displayName: 'Push an image'
+#  inputs:
+#    azureSubscriptionEndpoint: 'MSDN Action-Pack (479dd42f-03df-4e73-a11b-9980e593358b)'
+#    azureContainerRegistry: 'dockregxwr-on.azurecr.io'
+#    imageName: seicentobilling:latest    
+#    command: 'Push an image'
+
+
+
+    

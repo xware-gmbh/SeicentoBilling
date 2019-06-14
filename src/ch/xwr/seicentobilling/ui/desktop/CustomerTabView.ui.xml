@@ -1,0 +1,513 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+
+<?xdevuiml version="1.0"?>
+<?template BROWSER_XGA?>
+<?import?>
+<?import ??>
+<?import ch.xwr.seicentobilling.business.LovCrm.AddressType?>
+<?import ch.xwr.seicentobilling.business.LovCrm.ContactRelation?>
+<?import ch.xwr.seicentobilling.business.LovCrm.Department?>
+<?import ch.xwr.seicentobilling.business.LovState.AccountType?>
+<?import ch.xwr.seicentobilling.entities.Activity?>
+<?import ch.xwr.seicentobilling.entities.Address?>
+<?import ch.xwr.seicentobilling.entities.City?>
+<?import ch.xwr.seicentobilling.entities.CostAccount?>
+<?import ch.xwr.seicentobilling.entities.Customer?>
+<?import ch.xwr.seicentobilling.entities.CustomerLink?>
+<?import ch.xwr.seicentobilling.entities.LabelDefinition?>
+<?import ch.xwr.seicentobilling.entities.Order?>
+<?import ch.xwr.seicentobilling.entities.PaymentCondition?>
+<?import ch.xwr.seicentobilling.entities.Project?>
+<?import com.xdev.ui.XdevButton?>
+<?import com.xdev.ui.XdevCheckBox?>
+<?import com.xdev.ui.XdevFieldGroup?>
+<?import com.xdev.ui.XdevGridLayout?>
+<?import com.xdev.ui.XdevHorizontalLayout?>
+<?import com.xdev.ui.XdevHorizontalSplitPanel?>
+<?import com.xdev.ui.XdevLabel?>
+<?import com.xdev.ui.XdevLink?>
+<?import com.xdev.ui.XdevPopupDateField?>
+<?import com.xdev.ui.XdevTabSheet?>
+<?import com.xdev.ui.XdevTextField?>
+<?import com.xdev.ui.XdevVerticalLayout?>
+<?import com.xdev.ui.XdevVerticalSplitPanel?>
+<?import com.xdev.ui.XdevView?>
+<?import com.xdev.ui.entitycomponent.combobox.XdevComboBox?>
+<?import com.xdev.ui.entitycomponent.listselect.XdevTwinColSelect?>
+<?import com.xdev.ui.entitycomponent.table.XdevTable?>
+<?import com.xdev.ui.filter.XdevContainerFilterComponent?>
+<?import java.lang.Double?>
+<?import java.lang.Integer?>
+<?import java.lang.Short?>
+<?import java.lang.String?>
+<?import java.util.Date?>
+<XdevView xmlns:x="http://xml.xdev-software.com/xdevuiml" x:name="CustomerTabView">
+    <x:constraints zpos="0" width="100%" height="100%" />
+    <XdevHorizontalSplitPanel styleName="large" x:splitPosition="45.0" x:name="horizontalSplitPanel">
+        <x:constraints zpos="0" width="100%" height="100%" />
+        <XdevVerticalLayout x:name="verticalLayout" margin="">
+            <x:constraints splitPos="FIRST" width="100%" height="100%" />
+            <XdevContainerFilterComponent x:searchableProperties="cusCompany,cusName,city.ctyName,cusFirstName" x:name="containerFilterComponent" x:filterableProperties="city.ctyName,city.ctyZip,cusNumber,cusName,cusCompany,cusFirstName,cusAccountType,cusState,labelDefinitions.cldId" x:container="table" immediate="true">
+                <x:constraints top="80px" left="953px" weighty="0.0" width="100%" height="0%" />
+            </XdevContainerFilterComponent>
+            <XdevHorizontalLayout spacing="false" x:name="actionLayout" margin="">
+                <x:constraints top="-12px" left="941px" weighty="0.0" width="100%" height="0px" />
+                <XdevButton icon="WebContent/WEB-INF/resources/images/new1_16.png" description="{$cmdNew.description}" x:name="cmdNew">
+                    <x:constraints weightx="0.0" width="0px" height="0px" />
+                    <x:event>click.buttonClick</x:event>
+                </XdevButton>
+                <XdevButton icon="WebContent/WEB-INF/resources/images/delete3_16.png" x:name="cmdDelete">
+                    <x:constraints weightx="0.0" width="0px" height="0px" />
+                    <x:event>click.buttonClick</x:event>
+                </XdevButton>
+                <XdevButton icon="WebContent/WEB-INF/resources/images/reload2.png" x:name="cmdReload">
+                    <x:constraints weightx="0.0" width="0px" height="0px" />
+                    <x:event>click.buttonClick</x:event>
+                </XdevButton>
+                <XdevButton icon="WebContent/WEB-INF/resources/images/Printer_black_18.png" x:name="cmdReport">
+                    <x:constraints weightx="0.0" width="0px" height="0px" />
+                    <x:event>click.buttonClick</x:event>
+                </XdevButton>
+                <XdevButton icon="WebContent/WEB-INF/resources/images/info_small.jpg" x:name="cmdInfo">
+                    <x:constraints weightx="0.0" width="0px" height="0px" />
+                    <x:event>click.buttonClick</x:event>
+                </XdevButton>
+            </XdevHorizontalLayout>
+            <XdevTable x:connectedForm="fieldGroup" columnReorderingAllowed="true" x:name="table" columnCollapsingAllowed="true" x:entity="Customer" x:autoQuery="false">
+                <x:entityProperties>
+                    <entry type="int" property="cusNumber" caption="Nummer">
+                        <converter numberType="BigInteger" numberFormatType="number" currency="default" converterType="STRING_TO_NUMBER" locale="default" />
+                    </entry>
+                    <entry type="AccountType" property="cusAccountType" caption="Typ" />
+                    <entry type="String" property="cusCompany" caption="Firma" collapsed="true" />
+                    <entry type="String" property="shortname" caption="Name" />
+                    <entry type="String" property="cusName" caption="Name" collapsed="true" />
+                    <entry type="String" property="cusFirstName" caption="Vorname" collapsed="true" />
+                    <entry type="String" property="cusAddress" caption="Adresse" />
+                    <entry type="Integer" property="city.ctyZip" caption="PLZ">
+                        <converter numberType="Integer" numberFormatType="number" currency="default" groupingUsed="false" converterType="STRING_TO_NUMBER" locale="default" />
+                    </entry>
+                    <entry type="String" property="city.ctyName" caption="Ort" />
+                    <entry type="String" property="paymentCondition.pacName" caption="Zahlungsbedingung" collapsed="true" />
+                    <entry type="Short" property="cusState" caption="Status" />
+                </x:entityProperties>
+                <x:constraints weighty="1.0" width="100%" height="100%" />
+                <x:typeArguments>
+                    <typeArgument type="Customer" />
+                </x:typeArguments>
+                <x:data methodName="findAll" />
+                <x:event>valueChange.valueChange</x:event>
+            </XdevTable>
+        </XdevVerticalLayout>
+        <XdevGridLayout x:name="form" margin="b">
+            <x:constraints splitPos="SECOND" width="100%" height="100%" />
+            <XdevFieldGroup x:name="fieldGroup" x:entityType="Customer">
+                <x:typeArguments>
+                    <typeArgument type="Customer" />
+                </x:typeArguments>
+                <x:fields>
+                    <entry name="cmbCity" property="city" />
+                    <entry name="cmbPaymentCondition" property="paymentCondition" />
+                    <entry name="txtCusNumber" property="cusNumber" />
+                    <entry name="txtCusName" property="cusName" />
+                    <entry name="txtCusFirstName" property="cusFirstName" />
+                    <entry name="txtCusCompany" property="cusCompany" />
+                    <entry name="txtCusAddress" property="cusAddress" />
+                    <entry name="txtCusInfo" property="cusInfo" />
+                    <entry name="cbxState" property="cusState" />
+                    <entry name="txtAccountManager" property="cusAccountManager" />
+                    <entry name="cbxAccountType" property="cusAccountType" />
+                    <entry name="twinColSelect" property="labelDefinitions" />
+                    <entry name="cbxAccountSalutation" property="cusSalutation" />
+                    <entry name="datCusBirthdate" property="cusBirthdate" />
+                    <entry name="cbxAccountBillingType" property="cusBillingTarget" />
+                    <entry name="cbxAccountBillingReports" property="cusBillingReport" />
+                    <entry name="cbxSinglePdf" property="cusSinglepdf" />
+                </x:fields>
+            </XdevFieldGroup>
+            <XdevTabSheet styleName="framed" x:name="tabSheet" x:selectedTabIndex="0">
+                <x:constraints gridx="1" gridy="1" weighty="1.0" weightx="1.0" width="100%" height="100%" />
+                <x:event>selectedTabChange.selectedTabChange</x:event>
+                <XdevGridLayout caption="Kontakt" x:name="gridLayoutContact">
+                    <x:constraints width="100%" height="100%" />
+                    <XdevLabel x:name="lblCusNumber" value="{$lblCusNumber.value}">
+                        <x:constraints gridx="1" gridy="1" weighty="0.0" weightx="0.2" width="0px" height="0px" />
+                    </XdevLabel>
+                    <XdevTextField columns="5" required="true" x:name="txtCusNumber">
+                        <x:constraints gridx="2" gridy="1" weighty="0.0" weightx="1.0" width="100%" height="0px" />
+                    </XdevTextField>
+                    <XdevLabel x:name="lblType" value="Kontakt Typ">
+                        <x:constraints gridx="1" gridy="2" weighty="0.0" weightx="0.2" width="0px" height="0px" />
+                    </XdevLabel>
+                    <XdevComboBox x:name="cbxAccountType">
+                        <x:constraints gridx="2" gridy="2" weighty="0.0" weightx="1.0" width="0px" height="0px" />
+                        <x:typeArguments>
+                            <typeArgument type="?" />
+                        </x:typeArguments>
+                    </XdevComboBox>
+                    <XdevLabel x:name="lblAnrede" value="Anrede">
+                        <x:constraints gridx="3" gridy="2" weighty="0.0" weightx="0.2" width="0px" height="0px" />
+                    </XdevLabel>
+                    <XdevComboBox x:name="cbxAccountSalutation">
+                        <x:constraints gridx="4" gridy="2" weighty="0.0" weightx="1.0" width="0px" height="0px" />
+                        <x:typeArguments>
+                            <typeArgument type="?" />
+                        </x:typeArguments>
+                    </XdevComboBox>
+                    <XdevLabel x:name="lblCusCompany" value="{$lblCusCompany.value}">
+                        <x:constraints gridx="1" gridy="3" weighty="0.0" weightx="0.2" width="0px" height="0px" />
+                    </XdevLabel>
+                    <XdevTextField columns="5" x:name="txtCusCompany" maxLength="40">
+                        <x:constraints gridx="2" gridy="3" weighty="0.0" weightx="1.0" width="100%" gridWidth="3" height="0px" />
+                    </XdevTextField>
+                    <XdevLabel x:name="lblCusName" value="{$lblCusName.value}">
+                        <x:constraints gridx="1" gridy="4" weighty="0.0" weightx="0.2" width="0px" height="0px" />
+                    </XdevLabel>
+                    <XdevTextField columns="5" required="true" x:name="txtCusName" maxLength="40">
+                        <x:constraints gridx="2" gridy="4" weighty="0.0" weightx="1.0" width="100%" gridWidth="3" height="0px" />
+                    </XdevTextField>
+                    <XdevLabel x:name="lblCusFirstName" value="{$lblCusFirstName.value}">
+                        <x:constraints gridx="1" gridy="5" weighty="0.0" weightx="0.2" width="0px" height="0px" />
+                    </XdevLabel>
+                    <XdevTextField columns="5" x:name="txtCusFirstName" maxLength="40">
+                        <x:constraints gridx="2" gridy="5" weighty="0.0" weightx="1.0" width="100%" height="0px" />
+                    </XdevTextField>
+                    <XdevLink targetName="_blank" icon="WebContent/WEB-INF/resources/images/gmaps32.PNG" caption="Adresse" x:name="linkMaps">
+                        <x:constraints gridx="1" gridy="6" weighty="0.0" weightx="0.2" width="0px" height="0px" />
+                    </XdevLink>
+                    <XdevTextField columns="5" x:name="txtCusAddress" maxLength="40">
+                        <x:constraints gridx="2" gridy="6" weighty="0.0" weightx="1.0" width="100%" gridWidth="3" height="0px" />
+                    </XdevTextField>
+                    <XdevLabel x:name="lblCity" value="{$lblCity.value}">
+                        <x:constraints gridx="1" gridy="7" weighty="0.0" weightx="0.2" width="0px" height="0px" />
+                    </XdevLabel>
+                    <XdevComboBox required="true" itemCaptionFromAnnotation="false" x:name="cmbCity" x:entity="City">
+                        <x:constraints gridx="2" gridy="7" weighty="0.0" weightx="1.0" width="100%" gridWidth="2" height="0px" />
+                        <x:entityProperty>
+                            <entry type="String" property="fullname" />
+                        </x:entityProperty>
+                        <x:typeArguments>
+                            <typeArgument type="City" />
+                        </x:typeArguments>
+                        <x:data methodName="findAll" />
+                    </XdevComboBox>
+                    <XdevLabel x:name="lblBirthdate" value="Geburtsdatum">
+                        <x:constraints gridx="1" gridy="8" weighty="0.0" weightx="0.2" width="0px" height="0px" />
+                    </XdevLabel>
+                    <XdevPopupDateField x:name="datCusBirthdate">
+                        <x:constraints gridx="2" gridy="8" weighty="0.0" weightx="1.0" width="0px" height="0px" />
+                    </XdevPopupDateField>
+                    <XdevLabel x:name="lblCusState" value="{$lblCusState.value}">
+                        <x:constraints gridx="1" gridy="9" weighty="0.0" weightx="0.2" width="0px" height="0px" />
+                    </XdevLabel>
+                    <XdevComboBox x:name="cbxState">
+                        <x:constraints gridx="2" gridy="9" weighty="0.0" weightx="1.0" width="0px" height="0px" />
+                        <x:typeArguments>
+                            <typeArgument type="?" />
+                        </x:typeArguments>
+                    </XdevComboBox>
+                </XdevGridLayout>
+                <XdevGridLayout caption="Flags" x:name="gridLayoutFlags">
+                    <x:constraints width="100%" height="100%" />
+                    <XdevLabel x:name="lblAccountManager" value="Account Manager">
+                        <x:constraints gridx="1" gridy="1" top="140px" left="-1px" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+                    </XdevLabel>
+                    <XdevTextField columns="5" enabled="false" x:name="txtAccountManager" maxLength="40">
+                        <x:constraints gridx="2" gridy="1" top="140px" left="-1px" weighty="0.0" weightx="1.0" width="100%" height="0px" />
+                    </XdevTextField>
+                    <XdevLabel x:name="lblCusInfo" value="{$lblCusInfo.value}">
+                        <x:constraints gridx="1" gridy="2" weighty="0.0" weightx="0.2" width="0px" height="0px" />
+                    </XdevLabel>
+                    <XdevTextField columns="5" x:name="txtCusInfo">
+                        <x:constraints gridx="2" gridy="2" weighty="0.0" weightx="1.0" width="100%" gridWidth="2" height="0px" />
+                    </XdevTextField>
+                    <XdevLabel x:name="lblPaymentCondition" value="{$lblPaymentCondition.value}">
+                        <x:constraints gridx="1" gridy="3" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+                    </XdevLabel>
+                    <XdevComboBox required="true" itemCaptionFromAnnotation="false" x:name="cmbPaymentCondition" x:entity="PaymentCondition">
+                        <x:constraints gridx="2" gridy="3" weighty="0.0" weightx="1.0" width="100%" height="0px" />
+                        <x:entityProperty>
+                            <entry type="String" property="pacName" />
+                        </x:entityProperty>
+                        <x:typeArguments>
+                            <typeArgument type="PaymentCondition" />
+                        </x:typeArguments>
+                        <x:data methodName="findAll" />
+                    </XdevComboBox>
+                    <XdevLabel x:name="lblBillingTarget" value="Rechnungstyp">
+                        <x:constraints gridx="1" gridy="4" top="42px" left="-1px" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+                    </XdevLabel>
+                    <XdevComboBox itemCaptionFromAnnotation="false" x:name="cbxAccountBillingType">
+                        <x:constraints gridx="2" gridy="4" top="42px" left="-1px" weighty="0.0" weightx="1.0" width="-1px" height="0px" />
+                        <x:entityProperty>
+                            <entry type="String" property="pacName" />
+                        </x:entityProperty>
+                        <x:typeArguments>
+                            <typeArgument type="?" />
+                        </x:typeArguments>
+                        <x:data methodName="findAll" />
+                    </XdevComboBox>
+                    <XdevCheckBox caption="Single PDF" x:name="cbxSinglePdf">
+                        <x:constraints gridx="3" gridy="4" weighty="0.0" weightx="1.0" width="0px" height="0px" />
+                    </XdevCheckBox>
+                    <XdevLabel x:name="lblBillingReports" value="Rechnungsanhang">
+                        <x:constraints gridx="1" gridy="5" top="85px" left="-1px" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+                    </XdevLabel>
+                    <XdevComboBox itemCaptionFromAnnotation="false" x:name="cbxAccountBillingReports">
+                        <x:constraints gridx="2" gridy="5" top="85px" left="-1px" weighty="0.0" weightx="1.0" width="-1px" height="0px" />
+                        <x:entityProperty>
+                            <entry type="String" property="pacName" />
+                        </x:entityProperty>
+                        <x:typeArguments>
+                            <typeArgument type="?" />
+                        </x:typeArguments>
+                        <x:data methodName="findAll" />
+                    </XdevComboBox>
+                    <XdevLabel x:name="lblLabels" value="Label">
+                        <x:constraints gridx="1" gridy="6" weighty="0.0" weightx="0.2" width="0px" height="0px" />
+                    </XdevLabel>
+                    <XdevTwinColSelect itemCaptionFromAnnotation="false" x:name="twinColSelect" rightColumnCaption="aktiv" x:entity="LabelDefinition" icon="FontAwesome.BOOKMARK">
+                        <x:constraints gridx="2" gridy="6" weighty="0.0" weightx="1.0" width="0px" height="0px" />
+                        <x:entityProperty>
+                            <entry type="String" property="cldText" />
+                        </x:entityProperty>
+                        <x:typeArguments>
+                            <typeArgument type="LabelDefinition" />
+                        </x:typeArguments>
+                    </XdevTwinColSelect>
+                </XdevGridLayout>
+                <XdevGridLayout caption="Adressen" x:name="gridLayoutAddress" margin="">
+                    <x:constraints width="100%" height="100%" />
+                    <XdevVerticalSplitPanel styleName="large" x:name="verticalSplitPanel">
+                        <x:constraints gridx="1" gridy="1" weighty="1.0" weightx="1.0" width="100%" height="100%" />
+                        <XdevVerticalLayout x:name="verticalLayoutAdr" margin="">
+                            <x:constraints gridHeight="1" splitPos="FIRST" gridx="1" gridy="1" weighty="0.1" weightx="0.1" width="100%" alignment="TOP_LEFT" gridWidth="1" height="100%" />
+                            <XdevHorizontalLayout spacing="false" x:name="horizontalLayoutAddress" margin="">
+                                <x:constraints weighty="0.0" width="100%" height="0px" />
+                                <XdevButton icon="WebContent/WEB-INF/resources/images/new1_16.png" description="{$cmdNew.description}" x:name="cmdNewAddress">
+                                    <x:constraints weightx="0.0" width="0px" height="0px" />
+                                    <x:event>click.buttonClick</x:event>
+                                </XdevButton>
+                                <XdevButton icon="WebContent/WEB-INF/resources/images/delete3_16.png" x:name="cmdDeleteAddress">
+                                    <x:constraints weightx="0.0" width="0px" height="0px" />
+                                    <x:event>click.buttonClick</x:event>
+                                </XdevButton>
+                                <XdevButton icon="WebContent/WEB-INF/resources/images/edit1.png" x:name="cmdEditAddress">
+                                    <x:constraints weightx="0.0" width="0px" height="0px" />
+                                    <x:event>click.buttonClick</x:event>
+                                </XdevButton>
+                                <XdevButton icon="WebContent/WEB-INF/resources/images/reload2.png" x:name="cmdReloadAddress">
+                                    <x:constraints weightx="0.0" width="0px" height="0px" />
+                                    <x:event>click.buttonClick</x:event>
+                                </XdevButton>
+                                <XdevButton icon="WebContent/WEB-INF/resources/images/info_small.jpg" x:name="cmdInfoAddress">
+                                    <x:constraints weightx="0.0" width="0px" height="0px" />
+                                    <x:event>click.buttonClick</x:event>
+                                </XdevButton>
+                            </XdevHorizontalLayout>
+                            <XdevTable columnReorderingAllowed="true" caption="Adressen" x:name="tableAddress" columnCollapsingAllowed="true" x:entity="Address" x:autoQuery="false">
+                                <x:entityProperties>
+                                    <entry type="short" property="adrType" caption="Typ" />
+                                    <entry type="String" property="adrName" caption="Name" />
+                                    <entry type="String" property="adrAddOn" caption="Zusatz" collapsed="true" />
+                                    <entry type="String" property="adrLine0" caption="Adresse" />
+                                    <entry type="String" property="adrZip" caption="Plz" />
+                                    <entry type="String" property="adrCity" caption="Ort" />
+                                    <entry type="" property="generated" caption="Maps" generator="ch.xwr.seicentobilling.ui.desktop.crm.FunctionAddressHyperlink.Generator" />
+                                    <entry type="Date" property="adrValidFrom" caption="Gültig ab">
+                                        <converter dateStyle="DEFAULT" timeStyle="DEFAULT" currency="default" converterType="STRING_TO_DATE" locale="default" dateFormatType="DATE" />
+                                    </entry>
+                                </x:entityProperties>
+                                <x:constraints gridHeight="1" gridx="2" gridy="2" weighty="0.0" weightx="1.0" width="100%" alignment="TOP_LEFT" gridWidth="1" height="-1px" />
+                                <x:typeArguments>
+                                    <typeArgument type="Address" />
+                                </x:typeArguments>
+                                <x:event>itemClick.itemClick</x:event>
+                                <x:event>valueChange.valueChange</x:event>
+                            </XdevTable>
+                        </XdevVerticalLayout>
+                        <XdevVerticalLayout x:name="verticalLayoutLink" margin="">
+                            <x:constraints gridHeight="1" splitPos="SECOND" gridx="1" gridy="2" weighty="0.0" weightx="1.0" width="100px" alignment="TOP_LEFT" gridWidth="1" height="100px" />
+                            <XdevHorizontalLayout spacing="false" x:name="horizontalLayoutLink" margin="">
+                                <x:constraints weighty="0.0" width="100%" height="0px" />
+                                <XdevButton icon="WebContent/WEB-INF/resources/images/new1_16.png" description="{$cmdNew.description}" x:name="cmdNewCustomerLink">
+                                    <x:constraints weightx="0.0" width="0px" height="0px" />
+                                    <x:event>click.buttonClick</x:event>
+                                </XdevButton>
+                                <XdevButton icon="WebContent/WEB-INF/resources/images/delete3_16.png" x:name="cmdDeleteCustomerLink">
+                                    <x:constraints weightx="0.0" width="0px" height="0px" />
+                                    <x:event>click.buttonClick</x:event>
+                                </XdevButton>
+                                <XdevButton icon="WebContent/WEB-INF/resources/images/edit1.png" x:name="cmdEditCustomerLink">
+                                    <x:constraints weightx="0.0" width="0px" height="0px" />
+                                    <x:event>click.buttonClick</x:event>
+                                </XdevButton>
+                                <XdevButton icon="WebContent/WEB-INF/resources/images/reload2.png" x:name="cmdReloadCustomerLink">
+                                    <x:constraints weightx="0.0" width="0px" height="0px" />
+                                    <x:event>click.buttonClick</x:event>
+                                </XdevButton>
+                                <XdevButton icon="WebContent/WEB-INF/resources/images/info_small.jpg" x:name="cmdInfoCustomerLink">
+                                    <x:constraints weightx="0.0" width="0px" height="0px" />
+                                    <x:event>click.buttonClick</x:event>
+                                </XdevButton>
+                            </XdevHorizontalLayout>
+                            <XdevTable columnReorderingAllowed="true" caption="Mail / Telefon / Links" x:name="tableLink" columnCollapsingAllowed="true" x:entity="CustomerLink" x:autoQuery="false">
+                                <x:entityProperties>
+                                    <entry type="AddressType" property="cnkType" caption="Typ" />
+                                    <entry type="String" property="cnkLink" caption="Wert" />
+                                    <entry type="" property="generated" caption="Link" generator="ch.xwr.seicentobilling.ui.desktop.crm.FunctionLinkHyperlink.Generator" />
+                                    <entry type="Department" property="cnkDepartment" caption="Bereich" />
+                                    <entry type="String" property="cnkRemark" caption="Bemerkung" />
+                                    <entry type="Date" property="cnkValidFrom" caption="Gültig ab">
+                                        <converter dateStyle="DEFAULT" timeStyle="DEFAULT" currency="default" converterType="STRING_TO_DATE" locale="default" dateFormatType="DATE" />
+                                    </entry>
+                                </x:entityProperties>
+                                <x:constraints weighty="0.0" width="100%" alignment="BOTTOM_LEFT" height="-1px" />
+                                <x:typeArguments>
+                                    <typeArgument type="CustomerLink" />
+                                </x:typeArguments>
+                                <x:event>itemClick.itemClick</x:event>
+                            </XdevTable>
+                        </XdevVerticalLayout>
+                    </XdevVerticalSplitPanel>
+                </XdevGridLayout>
+                <XdevGridLayout caption="Aktivitäten" x:name="gridLayoutListActivity" margin="b">
+                    <x:constraints width="100%" height="100%" />
+                    <XdevVerticalLayout x:name="verticalLayout3" margin="">
+                        <x:constraints gridx="1" gridy="1" weighty="0.1" weightx="0.1" width="100%" height="100%" />
+                        <XdevHorizontalLayout spacing="false" x:name="horizontalLayout3" margin="">
+                            <x:constraints weighty="0.0" width="100%" alignment="MIDDLE_LEFT" height="-1px" />
+                            <XdevButton icon="WebContent/WEB-INF/resources/images/new1_16.png" caption="" x:name="cmdNewActivity">
+                                <x:constraints weightx="0.0" width="0px" alignment="MIDDLE_LEFT" height="0px" />
+                                <x:event>click.buttonClick</x:event>
+                            </XdevButton>
+                            <XdevButton icon="WebContent/WEB-INF/resources/images/delete3_16.png" x:name="cmdDeleteActivity">
+                                <x:constraints weightx="0.0" width="0px" height="0px" />
+                                <x:event>click.buttonClick</x:event>
+                            </XdevButton>
+                            <XdevButton icon="WebContent/WEB-INF/resources/images/edit1.png" x:name="cmdEditActivity">
+                                <x:constraints weightx="0.0" width="0px" alignment="MIDDLE_LEFT" height="0px" />
+                                <x:event>click.buttonClick</x:event>
+                            </XdevButton>
+                            <XdevButton icon="WebContent/WEB-INF/resources/images/reload2.png" x:name="cmdReloadActivity">
+                                <x:constraints weightx="0.0" width="0px" height="0px" />
+                                <x:event>click.buttonClick</x:event>
+                            </XdevButton>
+                            <XdevButton icon="WebContent/WEB-INF/resources/images/info_small.jpg" x:name="cmdInfoActivity">
+                                <x:constraints weightx="0.0" width="0px" height="0px" />
+                                <x:event>click.buttonClick</x:event>
+                            </XdevButton>
+                        </XdevHorizontalLayout>
+                        <XdevTable x:connectedForm="fieldGroupActivity" caption="Aktivititäten" x:name="tableActivity" x:entity="Activity" icon="FontAwesome.ARROWS_ALT" x:autoQuery="false" sortAscending="false">
+                            <x:entityProperties>
+                                <entry type="Date" property="actDate" caption="Datum" width="180" />
+                                <entry type="Short" property="actType" caption="Typ" width="85" />
+                                <entry type="String" property="actText" caption="Bemerkung" />
+                                <entry type="" property="generated" caption="Link" generator="ch.xwr.seicentobilling.ui.desktop.FunctionActHyperlink.Generator" />
+                                <entry type="CostAccount" property="costAccount" caption="Wer" />
+                                <entry type="Date" property="actFollowingUpDate" caption="Folgetermin">
+                                    <converter dateStyle="DEFAULT" timeStyle="DEFAULT" currency="default" converterType="STRING_TO_DATE" locale="default" dateFormatType="DATE" />
+                                </entry>
+                            </x:entityProperties>
+                            <x:constraints gridHeight="1" gridx="1" gridy="2" weighty="1.0" weightx="0.1" width="100%" alignment="TOP_LEFT" gridWidth="1" height="100%" />
+                            <x:typeArguments>
+                                <typeArgument type="Activity" />
+                            </x:typeArguments>
+                            <x:event>itemClick.itemClick</x:event>
+                        </XdevTable>
+                    </XdevVerticalLayout>
+                </XdevGridLayout>
+                <XdevGridLayout caption="Beziehungen" x:name="gridLayoutRelation" margin="">
+                    <x:constraints width="100%" height="100%" />
+                    <XdevVerticalLayout x:name="verticalLayout5" margin="">
+                        <x:constraints gridx="1" gridy="1" weighty="0.1" weightx="0.1" width="100%" height="100%" />
+                        <XdevHorizontalLayout spacing="false" x:name="horizontalLayout2" margin="">
+                            <x:constraints weighty="0.0" width="100%" height="-1px" />
+                            <XdevButton icon="WebContent/WEB-INF/resources/images/new1_16.png" caption="" x:name="cmdNewRelation">
+                                <x:constraints weightx="0.0" width="0px" alignment="MIDDLE_LEFT" height="0px" />
+                                <x:event>click.buttonClick</x:event>
+                            </XdevButton>
+                            <XdevButton icon="WebContent/WEB-INF/resources/images/delete3_16.png" x:name="cmdDeleteRelation">
+                                <x:constraints weightx="0.0" width="0px" height="0px" />
+                                <x:event>click.buttonClick</x:event>
+                            </XdevButton>
+                        </XdevHorizontalLayout>
+                        <XdevTable caption="Beziehungen" x:name="tableRelation" x:entity="ch.xwr.seicentobilling.entities.ContactRelation" icon="FontAwesome.EXCHANGE" x:autoQuery="false">
+                            <x:entityProperties>
+                                <entry type="String" property="customerOne.shortname" caption="Kontakt 1" />
+                                <entry type="ContactRelation" property="corTypeOne" caption="Typ" />
+                                <entry type="String" property="customerTwo.shortname" caption="Kontakt 2" />
+                                <entry type="ContactRelation" property="corTypeTwo" caption="Typ" />
+                            </x:entityProperties>
+                            <x:constraints weighty="1.0" width="100%" height="100%" />
+                            <x:typeArguments>
+                                <typeArgument type="ch.xwr.seicentobilling.entities.ContactRelation" />
+                            </x:typeArguments>
+                        </XdevTable>
+                    </XdevVerticalLayout>
+                </XdevGridLayout>
+                <XdevGridLayout caption="Referenzen" x:name="gridLayoutListRef" margin="b">
+                    <x:constraints width="100%" height="100%" />
+                    <XdevVerticalSplitPanel styleName="large" x:splitPosition="60.0" x:name="verticalSplitPanel2">
+                        <x:constraints gridx="1" gridy="1" weighty="1.0" weightx="1.0" width="100%" height="100%" />
+                        <XdevVerticalLayout x:name="verticalLayout2" margin="">
+                            <x:constraints gridHeight="1" splitPos="FIRST" gridx="1" gridy="1" weighty="0.1" weightx="0.1" width="100%" alignment="TOP_LEFT" gridWidth="1" height="100%" />
+                            <XdevTable caption="Rechnungen" x:name="tableOrder" x:entity="Order" icon="FontAwesome.FILE" x:autoQuery="false">
+                                <x:entityProperties>
+                                    <entry type="int" property="ordNumber" caption="Rechnungsnummer">
+                                        <converter decimalSeparatorAlwaysShown="false" numberType="Integer" numberFormatType="number" currency="default" groupingUsed="false" converterType="STRING_TO_NUMBER" locale="default" />
+                                    </entry>
+                                    <entry type="Date" property="ordBillDate" caption="Rechnungsdatum">
+                                        <converter dateStyle="DEFAULT" timeStyle="DEFAULT" currency="default" converterType="STRING_TO_DATE" locale="default" dateFormatType="DATE" />
+                                    </entry>
+                                    <entry type="Double" property="ordAmountNet" caption="Betrag Netto" alignment="RIGHT">
+                                        <converter numberType="Double" numberFormatType="currency" minimumFractionDigits="2" currency="default" converterType="STRING_TO_NUMBER" locale="default" />
+                                    </entry>
+                                    <entry type="Date" property="ordPayDate" caption="Bezahlt am">
+                                        <converter dateStyle="DEFAULT" timeStyle="DEFAULT" currency="default" converterType="STRING_TO_DATE" locale="default" dateFormatType="DATE" />
+                                    </entry>
+                                </x:entityProperties>
+                                <x:constraints weighty="1.0" width="100%" height="100%" />
+                                <x:typeArguments>
+                                    <typeArgument type="Order" />
+                                </x:typeArguments>
+                            </XdevTable>
+                        </XdevVerticalLayout>
+                        <XdevVerticalLayout x:name="verticalLayout4" margin="">
+                            <x:constraints gridHeight="1" splitPos="SECOND" gridx="1" gridy="1" weighty="0.0" weightx="0.0" width="100px" alignment="TOP_LEFT" gridWidth="1" height="100px" />
+                            <XdevTable caption="Projekte" x:name="tableProject" x:entity="Project" icon="FontAwesome.PRODUCT_HUNT" x:autoQuery="false">
+                                <x:entityProperties>
+                                    <entry type="String" property="proName" caption="Projekt" />
+                                    <entry type="Date" property="proStartDate" caption="Start Datum">
+                                        <converter dateStyle="DEFAULT" timeStyle="DEFAULT" currency="default" converterType="STRING_TO_DATE" locale="default" dateFormatType="DATE" />
+                                    </entry>
+                                    <entry type="Date" property="proEndDate" caption="End Datum">
+                                        <converter dateStyle="DEFAULT" timeStyle="DEFAULT" currency="default" converterType="STRING_TO_DATE" locale="default" dateFormatType="DATE" />
+                                    </entry>
+                                    <entry type="Integer" property="proHours" caption="Stunden" />
+                                </x:entityProperties>
+                                <x:constraints gridHeight="1" gridx="1" gridy="2" weighty="1.0" weightx="0.1" width="100%" alignment="TOP_LEFT" gridWidth="1" height="100%" />
+                                <x:typeArguments>
+                                    <typeArgument type="Project" />
+                                </x:typeArguments>
+                            </XdevTable>
+                        </XdevVerticalLayout>
+                    </XdevVerticalSplitPanel>
+                </XdevGridLayout>
+            </XdevTabSheet>
+            <XdevHorizontalLayout x:name="horizontalLayout" margin="">
+                <x:constraints gridx="1" gridy="2" weighty="0.0" weightx="0.0" width="0px" alignment="MIDDLE_CENTER" height="0px" />
+                <XdevButton icon="WebContent/WEB-INF/resources/images/save1.png" caption="{$cmdSave.caption}" x:name="cmdSave">
+                    <x:constraints weightx="0.0" width="0px" alignment="MIDDLE_LEFT" height="0px" />
+                    <x:event>click.buttonClick</x:event>
+                </XdevButton>
+                <XdevButton icon="WebContent/WEB-INF/resources/images/cancel1.png" caption="{$cmdReset.caption}" x:name="cmdReset">
+                    <x:constraints weightx="0.0" width="0px" alignment="MIDDLE_LEFT" height="0px" />
+                    <x:event>click.buttonClick</x:event>
+                </XdevButton>
+            </XdevHorizontalLayout>
+        </XdevGridLayout>
+    </XdevHorizontalSplitPanel>
+</XdevView>
+

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+
+<?xdevuiml version="1.0"?>
+<?import com.xdev.ui.XdevButton?>
+<?import com.xdev.ui.XdevGridLayout?>
+<?import com.xdev.ui.XdevPanel?>
+<?import com.xdev.ui.XdevPasswordField?>
+<?import com.xdev.ui.XdevTextField?>
+<?import com.xdev.ui.XdevView?>
+<XdevView xmlns:x="http://xml.xdev-software.com/xdevuiml" x:name="AuthView">
+    <x:constraints designWidth="787" zpos="0" designHeight="504" width="100%" height="100%" />
+    <XdevGridLayout x:name="gridLayout">
+        <x:constraints zpos="0" width="100%" height="100%" />
+        <XdevPanel caption="Login" tabIndex="0" x:name="panel">
+            <x:constraints gridx="1" gridy="1" weighty="0.1" weightx="0.1" alignment="MIDDLE_CENTER" />
+            <XdevGridLayout x:name="gridLayout2">
+                <x:constraints gridHeight="1" gridx="1" zpos="0" gridy="2" weighty="0.1" weightx="0.1" width="100%" alignment="MIDDLE_CENTER" gridWidth="1" height="100%" />
+                <XdevTextField columns="20" caption="Username" x:name="txtUsername">
+                    <x:constraints gridx="1" gridy="1" weighty="0.0" weightx="0.1" />
+                </XdevTextField>
+                <XdevPasswordField columns="20" caption="Password" x:name="txtPassword">
+                    <x:constraints gridx="1" gridy="2" weighty="0.0" weightx="0.1" />
+                </XdevPasswordField>
+                <XdevButton caption="Login" x:name="cmdLogin" x:styles="friendly" x:shortcut="ENTER">
+                    <x:constraints gridx="1" gridy="3" weighty="0.0" weightx="0.1" alignment="MIDDLE_RIGHT" />
+                    <x:event>click.buttonClick</x:event>
+                </XdevButton>
+            </XdevGridLayout>
+        </XdevPanel>
+    </XdevGridLayout>
+</XdevView>
+<?template BROWSER_XGA?>
+

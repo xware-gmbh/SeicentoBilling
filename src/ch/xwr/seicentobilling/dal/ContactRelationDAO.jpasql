@@ -1,0 +1,7 @@
+import ch.xwr.seicentobilling.entities.Customer
+import ch.xwr.seicentobilling.entities.ContactRelation
+
+findByCustomer(Customer dao)
+{
+	select * from ContactRelation where customerOne = :dao or customerTwo = :dao order by corTypeOne asc
+}

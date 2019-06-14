@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+
+<?xdevuiml version="1.0"?>
+<?template BROWSER_XGA?>
+<?import?>
+<?import ch.xwr.seicentobilling.business.LovCrm.Department?>
+<?import ch.xwr.seicentobilling.entities.City?>
+<?import ch.xwr.seicentobilling.entities.Customer?>
+<?import ch.xwr.seicentobilling.entities.CustomerLink?>
+<?import com.xdev.ui.XdevButton?>
+<?import com.xdev.ui.XdevFieldGroup?>
+<?import com.xdev.ui.XdevGridLayout?>
+<?import com.xdev.ui.XdevHorizontalLayout?>
+<?import com.xdev.ui.XdevLabel?>
+<?import com.xdev.ui.XdevLink?>
+<?import com.xdev.ui.XdevPanel?>
+<?import com.xdev.ui.XdevTextField?>
+<?import com.xdev.ui.XdevVerticalLayout?>
+<?import com.xdev.ui.XdevView?>
+<?import com.xdev.ui.entitycomponent.combobox.XdevComboBox?>
+<?import com.xdev.ui.entitycomponent.table.XdevTable?>
+<?import java.lang.String?>
+<?import java.util.Date?>
+<XdevView xmlns:x="http://xml.xdev-software.com/xdevuiml" x:name="ExpenseView">
+    <x:constraints zpos="0" width="100%" height="100%" />
+    <XdevPanel x:name="panel">
+        <x:constraints zpos="0" width="100%" height="100%" />
+        <XdevVerticalLayout x:name="verticalLayout" margin="">
+            <x:constraints gridHeight="1" gridx="1" zpos="0" gridy="1" weighty="0.0" weightx="0.0" width="-1px" alignment="TOP_LEFT" gridWidth="1" height="-1px" />
+            <XdevGridLayout x:name="form" margin="bl">
+                <x:constraints weighty="0.0" width="100%" height="-1px" />
+                <XdevButton icon="WebContent/WEB-INF/resources/images/greenarrow_left32.png" caption="Zurück" x:name="button">
+                    <x:constraints gridx="1" gridy="1" weighty="0.0" weightx="0.0" width="-1px" gridWidth="2" height="0px" />
+                    <x:event>click.buttonClick</x:event>
+                </XdevButton>
+                <XdevLabel x:name="lblExpAmount" value="Name">
+                    <x:constraints gridx="1" gridy="2" weighty="0.0" weightx="0.0" width="0px" height="-1px" />
+                </XdevLabel>
+                <XdevTextField columns="5" x:name="txtCusName">
+                    <x:constraints gridx="2" gridy="2" weighty="0.0" weightx="0.1" width="100%" height="100%" />
+                </XdevTextField>
+                <XdevLabel x:name="lblCompany" value="Firma">
+                    <x:constraints gridx="1" gridy="3" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+                </XdevLabel>
+                <XdevTextField columns="5" x:name="txtCusCompany">
+                    <x:constraints gridx="2" gridy="3" weighty="0.0" weightx="0.1" width="100%" height="100%" />
+                </XdevTextField>
+                <XdevLabel x:name="lblAddress" value="Adresse">
+                    <x:constraints gridx="1" gridy="4" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+                </XdevLabel>
+                <XdevTextField columns="5" x:name="txtCusAddress">
+                    <x:constraints gridx="2" gridy="4" weighty="0.0" weightx="0.1" width="100%" height="100%" />
+                </XdevTextField>
+                <XdevLabel x:name="lblPlace" value="Ort">
+                    <x:constraints gridx="1" gridy="5" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+                </XdevLabel>
+                <XdevComboBox itemCaptionFromAnnotation="false" x:name="cmbCity" x:entity="City">
+                    <x:constraints gridx="2" gridy="5" weighty="0.0" weightx="0.1" width="100%" height="100%" />
+                    <x:entityProperty>
+                        <entry type="String" property="fullname" />
+                    </x:entityProperty>
+                    <x:typeArguments>
+                        <typeArgument type="City" />
+                    </x:typeArguments>
+                    <x:data methodName="findAll" />
+                </XdevComboBox>
+                <XdevLink targetName="_blank" icon="WebContent/WEB-INF/resources/images/gmaps32.PNG" caption="Google Maps" x:name="linkMaps" resource="https://www.google.com/maps/search/?api=1&amp;query=Sursee">
+                    <x:constraints gridx="1" gridy="6" weighty="0.0" weightx="0.0" width="100%" gridWidth="2" height="0px" />
+                </XdevLink>
+                <XdevHorizontalLayout x:name="horizontalLayout" margin="">
+                    <x:constraints gridx="1" gridy="7" weighty="0.0" weightx="0.0" width="0px" alignment="TOP_CENTER" height="0px" />
+                </XdevHorizontalLayout>
+                <XdevFieldGroup x:name="fieldGroup" x:entityType="Customer">
+                    <x:typeArguments>
+                        <typeArgument type="Customer" />
+                    </x:typeArguments>
+                    <x:fields>
+                        <entry name="txtCusNumber" property="cusNumber" />
+                        <entry name="txtCusName" property="shortname" />
+                        <entry name="txtCusCompany" property="cusCompany" />
+                        <entry name="txtCusAddress" property="cusAddress" />
+                        <entry name="cmbCity" property="city" />
+                        <entry name="txtCusPhone" property="cusInfo" />
+                    </x:fields>
+                </XdevFieldGroup>
+                <XdevTable caption="Telefon / Mail / Web" x:name="table" x:entity="CustomerLink">
+                    <x:entityProperties>
+                        <entry type="String" property="cnkLink" caption="Wert" />
+                        <entry type="" property="generated" caption="Link" generator="ch.xwr.seicentobilling.ui.desktop.crm.FunctionLinkHyperlink.Generator" />
+                        <entry type="Department" property="cnkDepartment" caption="Bereich" />
+                        <entry type="Date" property="cnkValidFrom" caption="Gültig ab">
+                            <converter dateStyle="DEFAULT" timeStyle="DEFAULT" currency="default" converterType="STRING_TO_DATE" locale="default" dateFormatType="DATE" />
+                        </entry>
+                    </x:entityProperties>
+                    <x:constraints gridx="1" gridy="8" weighty="0.5" weightx="0.0" width="100%" gridWidth="2" height="300px" />
+                    <x:typeArguments>
+                        <typeArgument type="CustomerLink" />
+                    </x:typeArguments>
+                </XdevTable>
+            </XdevGridLayout>
+        </XdevVerticalLayout>
+    </XdevPanel>
+</XdevView>
+

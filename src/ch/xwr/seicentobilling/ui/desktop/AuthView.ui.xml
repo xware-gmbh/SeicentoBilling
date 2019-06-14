@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+
+<?xdevuiml version="1.0"?>
+<?template NONE?>
+<?import com.xdev.ui.XdevButton?>
+<?import com.xdev.ui.XdevGridLayout?>
+<?import com.xdev.ui.XdevPanel?>
+<?import com.xdev.ui.XdevView?>
+<XdevView xmlns:x="http://xml.xdev-software.com/xdevuiml" x:name="AuthView">
+    <x:constraints zpos="0" width="100%" height="100%" />
+    <XdevGridLayout x:name="gridLayout">
+        <x:constraints zpos="0" width="100%" height="100%" />
+        <XdevPanel caption="Login" tabIndex="0" x:name="panel">
+            <x:constraints gridx="1" gridy="1" weighty="0.1" weightx="0.1" width="0px" alignment="MIDDLE_CENTER" height="0px" />
+            <XdevGridLayout x:name="gridLayout2">
+                <x:constraints gridHeight="1" gridx="1" zpos="0" gridy="2" weighty="0.1" weightx="0.1" width="100%" alignment="MIDDLE_CENTER" gridWidth="1" height="100%" />
+                <XdevButton caption="Login" styleName="friendly" x:name="cmdLogin" x:shortcut="ENTER">
+                    <x:constraints gridx="1" gridy="1" weighty="0.0" weightx="0.1" width="0px" alignment="MIDDLE_RIGHT" height="0px" />
+                </XdevButton>
+            </XdevGridLayout>
+        </XdevPanel>
+    </XdevGridLayout>
+</XdevView>
+

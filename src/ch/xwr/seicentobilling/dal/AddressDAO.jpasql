@@ -1,0 +1,12 @@
+import ch.xwr.seicentobilling.entities.Customer
+import ch.xwr.seicentobilling.entities.Address
+
+findByCustomer(Customer dao)
+{
+	select * from Address where customer = :dao order by adrValidFrom desc
+}
+
+findByCustomerAndType(Customer dao, Enum type)
+{
+	select * from Address where customer = :dao and adrType = :type order by adrValidFrom desc
+}

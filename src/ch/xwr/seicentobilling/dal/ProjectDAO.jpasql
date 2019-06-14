@@ -1,0 +1,6 @@
+import ch.xwr.seicentobilling.entities.Project
+
+findByName(String name)
+{
+	select * from Project where proName like :name
+}

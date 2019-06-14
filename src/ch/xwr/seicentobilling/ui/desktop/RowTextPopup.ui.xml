@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+
+<?xdevuiml version="1.0"?>
+<?template NONE?>
+<?import ch.xwr.seicentobilling.entities.Entity?>
+<?import ch.xwr.seicentobilling.entities.Language?>
+<?import ch.xwr.seicentobilling.entities.RowObject?>
+<?import ch.xwr.seicentobilling.entities.RowText?>
+<?import com.vaadin.ui.CustomComponent?>
+<?import com.xdev.ui.XdevButton?>
+<?import com.xdev.ui.XdevFieldGroup?>
+<?import com.xdev.ui.XdevGridLayout?>
+<?import com.xdev.ui.XdevHorizontalLayout?>
+<?import com.xdev.ui.XdevLabel?>
+<?import com.xdev.ui.XdevPanel?>
+<?import com.xdev.ui.XdevTextArea?>
+<?import com.xdev.ui.XdevTextField?>
+<?import com.xdev.ui.XdevView?>
+<?import com.xdev.ui.entitycomponent.combobox.XdevComboBox?>
+<?import java.lang.String?>
+<XdevView xmlns:x="http://xml.xdev-software.com/xdevuiml" x:name="RowTextPopup">
+    <x:constraints zpos="0" width="100%" height="100%" />
+    <XdevPanel x:name="panel">
+        <x:constraints zpos="0" width="100%" height="100%" />
+        <XdevGridLayout x:name="form">
+            <x:constraints gridHeight="1" gridx="1" zpos="0" gridy="1" weighty="0.0" weightx="0.0" width="100%" alignment="TOP_LEFT" gridWidth="1" height="0px" />
+            <XdevTextArea columns="10" x:name="textArea" rows="8">
+                <x:constraints gridx="2" gridy="3" weighty="0.0" weightx="0.1" width="100%" height="0px" />
+            </XdevTextArea>
+            <XdevComboBox x:name="comboBoxState">
+                <x:constraints gridx="2" gridy="5" weighty="0.0" weightx="0.1" width="0px" height="0px" />
+                <x:typeArguments>
+                    <typeArgument type="CustomComponent" />
+                </x:typeArguments>
+            </XdevComboBox>
+            <XdevFieldGroup x:name="fieldGroup" x:entityType="RowText">
+                <x:typeArguments>
+                    <typeArgument type="RowText" />
+                </x:typeArguments>
+                <x:fields>
+                    <entry name="comboBoxObject" property="rowObject" />
+                    <entry name="textField" property="txtNumber" />
+                    <entry name="textArea" property="txtFreetext" />
+                    <entry name="comboBox2" property="language" />
+                    <entry name="comboBoxState" property="txtState" />
+                </x:fields>
+            </XdevFieldGroup>
+            <XdevLabel x:name="label" value="{$label.value}">
+                <x:constraints gridx="1" gridy="1" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+            </XdevLabel>
+            <XdevComboBox itemCaptionFromAnnotation="false" x:name="comboBoxObject" x:entity="RowObject" enabled="false">
+                <x:constraints gridx="2" gridy="1" weighty="0.0" weightx="0.1" width="100%" height="0px" />
+                <x:entityProperty>
+                    <entry type="Entity" property="entity" />
+                </x:entityProperty>
+                <x:typeArguments>
+                    <typeArgument type="RowObject" />
+                </x:typeArguments>
+                <x:data methodName="findAll" />
+            </XdevComboBox>
+            <XdevLabel x:name="label2" value="{$label2.value}">
+                <x:constraints gridx="1" gridy="2" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+            </XdevLabel>
+            <XdevTextField columns="5" x:name="textField">
+                <x:constraints gridx="2" gridy="2" weighty="0.0" weightx="0.1" width="0px" height="0px" />
+            </XdevTextField>
+            <XdevLabel x:name="label3" value="{$label3.value}">
+                <x:constraints gridx="1" gridy="3" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+            </XdevLabel>
+            <XdevLabel x:name="label4" value="{$label4.value}">
+                <x:constraints gridx="1" gridy="4" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+            </XdevLabel>
+            <XdevComboBox itemCaptionFromAnnotation="false" x:name="comboBox2" x:entity="Language">
+                <x:constraints gridx="2" gridy="4" weighty="0.0" weightx="0.1" width="0px" height="0px" />
+                <x:entityProperty>
+                    <entry type="String" property="lngName" />
+                </x:entityProperty>
+                <x:typeArguments>
+                    <typeArgument type="Language" />
+                </x:typeArguments>
+            </XdevComboBox>
+            <XdevLabel x:name="label5" value="{$label5.value}">
+                <x:constraints gridx="1" gridy="5" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+            </XdevLabel>
+            <XdevHorizontalLayout x:name="horizontalLayout" margin="">
+                <x:constraints gridx="2" gridy="6" weighty="0.0" weightx="0.1" width="100%" alignment="TOP_RIGHT" height="100%" />
+                <XdevButton icon="WebContent/WEB-INF/resources/images/save1.png" caption="{$cmdSave.caption}" x:name="cmdSave">
+                    <x:constraints gridHeight="1" gridx="2" gridy="6" weighty="0.0" weightx="0.0" width="0px" alignment="MIDDLE_LEFT" gridWidth="1" height="0px" />
+                    <x:event>click.buttonClick</x:event>
+                </XdevButton>
+                <XdevButton icon="WebContent/WEB-INF/resources/images/cancel1.png" caption="{$cmdCancel.caption}" x:name="cmdCancel">
+                    <x:constraints gridHeight="1" gridx="3" gridy="6" weighty="0.0" weightx="0.0" width="0px" alignment="MIDDLE_LEFT" gridWidth="1" height="0px" />
+                    <x:event>click.buttonClick</x:event>
+                </XdevButton>
+            </XdevHorizontalLayout>
+        </XdevGridLayout>
+    </XdevPanel>
+</XdevView>
+
