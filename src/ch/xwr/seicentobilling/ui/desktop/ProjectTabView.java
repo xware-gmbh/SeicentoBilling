@@ -369,7 +369,6 @@ public class ProjectTabView extends XdevView {
 		if (!areFieldsValid()) {
 			return;
 		}
-		cmdReload_buttonClick(event);
 
 		try {
 			this.fieldGroup.save();

@@ -462,6 +462,7 @@ public class OrderGenerateTabView extends XdevView {
 		this.checkBoxTextLast = new XdevCheckBox();
 		this.cmdPropose = new XdevButton();
 		this.cmdGenerate = new XdevButton();
+		this.label4 = new XdevLabel();
 		this.gridLayoutTexte = new XdevGridLayout();
 		this.labelInfoToolTip = new XdevLabel();
 		this.label5 = new XdevLabel();
@@ -484,7 +485,7 @@ public class OrderGenerateTabView extends XdevView {
 		this.treeGrid = new XdevTreeTable();
 
 		this.horizontalSplitPanel.setStyleName("large");
-		this.horizontalSplitPanel.setSplitPosition(50.0F, Unit.PERCENTAGE);
+		this.horizontalSplitPanel.setSplitPosition(35.0F, Unit.PERCENTAGE);
 		this.verticalLayoutLeft.setMargin(new MarginInfo(false));
 		this.panel.setCaption("Rechnungen generieren");
 		this.tabSheet.setStyleName("framed");
@@ -497,6 +498,8 @@ public class OrderGenerateTabView extends XdevView {
 		this.cmdPropose.setCaption("Vorschlag generieren");
 		this.cmdGenerate.setCaption("Rechnungen erstellen");
 		this.cmdGenerate.setEnabled(false);
+		this.label4.setIcon(FontAwesome.INFO_CIRCLE);
+		this.label4.setValue("MwSt-Ansatz wird für alle Positionen vom Projekt übernommen!");
 		this.labelInfoToolTip.setIcon(FontAwesome.INFO_CIRCLE);
 		this.labelInfoToolTip.setDescription("Es ist ein Tooltip vorhanden auf den Labeln und dem Button.");
 		this.label5.setDescription(
@@ -516,7 +519,7 @@ public class OrderGenerateTabView extends XdevView {
 		this.treeGrid.setMultiSelect(true);
 
 		this.gridLayout.setColumns(3);
-		this.gridLayout.setRows(7);
+		this.gridLayout.setRows(8);
 		this.label.setSizeUndefined();
 		this.gridLayout.addComponent(this.label, 0, 0);
 		this.comboBoxCostAccount.setSizeUndefined();
@@ -535,14 +538,17 @@ public class OrderGenerateTabView extends XdevView {
 		this.gridLayout.addComponent(this.cmdPropose, 1, 4);
 		this.cmdGenerate.setSizeUndefined();
 		this.gridLayout.addComponent(this.cmdGenerate, 1, 5);
+		this.label4.setWidth(100, Unit.PERCENTAGE);
+		this.label4.setHeight(-1, Unit.PIXELS);
+		this.gridLayout.addComponent(this.label4, 0, 6, 1, 6);
 		final CustomComponent gridLayout_hSpacer = new CustomComponent();
 		gridLayout_hSpacer.setSizeFull();
-		this.gridLayout.addComponent(gridLayout_hSpacer, 2, 0, 2, 5);
+		this.gridLayout.addComponent(gridLayout_hSpacer, 2, 0, 2, 6);
 		this.gridLayout.setColumnExpandRatio(2, 1.0F);
 		final CustomComponent gridLayout_vSpacer = new CustomComponent();
 		gridLayout_vSpacer.setSizeFull();
-		this.gridLayout.addComponent(gridLayout_vSpacer, 0, 6, 1, 6);
-		this.gridLayout.setRowExpandRatio(6, 1.0F);
+		this.gridLayout.addComponent(gridLayout_vSpacer, 0, 7, 1, 7);
+		this.gridLayout.setRowExpandRatio(7, 1.0F);
 		this.gridLayoutTexte.setColumns(2);
 		this.gridLayoutTexte.setRows(7);
 		this.labelInfoToolTip.setSizeUndefined();
@@ -628,7 +634,8 @@ public class OrderGenerateTabView extends XdevView {
 	} // </generated-code>
 
 	// <generated-code name="variables">
-	private XdevLabel label, label2, label3, labelInfoToolTip, label5, label6, label7, label8, label11, label12, label13;
+	private XdevLabel label, label2, label3, label4, labelInfoToolTip, label5, label6, label7, label8, label11, label12,
+			label13;
 	private XdevButton cmdPropose, cmdGenerate, cmdSaveText;
 	private XdevComboBox<CostAccount> comboBoxCostAccount;
 	private XdevPanel panel;

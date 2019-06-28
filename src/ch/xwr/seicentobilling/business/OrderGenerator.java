@@ -182,7 +182,7 @@ public class OrderGenerator {
 					break;
 				}
 
-				pos.setVat(pos.getItem().getVat());
+				pos.setVat(hdr.getProject().getVat());
 				pos.setOdlNumber(this._calc.getNextLineNumber(hdr));
 
 				final OrderLine newodl = this._calc.calculateLine(pos);
