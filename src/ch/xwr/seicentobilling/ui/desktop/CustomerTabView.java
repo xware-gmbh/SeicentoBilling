@@ -59,6 +59,7 @@ import ch.xwr.seicentobilling.business.ConfirmDialog;
 import ch.xwr.seicentobilling.business.JasperManager;
 import ch.xwr.seicentobilling.business.LovCrm;
 import ch.xwr.seicentobilling.business.LovState;
+import ch.xwr.seicentobilling.business.LovState.AccountType;
 import ch.xwr.seicentobilling.business.NumberRangeHandler;
 import ch.xwr.seicentobilling.business.RowObjectManager;
 import ch.xwr.seicentobilling.dal.ActivityDAO;
@@ -122,11 +123,16 @@ public class CustomerTabView extends XdevView {
 		this.txtCusNumber.setEnabled(false);
 
 		boolean hasData = true;
-		if (this.fieldGroup.getItemDataSource() == null) {
+		if (this.fieldGroup.getItemDataSource() == null || this.fieldGroup.getItemDataSource().getBean() == null ) {
 			hasData = false;
 		}
-		this.cmdSave.setEnabled(hasData);
-		this.tabSheet.setEnabled(hasData);
+		setROComponents(hasData);
+	}
+
+	private void setROComponents(final boolean state) {
+		this.cmdSave.setEnabled(state);
+		this.cmdReset.setEnabled(state);
+		this.tabSheet.setEnabled(state);
 	}
 
 	private boolean isNew() {
@@ -220,9 +226,11 @@ public class CustomerTabView extends XdevView {
 		// reassign filter
 		this.containerFilterComponent.setFilterData(fd);
 
-		final Customer bean = this.fieldGroup.getItemDataSource().getBean();
-		if (bean != null) {
-			this.table.select(bean);
+		if (this.fieldGroup.getItemDataSource() != null) {
+			final Customer bean = this.fieldGroup.getItemDataSource().getBean();
+			if (bean != null) {
+				this.table.select(bean);
+			}
 		}
 	}
 
@@ -241,6 +249,7 @@ public class CustomerTabView extends XdevView {
 		bean.setPaymentCondition(dao.find((long) 1));
 		bean.setCusBillingTarget(LovCrm.BillTarget.pdf);
 		bean.setCusBillingReport(LovCrm.BillReport.working);
+		bean.setCusAccountType(AccountType.juristisch);
 
 		this.fieldGroup.setItemDataSource(bean);
 		checkCustomerNumber(true, false);
@@ -280,16 +289,22 @@ public class CustomerTabView extends XdevView {
 				final RowObjectManager man = new RowObjectManager();
 				man.deleteObject(bean.getCusId(), bean.getClass().getSimpleName());
 
+				CustomerTabView.this.table.removeItem(bean);
+				CustomerTabView.this.table.select(null);
+
 				final CustomerDAO dao = new CustomerDAO();
 				dao.remove(bean);
-				CustomerTabView.this.table.getBeanContainerDataSource().refresh();
+				//CustomerTabView.this.table.getBeanContainerDataSource().refresh();
 
-				try {
-					CustomerTabView.this.table.select(CustomerTabView.this.table.getCurrentPageFirstItemId());
-				} catch (final Exception e) {
-					// ignore
-					CustomerTabView.this.fieldGroup.setItemDataSource(new Customer());
-				}
+				CustomerTabView.this.fieldGroup.clear();
+				setROComponents(false);
+
+//				try {
+//					CustomerTabView.this.table.select(CustomerTabView.this.table.getCurrentPageFirstItemId());
+//				} catch (final Exception e) {
+//					// ignore
+//					CustomerTabView.this.fieldGroup.setItemDataSource(new Customer());
+//				}
 				Notification.show("Datensatz löschen", "Datensatz wurde gelöscht!",
 						Notification.Type.TRAY_NOTIFICATION);
 			}

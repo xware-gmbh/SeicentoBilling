@@ -110,9 +110,16 @@ public class ProjectTabView extends XdevView {
 		if (this.fieldGroup.getItemDataSource() == null) {
 			hasData = false;
 		}
-		this.cmdSave.setEnabled(hasData);
-		this.tabSheet.setEnabled(hasData);
+
+		setROComponents(hasData);
 	}
+
+	private void setROComponents(final boolean state) {
+		this.cmdSave.setEnabled(state);
+		this.cmdReset.setEnabled(state);
+		this.tabSheet.setEnabled(state);
+	}
+
 
 	private void setDefaultFilter() {
 		CostAccount bean = Seicento.getLoggedInCostAccount();
@@ -195,16 +202,21 @@ public class ProjectTabView extends XdevView {
 				final RowObjectManager man = new RowObjectManager();
 				man.deleteObject(bean.getProId(), bean.getClass().getSimpleName());
 
+				ProjectTabView.this.table.removeItem(bean);
+				ProjectTabView.this.table.select(null);
+
 				final ProjectDAO dao = new ProjectDAO();
 				dao.remove(bean);
-				ProjectTabView.this.table.getBeanContainerDataSource().refresh();
 
-				try {
-					ProjectTabView.this.table.select(ProjectTabView.this.table.getCurrentPageFirstItemId());
-				} catch (final Exception e) {
-					// ignore
-					ProjectTabView.this.fieldGroup.setItemDataSource(new Project());
-				}
+				ProjectTabView.this.fieldGroup.clear();
+				setROComponents(false);
+
+//				try {
+//					ProjectTabView.this.table.select(ProjectTabView.this.table.getCurrentPageFirstItemId());
+//				} catch (final Exception e) {
+//					// ignore
+//					ProjectTabView.this.fieldGroup.setItemDataSource(new Project());
+//				}
 				Notification.show("Datensatz löschen", "Datensatz wurde gelöscht!",
 						Notification.Type.TRAY_NOTIFICATION);
 			}
@@ -244,6 +256,8 @@ public class ProjectTabView extends XdevView {
 
 		final Project bean = this.fieldGroup.getItemDataSource().getBean();
 		if (bean != null) {
+			//final boolean exi = this.table.containsId(bean);
+			//final com.vaadin.data.Item x = this.table.getItem(bean);
 			this.table.select(bean);
 		}
 	}
@@ -352,12 +366,12 @@ public class ProjectTabView extends XdevView {
 	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
 	 */
 	private void cmdSave_buttonClick(final Button.ClickEvent event) {
-		if (!AreFieldsValid()) {
+		if (!areFieldsValid()) {
 			return;
 		}
+		cmdReload_buttonClick(event);
 
 		try {
-
 			this.fieldGroup.save();
 
 			final RowObjectManager man = new RowObjectManager();
@@ -370,12 +384,13 @@ public class ProjectTabView extends XdevView {
 			e.printStackTrace();
 		}
 
-		setROFields();
 		cmdReload_buttonClick(event);
-
+		setROFields();
+		this.table.select(this.fieldGroup.getItemDataSource().getBean());
 	}
 
-	private boolean AreFieldsValid() {
+	@SuppressWarnings("unchecked")
+	private boolean areFieldsValid() {
 		if (this.fieldGroup.isValid()) {
 			return true;
 		}

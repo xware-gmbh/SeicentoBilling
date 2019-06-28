@@ -209,6 +209,7 @@ public class CityTabView extends XdevView {
 
 		this.horizontalSplitPanel.setStyleName("large");
 		this.horizontalSplitPanel.setSplitPosition(50.0F, Unit.PERCENTAGE);
+		this.verticalLayout.setMargin(new MarginInfo(false));
 		this.horizontalLayout.setSpacing(false);
 		this.horizontalLayout.setMargin(new MarginInfo(false));
 		this.cmdNew.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/new1_16.png"));

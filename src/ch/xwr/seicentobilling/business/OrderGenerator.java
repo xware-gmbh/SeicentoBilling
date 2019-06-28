@@ -21,7 +21,7 @@ import ch.xwr.seicentobilling.entities.Periode;
 import ch.xwr.seicentobilling.entities.ProjectLine;
 
 public class OrderGenerator {
-	private final HashMap<Integer, BillDto> _billMap = new HashMap<>();
+	private final HashMap<Long, BillDto> _billMap = new HashMap<>();
 	private OrderCalculator _calc = null;
 	private GuiGeneratorFields _guifld = null;
 	/** Logger initialized */
@@ -35,16 +35,17 @@ public class OrderGenerator {
 		for (final Iterator<ProjectLine> iterator = list.iterator(); iterator.hasNext();) {
 			final ProjectLine pln = iterator.next();
 			final int cusnbr = pln.getProject().getCustomer().getCusNumber();
+			final long proId = pln.getProject().getProId();
 			BillDto bill = null;
-			if (! this._billMap.containsKey(cusnbr)) {
+			if (! this._billMap.containsKey(proId)) {
 				bill = new BillDto();
 				bill.setCustomerNbr(cusnbr);
 				bill.setCustomer(pln.getProject().getCustomer());
 				bill.setProject(pln.getProject());
 				bill.setCostaccount(pln.getPeriode().getCostAccount());
-				this._billMap.put(cusnbr, bill);
+				this._billMap.put(proId, bill);
 			} else {
-				bill = this._billMap.get(cusnbr);
+				bill = this._billMap.get(proId);
 			}
 
 			cumulateLine(bill, pln);
@@ -205,7 +206,7 @@ public class OrderGenerator {
 		dao.setOrdCreatedBy(Seicento.getUserName());
 		//guifld
 		dao.setOrdBillDate(guifld.getBillDate());
-		dao.setOrdText(disolveHederText(billDto, guifld.getBillText()));
+		dao.setOrdText(disolveHeaderText(billDto, guifld.getBillText()));
 
 		if (guifld.getCopyTextFromLastBill().booleanValue()) {
 			final String lastText = lookupLastBill(billDto);
@@ -240,18 +241,27 @@ public class OrderGenerator {
 		return "";
 	}
 
-	private String disolveHederText(final BillDto billDto, String text) {
+	private String disolveHeaderText(final BillDto billDto, String text) {
 		String contact = "";
 		if (billDto.getProject().getProContact() != null) {
 			contact = billDto.getProject().getProContact();
 		}
-        text = text.replace("{proExtReference}", billDto.getProject().getProExtReference().trim());
+
+        text = text.replace("{proExtReference}", getText(billDto.getProject().getProExtReference()));
         text = text.replace("{proName}", billDto.getProject().getProName().trim());
         text = text.replace("{proContact}", contact.trim());
         //subject = subject.replace("#", "%23");
         text = text.replace("{csaName}", billDto.getCostaccount().getCsaName().trim());
 
 		return text;
+	}
+
+	private String getText(final String input) {
+		if (input == null || input.isEmpty()) {
+			return "";
+		}
+
+		return input.trim();
 	}
 
 	private String disolveLineText(final BillLine tmp, final Order hdr, String text) {
