@@ -127,6 +127,7 @@ public class ProjectLinePopup extends XdevView {
 	private void cmdSave_buttonClick(final Button.ClickEvent event) {
 		UI.getCurrent().getSession().setAttribute(String.class, "cmdSave");
 		try {
+			preSave();
 			this.fieldGroup.save();
 
 			final RowObjectManager man = new RowObjectManager();
@@ -139,6 +140,16 @@ public class ProjectLinePopup extends XdevView {
 		} catch (final Exception e) {
 			Notification.show("Fehler beim Speichern", e.getMessage(), Notification.Type.ERROR_MESSAGE);
 			e.printStackTrace();
+		}
+
+	}
+
+	private void preSave() {
+		final ProjectLine line = this.fieldGroup.getItemDataSource().getBean();
+
+		if (line.getPrlHours() == null || line.getPrlHours().doubleValue() == 0) {
+			line.setPrlHours(new Double(1));
+			this.fieldGroup.setItemDataSource(line);
 		}
 
 	}

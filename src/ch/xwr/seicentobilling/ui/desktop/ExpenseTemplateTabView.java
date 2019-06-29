@@ -18,7 +18,6 @@ import com.vaadin.ui.Window.CloseEvent;
 import com.vaadin.ui.Window.CloseListener;
 import com.xdev.dal.DAOs;
 import com.xdev.res.ApplicationResource;
-import com.xdev.res.StringResourceUtils;
 import com.xdev.ui.XdevButton;
 import com.xdev.ui.XdevCheckBox;
 import com.xdev.ui.XdevFieldGroup;
@@ -106,10 +105,25 @@ public class ExpenseTemplateTabView extends XdevView {
 
 	private void setROFields() {
 		this.cmbCostAccount.setEnabled(false);
+
+		boolean hasData = true;
+		if (this.fieldGroup.getItemDataSource() == null) {
+			hasData = false;
+		}
+		setROComponents(hasData);
+	}
+
+	private void setROComponents(final boolean state) {
+		this.cmdSave.setEnabled(state);
+		this.cmdReset.setEnabled(state);
+		this.form.setEnabled(state);
 	}
 
 	private void setDefaultFilter() {
-		final CostAccount bean = Seicento.getLoggedInCostAccount();
+		CostAccount bean = Seicento.getLoggedInCostAccount();
+		if (bean == null) {
+			bean = new CostAccountDAO().findAll().get(0); // Dev Mode
+		}
 
 		final LovState.State[] valState = new LovState.State[]{LovState.State.active};
 		final CostAccount[] val2 = new CostAccount[]{bean};
@@ -344,7 +358,7 @@ public class ExpenseTemplateTabView extends XdevView {
 		this.horizontalLayout.setSpacing(false);
 		this.horizontalLayout.setMargin(new MarginInfo(false));
 		this.cmdNew.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/new1_16.png"));
-		this.cmdNew.setDescription(StringResourceUtils.optLocalizeString("{$cmdNew.description}", this));
+		this.cmdNew.setDescription("Neuer Datensatz");
 		this.cmdDelete
 				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/delete3_16.png"));
 		this.cmdReload.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/reload2.png"));
@@ -394,6 +408,7 @@ public class ExpenseTemplateTabView extends XdevView {
 		this.comboBoxUnit.setTabIndex(8);
 		this.lblPrtProject.setValue("Projekt");
 		this.comboBoxProject.setTabIndex(9);
+		this.comboBoxProject.setRequired(true);
 		this.comboBoxProject.setItemCaptionFromAnnotation(false);
 		this.comboBoxProject.setContainerDataSource(Project.class, DAOs.get(ProjectDAO.class).findAll());
 		this.comboBoxProject.setItemCaptionPropertyId(Project_.proName.getName());
@@ -423,8 +438,8 @@ public class ExpenseTemplateTabView extends XdevView {
 
 		MasterDetail.connect(this.table, this.fieldGroup);
 
-		this.containerFilterComponent.setContainer(this.table.getBeanContainerDataSource(), "costAccount", "prtState",
-				"project", "prtWorkType", "prtRate");
+		this.containerFilterComponent.setContainer(this.table.getBeanContainerDataSource(), "costAccount", "project",
+				"extState");
 		this.containerFilterComponent.setSearchableProperties("costAccount.csaCode", "costAccount.csaName", "prtText");
 
 		this.cmdNew.setSizeUndefined();
@@ -535,12 +550,7 @@ public class ExpenseTemplateTabView extends XdevView {
 		this.cmdDelete.addClickListener(event -> this.cmdDelete_buttonClick(event));
 		this.cmdReload.addClickListener(event -> this.cmdReload_buttonClick(event));
 		this.cmdInfo.addClickListener(event -> this.cmdInfo_buttonClick(event));
-		this.table.addValueChangeListener(new Property.ValueChangeListener() {
-			@Override
-			public void valueChange(final Property.ValueChangeEvent event) {
-				ExpenseTemplateTabView.this.table_valueChange(event);
-			}
-		});
+		this.table.addValueChangeListener(event -> this.table_valueChange(event));
 		this.cmdSave.addClickListener(event -> this.cmdSave_buttonClick(event));
 		this.cmdReset.addClickListener(event -> this.cmdReset_buttonClick(event));
 	} // </generated-code>
