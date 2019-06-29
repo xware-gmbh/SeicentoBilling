@@ -126,8 +126,8 @@ public class MailDownloadPopup extends XdevView {
 	 */
 	private void cmdStart_buttonClick(final Button.ClickEvent event) {
 		try {
-			this.label.setValue("starte Erstellung.... einen Moment");
-			this.cmdStart.setEnabled(false);
+			this.label.setValue("starte Erstellung - einen Moment bitte... ");
+			//this.cmdStart.setEnabled(false);
 
 			initDownload();
 
@@ -153,6 +153,7 @@ public class MailDownloadPopup extends XdevView {
 		this.label = new XdevLabel();
 
 		this.cmdStart.setCaption("Erstelle Datei");
+		this.cmdStart.setDisableOnClick(true);
 		this.cmdDownload
 				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/Download1.png"));
 		this.cmdDownload.setCaption("Download");
@@ -160,7 +161,7 @@ public class MailDownloadPopup extends XdevView {
 		this.cmdMail.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/mail1.png"));
 		this.cmdMail.setCaption("Öffne Mail");
 		this.cmdMail.setEnabled(false);
-		this.label.setValue("Erstelle Datei...");
+		this.label.setValue("Zum Starten ersten Knopf drücken");
 
 		this.gridLayout.setColumns(4);
 		this.gridLayout.setRows(3);
