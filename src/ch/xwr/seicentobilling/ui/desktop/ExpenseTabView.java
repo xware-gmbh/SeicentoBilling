@@ -517,6 +517,7 @@ public class ExpenseTabView extends XdevView {
 		man.updateObject(newBean.getExpId(), newBean.getClass().getSimpleName());
 
 		reloadExpenseList();
+		this.tableLine.select(newBean);
 	}
 
 	/**

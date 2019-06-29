@@ -1,10 +1,15 @@
 package ch.xwr.seicentobilling.ui.desktop;
 
+import java.util.Collection;
 import java.util.Date;
+import java.util.Iterator;
+
+import org.apache.poi.ss.formula.functions.T;
 
 import com.vaadin.data.Property;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.shared.ui.MarginInfo;
+import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CustomComponent;
@@ -125,9 +130,12 @@ public class ProjectLinePopup extends XdevView {
 	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
 	 */
 	private void cmdSave_buttonClick(final Button.ClickEvent event) {
+		if (!areFieldsValid()) {
+			return;
+		}
+
 		UI.getCurrent().getSession().setAttribute(String.class, "cmdSave");
 		try {
-			preSave();
 			this.fieldGroup.save();
 
 			final RowObjectManager man = new RowObjectManager();
@@ -144,14 +152,28 @@ public class ProjectLinePopup extends XdevView {
 
 	}
 
-	private void preSave() {
-		final ProjectLine line = this.fieldGroup.getItemDataSource().getBean();
+	@SuppressWarnings("unchecked")
+	private boolean areFieldsValid() {
+		if (this.fieldGroup.isValid()) {
+			return true;
+		}
+		AbstractField<T> fld = null;
+		try {
+			final Collection<?> flds = this.fieldGroup.getFields();
+			for (final Iterator<?> iterator = flds.iterator(); iterator.hasNext();) {
+				fld = (AbstractField<T>) iterator.next();
+				if (!fld.isValid()) {
+					fld.focus();
+					fld.validate();
+				}
+			}
 
-		if (line.getPrlHours() == null || line.getPrlHours().doubleValue() == 0) {
-			line.setPrlHours(new Double(1));
-			this.fieldGroup.setItemDataSource(line);
+		} catch (final Exception e) {
+			final Object prop = this.fieldGroup.getPropertyId(fld);
+			Notification.show("Feld ist ungültig", prop.toString(), Notification.Type.ERROR_MESSAGE);
 		}
 
+		return false;
 	}
 
 	/**
@@ -348,16 +370,20 @@ public class ProjectLinePopup extends XdevView {
 		this.cmbPeriode.setItemCaptionPropertyId(Periode_.perName.getName());
 		this.lblPrlReportDate.setValue(StringResourceUtils.optLocalizeString("{$lblPrlReportDate.value}", this));
 		this.datePrlReportDate.setTabIndex(52);
+		this.datePrlReportDate.setRequired(true);
 		this.lblProject.setValue(StringResourceUtils.optLocalizeString("{$lblProject.value}", this));
 		this.cmbProject.setTabIndex(53);
+		this.cmbProject.setRequired(true);
 		this.cmbProject.setContainerDataSource(Project.class, DAOs.get(ProjectDAO.class).findAll());
 		this.cmbProject.setItemCaptionPropertyId(Project_.proName.getName());
 		this.lblPrlHours.setValue(StringResourceUtils.optLocalizeString("{$lblPrlHours.value}", this));
 		this.txtPrlHours.setConverter(ConverterBuilder.stringToDouble().build());
 		this.txtPrlHours.setTabIndex(54);
+		this.txtPrlHours.setRequired(true);
 		this.lblPrlRate.setValue(StringResourceUtils.optLocalizeString("{$lblPrlRate.value}", this));
 		this.txtPrlRate.setConverter(ConverterBuilder.stringToDouble().currency().build());
 		this.txtPrlRate.setTabIndex(55);
+		this.txtPrlRate.setRequired(true);
 		this.lblPrlText.setValue(StringResourceUtils.optLocalizeString("{$lblPrlText.value}", this));
 		this.txtPrlText.setTabIndex(56);
 		this.txtPrlText.setMaxLength(384);

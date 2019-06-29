@@ -37,13 +37,13 @@
         <XdevLabel x:name="lblPrlReportDate" value="{$lblPrlReportDate.value}">
             <x:constraints gridx="1" gridy="2" weighty="0.0" weightx="0.0" width="0px" height="0px" />
         </XdevLabel>
-        <XdevPopupDateField tabIndex="52" x:name="datePrlReportDate">
+        <XdevPopupDateField tabIndex="52" required="true" x:name="datePrlReportDate">
             <x:constraints gridx="2" gridy="2" weighty="0.0" weightx="1.0" width="0px" height="0px" />
         </XdevPopupDateField>
         <XdevLabel x:name="lblProject" value="{$lblProject.value}">
             <x:constraints gridx="1" gridy="3" weighty="0.0" weightx="0.0" width="0px" height="0px" />
         </XdevLabel>
-        <XdevComboBox tabIndex="53" x:name="cmbProject" x:entity="Project">
+        <XdevComboBox tabIndex="53" required="true" x:name="cmbProject" x:entity="Project">
             <x:constraints gridx="2" gridy="3" weighty="0.0" weightx="1.0" width="100%" height="0px" />
             <x:entityProperty>
                 <entry type="String" property="proName" />
@@ -57,14 +57,14 @@
         <XdevLabel x:name="lblPrlHours" value="{$lblPrlHours.value}">
             <x:constraints gridx="1" gridy="4" weighty="0.0" weightx="0.0" width="0px" height="0px" />
         </XdevLabel>
-        <XdevTextField columns="5" tabIndex="54" x:name="txtPrlHours">
+        <XdevTextField columns="5" tabIndex="54" required="true" x:name="txtPrlHours">
             <converter numberType="Double" numberFormatType="number" currency="default" converterType="STRING_TO_NUMBER" locale="default" />
             <x:constraints gridx="2" gridy="4" weighty="0.0" weightx="1.0" width="100%" height="0px" />
         </XdevTextField>
         <XdevLabel x:name="lblPrlRate" value="{$lblPrlRate.value}">
             <x:constraints gridx="3" gridy="4" weighty="0.0" weightx="0.0" width="0px" height="0px" />
         </XdevLabel>
-        <XdevTextField columns="5" tabIndex="55" x:name="txtPrlRate">
+        <XdevTextField columns="5" tabIndex="55" required="true" x:name="txtPrlRate">
             <converter numberType="Double" numberFormatType="currency" currency="default" converterType="STRING_TO_NUMBER" locale="default" />
             <x:constraints gridx="4" gridy="4" weighty="0.0" weightx="1.0" width="100%" height="0px" />
         </XdevTextField>
