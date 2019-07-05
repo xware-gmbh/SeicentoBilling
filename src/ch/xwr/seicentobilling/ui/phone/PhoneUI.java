@@ -157,7 +157,7 @@ public class PhoneUI extends XdevUI {
 		this.button.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/home32.png"));
 		this.container.setMargin(new MarginInfo(false));
 		this.navigator.setRedirectViewName("home");
-		this.navigator.addView("", AuthViewMockup.class);
+		this.navigator.addView("", AuthView.class);
 		this.navigator.addView("home", MainView.class);
 		this.navigator.addView("periodeView", PeriodeView.class);
 		this.navigator.addView("projectLineListView", ProjectLineListView.class);

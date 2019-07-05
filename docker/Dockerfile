@@ -9,6 +9,7 @@ ENV CATALINA_HOME /usr/local/tomcat
 #Provision Webapp	
 ADD ./SeicentoBilling.war $CATALINA_HOME/webapps/
 ADD ./UrlProtocolExtender.jar /usr/lib/jvm/java-1.8-openjdk/jre/lib/ext
+ADD ./UrlProtocolExtender.jar /usr/local/openjdk-8/jre/lib/ext
 
 EXPOSE 8080
 CMD ["catalina.sh", "run"]
