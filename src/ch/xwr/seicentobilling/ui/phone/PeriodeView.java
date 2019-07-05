@@ -23,6 +23,8 @@ public class PeriodeView extends XdevView {
 
 	@NavigationParameter
 	private String target;
+	@NavigationParameter
+	private String string;
 	/**
 	 *
 	 */
@@ -36,6 +38,8 @@ public class PeriodeView extends XdevView {
 		super.enter(event);
 
 		this.target = Navigation.getParameter(event, "string", String.class);
+
+		this.string = Navigation.getParameter(event, "string", String.class);
 
 	}
 
@@ -73,7 +77,7 @@ public class PeriodeView extends XdevView {
 		final CostAccount bean;
 		final String name = Seicento.getUserName();
 
-		if ("unknown".equals(name)){
+		if ("unknown".equals(name) || name.isEmpty()){
 			bean = dao.find((long) 1); //Dummy
 		} else {
 			bean = dao.findByName(Seicento.getUserName()).get(0);
@@ -81,7 +85,7 @@ public class PeriodeView extends XdevView {
 
 		final XdevBeanContainer<Periode> myList = this.table.getBeanContainerDataSource();
 		myList.removeAll();
-		myList.addAll(new PeriodeDAO().findByCostAccount(bean));
+		myList.addAll(new PeriodeDAO().findByCostAccountOpenPeriode(bean));
 
 		this.table.refreshRowCache();
 		this.table.getBeanContainerDataSource().refresh();

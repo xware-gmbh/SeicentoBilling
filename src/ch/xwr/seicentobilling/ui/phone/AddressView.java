@@ -31,6 +31,7 @@ import com.xdev.ui.navigation.NavigationParameter;
 import com.xdev.util.ConverterBuilder;
 
 import ch.xwr.seicentobilling.dal.CityDAO;
+import ch.xwr.seicentobilling.dal.CustomerLinkDAO;
 import ch.xwr.seicentobilling.entities.City;
 import ch.xwr.seicentobilling.entities.Customer;
 import ch.xwr.seicentobilling.entities.CustomerLink;
@@ -69,7 +70,17 @@ public class AddressView extends XdevView {
 			//postLoadAccountAction(this.customer);
 			setGoogleLink();
 			//setTelLink();
+			loadLinkTable();
 		}
+	}
+
+
+	private void loadLinkTable() {
+		final CustomerLinkDAO dao = new CustomerLinkDAO();
+		//table
+
+		this.table.removeAllItems();
+		this.table.addItems(dao.findByCustomer(this.customer));
 	}
 
 
@@ -180,12 +191,12 @@ public class AddressView extends XdevView {
 		this.linkMaps.setResource(new ExternalResource("https://www.google.com/maps/search/?api=1&query=Sursee"));
 		this.horizontalLayout.setMargin(new MarginInfo(false));
 		this.table.setCaption("Telefon / Mail / Web");
-		this.table.setContainerDataSource(CustomerLink.class);
+		this.table.setContainerDataSource(CustomerLink.class, false);
 		this.table.addGeneratedColumn("generated", new FunctionLinkHyperlink.Generator());
-		this.table.setVisibleColumns(CustomerLink_.cnkLink.getName(), "generated", CustomerLink_.cnkDepartment.getName(),
+		this.table.setVisibleColumns("generated", CustomerLink_.cnkLink.getName(), CustomerLink_.cnkDepartment.getName(),
 				CustomerLink_.cnkValidFrom.getName());
-		this.table.setColumnHeader("cnkLink", "Wert");
 		this.table.setColumnHeader("generated", "Link");
+		this.table.setColumnHeader("cnkLink", "Wert");
 		this.table.setColumnHeader("cnkDepartment", "Bereich");
 		this.table.setColumnHeader("cnkValidFrom", "Gültig ab");
 		this.table.setConverter("cnkValidFrom", ConverterBuilder.stringToDate().dateOnly().build());

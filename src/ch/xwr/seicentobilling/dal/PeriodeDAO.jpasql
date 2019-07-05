@@ -7,3 +7,9 @@ findByCostAccount(CostAccount costaccount)
 	//select * from Company where cmpState = :state
 	select * from Periode where costAccount = :costaccount order by perYear desc, perMonth desc
 }
+
+findByCostAccountOpenPeriode(CostAccount costaccount)
+{
+	//select * from Company where cmpState = :state
+	select * from Periode where costAccount = :costaccount and perBookedExpense = 0 and perState = 1 order by perYear desc, perMonth desc
+}

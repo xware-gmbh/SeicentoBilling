@@ -84,10 +84,10 @@
                         <entry name="txtCusPhone" property="cusInfo" />
                     </x:fields>
                 </XdevFieldGroup>
-                <XdevTable caption="Telefon / Mail / Web" x:name="table" x:entity="CustomerLink">
+                <XdevTable caption="Telefon / Mail / Web" x:name="table" x:entity="CustomerLink" x:autoQuery="false">
                     <x:entityProperties>
-                        <entry type="String" property="cnkLink" caption="Wert" />
                         <entry type="" property="generated" caption="Link" generator="ch.xwr.seicentobilling.ui.desktop.crm.FunctionLinkHyperlink.Generator" />
+                        <entry type="String" property="cnkLink" caption="Wert" />
                         <entry type="Department" property="cnkDepartment" caption="Bereich" />
                         <entry type="Date" property="cnkValidFrom" caption="Gültig ab">
                             <converter dateStyle="DEFAULT" timeStyle="DEFAULT" currency="default" converterType="STRING_TO_DATE" locale="default" dateFormatType="DATE" />
