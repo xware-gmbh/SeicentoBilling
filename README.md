@@ -19,19 +19,17 @@ Folgende technische Komponenten kommen zum Einsatz
 ## Installation SeicentoBilling als Docker Image
 Folgende Voraussetzungen müssen erfüllt sein für die Installation:
 * bestehendes Azure AD Konto
-* Docker
-* MSSQL DB
+* Docker (auf lokaler Maschine mit Docker Desktop unter Windows - ab Version 18.x)
+* MSSQL DB (ab Version 12)
 
 ### Installation Steps
 1. Bereitstellen einer SQL DB ([Anleitung](https://github.com/xware-gmbh/SeicentoBilling/tree/master/flyway)) 
-3. Registrieren einer App im Azure Portal ([Anleitung](https://github.com/xware-gmbh/SeicentoBilling/tree/master/docs/azuread))
-4. Erstellen von [docker-compose.yml](https://github.com/xware-gmbh/SeicentoBilling/blob/master/docker/docker-compose.yml) auf der Docker Maschine
-    - Erstellen eines Reverse Proxy mit nginx ([Anleitung](https://github.com/xware-gmbh/SeicentoBilling/tree/master/docs/nginx))
-5. Setzen der ENV Variablen in docker-compose mit den Werten aus Schritt 1. und 3.
-6. Starten Image (_docker-compose up -d_)
+2. Registrieren einer App im Azure Portal ([Anleitung](https://github.com/xware-gmbh/SeicentoBilling/tree/master/docs/azuread))
+3. Starten des Docker Containers ([Anleitung](https://github.com/xware-gmbh/SeicentoBilling/tree/master/docs/docker))
 
 Optional:
-* Setup Jasperserver/Reports ([Anleitung](https://github.com/xware-gmbh/SeicentoBilling/tree/master/docs/jasperserver))
+* Setup Jasperserver/Reports ([Anleitung](https://github.com/jmurighub/SeicentoSalary/tree/master/docs/jasperserver))
+* Erstellen eines Reverse Proxy mit nginx ([Anleitung](https://github.com/jmurighub/SeicentoSalary/tree/master/docs/nginx))
 
 ## Features
 Folgende Module/Features werden durch SeicentoBilling behandelt:
