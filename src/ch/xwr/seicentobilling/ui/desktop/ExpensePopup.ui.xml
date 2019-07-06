@@ -35,7 +35,6 @@
             <x:typeArguments>
                 <typeArgument type="Periode" />
             </x:typeArguments>
-            <x:data methodName="findAll" />
         </XdevComboBox>
         <XdevLabel x:name="lblExpBooked" value="{$lblExpBooked.value}">
             <x:constraints gridx="3" gridy="1" weighty="0.0" weightx="0.0" width="0px" height="0px" />
@@ -72,7 +71,6 @@
             <x:typeArguments>
                 <typeArgument type="Vat" />
             </x:typeArguments>
-            <x:data methodName="findAll" />
         </XdevComboBox>
         <XdevLabel x:name="lblExpAccount" value="{$lblExpAccount.value}">
             <x:constraints gridx="1" gridy="6" weighty="0.0" weightx="0.0" width="0px" height="0px" />
@@ -98,7 +96,6 @@
             <x:typeArguments>
                 <typeArgument type="Project" />
             </x:typeArguments>
-            <x:data methodName="findAll" />
         </XdevComboBox>
         <XdevLabel x:name="lblExpFlagGeneric" value="{$lblExpFlagGeneric.value}">
             <x:constraints gridx="1" gridy="7" weighty="0.0" weightx="0.0" width="0px" height="0px" />

@@ -608,7 +608,7 @@ public class ProjectTabView extends XdevView {
 		this.txtProRate.setRequired(true);
 		this.lblCostAccount.setValue(StringResourceUtils.optLocalizeString("{$lblCostAccount.value}", this));
 		this.cmbCostAccount.setItemCaptionFromAnnotation(false);
-		this.cmbCostAccount.setContainerDataSource(CostAccount.class, DAOs.get(CostAccountDAO.class).findAll());
+		this.cmbCostAccount.setContainerDataSource(CostAccount.class);
 		this.cmbCostAccount.setItemCaptionPropertyId(CostAccount_.csaName.getName());
 		this.lblBillingAddress.setValue("R-Adresse");
 		this.cmbBillingAddress.setItemCaptionFromAnnotation(false);
@@ -623,7 +623,7 @@ public class ProjectTabView extends XdevView {
 		this.cmbVat.setContainerDataSource(Vat.class);
 		this.cmbVat.setItemCaptionPropertyId("fullName");
 		this.lblProject.setValue(StringResourceUtils.optLocalizeString("{$lblProject.value}", this));
-		this.cmbProject.setContainerDataSource(Project.class, DAOs.get(ProjectDAO.class).findAll());
+		this.cmbProject.setContainerDataSource(Project.class);
 		this.cmbProject.setItemCaptionPropertyId(Project_.proName.getName());
 		this.lblProDescription.setValue(StringResourceUtils.optLocalizeString("{$lblProDescription.value}", this));
 		this.textArea.setRows(5);

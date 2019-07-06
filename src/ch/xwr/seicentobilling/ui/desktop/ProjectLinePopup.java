@@ -16,7 +16,6 @@ import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Window;
-import com.xdev.dal.DAOs;
 import com.xdev.res.ApplicationResource;
 import com.xdev.res.StringResourceUtils;
 import com.xdev.ui.XdevButton;
@@ -33,7 +32,6 @@ import com.xdev.util.ConverterBuilder;
 import ch.xwr.seicentobilling.business.LovState;
 import ch.xwr.seicentobilling.business.RowObjectManager;
 import ch.xwr.seicentobilling.dal.PeriodeDAO;
-import ch.xwr.seicentobilling.dal.ProjectDAO;
 import ch.xwr.seicentobilling.dal.ProjectLineDAO;
 import ch.xwr.seicentobilling.dal.ProjectLineTemplateDAO;
 import ch.xwr.seicentobilling.entities.Periode;
@@ -58,8 +56,8 @@ public class ProjectLinePopup extends XdevView {
 		this.comboBoxWorktype.addItems((Object[]) LovState.WorkType.values());
 
 		// get Parameter
-		final Long beanId = (Long) UI.getCurrent().getSession().getAttribute("beanId");
-		final Long objId = (Long) UI.getCurrent().getSession().getAttribute("objId");
+		final Long beanId = (Long) UI.getCurrent().getSession().getAttribute("beanId"); //projectline
+		final Long objId = (Long) UI.getCurrent().getSession().getAttribute("objId");   //Periode
 		ProjectLine bean = null;
 		Periode obj = null;
 
@@ -186,7 +184,8 @@ public class ProjectLinePopup extends XdevView {
 	private void cmbProject_valueChange(final Property.ValueChangeEvent event) {
 		if (this.fieldGroup.getItemDataSource().getBean().getPrlId() == null) {
 			if (this.cmbProject.isModified()) {
-				final Project obj = (Project) event.getProperty().getValue();
+				//final Project obj = (Project) event.getProperty().getValue();
+				final Project obj = this.cmbProject.getSelectedItem().getBean();
 				this.txtPrlRate.setValue("SFr. " + obj.getProRate());
 			}
 		}
@@ -366,7 +365,7 @@ public class ProjectLinePopup extends XdevView {
 
 		this.lblPeriode.setValue(StringResourceUtils.optLocalizeString("{$lblPeriode.value}", this));
 		this.cmbPeriode.setTabIndex(51);
-		this.cmbPeriode.setContainerDataSource(Periode.class, DAOs.get(PeriodeDAO.class).findAll());
+		this.cmbPeriode.setContainerDataSource(Periode.class);
 		this.cmbPeriode.setItemCaptionPropertyId(Periode_.perName.getName());
 		this.lblPrlReportDate.setValue(StringResourceUtils.optLocalizeString("{$lblPrlReportDate.value}", this));
 		this.datePrlReportDate.setTabIndex(52);
@@ -374,7 +373,7 @@ public class ProjectLinePopup extends XdevView {
 		this.lblProject.setValue(StringResourceUtils.optLocalizeString("{$lblProject.value}", this));
 		this.cmbProject.setTabIndex(53);
 		this.cmbProject.setRequired(true);
-		this.cmbProject.setContainerDataSource(Project.class, DAOs.get(ProjectDAO.class).findAll());
+		this.cmbProject.setContainerDataSource(Project.class);
 		this.cmbProject.setItemCaptionPropertyId(Project_.proName.getName());
 		this.lblPrlHours.setValue(StringResourceUtils.optLocalizeString("{$lblPrlHours.value}", this));
 		this.txtPrlHours.setConverter(ConverterBuilder.stringToDouble().build());

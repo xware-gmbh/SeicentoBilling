@@ -32,8 +32,6 @@ import ch.xwr.seicentobilling.dal.ExpenseDAO;
 import ch.xwr.seicentobilling.dal.ExpenseTemplateDAO;
 import ch.xwr.seicentobilling.dal.LovAccountDAO;
 import ch.xwr.seicentobilling.dal.PeriodeDAO;
-import ch.xwr.seicentobilling.dal.ProjectDAO;
-import ch.xwr.seicentobilling.dal.VatDAO;
 import ch.xwr.seicentobilling.entities.Expense;
 import ch.xwr.seicentobilling.entities.ExpenseTemplate;
 import ch.xwr.seicentobilling.entities.Expense_;
@@ -375,7 +373,7 @@ public class ExpensePopup extends XdevView {
 
 		this.lblPeriode.setValue(StringResourceUtils.optLocalizeString("{$lblPeriode.value}", this));
 		this.cmbPeriode.setTabIndex(1);
-		this.cmbPeriode.setContainerDataSource(Periode.class, DAOs.get(PeriodeDAO.class).findAll());
+		this.cmbPeriode.setContainerDataSource(Periode.class);
 		this.cmbPeriode.setItemCaptionPropertyId(Periode_.perName.getName());
 		this.lblExpBooked.setValue(StringResourceUtils.optLocalizeString("{$lblExpBooked.value}", this));
 		this.dateExpBooked.setTabIndex(2);
@@ -392,7 +390,7 @@ public class ExpensePopup extends XdevView {
 		this.cmbVat.setTabIndex(6);
 		this.cmbVat.setRequired(true);
 		this.cmbVat.setItemCaptionFromAnnotation(false);
-		this.cmbVat.setContainerDataSource(Vat.class, DAOs.get(VatDAO.class).findAll());
+		this.cmbVat.setContainerDataSource(Vat.class);
 		this.cmbVat.setItemCaptionPropertyId("fullName");
 		this.lblExpAccount.setValue(StringResourceUtils.optLocalizeString("{$lblExpAccount.value}", this));
 		this.comboBoxAccount.setTabIndex(7);
@@ -403,7 +401,7 @@ public class ExpensePopup extends XdevView {
 		this.lblProject.setValue(StringResourceUtils.optLocalizeString("{$lblProject.value}", this));
 		this.cmbProject.setTabIndex(8);
 		this.cmbProject.setRequired(true);
-		this.cmbProject.setContainerDataSource(Project.class, DAOs.get(ProjectDAO.class).findAll());
+		this.cmbProject.setContainerDataSource(Project.class);
 		this.cmbProject.setItemCaptionPropertyId(Project_.proName.getName());
 		this.lblExpFlagGeneric.setValue(StringResourceUtils.optLocalizeString("{$lblExpFlagGeneric.value}", this));
 		this.comboBoxGeneric.setTabIndex(9);
