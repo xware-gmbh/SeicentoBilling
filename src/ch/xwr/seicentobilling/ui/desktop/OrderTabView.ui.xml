@@ -170,7 +170,6 @@
                                 <x:typeArguments>
                                     <typeArgument type="Project" />
                                 </x:typeArguments>
-                                <x:data methodName="findAll" />
                             </XdevComboBox>
                             <XdevLabel x:name="lblPaymentCondition" value="{$lblPaymentCondition.value}">
                                 <x:constraints gridx="3" gridy="5" weighty="0.0" weightx="0.0" width="0px" height="0px" />

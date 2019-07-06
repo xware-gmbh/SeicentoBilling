@@ -60,7 +60,6 @@ import ch.xwr.seicentobilling.dal.CustomerDAO;
 import ch.xwr.seicentobilling.dal.OrderDAO;
 import ch.xwr.seicentobilling.dal.OrderLineDAO;
 import ch.xwr.seicentobilling.dal.PaymentConditionDAO;
-import ch.xwr.seicentobilling.dal.ProjectDAO;
 import ch.xwr.seicentobilling.entities.City_;
 import ch.xwr.seicentobilling.entities.Customer;
 import ch.xwr.seicentobilling.entities.Customer_;
@@ -956,15 +955,13 @@ public class OrderTabView extends XdevView {
 		this.verticalLayoutLeft.setMargin(new MarginInfo(false));
 		this.actionLayout.setSpacing(false);
 		this.actionLayout.setMargin(new MarginInfo(false));
-		this.cmdNew
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/new1_16.png"));
+		this.cmdNew.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/new1_16.png"));
 		this.cmdNew.setDescription(StringResourceUtils.optLocalizeString("{$cmdNew.description}", this));
-		this.cmdDelete.setIcon(
-				new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/delete3_16.png"));
-		this.cmdReload
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/reload2.png"));
-		this.cmdInfo.setIcon(
-				new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/info_small.jpg"));
+		this.cmdDelete
+				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/delete3_16.png"));
+		this.cmdReload.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/reload2.png"));
+		this.cmdInfo
+				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/info_small.jpg"));
 		this.cmdCopy.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/copy1.png"));
 		this.cmdCopy.setDescription("Rechnung kopieren");
 		this.cmdReport.setIcon(
@@ -982,12 +979,11 @@ public class OrderTabView extends XdevView {
 		this.table.setContainerDataSource(Order.class, NestedProperty.of(Order_.customer, Customer_.cusNumber),
 				NestedProperty.of("customer.shortname", String.class),
 				NestedProperty.of(Order_.customer, Customer_.city, City_.ctyName));
-		this.table.setVisibleColumns(Order_.ordNumber.getName(),
-				NestedProperty.path(Order_.customer, Customer_.cusNumber), "customer.shortname",
-				NestedProperty.path(Order_.customer, Customer_.city, City_.ctyName), Order_.ordAmountBrut.getName(),
-				Order_.ordAmountNet.getName(), Order_.ordBillDate.getName(), Order_.project.getName(),
-				Order_.paymentCondition.getName(), Order_.ordBookedOn.getName(), Order_.ordCreatedBy.getName(),
-				Order_.ordState.getName());
+		this.table.setVisibleColumns(Order_.ordNumber.getName(), NestedProperty.path(Order_.customer, Customer_.cusNumber),
+				"customer.shortname", NestedProperty.path(Order_.customer, Customer_.city, City_.ctyName),
+				Order_.ordAmountBrut.getName(), Order_.ordAmountNet.getName(), Order_.ordBillDate.getName(),
+				Order_.project.getName(), Order_.paymentCondition.getName(), Order_.ordBookedOn.getName(),
+				Order_.ordCreatedBy.getName(), Order_.ordState.getName());
 		this.table.setColumnHeader("ordNumber", "Nummer");
 		this.table.setConverter("ordNumber", ConverterBuilder.stringToBigInteger().groupingUsed(false).build());
 		this.table.setColumnHeader("customer.cusNumber", "K#");
@@ -1032,7 +1028,7 @@ public class OrderTabView extends XdevView {
 		this.lblOrdText.setValue(StringResourceUtils.optLocalizeString("{$lblOrdText.value}", this));
 		this.txtOrdText.setMaxLength(255);
 		this.lblProject.setValue(StringResourceUtils.optLocalizeString("{$lblProject.value}", this));
-		this.cmbProject.setContainerDataSource(Project.class, DAOs.get(ProjectDAO.class).findAll());
+		this.cmbProject.setContainerDataSource(Project.class);
 		this.cmbProject.setItemCaptionPropertyId(Project_.proName.getName());
 		this.lblPaymentCondition.setValue(StringResourceUtils.optLocalizeString("{$lblPaymentCondition.value}", this));
 		this.cmbPaymentCondition.setRequired(true);
@@ -1074,14 +1070,13 @@ public class OrderTabView extends XdevView {
 		this.cmdNewLine
 				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/new1_16.png"));
 		this.cmdNewLine.setDescription(StringResourceUtils.optLocalizeString("{$cmdNewLine.description}", this));
-		this.cmdDeleteLine.setIcon(
-				new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/delete3_16.png"));
+		this.cmdDeleteLine
+				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/delete3_16.png"));
 		this.cmdReloadLine
 				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/reload2.png"));
-		this.cmdInfoLine.setIcon(
-				new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/info_small.jpg"));
-		this.cmdEditLine
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/edit1.png"));
+		this.cmdInfoLine
+				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/info_small.jpg"));
+		this.cmdEditLine.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/edit1.png"));
 		this.tableLine.setColumnReorderingAllowed(true);
 		this.tableLine.setColumnCollapsingAllowed(true);
 		this.tableLine.setContainerDataSource(OrderLine.class, false);
@@ -1116,15 +1111,13 @@ public class OrderTabView extends XdevView {
 		this.horizontalLayout.setMargin(new MarginInfo(false));
 		this.cmdSave.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/save1.png"));
 		this.cmdSave.setCaption(StringResourceUtils.optLocalizeString("{$cmdSave.caption}", this));
-		this.cmdReset
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/cancel1.png"));
+		this.cmdReset.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/cancel1.png"));
 		this.cmdReset.setCaption(StringResourceUtils.optLocalizeString("{$cmdReset.caption}", this));
 
 		MasterDetail.connect(this.table, this.fieldGroup);
 
-		this.containerFilterComponent.setContainer(this.table.getBeanContainerDataSource(), "customer",
-				"paymentCondition", "project", "ordNumber", "ordState", "ordAmountBrut", "ordOrderDate", "ordBillDate",
-				"ordPayDate");
+		this.containerFilterComponent.setContainer(this.table.getBeanContainerDataSource(), "customer", "paymentCondition",
+				"project", "ordNumber", "ordState", "ordAmountBrut", "ordOrderDate", "ordBillDate", "ordPayDate");
 		this.containerFilterComponent.setSearchableProperties("ordCreatedBy", "ordText", "customer.cusCompany",
 				"customer.cusName", "project.proName", "project.proExtReference");
 
@@ -1249,8 +1242,8 @@ public class OrderTabView extends XdevView {
 		this.gridLayoutDetails.addComponent(gridLayoutDetails_vSpacer, 0, 5, 1, 5);
 		this.gridLayoutDetails.setRowExpandRatio(5, 1.0F);
 		this.gridLayoutHdr.setSizeFull();
-		this.tabSheet.addTab(this.gridLayoutHdr,
-				StringResourceUtils.optLocalizeString("{$gridLayoutHdr.caption}", this), null);
+		this.tabSheet.addTab(this.gridLayoutHdr, StringResourceUtils.optLocalizeString("{$gridLayoutHdr.caption}", this),
+				null);
 		this.gridLayoutDetails.setSizeFull();
 		this.tabSheet.addTab(this.gridLayoutDetails,
 				StringResourceUtils.optLocalizeString("{$gridLayoutDetails.caption}", this), null);
