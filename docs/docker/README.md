@@ -37,5 +37,5 @@ Container starten mit _docker-compose up -d_
 
 Wenn alles korrekt ist kann nun das GUI via Browser aufgerufen werden [http://localhost:8080](http://localhost:8080)
 
-![Login SeicentoBilling](https://github.com/xware-gmbh/SeicentoBilling/blob/master/docs/images/Login_SeicentoBilling.PNG "Login SeicentoBilling")  
+  
  

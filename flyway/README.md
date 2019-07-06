@@ -40,20 +40,19 @@ __flyway.password__=[your password]
 Um flyway zu testen wie folgt vorgehen:  
 * Starten CMD (Kommandozeile)
 * Navigieren nach C:\xtra\tryout\flyway-5.2.4
-* ausführen _flyway migrate_
+* ausführen _flyway info_
 
 Output flyway info könnte in etwa so aussehen:  
 ![flyway info](https://github.com/xware-gmbh/SeicentoBilling/blob/master/docs/images/flyway-infosalary.PNG "flyway info")   
 
 ### DB migrieren mit flyway
 Um die Tabellen zu erstellen sind nun noch folgende Schritte nötig:
-* Sql Scripts kopieren (von Github _SeicentoBilling/flyway/sql_ nach _C:\xtra\tryout\flyway-5.2.4\sql_)
+* Sql Scripts kopieren (von Github _SeicentoBilling/flyway/sql_ nach _C:\xtra\tryout\flyway-5.2.4\sql_)   
+    Kopierte SQL Dateien:    
+    ![flywaysql](https://github.com/xware-gmbh/SeicentoBilling/blob/master/docs/images/flyway-copyscripts.PNG "flyway sql"))
 * ausführen _flyway migrate_ von der Kommandozeile
 
-Kopierte SQL Dateien:    
-![flywaysql](https://github.com/xware-gmbh/SeicentoBilling/blob/master/docs/images/flyway-copyscripts.PNG "flyway sql"))
-
-Nachdem _flyway migrate_ durchgelaufen ist, sollten nun die Tabellen vorhanden sein: ![sql management studio](https://github.com/xware-gmbh/SeicentoBilling/blob/master/docs/images/sqlmanagmentstudio.PNG "sql managment studio")  )
+Nachdem _flyway migrate_ durchgelaufen ist, sollten nun die Tabellen vorhanden sein:  ![sql management studio](https://github.com/xware-gmbh/SeicentoBilling/blob/master/docs/images/sqlmanagmentstudio.PNG "sql managment studio")  )
 
 ## Next Step
 Registrieren einer App im Azure Portal ([Anleitung](https://github.com/xware-gmbh/SeicentoBilling/tree/master/docs/azuread))   

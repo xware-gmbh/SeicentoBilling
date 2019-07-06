@@ -28,8 +28,8 @@ Folgende Voraussetzungen müssen erfüllt sein für die Installation:
 3. Starten des Docker Containers ([Anleitung](https://github.com/xware-gmbh/SeicentoBilling/tree/master/docs/docker))
 
 Optional:
-* Setup Jasperserver/Reports ([Anleitung](https://github.com/jmurighub/SeicentoSalary/tree/master/docs/jasperserver))
-* Erstellen eines Reverse Proxy mit nginx ([Anleitung](https://github.com/jmurighub/SeicentoSalary/tree/master/docs/nginx))
+* Setup Jasperserver/Reports ([Anleitung](https://github.com/xware-gmbh/SeicentoSalary/tree/master/docs/jasperserver))
+* Erstellen eines Reverse Proxy mit nginx ([Anleitung](https://github.com/xware-gmbh/SeicentoSalary/tree/master/docs/nginx))
 
 ## Features
 Folgende Module/Features werden durch SeicentoBilling behandelt:
