@@ -80,7 +80,7 @@ public class CostAccount implements java.io.Serializable {
 		this.csaCode = csaCode;
 	}
 
-	@Caption("CsaName")
+	@Caption("Name")
 	@Column(name = "csaName", columnDefinition = "nvarchar")
 	public String getCsaName() {
 		return this.csaName;
@@ -90,7 +90,7 @@ public class CostAccount implements java.io.Serializable {
 		this.csaName = csaName;
 	}
 
-	@Caption("CsaState")
+	@Caption("Status")
 	@Column(name = "csaState", columnDefinition = "smallint")
 	public LovState.State getCsaState() {
 		return this.csaState;

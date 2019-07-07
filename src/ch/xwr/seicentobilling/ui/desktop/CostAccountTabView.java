@@ -23,6 +23,8 @@ import com.xdev.ui.XdevVerticalLayout;
 import com.xdev.ui.XdevView;
 import com.xdev.ui.entitycomponent.combobox.XdevComboBox;
 import com.xdev.ui.entitycomponent.table.XdevTable;
+import com.xdev.ui.filter.FilterData;
+import com.xdev.ui.filter.FilterOperator;
 import com.xdev.ui.filter.XdevContainerFilterComponent;
 import com.xdev.ui.masterdetail.MasterDetail;
 
@@ -44,6 +46,17 @@ public class CostAccountTabView extends XdevView {
 
 		//Type
 		this.comboBoxState.addItems((Object[])LovState.State.values());
+
+		setDefaultFilter();
+
+
+	}
+
+	private void setDefaultFilter() {
+		final LovState.State[] valState = new LovState.State[] { LovState.State.active };
+		final FilterData[] fd = new FilterData[] { new FilterData("csaState", new FilterOperator.Is(), valState) };
+
+		this.containerFilterComponent.setFilterData(fd);
 
 	}
 
@@ -71,6 +84,7 @@ public class CostAccountTabView extends XdevView {
 
 		Notification.show("Save clicked", "Daten wurden gespeichert", Notification.Type.TRAY_NOTIFICATION);
 
+		cmdReload_buttonClick(event);
 	}
 
 	/**
@@ -146,9 +160,33 @@ public class CostAccountTabView extends XdevView {
 	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
 	 */
 	private void cmdReload_buttonClick(final Button.ClickEvent event) {
+
+		// save filter
+		final FilterData[] fd = this.containerFilterComponent.getFilterData();
+		this.containerFilterComponent.setFilterData(null);
+		final int idx = this.table.getCurrentPageFirstItemIndex();
+
+		// clear+reload List
+		this.table.removeAllItems();
+
 		this.table.refreshRowCache();
-		this.table.getBeanContainerDataSource().refresh();
-		this.table.sort();
+		this.table.getBeanContainerDataSource().addAll(new CostAccountDAO().findAll());
+
+		// reassign filter
+		this.containerFilterComponent.setFilterData(fd);
+
+		if (this.fieldGroup.getItemDataSource() != null) {
+			final CostAccount bean = this.fieldGroup.getItemDataSource().getBean();
+			if (bean != null) {
+				this.table.select(bean);
+
+				if (idx > 0) {
+					this.table.setCurrentPageFirstItemIndex(idx);
+				}
+				//this.table.setCurrentPageFirstItemId(bean);
+			}
+		}
+
 	}
 
 	/**
@@ -227,7 +265,7 @@ public class CostAccountTabView extends XdevView {
 		this.txtCsaName.setMaxLength(50);
 		this.lblCostAccount.setValue(StringResourceUtils.optLocalizeString("{$lblCostAccount.value}", this));
 		this.cmbCostAccount.setTabIndex(3);
-		this.cmbCostAccount.setContainerDataSource(CostAccount.class, DAOs.get(CostAccountDAO.class).findAll());
+		this.cmbCostAccount.setContainerDataSource(CostAccount.class, DAOs.get(CostAccountDAO.class).findAllActive());
 		this.cmbCostAccount.setItemCaptionPropertyId(CostAccount_.csaCode.getName());
 		this.lblCsaState.setValue(StringResourceUtils.optLocalizeString("{$lblCsaState.value}", this));
 		this.horizontalLayout2.setMargin(new MarginInfo(false));

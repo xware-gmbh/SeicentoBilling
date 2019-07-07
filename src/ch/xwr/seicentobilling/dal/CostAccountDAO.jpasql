@@ -5,3 +5,8 @@ findByName(String name)
 	//select * from Company where cmpState = :state
 	select * from CostAccount where csaName = :name
 }
+
+findAllActive()
+{
+	select * from CostAccount where csaState = 1 order by csaName asc	
+}
