@@ -24,6 +24,7 @@ import com.xdev.ui.XdevView;
 import com.xdev.ui.entitycomponent.combobox.XdevComboBox;
 import com.xdev.ui.entitycomponent.table.XdevTable;
 import com.xdev.ui.filter.FilterData;
+import com.xdev.ui.filter.FilterOperator;
 import com.xdev.ui.filter.XdevContainerFilterComponent;
 import com.xdev.ui.masterdetail.MasterDetail;
 import com.xdev.util.ConverterBuilder;
@@ -46,6 +47,15 @@ public class VatTabView extends XdevView {
 
 		//Type
 		this.comboBoxState.addItems((Object[])LovState.State.values());
+
+		setDefaultFilter();
+	}
+
+	private void setDefaultFilter() {
+		final LovState.State[] valState = new LovState.State[] { LovState.State.active };
+		final FilterData[] fd = new FilterData[] { new FilterData("vatState", new FilterOperator.Is(), valState) };
+
+		this.containerFilterComponent.setFilterData(fd);
 
 	}
 
