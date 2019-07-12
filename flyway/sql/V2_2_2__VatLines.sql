@@ -7,7 +7,10 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE TABLE [dbo].[VatLine](
+IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = N'VatLine')
+BEGIN
+
+	CREATE TABLE [dbo].[VatLine](
 	[vanId] [bigint] IDENTITY(1,1) NOT NULL,
 	[vanValidFrom] [date] NOT NULL,
 	[vanvatId] [bigint] NOT NULL,
@@ -19,14 +22,15 @@ CREATE TABLE [dbo].[VatLine](
 	[vanId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
-GO
 
 ALTER TABLE [dbo].[VatLine]  WITH CHECK ADD  CONSTRAINT [FK_VatLine_Vat] FOREIGN KEY([vanvatId])
 REFERENCES [dbo].[Vat] ([vatId])
-GO
 
 ALTER TABLE [dbo].[VatLine] CHECK CONSTRAINT [FK_VatLine_Vat]
+	
+END
 GO
+
 
 
 /****** Add to Entity ****/            
