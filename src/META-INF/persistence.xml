@@ -21,6 +21,7 @@
 		<class>ch.xwr.seicentobilling.entities.Expense</class>
 		<class>ch.xwr.seicentobilling.entities.RowLabel</class>
 		<class>ch.xwr.seicentobilling.entities.Vat</class>
+		<class>ch.xwr.seicentobilling.entities.VatLine</class>
 		<class>ch.xwr.seicentobilling.entities.Item</class>
 		<class>ch.xwr.seicentobilling.entities.OrderLine</class>
 		<class>ch.xwr.seicentobilling.entities.Entity</class>
@@ -63,12 +64,11 @@
 			<property name="hibernate.transaction.auto_close_session"
 				value="false" />
 				
-			<!-- local Database -->
-			<property name="javax.persistence.jdbc.url"
-				value="jdbc:sqlserver://localhost:1433;databaseName=seicento" />
-			<property name="javax.persistence.jdbc.password"
-				value="usrseicento" />
-				 													
+<property name="javax.persistence.jdbc.url"
+	value="jdbc:sqlserver://localhost:1433;databaseName=seicento" />
+<property name="javax.persistence.jdbc.password"
+	value="usrseicento" />
+				
 			<property name="javax.persistence.jdbc.user"
 				value="usrseicento" />
 				
