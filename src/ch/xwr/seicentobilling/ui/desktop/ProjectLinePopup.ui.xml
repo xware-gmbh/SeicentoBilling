@@ -42,8 +42,8 @@
         <XdevLabel x:name="lblProject" value="{$lblProject.value}">
             <x:constraints gridx="1" gridy="3" weighty="0.0" weightx="0.0" width="0px" height="0px" />
         </XdevLabel>
-        <XdevComboBox tabIndex="53" required="true" x:name="cmbProject" x:entity="Project">
-            <x:constraints gridx="2" gridy="3" weighty="0.0" weightx="1.0" width="100%" height="0px" />
+        <XdevComboBox tabIndex="53" required="true" x:name="cmbProject" autoQueryData="false" immediate="false" x:entity="Project" x:autoQuery="false">
+            <x:constraints gridx="2" gridy="3" weighty="0.0" weightx="1.0" width="100%" gridWidth="2" height="0px" />
             <x:entityProperty>
                 <entry type="String" property="proName" />
             </x:entityProperty>
@@ -52,25 +52,29 @@
             </x:typeArguments>
             <x:event>valueChange.valueChange</x:event>
         </XdevComboBox>
+        <XdevButton icon="FontAwesome.SEARCH" caption="" description="Suchen..." tabIndex="54" x:name="btnSearch">
+            <x:constraints gridx="4" gridy="3" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+            <x:event>click.buttonClick</x:event>
+        </XdevButton>
         <XdevLabel x:name="lblPrlHours" value="{$lblPrlHours.value}">
             <x:constraints gridx="1" gridy="4" weighty="0.0" weightx="0.0" width="0px" height="0px" />
         </XdevLabel>
-        <XdevTextField columns="5" tabIndex="54" required="true" x:name="txtPrlHours">
+        <XdevTextField columns="5" tabIndex="55" required="true" x:name="txtPrlHours">
             <converter numberType="Double" numberFormatType="number" currency="default" converterType="STRING_TO_NUMBER" locale="default" />
             <x:constraints gridx="2" gridy="4" weighty="0.0" weightx="1.0" width="100%" height="0px" />
         </XdevTextField>
         <XdevLabel x:name="lblPrlRate" value="{$lblPrlRate.value}">
             <x:constraints gridx="3" gridy="4" weighty="0.0" weightx="0.0" width="0px" height="0px" />
         </XdevLabel>
-        <XdevTextField columns="5" tabIndex="55" required="true" x:name="txtPrlRate">
+        <XdevTextField columns="5" tabIndex="56" required="true" x:name="txtPrlRate">
             <converter numberType="Double" numberFormatType="currency" currency="default" converterType="STRING_TO_NUMBER" locale="default" />
             <x:constraints gridx="4" gridy="4" weighty="0.0" weightx="1.0" width="100%" height="0px" />
         </XdevTextField>
         <XdevLabel x:name="lblPrlText" value="{$lblPrlText.value}">
             <x:constraints gridx="1" gridy="5" weighty="0.0" weightx="0.0" width="0px" height="0px" />
         </XdevLabel>
-        <XdevTextField columns="5" tabIndex="56" x:name="txtPrlText" maxLength="384">
-            <x:constraints gridx="2" gridy="5" weighty="0.0" weightx="1.0" width="100%" gridWidth="3" height="0px" />
+        <XdevTextField columns="5" tabIndex="57" x:name="txtPrlText" maxLength="384">
+            <x:constraints gridx="2" gridy="5" weighty="0.0" weightx="1.0" width="100%" gridWidth="2" height="0px" />
         </XdevTextField>
         <XdevLabel x:name="lblPrlWorkType" value="{$lblPrlWorkType.value}">
             <x:constraints gridx="1" gridy="6" weighty="0.0" weightx="0.0" width="0px" height="0px" />
@@ -90,8 +94,19 @@
                 <typeArgument type="?" />
             </x:typeArguments>
         </XdevComboBox>
+        <XdevHorizontalLayout x:name="horizontalLayout" margin="">
+            <x:constraints gridx="1" gridy="7" weighty="0.0" weightx="0.0" width="100%" alignment="MIDDLE_CENTER" gridWidth="3" height="0px" />
+            <XdevButton icon="WebContent/WEB-INF/resources/images/save1.png" caption="{$cmdSave.caption}" x:name="cmdSave" x:shortcut="ENTER">
+                <x:constraints weightx="0.0" width="0px" alignment="MIDDLE_LEFT" height="0px" />
+                <x:event>click.buttonClick</x:event>
+            </XdevButton>
+            <XdevButton icon="WebContent/WEB-INF/resources/images/cancel1.png" caption="{$cmdCancel.caption}" x:name="cmdCancel" x:shortcut="ESCAPE">
+                <x:constraints weightx="0.0" width="0px" alignment="MIDDLE_LEFT" height="0px" />
+                <x:event>click.buttonClick</x:event>
+            </XdevButton>
+        </XdevHorizontalLayout>
         <XdevHorizontalLayout x:name="horizontalLayout2" margin="">
-            <x:constraints gridx="1" gridy="8" weighty="0.0" weightx="0.0" width="100%" gridWidth="3" height="-1px" />
+            <x:constraints gridx="1" gridy="8" weighty="0.0" weightx="0.0" width="100%" gridWidth="2" height="-1px" />
             <XdevButton caption="K1" description="CTRL + 1" styleName="borderless tiny" x:name="cmdAction01" x:shortcut="CTRL+NUM1">
                 <x:constraints gridHeight="1" gridx="4" gridy="7" weighty="0.0" weightx="0.0" width="0px" alignment="MIDDLE_RIGHT" gridWidth="1" height="0px" />
                 <x:event>click.buttonClick</x:event>
@@ -144,22 +159,11 @@
                 <entry name="txtPrlText" property="prlText" />
                 <entry name="txtPrlRate" property="prlRate" />
                 <entry name="cmbProject" property="project" />
-                <entry name="txtPrlitmId" property="prlitmId" />
                 <entry name="comboBoxWorktype" property="prlWorkType" />
                 <entry name="comboBoxState" property="prlState" />
+                <entry name="" property="prlitmId" />
             </x:fields>
         </XdevFieldGroup>
-        <XdevHorizontalLayout x:name="horizontalLayout" margin="">
-            <x:constraints gridx="1" gridy="7" weighty="0.0" weightx="0.0" width="100%" alignment="MIDDLE_CENTER" gridWidth="4" height="0px" />
-            <XdevButton icon="WebContent/WEB-INF/resources/images/save1.png" caption="{$cmdSave.caption}" x:name="cmdSave" x:shortcut="ENTER">
-                <x:constraints weightx="0.0" width="0px" alignment="MIDDLE_LEFT" height="0px" />
-                <x:event>click.buttonClick</x:event>
-            </XdevButton>
-            <XdevButton icon="WebContent/WEB-INF/resources/images/cancel1.png" caption="{$cmdCancel.caption}" x:name="cmdCancel" x:shortcut="ESCAPE">
-                <x:constraints weightx="0.0" width="0px" alignment="MIDDLE_LEFT" height="0px" />
-                <x:event>click.buttonClick</x:event>
-            </XdevButton>
-        </XdevHorizontalLayout>
     </XdevGridLayout>
 </XdevView>
 

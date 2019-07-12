@@ -43,6 +43,7 @@ public class OrderGenerator {
 				bill.setCustomer(pln.getProject().getCustomer());
 				bill.setProject(pln.getProject());
 				bill.setCostaccount(pln.getPeriode().getCostAccount());
+				bill.setPeriode(inp);
 				this._billMap.put(proId, bill);
 			} else {
 				bill = this._billMap.get(proId);
@@ -148,12 +149,12 @@ public class OrderGenerator {
 	}
 
 	private void createPositions(final Order hdr, final BillDto billDto) {
-		createPosition(hdr, billDto.getProjectHours(), 0);
-		createPosition(hdr, billDto.getJourneyHours(), 2);
-		createPosition(hdr, billDto.getExpenseHours(), 1);
+		createPosition(hdr, billDto, billDto.getProjectHours(), 0);
+		createPosition(hdr, billDto, billDto.getJourneyHours(), 2);
+		createPosition(hdr, billDto, billDto.getExpenseHours(), 1);
 	}
 
-	private void createPosition(final Order hdr, final List<BillLine> list, final int flag) {
+	private void createPosition(final Order hdr, final BillDto billDto, final List<BillLine> list, final int flag) {
 		final OrderLineDAO dao = new OrderLineDAO();
 
 		if (list!= null && ! list.isEmpty()) {
@@ -170,15 +171,15 @@ public class OrderGenerator {
 				switch (flag) {
 				case 0:
 					pos.setItem(this._guifld.getItemProject());
-					pos.setOdlText(disolveLineText(tmp,  hdr, this._guifld.getLineTextProject()));
+					pos.setOdlText(disolveLineText(billDto, tmp, this._guifld.getLineTextProject()));
 					break;
 				case 1:
 					pos.setItem(this._guifld.getItemExpense());
-					pos.setOdlText(disolveLineText(tmp,  hdr, this._guifld.getLineTextExpense()));
+					pos.setOdlText(disolveLineText(billDto, tmp, this._guifld.getLineTextExpense()));
 					break;
 				case 2:
 					pos.setItem(this._guifld.getItemJourney());
-					pos.setOdlText(disolveLineText(tmp,  hdr,this._guifld.getLineTextJourney()));
+					pos.setOdlText(disolveLineText(billDto, tmp, this._guifld.getLineTextJourney()));
 					break;
 				}
 
@@ -247,11 +248,17 @@ public class OrderGenerator {
 			contact = billDto.getProject().getProContact();
 		}
 
+		String monthText = LovState.Month.fromId(billDto.getPeriode().getPerMonth().getValue()).name();
+		monthText = monthText.substring(0, 1).toUpperCase() + monthText.substring(1);
+
         text = text.replace("{proExtReference}", getText(billDto.getProject().getProExtReference()));
         text = text.replace("{proName}", billDto.getProject().getProName().trim());
         text = text.replace("{proContact}", contact.trim());
         //subject = subject.replace("#", "%23");
         text = text.replace("{csaName}", billDto.getCostaccount().getCsaName().trim());
+        text = text.replace("{perYear}", billDto.getPeriode().getPerYear().toString());
+        text = text.replace("{perMonth}", "" + billDto.getPeriode().getPerMonth().getValue());
+        text = text.replace("{perMonthText}", monthText);
 
 		return text;
 	}
@@ -264,10 +271,16 @@ public class OrderGenerator {
 		return input.trim();
 	}
 
-	private String disolveLineText(final BillLine tmp, final Order hdr, String text) {
+	private String disolveLineText(final BillDto billDto, final BillLine tmp, String text) {
+		String monthText = LovState.Month.fromId(billDto.getPeriode().getPerMonth().getValue()).name();
+		monthText = monthText.substring(0, 1).toUpperCase() + monthText.substring(1);
 
         text = text.replace("{csaName}", tmp.getCostaccount().getCsaName().trim());
         text = text.replace("{csaCode}", tmp.getCostaccount().getCsaCode().trim());
+        text = text.replace("{perYear}", billDto.getPeriode().getPerYear().toString());
+        text = text.replace("{perMonth}", "" + billDto.getPeriode().getPerMonth().getValue());
+        text = text.replace("{perMonthText}", monthText);
+
 
 		return text;
 	}

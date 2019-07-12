@@ -503,11 +503,13 @@ public class OrderGenerateTabView extends XdevView {
 		this.labelInfoToolTip.setIcon(FontAwesome.INFO_CIRCLE);
 		this.labelInfoToolTip.setDescription("Es ist ein Tooltip vorhanden auf den Labeln und dem Button.");
 		this.label5.setDescription(
-				"Rechnungstext - mögliche Platzhalter {proExtReference} {proName}, {proContact}, {csaName}");
+				"Rechnungstext - mögliche Platzhalter {proExtReference} {proName}, {proContact}, {csaName}, {perYear}, {perMonth}, {perMonthText}");
 		this.label5.setValue("Textzeile Rechnung");
-		this.label6.setDescription("mögliche Platzhalter: {csaName}, {csaCode}");
+		this.label6.setDescription("mögliche Platzhalter: {csaName}, {csaCode}, , {perYear}, {perMonth}, {perMonthText}");
 		this.label6.setValue("Textzeile Dienstleistung");
+		this.label7.setDescription("siehe Dienstleistung");
 		this.label7.setValue("Textzeile Spesen");
+		this.label8.setDescription("siehe Dienstleistung");
 		this.label8.setValue("Textzeile Reisezeit");
 		this.cmdSaveText.setCaption("Texte speichern");
 		this.cmdSaveText.setDescription("Speichert die Texte als persönliche Einstellungen.");

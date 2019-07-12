@@ -5,6 +5,7 @@ import java.util.List;
 
 import ch.xwr.seicentobilling.entities.CostAccount;
 import ch.xwr.seicentobilling.entities.Customer;
+import ch.xwr.seicentobilling.entities.Periode;
 import ch.xwr.seicentobilling.entities.Project;
 
 public class BillDto {
@@ -13,6 +14,12 @@ public class BillDto {
 	private Customer customer;
 	private CostAccount costaccount;
 	private Double totalAmount;
+	private List<BillLine> expenseHours = new ArrayList<>();
+	private List<BillLine> journeyHours = new ArrayList<>();
+	private List<BillLine> projectHours = new ArrayList<>();
+	private Periode periode;
+
+
 	public Customer getCustomer() {
 		return this.customer;
 	}
@@ -25,10 +32,6 @@ public class BillDto {
 	public void setTotalAmount(final Double totalAmount) {
 		this.totalAmount = totalAmount;
 	}
-	private List<BillLine> expenseHours = new ArrayList<>();
-	private List<BillLine> journeyHours = new ArrayList<>();
-	private List<BillLine> projectHours = new ArrayList<>();
-
 	public int getCustomerNbr() {
 		return this.customerNbr;
 	}
@@ -64,5 +67,11 @@ public class BillDto {
 	}
 	public void setCostaccount(final CostAccount costaccount) {
 		this.costaccount = costaccount;
+	}
+	public Periode getPeriode() {
+		return periode;
+	}
+	public void setPeriode(Periode periode) {
+		this.periode = periode;
 	}
 }
