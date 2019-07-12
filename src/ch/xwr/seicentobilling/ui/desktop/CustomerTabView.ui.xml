@@ -96,7 +96,7 @@
                 <x:typeArguments>
                     <typeArgument type="Customer" />
                 </x:typeArguments>
-                <x:data methodName="findAll" />
+                <x:data methodName="findAllByNumberDesc" />
                 <x:event>valueChange.valueChange</x:event>
             </XdevTable>
         </XdevVerticalLayout>

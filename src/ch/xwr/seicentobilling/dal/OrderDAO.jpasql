@@ -1,7 +1,13 @@
 import ch.xwr.seicentobilling.entities.Customer
 import ch.xwr.seicentobilling.entities.Order
+import ch.xwr.seicentobilling.entities.Project
 
 findByCustomer(Customer dao)
 {
 	select * from Order where customer = :dao order by ordBillDate desc
+}
+
+findByProject(Project dao)
+{
+	select * from Order where project = :dao order by ordBillDate desc
 }

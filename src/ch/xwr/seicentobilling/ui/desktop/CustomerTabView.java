@@ -211,17 +211,13 @@ public class CustomerTabView extends XdevView {
 		// save filter
 		final FilterData[] fd = this.containerFilterComponent.getFilterData();
 		this.containerFilterComponent.setFilterData(null);
+		final int idx = this.table.getCurrentPageFirstItemIndex();
 
 		// clear+reload List
 		this.table.removeAllItems();
 
 		this.table.refreshRowCache();
-		this.table.getBeanContainerDataSource().addAll(new CustomerDAO().findAll());
-
-		// sort Table
-//		final Object [] properties={"proStartDate","proEndDate"};
-//		final boolean [] ordering={false, false};
-//		this.table.sort(properties, ordering);
+		this.table.getBeanContainerDataSource().addAll(new CustomerDAO().findAllByNumberDesc());
 
 		// reassign filter
 		this.containerFilterComponent.setFilterData(fd);
@@ -230,6 +226,11 @@ public class CustomerTabView extends XdevView {
 			final Customer bean = this.fieldGroup.getItemDataSource().getBean();
 			if (bean != null) {
 				this.table.select(bean);
+
+				if (idx > 0) {
+					this.table.setCurrentPageFirstItemIndex(idx);
+				}
+				//this.table.setCurrentPageFirstItemId(bean);
 			}
 		}
 	}
@@ -438,7 +439,9 @@ public class CustomerTabView extends XdevView {
 			e.printStackTrace();
 		}
 
+
 		cmdReload_buttonClick(event);
+		//this.table.sanitizeSelection();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -1268,7 +1271,7 @@ public class CustomerTabView extends XdevView {
 				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/info_small.jpg"));
 		this.table.setColumnReorderingAllowed(true);
 		this.table.setColumnCollapsingAllowed(true);
-		this.table.setContainerDataSource(Customer.class, DAOs.get(CustomerDAO.class).findAll(),
+		this.table.setContainerDataSource(Customer.class, DAOs.get(CustomerDAO.class).findAllByNumberDesc(),
 				NestedProperty.of(Customer_.city, City_.ctyZip), NestedProperty.of(Customer_.city, City_.ctyName),
 				NestedProperty.of(Customer_.paymentCondition, PaymentCondition_.pacName));
 		this.table.setVisibleColumns(Customer_.cusNumber.getName(), Customer_.cusAccountType.getName(),
