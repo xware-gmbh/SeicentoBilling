@@ -42,7 +42,7 @@
         <XdevLabel x:name="lblProject" value="{$lblProject.value}">
             <x:constraints gridx="1" gridy="3" weighty="0.0" weightx="0.0" width="0px" height="0px" />
         </XdevLabel>
-        <XdevComboBox tabIndex="53" required="true" x:name="cmbProject" autoQueryData="false" immediate="false" x:entity="Project" x:autoQuery="false">
+        <XdevComboBox tabIndex="53" required="true" x:name="cmbProject" autoQueryData="false" immediate="false" x:entity="Project">
             <x:constraints gridx="2" gridy="3" weighty="0.0" weightx="1.0" width="100%" gridWidth="2" height="0px" />
             <x:entityProperty>
                 <entry type="String" property="proName" />
@@ -52,10 +52,6 @@
             </x:typeArguments>
             <x:event>valueChange.valueChange</x:event>
         </XdevComboBox>
-        <XdevButton icon="FontAwesome.SEARCH" caption="" description="Suchen..." tabIndex="54" x:name="btnSearch">
-            <x:constraints gridx="4" gridy="3" weighty="0.0" weightx="0.0" width="0px" height="0px" />
-            <x:event>click.buttonClick</x:event>
-        </XdevButton>
         <XdevLabel x:name="lblPrlHours" value="{$lblPrlHours.value}">
             <x:constraints gridx="1" gridy="4" weighty="0.0" weightx="0.0" width="0px" height="0px" />
         </XdevLabel>

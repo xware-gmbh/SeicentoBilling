@@ -6,7 +6,9 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.poi.ss.formula.functions.T;
+import org.hibernate.exception.ConstraintViolationException;
 
+import com.microsoft.sqlserver.jdbc.SQLServerException;
 import com.vaadin.data.Property;
 import com.vaadin.external.org.slf4j.Logger;
 import com.vaadin.external.org.slf4j.LoggerFactory;
@@ -378,14 +380,33 @@ public class ProjectTabView extends XdevView {
 					this.fieldGroup.getItemDataSource().getBean().getClass().getSimpleName());
 
 			Notification.show("Save clicked", "Daten wurden gespeichert", Notification.Type.TRAY_NOTIFICATION);
+
 		} catch (final Exception e) {
-			Notification.show("Fehler beim Speichern", e.getMessage(), Notification.Type.ERROR_MESSAGE);
+			final String text = getErrorText(e);
+			Notification.show("Fehler beim Speichern", text, Notification.Type.ERROR_MESSAGE);
 			e.printStackTrace();
 		}
 
 		cmdReload_buttonClick(event);
 		setROFields();
 		this.table.select(this.fieldGroup.getItemDataSource().getBean());
+	}
+
+	private String getErrorText(final Exception e) {
+		final String text = e.getMessage();
+
+		try {
+			final Throwable myEx = e.getCause();
+
+			if (myEx instanceof ConstraintViolationException) {
+				final SQLServerException se = (SQLServerException) myEx.getCause();
+				return se.getMessage();
+			}
+
+		} catch (final Exception exc) {
+			//ignore
+		}
+		return text;
 	}
 
 	@SuppressWarnings("unchecked")

@@ -8,7 +8,6 @@ import org.apache.poi.ss.formula.functions.T;
 
 import com.vaadin.data.Property;
 import com.vaadin.event.ShortcutAction;
-import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Alignment;
@@ -17,8 +16,7 @@ import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.Window.CloseEvent;
-import com.vaadin.ui.Window.CloseListener;
+import com.xdev.dal.DAOs;
 import com.xdev.res.ApplicationResource;
 import com.xdev.res.StringResourceUtils;
 import com.xdev.ui.XdevButton;
@@ -45,7 +43,6 @@ import ch.xwr.seicentobilling.entities.ProjectLine;
 import ch.xwr.seicentobilling.entities.ProjectLineTemplate;
 import ch.xwr.seicentobilling.entities.ProjectLine_;
 import ch.xwr.seicentobilling.entities.Project_;
-import ch.xwr.seicentobilling.ui.desktop.project.ProjectLookupPopup;
 
 public class ProjectLinePopup extends XdevView {
 
@@ -59,12 +56,10 @@ public class ProjectLinePopup extends XdevView {
 		// State
 		this.comboBoxState.addItems((Object[]) LovState.State.values());
 		this.comboBoxWorktype.addItems((Object[]) LovState.WorkType.values());
-		//this.cmbProject.addItem(new ProjectDAO().findAllActiveSmall());
-		this.cmbProject.addItem(new ProjectDAO().findAllActive());
 
 		// get Parameter
-		final Long beanId = (Long) UI.getCurrent().getSession().getAttribute("beanId"); // projectline
-		final Long objId = (Long) UI.getCurrent().getSession().getAttribute("objId"); // Periode
+		final Long beanId = (Long) UI.getCurrent().getSession().getAttribute("beanId");
+		final Long objId = (Long) UI.getCurrent().getSession().getAttribute("objId");
 		ProjectLine bean = null;
 		Periode obj = null;
 
@@ -82,8 +77,6 @@ public class ProjectLinePopup extends XdevView {
 		} else {
 			final ProjectLineDAO dao = new ProjectLineDAO();
 			bean = dao.find(beanId.longValue());
-
-			prepareProjectCombo(bean.getProject());
 		}
 
 		setBeanGui(bean);
@@ -96,7 +89,7 @@ public class ProjectLinePopup extends XdevView {
 
 		setROFields();
 
-		// focus
+		//focus
 		this.datePrlReportDate.focus();
 	}
 
@@ -118,7 +111,8 @@ public class ProjectLinePopup extends XdevView {
 	}
 
 	/**
-	 * Event handler delegate method for the {@link XdevButton} {@link #cmdCancel}.
+	 * Event handler delegate method for the {@link XdevButton}
+	 * {@link #cmdCancel}.
 	 *
 	 * @see Button.ClickListener#buttonClick(Button.ClickEvent)
 	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
@@ -129,7 +123,8 @@ public class ProjectLinePopup extends XdevView {
 	}
 
 	/**
-	 * Event handler delegate method for the {@link XdevButton} {@link #cmdSave}.
+	 * Event handler delegate method for the {@link XdevButton}
+	 * {@link #cmdSave}.
 	 *
 	 * @see Button.ClickListener#buttonClick(Button.ClickEvent)
 	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
@@ -189,13 +184,10 @@ public class ProjectLinePopup extends XdevView {
 	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
 	 */
 	private void cmbProject_valueChange(final Property.ValueChangeEvent event) {
-		if (this.fieldGroup.getItemDataSource() != null) {
-			if (this.fieldGroup.getItemDataSource().getBean().getPrlId() == null) {
-				if (this.cmbProject.isModified()) {
-					// final Project obj = (Project) event.getProperty().getValue();
-					final Project obj = this.cmbProject.getSelectedItem().getBean();
-					this.txtPrlRate.setValue("SFr. " + obj.getProRate());
-				}
+		if (this.fieldGroup.getItemDataSource().getBean().getPrlId() == null) {
+			if (this.cmbProject.isModified()) {
+				final Project obj = (Project) event.getProperty().getValue();
+				this.txtPrlRate.setValue("SFr. " + obj.getProRate());
 			}
 		}
 
@@ -207,8 +199,9 @@ public class ProjectLinePopup extends XdevView {
 		final ProjectLineTemplateDAO dao = new ProjectLineTemplateDAO();
 		final ProjectLineTemplate tpl = dao.findByKeyNumber(line.getPeriode().getCostAccount(), iKey);
 
-		if (tpl == null) {
-			return; // not found
+		if (tpl == null)
+		 {
+			return;	//not found
 		}
 
 		line.setPrlHours(tpl.getPrtHours());
@@ -223,8 +216,7 @@ public class ProjectLinePopup extends XdevView {
 	}
 
 	/**
-	 * Event handler delegate method for the {@link XdevButton}
-	 * {@link #cmdAction02}.
+	 * Event handler delegate method for the {@link XdevButton} {@link #cmdAction02}.
 	 *
 	 * @see Button.ClickListener#buttonClick(Button.ClickEvent)
 	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
@@ -333,39 +325,6 @@ public class ProjectLinePopup extends XdevView {
 
 	}
 
-	/**
-	 * Event handler delegate method for the {@link XdevButton} {@link #btnSearch}.
-	 *
-	 * @see Button.ClickListener#buttonClick(Button.ClickEvent)
-	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
-	 */
-	private void btnSearch_buttonClick(final Button.ClickEvent event) {
-		popupProjectLookup();
-	}
-
-	private void popupProjectLookup() {
-		final Window win = ProjectLookupPopup.getPopupWindow();
-
-		win.addCloseListener(new CloseListener() {
-			@Override
-			public void windowClose(final CloseEvent e) {
-				final Long beanId = (Long) UI.getCurrent().getSession().getAttribute("beanId");
-
-				if (beanId != null && beanId > 0) {
-					final Project bean = new ProjectDAO().find(beanId);
-					prepareProjectCombo(bean);
-				}
-			}
-		});
-		this.getUI().addWindow(win);
-
-	}
-
-	private void prepareProjectCombo(final Project bean) {
-		ProjectLinePopup.this.cmbProject.addItem(bean);
-		ProjectLinePopup.this.cmbProject.setValue(bean);
-	}
-
 	/*
 	 * WARNING: Do NOT edit!<br>The content of this method is always regenerated by
 	 * the UI designer.
@@ -379,7 +338,6 @@ public class ProjectLinePopup extends XdevView {
 		this.datePrlReportDate = new XdevPopupDateField();
 		this.lblProject = new XdevLabel();
 		this.cmbProject = new XdevComboBox<>();
-		this.btnSearch = new XdevButton();
 		this.lblPrlHours = new XdevLabel();
 		this.txtPrlHours = new XdevTextField();
 		this.lblPrlRate = new XdevLabel();
@@ -390,9 +348,6 @@ public class ProjectLinePopup extends XdevView {
 		this.comboBoxWorktype = new XdevComboBox<>();
 		this.lblPrlState = new XdevLabel();
 		this.comboBoxState = new XdevComboBox<>();
-		this.horizontalLayout = new XdevHorizontalLayout();
-		this.cmdSave = new XdevButton();
-		this.cmdCancel = new XdevButton();
 		this.horizontalLayout2 = new XdevHorizontalLayout();
 		this.cmdAction01 = new XdevButton();
 		this.cmdAction02 = new XdevButton();
@@ -404,11 +359,14 @@ public class ProjectLinePopup extends XdevView {
 		this.cmdAction2 = new XdevButton();
 		this.cmdAction3 = new XdevButton();
 		this.cmdAction4 = new XdevButton();
+		this.horizontalLayout = new XdevHorizontalLayout();
+		this.cmdSave = new XdevButton();
+		this.cmdCancel = new XdevButton();
 		this.fieldGroup = new XdevFieldGroup<>(ProjectLine.class);
 
 		this.lblPeriode.setValue(StringResourceUtils.optLocalizeString("{$lblPeriode.value}", this));
 		this.cmbPeriode.setTabIndex(51);
-		this.cmbPeriode.setContainerDataSource(Periode.class);
+		this.cmbPeriode.setContainerDataSource(Periode.class, DAOs.get(PeriodeDAO.class).findAll());
 		this.cmbPeriode.setItemCaptionPropertyId(Periode_.perName.getName());
 		this.lblPrlReportDate.setValue(StringResourceUtils.optLocalizeString("{$lblPrlReportDate.value}", this));
 		this.datePrlReportDate.setTabIndex(52);
@@ -416,36 +374,23 @@ public class ProjectLinePopup extends XdevView {
 		this.lblProject.setValue(StringResourceUtils.optLocalizeString("{$lblProject.value}", this));
 		this.cmbProject.setTabIndex(53);
 		this.cmbProject.setRequired(true);
-		this.cmbProject.setAutoQueryData(false);
-		this.cmbProject.setImmediate(false);
-		this.cmbProject.setContainerDataSource(Project.class, false);
+		this.cmbProject.setContainerDataSource(Project.class, DAOs.get(ProjectDAO.class).findAll());
 		this.cmbProject.setItemCaptionPropertyId(Project_.proName.getName());
-		this.btnSearch.setIcon(FontAwesome.SEARCH);
-		this.btnSearch.setCaption("");
-		this.btnSearch.setDescription("Suchen...");
-		this.btnSearch.setTabIndex(54);
 		this.lblPrlHours.setValue(StringResourceUtils.optLocalizeString("{$lblPrlHours.value}", this));
 		this.txtPrlHours.setConverter(ConverterBuilder.stringToDouble().build());
-		this.txtPrlHours.setTabIndex(55);
+		this.txtPrlHours.setTabIndex(54);
 		this.txtPrlHours.setRequired(true);
 		this.lblPrlRate.setValue(StringResourceUtils.optLocalizeString("{$lblPrlRate.value}", this));
 		this.txtPrlRate.setConverter(ConverterBuilder.stringToDouble().currency().build());
-		this.txtPrlRate.setTabIndex(56);
+		this.txtPrlRate.setTabIndex(55);
 		this.txtPrlRate.setRequired(true);
 		this.lblPrlText.setValue(StringResourceUtils.optLocalizeString("{$lblPrlText.value}", this));
-		this.txtPrlText.setTabIndex(57);
+		this.txtPrlText.setTabIndex(56);
 		this.txtPrlText.setMaxLength(384);
 		this.lblPrlWorkType.setValue(StringResourceUtils.optLocalizeString("{$lblPrlWorkType.value}", this));
 		this.comboBoxWorktype.setTabIndex(57);
 		this.lblPrlState.setValue(StringResourceUtils.optLocalizeString("{$lblPrlState.value}", this));
 		this.comboBoxState.setTabIndex(58);
-		this.horizontalLayout.setMargin(new MarginInfo(false));
-		this.cmdSave.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/save1.png"));
-		this.cmdSave.setCaption(StringResourceUtils.optLocalizeString("{$cmdSave.caption}", this));
-		this.cmdSave.setClickShortcut(ShortcutAction.KeyCode.ENTER);
-		this.cmdCancel.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/cancel1.png"));
-		this.cmdCancel.setCaption(StringResourceUtils.optLocalizeString("{$cmdCancel.caption}", this));
-		this.cmdCancel.setClickShortcut(ShortcutAction.KeyCode.ESCAPE);
 		this.horizontalLayout2.setMargin(new MarginInfo(false));
 		this.cmdAction01.setCaption("K1");
 		this.cmdAction01.setDescription("CTRL + 1");
@@ -487,6 +432,13 @@ public class ProjectLinePopup extends XdevView {
 		this.cmdAction4.setDescription("CTRL + 0");
 		this.cmdAction4.setStyleName("borderless tiny");
 		this.cmdAction4.setClickShortcut(ShortcutAction.KeyCode.NUM0, ShortcutAction.ModifierKey.CTRL);
+		this.horizontalLayout.setMargin(new MarginInfo(false));
+		this.cmdSave.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/save1.png"));
+		this.cmdSave.setCaption(StringResourceUtils.optLocalizeString("{$cmdSave.caption}", this));
+		this.cmdSave.setClickShortcut(ShortcutAction.KeyCode.ENTER);
+		this.cmdCancel.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/cancel1.png"));
+		this.cmdCancel.setCaption(StringResourceUtils.optLocalizeString("{$cmdCancel.caption}", this));
+		this.cmdCancel.setClickShortcut(ShortcutAction.KeyCode.ESCAPE);
 		this.fieldGroup.bind(this.cmbPeriode, ProjectLine_.periode.getName());
 		this.fieldGroup.bind(this.datePrlReportDate, ProjectLine_.prlReportDate.getName());
 		this.fieldGroup.bind(this.txtPrlHours, ProjectLine_.prlHours.getName());
@@ -496,16 +448,6 @@ public class ProjectLinePopup extends XdevView {
 		this.fieldGroup.bind(this.comboBoxWorktype, ProjectLine_.prlWorkType.getName());
 		this.fieldGroup.bind(this.comboBoxState, ProjectLine_.prlState.getName());
 
-		this.cmdSave.setSizeUndefined();
-		this.horizontalLayout.addComponent(this.cmdSave);
-		this.horizontalLayout.setComponentAlignment(this.cmdSave, Alignment.MIDDLE_LEFT);
-		this.cmdCancel.setSizeUndefined();
-		this.horizontalLayout.addComponent(this.cmdCancel);
-		this.horizontalLayout.setComponentAlignment(this.cmdCancel, Alignment.MIDDLE_LEFT);
-		final CustomComponent horizontalLayout_spacer = new CustomComponent();
-		horizontalLayout_spacer.setSizeFull();
-		this.horizontalLayout.addComponent(horizontalLayout_spacer);
-		this.horizontalLayout.setExpandRatio(horizontalLayout_spacer, 1.0F);
 		this.cmdAction01.setSizeUndefined();
 		this.horizontalLayout2.addComponent(this.cmdAction01);
 		this.horizontalLayout2.setComponentAlignment(this.cmdAction01, Alignment.MIDDLE_RIGHT);
@@ -540,6 +482,16 @@ public class ProjectLinePopup extends XdevView {
 		horizontalLayout2_spacer.setSizeFull();
 		this.horizontalLayout2.addComponent(horizontalLayout2_spacer);
 		this.horizontalLayout2.setExpandRatio(horizontalLayout2_spacer, 1.0F);
+		this.cmdSave.setSizeUndefined();
+		this.horizontalLayout.addComponent(this.cmdSave);
+		this.horizontalLayout.setComponentAlignment(this.cmdSave, Alignment.MIDDLE_LEFT);
+		this.cmdCancel.setSizeUndefined();
+		this.horizontalLayout.addComponent(this.cmdCancel);
+		this.horizontalLayout.setComponentAlignment(this.cmdCancel, Alignment.MIDDLE_LEFT);
+		final CustomComponent horizontalLayout_spacer = new CustomComponent();
+		horizontalLayout_spacer.setSizeFull();
+		this.horizontalLayout.addComponent(horizontalLayout_spacer);
+		this.horizontalLayout.setExpandRatio(horizontalLayout_spacer, 1.0F);
 		this.form.setColumns(4);
 		this.form.setRows(9);
 		this.lblPeriode.setSizeUndefined();
@@ -555,9 +507,7 @@ public class ProjectLinePopup extends XdevView {
 		this.form.addComponent(this.lblProject, 0, 2);
 		this.cmbProject.setWidth(100, Unit.PERCENTAGE);
 		this.cmbProject.setHeight(-1, Unit.PIXELS);
-		this.form.addComponent(this.cmbProject, 1, 2, 2, 2);
-		this.btnSearch.setSizeUndefined();
-		this.form.addComponent(this.btnSearch, 3, 2);
+		this.form.addComponent(this.cmbProject, 1, 2);
 		this.lblPrlHours.setSizeUndefined();
 		this.form.addComponent(this.lblPrlHours, 0, 3);
 		this.txtPrlHours.setWidth(100, Unit.PERCENTAGE);
@@ -572,7 +522,7 @@ public class ProjectLinePopup extends XdevView {
 		this.form.addComponent(this.lblPrlText, 0, 4);
 		this.txtPrlText.setWidth(100, Unit.PERCENTAGE);
 		this.txtPrlText.setHeight(-1, Unit.PIXELS);
-		this.form.addComponent(this.txtPrlText, 1, 4, 2, 4);
+		this.form.addComponent(this.txtPrlText, 1, 4, 3, 4);
 		this.lblPrlWorkType.setSizeUndefined();
 		this.form.addComponent(this.lblPrlWorkType, 0, 5);
 		this.comboBoxWorktype.setSizeUndefined();
@@ -581,14 +531,15 @@ public class ProjectLinePopup extends XdevView {
 		this.form.addComponent(this.lblPrlState, 2, 5);
 		this.comboBoxState.setSizeUndefined();
 		this.form.addComponent(this.comboBoxState, 3, 5);
-		this.horizontalLayout.setWidth(100, Unit.PERCENTAGE);
-		this.horizontalLayout.setHeight(-1, Unit.PIXELS);
-		this.form.addComponent(this.horizontalLayout, 0, 6, 2, 6);
-		this.form.setComponentAlignment(this.horizontalLayout, Alignment.MIDDLE_CENTER);
 		this.horizontalLayout2.setWidth(100, Unit.PERCENTAGE);
 		this.horizontalLayout2.setHeight(-1, Unit.PIXELS);
-		this.form.addComponent(this.horizontalLayout2, 0, 7, 1, 7);
+		this.form.addComponent(this.horizontalLayout2, 0, 7, 2, 7);
+		this.horizontalLayout.setWidth(100, Unit.PERCENTAGE);
+		this.horizontalLayout.setHeight(-1, Unit.PIXELS);
+		this.form.addComponent(this.horizontalLayout, 0, 6, 3, 6);
+		this.form.setComponentAlignment(this.horizontalLayout, Alignment.MIDDLE_CENTER);
 		this.form.setColumnExpandRatio(1, 100.0F);
+		this.form.setColumnExpandRatio(3, 100.0F);
 		final CustomComponent form_vSpacer = new CustomComponent();
 		form_vSpacer.setSizeFull();
 		this.form.addComponent(form_vSpacer, 0, 8, 3, 8);
@@ -598,9 +549,6 @@ public class ProjectLinePopup extends XdevView {
 		this.setSizeFull();
 
 		this.cmbProject.addValueChangeListener(event -> this.cmbProject_valueChange(event));
-		this.btnSearch.addClickListener(event -> this.btnSearch_buttonClick(event));
-		this.cmdSave.addClickListener(event -> this.cmdSave_buttonClick(event));
-		this.cmdCancel.addClickListener(event -> this.cmdCancel_buttonClick(event));
 		this.cmdAction01.addClickListener(event -> this.cmdAction01_buttonClick(event));
 		this.cmdAction02.addClickListener(event -> this.cmdAction02_buttonClick(event));
 		this.cmdAction03.addClickListener(event -> this.cmdAction03_buttonClick(event));
@@ -611,14 +559,16 @@ public class ProjectLinePopup extends XdevView {
 		this.cmdAction2.addClickListener(event -> this.cmdAction2_buttonClick(event));
 		this.cmdAction3.addClickListener(event -> this.cmdAction3_buttonClick(event));
 		this.cmdAction4.addClickListener(event -> this.cmdAction4_buttonClick(event));
+		this.cmdSave.addClickListener(event -> this.cmdSave_buttonClick(event));
+		this.cmdCancel.addClickListener(event -> this.cmdCancel_buttonClick(event));
 	} // </generated-code>
 
 	// <generated-code name="variables">
 	private XdevLabel lblPeriode, lblPrlReportDate, lblProject, lblPrlHours, lblPrlRate, lblPrlText, lblPrlWorkType,
 			lblPrlState;
-	private XdevButton btnSearch, cmdSave, cmdCancel, cmdAction01, cmdAction02, cmdAction03, cmdAction04, cmdAction05,
-			cmdAction06, cmdAction, cmdAction2, cmdAction3, cmdAction4;
-	private XdevHorizontalLayout horizontalLayout, horizontalLayout2;
+	private XdevButton cmdAction01, cmdAction02, cmdAction03, cmdAction04, cmdAction05, cmdAction06, cmdAction, cmdAction2,
+			cmdAction3, cmdAction4, cmdSave, cmdCancel;
+	private XdevHorizontalLayout horizontalLayout2, horizontalLayout;
 	private XdevPopupDateField datePrlReportDate;
 	private XdevComboBox<?> comboBoxWorktype, comboBoxState;
 	private XdevGridLayout form;

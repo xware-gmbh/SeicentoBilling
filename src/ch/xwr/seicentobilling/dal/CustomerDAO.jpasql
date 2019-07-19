@@ -12,3 +12,9 @@ findAllByNumberDesc()
 	//select * from Customer join lbl labelDefinitions where cusState = 1 and lbl.Text = "Kunde" order by cusName asc, cusCompany asc
 	select * from Customer order by cusNumber desc
 }
+
+findAllActiveByNumberDesc()
+{
+	//select * from Customer join lbl labelDefinitions where cusState = 1 and lbl.Text = "Kunde" order by cusName asc, cusCompany asc
+	select * from Customer where cusState = 1 order by cusNumber desc
+}
