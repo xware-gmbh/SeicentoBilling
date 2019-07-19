@@ -59,7 +59,6 @@ public class ProjectLinePopup extends XdevView {
 		// State
 		this.comboBoxState.addItems((Object[]) LovState.State.values());
 		this.comboBoxWorktype.addItems((Object[]) LovState.WorkType.values());
-		//this.cmbProject.addItem(new ProjectDAO().findAllActiveSmall());
 		this.cmbProject.addItem(new ProjectDAO().findAllActive());
 
 		// get Parameter

@@ -1,7 +1,13 @@
 import ch.xwr.seicentobilling.entities.VatLine
 import ch.xwr.seicentobilling.entities.Vat
+import java.util.Date
 
 findByVat(Vat vat)
 {
 	select * from VatLine where vat = :vat order by vanValidFrom desc
+}
+
+findByVatAndDate(Vat vat, Date refDate)
+{
+	select * from VatLine where vat = :vat and vanValidFrom <= :refDate and vanState = 1 order by vanValidFrom desc
 }
