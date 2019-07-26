@@ -35,4 +35,3 @@ Optional:
 Folgende Module/Features werden durch SeicentoBilling behandelt:
 ![Features](https://github.com/xware-gmbh/SeicentoBilling/blob/master/docs/images/billing_modules.PNG "Logo")   
 ![StartScreen](https://github.com/xware-gmbh/SeicentoBilling/blob/master/docs/images/SeicentoBilling_Overview.PNG "StartScreen")
-
