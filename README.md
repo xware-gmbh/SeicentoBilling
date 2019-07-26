@@ -1,17 +1,17 @@
 <h1 align="center">
-  <a href="https://xwr.visualstudio.com/XWare/_apis/build/status/Dockerhub%20SeicentoBilling-FromTemplate">
-  	<img src="https://xwr.visualstudio.com/XWare/_build/latest?definitionId=23" alt="BuildStatus"/>
+  <img src="https://xwr.visualstudio.com/XWare/_apis/build/status/Dockerhub%20SeicentoBilling-FromTemplate" alt="BuildStatus"/>
+  <a href="http://hits.dwyl.io/xware-gmbh/SeicentoBilling">
+  	<img src="http://hits.dwyl.io/xware-gmbh/SeicentoBilling.svg" alt="HitCount"/>
   </a>
-  <a href="http://hits.dwyl.io/jmurighub/SeicentoBilling">
-  	<img src="http://hits.dwyl.io/jmurighub/SeicentoBilling.svg" alt="HitCount"/>
-  </a>
-  <img src="https://img.shields.io/github/stars/SeicentoBilling/SeicentoBilling.svg?label=Stars&style=flat" alt="Stars"/>
-  <a href="https://github.com/jmurighub/SeicentoBilling/blob/master/LICENSE.txt">
-  	<img src="https://img.shields.io/github/license/SeicentoBilling/SeicentoBilling.svg" alt="License"/>
+  <img src="https://img.shields.io/github/stars/xware-gmbh/SeicentoBilling.svg?label=Stars&style=flat" alt="Stars"/>
+  <a href="https://github.com/xware-gmbh/SeicentoBilling/blob/master/LICENSE.txt">
+  	<img src="https://img.shields.io/github/license/xware-gmbh/SeicentoBilling.svg" alt="License"/>
   </a>
 </h1>
-
-![Produktlogo](https://github.com/xware-gmbh/SeicentoBilling/blob/master/docs/images/seicento_billing.PNG "Logo") ![xwr.ch](https://github.com/xware-gmbh/SeicentoBilling/blob/master/docs/images/XWareLogo.png "xwr.ch")
+<h1 align="left">
+  <img src="https://github.com/xware-gmbh/SeicentoBilling/blob/master/docs/images/seicento_billing.PNG" alt="ProductLogo"/>
+   <img src="https://github.com/xware-gmbh/SeicentoBilling/blob/master/docs/images/XWareLogo.png" alt="Company Logo" align="right"/>
+</h1>
          
 SeicentoBilling ist eine einfache Weblösung für Leistungsrapportierung, Spesen und Rechnungsstellung. Die App ist seit mehreren Jahren produktiv im Einsatz.  
 
