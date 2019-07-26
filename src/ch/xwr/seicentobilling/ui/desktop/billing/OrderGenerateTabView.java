@@ -291,6 +291,7 @@ public class OrderGenerateTabView extends XdevView {
 	 * @see Button.ClickListener#buttonClick(Button.ClickEvent)
 	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
 	 */
+	@SuppressWarnings("unchecked")
 	private void cmdGenerate_buttonClick(final Button.ClickEvent event) {
 		if (isModelValid()) {
 			int icount = 0;
@@ -311,11 +312,17 @@ public class OrderGenerateTabView extends XdevView {
 					} else {
 						billnbrs = billnbrs + ", " + newOrd.getOrdNumber();
 					}
+
+					cbo.setValue(false);
+					item.getItemProperty("L-Rechnung").setValue( "Neu: " +  newOrd.getOrdNumber());
 				}
 	     	}
 
-			Notification.show("Rechnungen generieren", "" + icount + " Rechnung(en) erstellt mit Nr: " + billnbrs + ".",
-					Notification.Type.HUMANIZED_MESSAGE);
+			Notification.show("Rechnungen erstellen ausgeführt", Notification.Type.TRAY_NOTIFICATION);
+			if (icount > 0) {
+				Notification.show("Rechnungen generieren", "" + icount + " Rechnung(en) erstellt mit Nr: " + billnbrs + ".",
+						Notification.Type.HUMANIZED_MESSAGE);
+			}
 
 			markPeriodeAsGenerated();
 
@@ -378,7 +385,7 @@ public class OrderGenerateTabView extends XdevView {
 		final List<BillDto> lst = gen.proposeDraft(per);
 
 		if (per.getPerBookedProject().equals(BookingType.gebucht)) {
-			Notification.show("Rechnungsvorschlag", "Für diese Periode wurden bereits einmal Rechnungen generiert!!", Notification.Type.TRAY_NOTIFICATION);
+			Notification.show("Rechnungsvorschlag", "Für diese Periode wurden bereits Rechnungen generiert!!", Notification.Type.WARNING_MESSAGE);
 		}
 
 		// publish list to grid

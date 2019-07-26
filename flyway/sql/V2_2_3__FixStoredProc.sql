@@ -57,19 +57,4 @@ BEGIN
 END
 
 
-/****** Object:  Index [IX_Project_APK]    Script Date: 19.07.2019 11:30:01 ******/
-
-SET ANSI_PADDING ON
-GO
-
-IF NOT EXISTS (SELECT name FROM sysindexes WHERE name = 'IX_Project_APK')
-begin
-CREATE UNIQUE NONCLUSTERED INDEX [IX_Project_APK] ON [dbo].[Project]
-(
-	[proName] ASC
-)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF) ON [PRIMARY]
-end
-GO
-
-
 
