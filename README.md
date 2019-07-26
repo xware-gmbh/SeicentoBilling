@@ -12,7 +12,9 @@
 </h1>
 <h1 align="left">
   <img src="https://github.com/xware-gmbh/SeicentoBilling/blob/master/docs/images/seicento_billing.PNG" alt="ProductLogo"/>
-   <img src="https://github.com/xware-gmbh/SeicentoBilling/blob/master/docs/images/XWareLogo.png" alt="Company Logo" align="right"/>
+  <a href="https://www.xwr.ch">
+  	<img src="https://github.com/xware-gmbh/SeicentoBilling/blob/master/docs/images/XWareLogo.png" alt="Company Logo" align="right"/>
+  </a>
 </h1>
          
 SeicentoBilling ist eine einfache Weblösung für Leistungsrapportierung, Spesen und Rechnungsstellung. Die App ist seit mehreren Jahren produktiv im Einsatz.  
