@@ -215,6 +215,11 @@ public class OrderTabView extends XdevView {
 	}
 
 	private Order getNewDaoWithDefaults() {
+		String usr = Seicento.getUserName();
+		if (usr != null && usr.length() > 20) {
+			usr = usr.substring(0, 20);
+		}
+
 		final Order dao = new Order();
 
 		dao.setOrdState(LovState.State.active);
@@ -224,7 +229,7 @@ public class OrderTabView extends XdevView {
 		dao.setOrdAmountNet(new Double(0.));
 
 		dao.setOrdCreated(new Date());
-		dao.setOrdCreatedBy(Seicento.getUserName());
+		dao.setOrdCreatedBy(usr);
 
 		return dao;
 	}
