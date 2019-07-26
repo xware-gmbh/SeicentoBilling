@@ -10,6 +10,8 @@ import java.util.List;
 
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
+import com.vaadin.external.org.slf4j.Logger;
+import com.vaadin.external.org.slf4j.LoggerFactory;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.Alignment;
@@ -48,6 +50,9 @@ import ch.xwr.seicentobilling.entities.Order;
 import ch.xwr.seicentobilling.entities.Periode;
 
 public class OrderGenerateTabView extends XdevView {
+	/** Logger initialized */
+	private static final Logger _logger = LoggerFactory.getLogger(OrderGenerateTabView.class);
+
 	private final GuiGeneratorFields guifld = new GuiGeneratorFields();
 	private CostAccount user = null;
 
@@ -59,48 +64,59 @@ public class OrderGenerateTabView extends XdevView {
 		this.initUI();
 
 		loadFields();
-		loadParams();
+		if (!loadParams()) {
+			this.cmdPropose.setEnabled(false);
+			Notification.show("Parameter konnten nicht geladen werden. Bitte Artikel + Texte überprüfen.", Notification.Type.ERROR_MESSAGE);
+		}
 	}
 
 
-	private void loadParams() {
-		final RowObjectAddonHandler objman = new RowObjectAddonHandler(null);  //company Level
-		final RowObjectAddonHandler objUsr = new RowObjectAddonHandler(this.user.getCsaId(), "CostAccount");  //userlevel
+	private boolean loadParams() {
+		try {
+			final RowObjectAddonHandler objman = new RowObjectAddonHandler(null);  //company Level
+			final RowObjectAddonHandler objUsr = new RowObjectAddonHandler(this.user.getCsaId(), "CostAccount");  //userlevel
 
-		//Order (Header)
-		this.textFieldOrderText.setValue(getTextParams(objman, objUsr, "headerText"));
+			//Order (Header)
+			this.textFieldOrderText.setValue(getTextParams(objman, objUsr, "headerText"));
 
-		//project
-		this.textFieldProjectLine.setValue(getTextParams(objman, objUsr, "lineTextProject"));
-		//expense
-		this.textFieldExpenseLine.setValue(getTextParams(objman, objUsr, "lineTextExpense"));
-		//journey
-		this.textFieldJourneyLine.setValue(getTextParams(objman, objUsr, "lineTextJourney"));
+			//project
+			this.textFieldProjectLine.setValue(getTextParams(objman, objUsr, "lineTextProject"));
+			//expense
+			this.textFieldExpenseLine.setValue(getTextParams(objman, objUsr, "lineTextExpense"));
+			//journey
+			this.textFieldJourneyLine.setValue(getTextParams(objman, objUsr, "lineTextJourney"));
 
-		//items
-		final ch.xwr.seicentobilling.entities.Item itm1 = SearchItem(objman, "itemIdentProject");
-		this.textFieldItemProject.setValue(itm1.getPrpShortName());
-		//
-		final ch.xwr.seicentobilling.entities.Item itm2 = SearchItem(objman, "itemIdentExpense");
-		this.textFieldItemExpense.setValue(itm2.getPrpShortName());
-		//
-		final ch.xwr.seicentobilling.entities.Item itm3 = SearchItem(objman, "itemIdentJourney");
-		this.textFieldItemJourney.setValue(itm3.getPrpShortName());
-		//
-		final String cbxValue = objUsr.getRowParameter("billing", "generator", "cbxLastText");
-		if (cbxValue.toLowerCase().equals("true")) {
-			this.checkBoxTextLast.setValue(true);
+			//items
+			final ch.xwr.seicentobilling.entities.Item itm1 = SearchItem(objman, "itemIdentProject");
+			this.textFieldItemProject.setValue(itm1.getPrpShortName());
+			//
+			final ch.xwr.seicentobilling.entities.Item itm2 = SearchItem(objman, "itemIdentExpense");
+			this.textFieldItemExpense.setValue(itm2.getPrpShortName());
+			//
+			final ch.xwr.seicentobilling.entities.Item itm3 = SearchItem(objman, "itemIdentJourney");
+			this.textFieldItemJourney.setValue(itm3.getPrpShortName());
+			//
+			final String cbxValue = objUsr.getRowParameter("billing", "generator", "cbxLastText");
+			if (cbxValue.toLowerCase().equals("true")) {
+				this.checkBoxTextLast.setValue(true);
+			}
+
+			this.gridLayoutArtikel.setEnabled(false);
+			this.gridLayoutArtikel.setReadOnly(true);
+
+			//init model
+			this.guifld.setItemProject(itm1);
+			this.guifld.setItemExpense(itm2);
+			this.guifld.setItemJourney(itm3);
+
+			return true;
+
+		} catch (final Exception e) {
+			_logger.error("Could not load Params for Ordergeneration");
+			_logger.error(e.getStackTrace().toString());
 		}
 
-
-		this.gridLayoutArtikel.setEnabled(false);
-		this.gridLayoutArtikel.setReadOnly(true);
-
-		//init model
-		this.guifld.setItemProject(itm1);
-		this.guifld.setItemExpense(itm2);
-		this.guifld.setItemJourney(itm3);
-
+		return false;
 	}
 
 
@@ -120,7 +136,7 @@ public class OrderGenerateTabView extends XdevView {
 
 		final ItemDAO dao = new ItemDAO();
 		final List<ch.xwr.seicentobilling.entities.Item> lst = dao.findByIdent(value);
-		if (lst != null) {
+		if (lst != null && lst.size() > 0) {
 			return lst.get(0);
 		}
 		return null;
