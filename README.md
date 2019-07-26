@@ -1,5 +1,7 @@
 <h1 align="center">
-  <img src="https://xwr.visualstudio.com/XWare/_apis/build/status/Dockerhub%20SeicentoBilling-FromTemplate" alt="BuildStatus"/>
+  <a href="https://xwr.visualstudio.com/XWare/_build/latest?definitionId=23">
+  	<img src="https://xwr.visualstudio.com/XWare/_apis/build/status/Dockerhub%20SeicentoBilling-FromTemplate" alt="BuildStatus"/>
+  </a>
   <a href="http://hits.dwyl.io/xware-gmbh/SeicentoBilling">
   	<img src="http://hits.dwyl.io/xware-gmbh/SeicentoBilling.svg" alt="HitCount"/>
   </a>
