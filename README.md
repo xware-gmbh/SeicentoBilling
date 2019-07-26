@@ -4,7 +4,7 @@
   	<img src="http://hits.dwyl.io/xware-gmbh/SeicentoBilling.svg" alt="HitCount"/>
   </a>
   <img src="https://img.shields.io/github/stars/xware-gmbh/SeicentoBilling.svg?label=Stars&style=flat" alt="Stars"/>
-  <a href="https://github.com/xware-gmbh/SeicentoBilling/blob/master/LICENSE.txt">
+  <a href="https://github.com/xware-gmbh/SeicentoBilling/blob/dev1/LICENSE.txt">
   	<img src="https://img.shields.io/github/license/xware-gmbh/SeicentoBilling.svg" alt="License"/>
   </a>
 </h1>
