@@ -24,9 +24,6 @@ Anmelden mit jasperadmin/jasperadmin
 #### Step 4: Testreport starten
 Beliebigen Report unter Root/Reports/XWare GmbH aufstarten.
 
-#### Step 4: Testreport starten
-Beliebigen Report unter Root/Reports/XWare GmbH aufstarten.
-
 ![Jasperserver](https://github.com/xware-gmbh/SeicentoBilling/blob/master/docs/images/Jasper_BillingOverview.PNG "Jasperserver")
 
 #### Step 5: Seicento Konfigurieren
