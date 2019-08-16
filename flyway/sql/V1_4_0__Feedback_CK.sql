@@ -17,7 +17,7 @@ BEGIN
         ,[objRowId]  
         ,[objState])  
     VALUES 
-        (@ENTId, @ObjId, 1)
+        (@ENTId, @CmpID, 1)
  
 END             
 
