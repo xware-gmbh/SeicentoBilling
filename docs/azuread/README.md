@@ -7,7 +7,7 @@ Voraussetzung ist, dass eine Subscription und die nötigen Berechtigungen in Azu
 
 ### Installation Steps
 1. Starten [Azure Portal](https://portal.azure.com) 
-3. Wählen der [App Registrierung](https://portal.azure.com/#blade/Microsoft_AAD_IAM/ActiveDirectoryMenuBlade/RegisteredAppsPreview)
+3. Wählen der [App Registrierung](https://portal.azure.com/#blade/Microsoft_AAD_IAM/ActiveDirectoryMenuBlade/RegisteredApps)
 4. Callback Adresse erfassen (Server auf welchem Docker laufen wird)
 5. SecretKey generieren (wird für die Konfiguration benötigt)
 
