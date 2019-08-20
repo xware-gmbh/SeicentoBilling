@@ -150,6 +150,7 @@ public class ProjectTabView extends XdevView {
 		bean.setProRate(150);
 		bean.setProRemark("");
 		bean.setProDescription("");
+		bean.setProHoursEffective(new Double(0.));
 		bean.setProModel(LovState.ProModel.undefined);
 
 		final VatDAO dao = new VatDAO();
