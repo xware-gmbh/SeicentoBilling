@@ -51,6 +51,7 @@ public class ExcelHandler {
 		    //final HSSFRow row = null;
 		    XSSFRow row = null;
 		    for (int i = 15; i < sheet.getLastRowNum(); i++) {
+		    	LOG.info("Start processing Excel-line " + (i + 1));
 		    	row = sheet.getRow(i);
 		    	loopExcelRow(row);
 			}
