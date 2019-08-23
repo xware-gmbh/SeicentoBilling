@@ -383,8 +383,6 @@ public class VatTabView extends XdevView {
 		this.gridLayout2 = new XdevGridLayout();
 		this.lblVatName = new XdevLabel();
 		this.txtVatName = new XdevTextField();
-		this.lblVatRate = new XdevLabel();
-		this.txtVatRate = new XdevTextField();
 		this.lblVatSign = new XdevLabel();
 		this.txtVatSign = new XdevTextField();
 		this.lblVatInclude = new XdevLabel();
@@ -414,10 +412,8 @@ public class VatTabView extends XdevView {
 		this.cmdInfo
 				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/info_small.jpg"));
 		this.table.setContainerDataSource(Vat.class, DAOs.get(VatDAO.class).findAll());
-		this.table.setVisibleColumns(Vat_.vatName.getName(), Vat_.vatRate.getName(), Vat_.vatSign.getName(),
-				Vat_.vatInclude.getName(), Vat_.vatState.getName());
-		this.table.setConverter("vatRate",
-				ConverterBuilder.stringToDouble().minimumFractionDigits(2).maximumFractionDigits(2).build());
+		this.table.setVisibleColumns(Vat_.vatName.getName(), Vat_.vatSign.getName(), Vat_.vatInclude.getName(),
+				Vat_.vatState.getName());
 		this.form.setMargin(new MarginInfo(false));
 		this.tabSheet.setStyleName("framed");
 		this.panel.setTabIndex(0);
@@ -425,13 +421,11 @@ public class VatTabView extends XdevView {
 		this.verticalLayout2.setMargin(new MarginInfo(true, false, false, true));
 		this.gridLayout2.setMargin(new MarginInfo(false));
 		this.lblVatName.setValue("Name");
-		this.lblVatRate.setValue("Rate");
-		this.txtVatRate
-				.setConverter(ConverterBuilder.stringToDouble().minimumFractionDigits(2).maximumFractionDigits(2).build());
-		this.lblVatSign.setValue("Sign");
-		this.lblVatInclude.setValue("Include");
+		this.txtVatName.setMaxLength(40);
+		this.lblVatSign.setValue("Zeichen");
+		this.lblVatInclude.setValue("Inklusiv");
 		this.chkVatInclude.setCaption("");
-		this.lblVatState.setValue("State");
+		this.lblVatState.setValue("Status");
 		this.horizontalLayout3.setSpacing(false);
 		this.horizontalLayout3.setMargin(new MarginInfo(false, true, false, false));
 		this.cmdNewLine.setIcon(FontAwesome.PLUS_CIRCLE);
@@ -456,7 +450,6 @@ public class VatTabView extends XdevView {
 		this.cmdReset.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/cancel1.png"));
 		this.cmdReset.setCaption("Verwerfen");
 		this.fieldGroup.bind(this.txtVatName, Vat_.vatName.getName());
-		this.fieldGroup.bind(this.txtVatRate, Vat_.vatRate.getName());
 		this.fieldGroup.bind(this.txtVatSign, Vat_.vatSign.getName());
 		this.fieldGroup.bind(this.chkVatInclude, Vat_.vatInclude.getName());
 		this.fieldGroup.bind(this.comboBoxState, Vat_.vatState.getName());
@@ -496,36 +489,30 @@ public class VatTabView extends XdevView {
 		this.verticalLayout.setComponentAlignment(this.table, Alignment.MIDDLE_CENTER);
 		this.verticalLayout.setExpandRatio(this.table, 100.0F);
 		this.gridLayout2.setColumns(2);
-		this.gridLayout2.setRows(6);
+		this.gridLayout2.setRows(5);
 		this.lblVatName.setSizeUndefined();
 		this.gridLayout2.addComponent(this.lblVatName, 0, 0);
 		this.txtVatName.setWidth(100, Unit.PERCENTAGE);
 		this.txtVatName.setHeight(-1, Unit.PIXELS);
 		this.gridLayout2.addComponent(this.txtVatName, 1, 0);
-		this.lblVatRate.setSizeUndefined();
-		this.gridLayout2.addComponent(this.lblVatRate, 0, 1);
-		this.txtVatRate.setWidth(100, Unit.PERCENTAGE);
-		this.txtVatRate.setHeight(-1, Unit.PIXELS);
-		this.gridLayout2.addComponent(this.txtVatRate, 1, 1);
 		this.lblVatSign.setSizeUndefined();
-		this.gridLayout2.addComponent(this.lblVatSign, 0, 2);
-		this.txtVatSign.setWidth(100, Unit.PERCENTAGE);
-		this.txtVatSign.setHeight(-1, Unit.PIXELS);
-		this.gridLayout2.addComponent(this.txtVatSign, 1, 2);
+		this.gridLayout2.addComponent(this.lblVatSign, 0, 1);
+		this.txtVatSign.setSizeUndefined();
+		this.gridLayout2.addComponent(this.txtVatSign, 1, 1);
 		this.lblVatInclude.setSizeUndefined();
-		this.gridLayout2.addComponent(this.lblVatInclude, 0, 3);
+		this.gridLayout2.addComponent(this.lblVatInclude, 0, 2);
 		this.chkVatInclude.setWidth(100, Unit.PERCENTAGE);
 		this.chkVatInclude.setHeight(-1, Unit.PIXELS);
-		this.gridLayout2.addComponent(this.chkVatInclude, 1, 3);
+		this.gridLayout2.addComponent(this.chkVatInclude, 1, 2);
 		this.lblVatState.setSizeUndefined();
-		this.gridLayout2.addComponent(this.lblVatState, 0, 4);
+		this.gridLayout2.addComponent(this.lblVatState, 0, 3);
 		this.comboBoxState.setSizeUndefined();
-		this.gridLayout2.addComponent(this.comboBoxState, 1, 4);
+		this.gridLayout2.addComponent(this.comboBoxState, 1, 3);
 		this.gridLayout2.setColumnExpandRatio(1, 100.0F);
 		final CustomComponent gridLayout2_vSpacer = new CustomComponent();
 		gridLayout2_vSpacer.setSizeFull();
-		this.gridLayout2.addComponent(gridLayout2_vSpacer, 0, 5, 1, 5);
-		this.gridLayout2.setRowExpandRatio(5, 1.0F);
+		this.gridLayout2.addComponent(gridLayout2_vSpacer, 0, 4, 1, 4);
+		this.gridLayout2.setRowExpandRatio(4, 1.0F);
 		this.cmdNewLine.setSizeUndefined();
 		this.horizontalLayout3.addComponent(this.cmdNewLine);
 		this.horizontalLayout3.setComponentAlignment(this.cmdNewLine, Alignment.MIDDLE_CENTER);
@@ -593,7 +580,7 @@ public class VatTabView extends XdevView {
 
 	// <generated-code name="variables">
 	private XdevButton cmdNew, cmdDelete, cmdReload, cmdInfo, cmdNewLine, cmdEditLine, cmdDeletLine, cmdSave, cmdReset;
-	private XdevLabel lblVatName, lblVatRate, lblVatSign, lblVatInclude, lblVatState;
+	private XdevLabel lblVatName, lblVatSign, lblVatInclude, lblVatState;
 	private XdevTabSheet tabSheet;
 	private XdevPanel panel;
 	private XdevFieldGroup<Vat> fieldGroup;
@@ -605,7 +592,7 @@ public class VatTabView extends XdevView {
 	private XdevHorizontalLayout horizontalLayout, horizontalLayout3, horizontalLayoutButtons;
 	private XdevComboBox<?> comboBoxState;
 	private XdevCheckBox chkVatInclude;
-	private XdevTextField txtVatName, txtVatRate, txtVatSign;
+	private XdevTextField txtVatName, txtVatSign;
 	private XdevVerticalLayout verticalLayout, verticalLayout2;
 	// </generated-code>
 
