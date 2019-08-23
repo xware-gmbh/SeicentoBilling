@@ -74,7 +74,7 @@ public class Order implements java.io.Serializable {
 		this.ordId = ordId;
 	}
 
-	@Caption("Customer")
+	@Caption("Kunde")
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "ordcusId", nullable = false, columnDefinition = "bigint")
 	public Customer getCustomer() {
@@ -85,7 +85,7 @@ public class Order implements java.io.Serializable {
 		this.customer = customer;
 	}
 
-	@Caption("PaymentCondition")
+	@Caption("Zahlungsbedingung")
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "ordpacId", nullable = false, columnDefinition = "bigint")
 	public PaymentCondition getPaymentCondition() {
@@ -96,7 +96,7 @@ public class Order implements java.io.Serializable {
 		this.paymentCondition = paymentCondition;
 	}
 
-	@Caption("Project")
+	@Caption("Projekt")
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "ordproId", columnDefinition = "bigint")
 	public Project getProject() {
@@ -107,7 +107,7 @@ public class Order implements java.io.Serializable {
 		this.project = project;
 	}
 
-	@Caption("OrdNumber")
+	@Caption("AuftragNbr")
 	@Column(name = "ordNumber", unique = true, nullable = false, columnDefinition = "int")
 	public int getOrdNumber() {
 		return this.ordNumber;
@@ -117,7 +117,7 @@ public class Order implements java.io.Serializable {
 		this.ordNumber = ordNumber;
 	}
 
-	@Caption("OrdState")
+	@Caption("Status")
 	@Column(name = "ordState", columnDefinition = "smallint")
 	public LovState.State getOrdState() {
 		return this.ordState;
@@ -127,7 +127,7 @@ public class Order implements java.io.Serializable {
 		this.ordState = ordState;
 	}
 
-	@Caption("OrdCreated")
+	@Caption("Erstellt am")
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "ordCreated", columnDefinition = "datetime", length = 23)
 	public Date getOrdCreated() {
@@ -138,7 +138,7 @@ public class Order implements java.io.Serializable {
 		this.ordCreated = ordCreated;
 	}
 
-	@Caption("OrdCreatedBy")
+	@Caption("Erstellt von")
 	@Column(name = "ordCreatedBy", columnDefinition = "nvarchar")
 	public String getOrdCreatedBy() {
 		return this.ordCreatedBy;
@@ -148,7 +148,7 @@ public class Order implements java.io.Serializable {
 		this.ordCreatedBy = ordCreatedBy;
 	}
 
-	@Caption("OrdOrderDate")
+	@Caption("Bestelldatum")
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "ordOrderDate", columnDefinition = "datetime", length = 23)
 	public Date getOrdOrderDate() {
@@ -159,7 +159,7 @@ public class Order implements java.io.Serializable {
 		this.ordOrderDate = ordOrderDate;
 	}
 
-	@Caption("OrdBillDate")
+	@Caption("Rechnungsdatum")
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "ordBillDate", columnDefinition = "datetime", length = 23)
 	public Date getOrdBillDate() {
@@ -170,7 +170,7 @@ public class Order implements java.io.Serializable {
 		this.ordBillDate = ordBillDate;
 	}
 
-	@Caption("OrdAmountBrut")
+	@Caption("BetragBrutto")
 	@Column(name = "ordAmountBrut", columnDefinition = "numeric", precision = 10, scale = 3)
 	public Double getOrdAmountBrut() {
 		return this.ordAmountBrut;
@@ -180,7 +180,7 @@ public class Order implements java.io.Serializable {
 		this.ordAmountBrut = ordAmountBrut;
 	}
 
-	@Caption("OrdAmountNet")
+	@Caption("BetragNetto")
 	@Column(name = "ordAmountNet", columnDefinition = "numeric", precision = 10, scale = 3)
 	public Double getOrdAmountNet() {
 		return this.ordAmountNet;
@@ -190,7 +190,7 @@ public class Order implements java.io.Serializable {
 		this.ordAmountNet = ordAmountNet;
 	}
 
-	@Caption("OrdPayDate")
+	@Caption("Zahlungsdatum")
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "ordPayDate", columnDefinition = "datetime", length = 23)
 	public Date getOrdPayDate() {
@@ -201,7 +201,7 @@ public class Order implements java.io.Serializable {
 		this.ordPayDate = ordPayDate;
 	}
 
-	@Caption("OrdText")
+	@Caption("Text")
 	@Column(name = "ordText", columnDefinition = "nvarchar")
 	public String getOrdText() {
 		return this.ordText;
@@ -211,7 +211,7 @@ public class Order implements java.io.Serializable {
 		this.ordText = ordText;
 	}
 
-	@Caption("OrdDueDate")
+	@Caption("Fälligkeitsdatum")
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "ordDueDate", columnDefinition = "datetime", length = 23)
 	public Date getOrdDueDate() {
@@ -222,7 +222,7 @@ public class Order implements java.io.Serializable {
 		this.ordDueDate = ordDueDate;
 	}
 
-	@Caption("OrdBookedOn")
+	@Caption("Buchungsdatum")
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "ordBookedOn", columnDefinition = "datetime", length = 23)
 	public Date getOrdBookedOn() {
@@ -233,7 +233,7 @@ public class Order implements java.io.Serializable {
 		this.ordBookedOn = ordBookedOn;
 	}
 
-	@Caption("OrderLines")
+	@Caption("Positionen")
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "orderhdr")
 	public Set<OrderLine> getOrderLines() {
 		return this.orderLines;
@@ -245,7 +245,7 @@ public class Order implements java.io.Serializable {
 
 // Manueller Teil
 
-	@Caption("AmountVat")
+	@Caption("Betrag Mwst")
 	@Transient
 	@Column(name = "ORDAMOUNTVAT", insertable = false, updatable = false)
 	public Double getOrdAmountVat() {

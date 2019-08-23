@@ -36,6 +36,7 @@ import com.xdev.ui.XdevHorizontalSplitPanel;
 import com.xdev.ui.XdevLabel;
 import com.xdev.ui.XdevPopupDateField;
 import com.xdev.ui.XdevTabSheet;
+import com.xdev.ui.XdevTextArea;
 import com.xdev.ui.XdevTextField;
 import com.xdev.ui.XdevVerticalLayout;
 import com.xdev.ui.XdevVerticalSplitPanel;
@@ -920,7 +921,7 @@ public class OrderTabView extends XdevView {
 		this.lblOrdOrderDate = new XdevLabel();
 		this.dateOrdOrderDate = new XdevPopupDateField();
 		this.lblOrdText = new XdevLabel();
-		this.txtOrdText = new XdevTextField();
+		this.textArea = new XdevTextArea();
 		this.lblProject = new XdevLabel();
 		this.cmbProject = new XdevComboBox<>();
 		this.lblPaymentCondition = new XdevLabel();
@@ -1031,7 +1032,8 @@ public class OrderTabView extends XdevView {
 		this.lblOrdBillDate.setValue(StringResourceUtils.optLocalizeString("{$lblOrdBillDate.value}", this));
 		this.lblOrdOrderDate.setValue(StringResourceUtils.optLocalizeString("{$lblOrdOrderDate.value}", this));
 		this.lblOrdText.setValue(StringResourceUtils.optLocalizeString("{$lblOrdText.value}", this));
-		this.txtOrdText.setMaxLength(255);
+		this.textArea.setRows(2);
+		this.textArea.setMaxLength(256);
 		this.lblProject.setValue(StringResourceUtils.optLocalizeString("{$lblProject.value}", this));
 		this.cmbProject.setContainerDataSource(Project.class);
 		this.cmbProject.setItemCaptionPropertyId(Project_.proName.getName());
@@ -1059,7 +1061,7 @@ public class OrderTabView extends XdevView {
 		this.fieldGroup.bind(this.dateOrdOrderDate, Order_.ordOrderDate.getName());
 		this.fieldGroup.bind(this.dateOrdCreated, Order_.ordCreated.getName());
 		this.fieldGroup.bind(this.dateOrdPayDate, Order_.ordPayDate.getName());
-		this.fieldGroup.bind(this.txtOrdText, Order_.ordText.getName());
+		this.fieldGroup.bind(this.textArea, Order_.ordText.getName());
 		this.fieldGroup.bind(this.cmbPaymentCondition, Order_.paymentCondition.getName());
 		this.fieldGroup.bind(this.cmbProject, Order_.project.getName());
 		this.fieldGroup.bind(this.comboBoxState, Order_.ordState.getName());
@@ -1187,9 +1189,9 @@ public class OrderTabView extends XdevView {
 		this.gridLayoutHdr.addComponent(this.dateOrdOrderDate, 3, 2);
 		this.lblOrdText.setSizeUndefined();
 		this.gridLayoutHdr.addComponent(this.lblOrdText, 0, 3);
-		this.txtOrdText.setWidth(100, Unit.PERCENTAGE);
-		this.txtOrdText.setHeight(-1, Unit.PIXELS);
-		this.gridLayoutHdr.addComponent(this.txtOrdText, 1, 3, 3, 3);
+		this.textArea.setWidth(100, Unit.PERCENTAGE);
+		this.textArea.setHeight(-1, Unit.PIXELS);
+		this.gridLayoutHdr.addComponent(this.textArea, 1, 3, 3, 3);
 		this.lblProject.setSizeUndefined();
 		this.gridLayoutHdr.addComponent(this.lblProject, 0, 4);
 		this.cmbProject.setSizeUndefined();
@@ -1344,11 +1346,12 @@ public class OrderTabView extends XdevView {
 	private XdevVerticalSplitPanel verticalSplitPanel;
 	private XdevPopupDateField dateOrdBillDate, dateOrdOrderDate, dateOrdCreated, dateOrdPayDate, dateOrdDueDate,
 			dateOrdBookedOn;
+	private XdevTextArea textArea;
 	private XdevTable<OrderLine> tableLine;
 	private XdevComboBox<?> comboBoxState;
 	private XdevTable<Order> table;
 	private XdevComboBox<Customer> cmbCustomer;
-	private XdevTextField txtOrdNumber, txtOrdText, txtOrdAmountBrut, txtOrdAmountNet, txtOrdAmountVat;
+	private XdevTextField txtOrdNumber, txtOrdAmountBrut, txtOrdAmountNet, txtOrdAmountVat;
 	private XdevFieldGroup<Order> fieldGroup;
 	private XdevVerticalLayout verticalLayoutLeft, verticalLayoutRight, verticalLayout;
 	// </generated-code>

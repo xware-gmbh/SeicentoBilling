@@ -11,3 +11,13 @@ findByProject(Project dao)
 {
 	select * from Order where project = :dao order by ordBillDate desc
 }
+
+findOrdersNotBooked()
+{
+	select * from Order where ordBookedOn = null and ordState = 1 order by ordBillDate asc	
+}
+
+findByBillNumber(int ordNumber)
+{
+	select * from Order where ordNumber = :ordNumber
+}

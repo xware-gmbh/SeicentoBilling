@@ -21,6 +21,7 @@
 <?import com.xdev.ui.XdevLabel?>
 <?import com.xdev.ui.XdevPopupDateField?>
 <?import com.xdev.ui.XdevTabSheet?>
+<?import com.xdev.ui.XdevTextArea?>
 <?import com.xdev.ui.XdevTextField?>
 <?import com.xdev.ui.XdevVerticalLayout?>
 <?import com.xdev.ui.XdevVerticalSplitPanel?>
@@ -156,9 +157,9 @@
                             <XdevLabel x:name="lblOrdText" value="{$lblOrdText.value}">
                                 <x:constraints gridx="1" gridy="4" weighty="0.0" weightx="0.0" width="0px" height="0px" />
                             </XdevLabel>
-                            <XdevTextField columns="5" x:name="txtOrdText" maxLength="255">
+                            <XdevTextArea columns="5" x:name="textArea" rows="2" maxLength="256">
                                 <x:constraints gridx="2" gridy="4" weighty="0.0" weightx="0.1" width="100%" gridWidth="3" height="0px" />
-                            </XdevTextField>
+                            </XdevTextArea>
                             <XdevLabel x:name="lblProject" value="{$lblProject.value}">
                                 <x:constraints gridx="1" gridy="5" weighty="0.0" weightx="0.0" width="0px" height="0px" />
                             </XdevLabel>
@@ -254,7 +255,7 @@
                             <entry name="dateOrdOrderDate" property="ordOrderDate" />
                             <entry name="dateOrdCreated" property="ordCreated" />
                             <entry name="dateOrdPayDate" property="ordPayDate" />
-                            <entry name="txtOrdText" property="ordText" />
+                            <entry name="textArea" property="ordText" />
                             <entry name="cmbPaymentCondition" property="paymentCondition" />
                             <entry name="cmbProject" property="project" />
                             <entry name="comboBoxState" property="ordState" />
