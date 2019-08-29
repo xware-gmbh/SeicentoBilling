@@ -1,0 +1,98 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "seicento-chart.fullname" . }}
+  labels:
+    app: {{ template "seicento-chart.fullname" . }}
+    chart: {{ template "seicento-chart.chart" . }}
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+spec:
+  selector:
+    matchLabels:
+      app: {{ template "seicento-chart.fullname" . }}
+      release: "{{ .Release.Name }}"
+  template:
+    metadata:
+      labels:
+        app: {{ template "seicento-chart.fullname" . }}
+        chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+        release: "{{ .Release.Name }}"
+    spec:
+      {{- if .Values.securityContext.enabled }}
+      securityContext:
+        fsGroup: {{ .Values.securityContext.fsGroup }}
+        runAsUser: {{ .Values.securityContext.runAsUser }}
+      {{- end}}
+{{- include "seicento-chart.imagePullSecrets" . | indent 6 }}
+      {{- if and .Values.volumePermissions.enabled .Values.persistence.enabled }}
+      initContainers:
+      - name: volume-permissions
+        image: "{{ template "seicento-chart.volumePermissions.image" . }}"
+        imagePullPolicy: {{ default "" .Values.volumePermissions.image.pullPolicy | quote }}
+        command: ["chown", "-R", "{{ .Values.securityContext.runAsUser }}:{{ .Values.securityContext.fsGroup }}", "/bitnami/tomcat"]
+        securityContext:
+          runAsUser: 0
+        resources: {{ toYaml .Values.volumePermissions.resources | nindent 10 }}
+        volumeMounts:
+        - name: data
+          mountPath: /bitnami/tomcat
+      {{- end }}
+      containers:
+      - name: seicento-chart
+        image: "{{ template "seicento-chart.image" . }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
+        env:
+        - name: TOMCAT_USERNAME
+          value: {{ .Values.tomcatUsername | quote }}
+        - name: TOMCAT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "seicento-chart.fullname" . }}
+              key: tomcat-password
+        - name: APP_STAGE
+          value: {{ .Values.APP_STAGE | quote }}
+        - name: DB_PWD_TEST
+          value: {{ .Values.DB_URL_TEST | quote }}
+        - name: DB_URL_TEST
+          value: {{ .Values.DB_USR_TEST | quote }}
+        - name: DB_USR_TEST
+          value: {{ .Values.DB_PWD_TEST | quote }}
+        - name: clientid
+          value: {{ .Values.tenantid | quote }}
+        - name: clientkey
+          value: {{ .Values.clientid | quote }}
+        - name: tenantid
+          value: {{ .Values.clientkey | quote }}
+        - name: TOMCAT_ALLOW_REMOTE_MANAGEMENT
+          value: {{ .Values.tomcatAllowRemoteManagement | quote }}
+        ports:
+        - name: http
+          containerPort: 8080
+        livenessProbe:
+          httpGet:
+            path: /
+            port: http
+          initialDelaySeconds: 120
+          timeoutSeconds: 5
+          failureThreshold: 6
+        readinessProbe:
+          httpGet:
+            path: /
+            port: http
+          initialDelaySeconds: 30
+          timeoutSeconds: 3
+          periodSeconds: 51
+        resources:
+{{ toYaml .Values.resources | indent 10 }}
+        volumeMounts:
+        - name: data
+          mountPath: /bitnami/tomcat
+      volumes:
+      - name: data
+      {{- if .Values.persistence.enabled }}
+        persistentVolumeClaim:
+          claimName: {{ template "seicento-chart.fullname" . }}
+      {{- else }}
+        emptyDir: {}
+      {{- end -}}

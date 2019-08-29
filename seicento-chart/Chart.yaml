@@ -1,0 +1,20 @@
+apiVersion: v1
+name: seicento-chart
+version: 0.0.1
+appVersion: 2.2.0
+description: Chart for Seicento Billing
+keywords:
+- tomcat
+- java
+- http
+- web
+- application server
+- erp
+home: https://github.com/xware-gmbh/SeicentoBilling
+sources:
+- https://github.com/xware-gmbh/SeicentoBilling
+maintainers:
+- name: XWare GmbH
+  email: info@xwr.ch
+engine: gotpl
+icon: https://github.com/xware-gmbh/SeicentoBilling/raw/master/docs/images/seicento_billing.PNG

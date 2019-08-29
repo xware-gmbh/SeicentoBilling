@@ -1,0 +1,170 @@
+## Global Docker image parameters
+## Please, note that this will override the image parameters, including dependencies, configured to use the global value
+## Current available global Docker image parameters: imageRegistry and imagePullSecrets
+##
+# global:
+#   imageRegistry: myRegistryName
+#   imagePullSecrets:
+#     - myRegistryKeySecretName
+#   storageClass: myStorageClass
+
+## Seicento Specific ENV
+## 
+# APP_STAGE: TEST
+# DB_URL_TEST: jdbc:sqlserver:[SERVER]:1433;database=[DBNAME];encrypt=true;trustServerCertificate=false; hostNameInCertificate=*.database.windows.net;loginTimeout=30;
+# DB_USR_TEST: [DBUSER]
+# DB_PWD_TEST: [DBPASSWORD]
+# tenantid: [Company.com]
+# clientid: [Azure ClientID]
+# clientkey: [Azure Client Key]
+APP_STAGE: TEST
+DB_URL_TEST: jdbc:sqlserver://testing-mssql-linux.kubeapps:1433;databaseName=dbTestingSeicento;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;
+DB_USR_TEST: sa
+DB_PWD_TEST: GBtKC1jr6INk8xuPM285
+tenantid: 5b023340-9914-41fc-a387-5d3a12615797
+clientid: 3db9db91-b5c5-46e4-b875-343a0a0eb2f5
+clientkey: 3db9db91-b5c5-46e4-b875-343a0a0eb2f5
+
+## Bitnami Tomcat image version
+## ref: https://hub.docker.com/r/bitnami/tomcat/tags/
+##
+image:
+  registry: docker.io
+  repository: jmurihub/seicentobilling
+  tag: 2.2.0
+  ## Specify a imagePullPolicy
+  ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
+  ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
+  ##
+  pullPolicy: IfNotPresent
+  ## Optionally specify an array of imagePullSecrets.
+  ## Secrets must be manually created in the namespace.
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+  ##
+  # pullSecrets:
+  #   - myRegistryKeySecretName
+
+## String to partially override tomcat.fullname template (will maintain the release name)
+##
+# nameOverride:
+
+## String to fully override tomcat.fullname template
+##
+# fullnameOverride:
+
+## Init containers parameters:
+## volumePermissions: Change the owner and group of the persistent volume mountpoint to runAsUser:fsGroup values from the securityContext section.
+##
+volumePermissions:
+  enabled: false
+  image:
+    registry: docker.io
+    repository: bitnami/minideb
+    tag: latest
+    pullPolicy: Always
+    ## Optionally specify an array of imagePullSecrets.
+    ## Secrets must be manually created in the namespace.
+    ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+    ##
+    # pullSecrets:
+    #   - myRegistryKeySecretName
+  resources: {}
+
+## Pod Security Context
+## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
+##
+securityContext:
+  enabled: false
+  fsGroup: 1001
+  runAsUser: 1001
+
+## Specify a imagePullPolicy
+## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
+##
+imagePullPolicy: IfNotPresent
+
+## Admin user
+## ref: https://github.com/bitnami/bitnami-docker-tomcat#creating-a-custom-user
+##
+tomcatUsername: user
+
+## Admin password
+## ref: https://github.com/bitnami/bitnami-docker-tomcat#creating-a-custom-user
+##
+# tomcatPassword:
+
+## Expose management services
+## ref: https://github.com/bitnami/charts/tree/master/bitnami/tomcat#configuration
+##
+tomcatAllowRemoteManagement: 0
+
+## Kubernetes configuration
+## For minikube, set this to NodePort, elsewhere use LoadBalancer
+##
+service:
+  type: LoadBalancer
+  # HTTP Port
+  port: 8080
+  ##
+  ## loadBalancerIP:
+  ## nodePorts:
+  ##   http: <to set explicitly, choose port between 30000-32767>
+  ##   https: <to set explicitly, choose port between 30000-32767>
+  nodePorts:
+    http: ""
+  ## Enable client source IP preservation
+  ## ref http://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/#preserving-the-client-source-ip
+  ##
+  externalTrafficPolicy: Cluster
+
+## Enable persistence using Persistent Volume Claims
+## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
+##
+persistence:
+  enabled: false
+  ## If defined, volume.beta.kubernetes.io/storage-class: <storageClass>
+  ## Default: volume.alpha.kubernetes.io/storage-class: default
+  ##
+  # storageClass:
+  #accessMode: ReadWriteOnce
+  #size: 8Gi
+
+## Configure resource requests and limits
+## ref: http://kubernetes.io/docs/user-guide/compute-resources/
+##
+resources:
+  requests:
+    memory: 512Mi
+    cpu: 300m
+
+## Configure the ingress resource that allows you to access the
+## Tomcat installation. Set up the URL
+## ref: http://kubernetes.io/docs/user-guide/ingress/
+##
+ingress:
+  ## Set to true to enable ingress record generation
+  enabled: true
+
+  ## Set this to true in order to add the corresponding annotations for cert-manager
+  certManager: true
+
+  ## Ingress annotations done as key:value pairs
+  ## For a full list of possible ingress annotations, please see
+  ## ref: https://github.com/kubernetes/ingress-nginx/blob/master/docs/annotations.md
+  ##
+  ## If tls is set to true, annotation ingress.kubernetes.io/secure-backends: "true" will automatically be set
+  ## If certManager is set to true, annotation kubernetes.io/tls-acme: "true" will automatically be set
+  annotations:
+    kubernetes.io/ingress.class: nginx
+  
+  ## The list of hostnames to be covered with this ingress record.
+  ## Most likely this will be just one host, but in the event more hosts are needed, this is an array
+  hosts:
+  - name: seicento.jambor.pro
+
+  ## The tls configuration for the ingress
+  ## see: https://kubernetes.io/docs/concepts/services-networking/ingress/#tls
+  tls:
+  - hosts:
+    - seicento.jambor.pro
+    secretName: seicento.jambor.pro-tls
