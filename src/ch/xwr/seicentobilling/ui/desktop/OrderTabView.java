@@ -1023,6 +1023,7 @@ public class OrderTabView extends XdevView {
 		this.tabSheet.setStyleName("framed");
 		this.gridLayoutHdr.setMargin(new MarginInfo(true, true, false, true));
 		this.lblOrdNumber.setValue(StringResourceUtils.optLocalizeString("{$lblOrdNumber.value}", this));
+		this.txtOrdNumber.setColumns(5);
 		this.txtOrdNumber.setConverter(ConverterBuilder.stringToBigInteger().groupingUsed(false).build());
 		this.lblCustomer.setValue(StringResourceUtils.optLocalizeString("{$lblCustomer.value}", this));
 		this.cmbCustomer.setRequired(true);
@@ -1044,10 +1045,12 @@ public class OrderTabView extends XdevView {
 				DAOs.get(PaymentConditionDAO.class).findAll());
 		this.cmbPaymentCondition.setItemCaptionPropertyId(PaymentCondition_.pacName.getName());
 		this.lblOrdAmountBrut.setValue(StringResourceUtils.optLocalizeString("{$lblOrdAmountBrut.value}", this));
+		this.txtOrdAmountBrut.setColumns(5);
 		this.txtOrdAmountBrut.setConverter(ConverterBuilder.stringToDouble().currency().build());
 		this.lblOrdAmountNet.setValue(StringResourceUtils.optLocalizeString("{$lblOrdAmountNet.value}", this));
 		this.txtOrdAmountNet.setConverter(ConverterBuilder.stringToDouble().currency().build());
 		this.lblOrdAmountVat.setValue(StringResourceUtils.optLocalizeString("{$lblOrdAmountVat.value}", this));
+		this.txtOrdAmountVat.setColumns(5);
 		this.txtOrdAmountVat.setConverter(ConverterBuilder.stringToDouble().currency().build());
 		this.txtOrdAmountVat.setEnabled(false);
 		this.gridLayoutDetails.setMargin(new MarginInfo(true, true, false, true));
@@ -1212,7 +1215,6 @@ public class OrderTabView extends XdevView {
 		this.gridLayoutHdr.addComponent(this.lblOrdAmountVat, 0, 6);
 		this.txtOrdAmountVat.setSizeUndefined();
 		this.gridLayoutHdr.addComponent(this.txtOrdAmountVat, 1, 6);
-		this.gridLayoutHdr.setColumnExpandRatio(1, 10.0F);
 		this.gridLayoutHdr.setColumnExpandRatio(3, 10.0F);
 		final CustomComponent gridLayoutHdr_vSpacer = new CustomComponent();
 		gridLayoutHdr_vSpacer.setSizeFull();
