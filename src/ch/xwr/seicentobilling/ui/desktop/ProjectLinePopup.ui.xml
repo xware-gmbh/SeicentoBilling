@@ -7,6 +7,7 @@
 <?import ch.xwr.seicentobilling.entities.Periode?>
 <?import ch.xwr.seicentobilling.entities.Project?>
 <?import ch.xwr.seicentobilling.entities.ProjectLine?>
+<?import ch.xwr.seicentobilling.ui.LookupField?>
 <?import com.xdev.ui.XdevButton?>
 <?import com.xdev.ui.XdevFieldGroup?>
 <?import com.xdev.ui.XdevGridLayout?>
@@ -148,6 +149,9 @@
                 <x:event>click.buttonClick</x:event>
             </XdevButton>
         </XdevHorizontalLayout>
+        <LookupField x:name="lookupField" columns="5">
+            <x:constraints gridx="1" gridy="9" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+        </LookupField>
         <XdevFieldGroup x:name="fieldGroup" x:entityType="ProjectLine">
             <x:typeArguments>
                 <typeArgument type="ProjectLine" />
@@ -161,7 +165,6 @@
                 <entry name="cmbProject" property="project" />
                 <entry name="comboBoxWorktype" property="prlWorkType" />
                 <entry name="comboBoxState" property="prlState" />
-                <entry name="" property="prlitmId" />
             </x:fields>
         </XdevFieldGroup>
     </XdevGridLayout>

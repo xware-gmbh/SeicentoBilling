@@ -63,12 +63,13 @@
 			<property name="hibernate.c3p0.timeout" value="3000" />
 			<property name="hibernate.transaction.auto_close_session"
 				value="false" />
-				
+ 
 <property name="javax.persistence.jdbc.url"
 	value="jdbc:sqlserver://localhost:1433;databaseName=seicento" />
 <property name="javax.persistence.jdbc.password"
 	value="usrseicento" />
-				
+
+
 			<property name="javax.persistence.jdbc.user"
 				value="usrseicento" />
 				

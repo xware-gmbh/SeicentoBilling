@@ -45,9 +45,12 @@ import ch.xwr.seicentobilling.entities.ProjectLine;
 import ch.xwr.seicentobilling.entities.ProjectLineTemplate;
 import ch.xwr.seicentobilling.entities.ProjectLine_;
 import ch.xwr.seicentobilling.entities.Project_;
+import ch.xwr.seicentobilling.ui.LookupField;
 import ch.xwr.seicentobilling.ui.desktop.project.ProjectLookupPopup;
 
 public class ProjectLinePopup extends XdevView {
+
+	private final LookupField lookupF = new LookupField();
 
 	/**
 	 *
@@ -403,6 +406,7 @@ public class ProjectLinePopup extends XdevView {
 		this.cmdAction2 = new XdevButton();
 		this.cmdAction3 = new XdevButton();
 		this.cmdAction4 = new XdevButton();
+		this.lookupField = new LookupField();
 		this.fieldGroup = new XdevFieldGroup<>(ProjectLine.class);
 
 		this.lblPeriode.setValue(StringResourceUtils.optLocalizeString("{$lblPeriode.value}", this));
@@ -486,6 +490,7 @@ public class ProjectLinePopup extends XdevView {
 		this.cmdAction4.setDescription("CTRL + 0");
 		this.cmdAction4.setStyleName("borderless tiny");
 		this.cmdAction4.setClickShortcut(ShortcutAction.KeyCode.NUM0, ShortcutAction.ModifierKey.CTRL);
+		this.lookupField.setColumns(5);
 		this.fieldGroup.bind(this.cmbPeriode, ProjectLine_.periode.getName());
 		this.fieldGroup.bind(this.datePrlReportDate, ProjectLine_.prlReportDate.getName());
 		this.fieldGroup.bind(this.txtPrlHours, ProjectLine_.prlHours.getName());
@@ -540,7 +545,7 @@ public class ProjectLinePopup extends XdevView {
 		this.horizontalLayout2.addComponent(horizontalLayout2_spacer);
 		this.horizontalLayout2.setExpandRatio(horizontalLayout2_spacer, 1.0F);
 		this.form.setColumns(4);
-		this.form.setRows(9);
+		this.form.setRows(10);
 		this.lblPeriode.setSizeUndefined();
 		this.form.addComponent(this.lblPeriode, 0, 0);
 		this.cmbPeriode.setWidth(100, Unit.PERCENTAGE);
@@ -587,11 +592,13 @@ public class ProjectLinePopup extends XdevView {
 		this.horizontalLayout2.setWidth(100, Unit.PERCENTAGE);
 		this.horizontalLayout2.setHeight(-1, Unit.PIXELS);
 		this.form.addComponent(this.horizontalLayout2, 0, 7, 1, 7);
+		this.lookupField.setSizeUndefined();
+		this.form.addComponent(this.lookupField, 0, 8);
 		this.form.setColumnExpandRatio(1, 100.0F);
 		final CustomComponent form_vSpacer = new CustomComponent();
 		form_vSpacer.setSizeFull();
-		this.form.addComponent(form_vSpacer, 0, 8, 3, 8);
-		this.form.setRowExpandRatio(8, 1.0F);
+		this.form.addComponent(form_vSpacer, 0, 9, 3, 9);
+		this.form.setRowExpandRatio(9, 1.0F);
 		this.form.setSizeFull();
 		this.setContent(this.form);
 		this.setSizeFull();
@@ -613,6 +620,7 @@ public class ProjectLinePopup extends XdevView {
 	} // </generated-code>
 
 	// <generated-code name="variables">
+	private LookupField lookupField;
 	private XdevLabel lblPeriode, lblPrlReportDate, lblProject, lblPrlHours, lblPrlRate, lblPrlText, lblPrlWorkType,
 			lblPrlState;
 	private XdevButton btnSearch, cmdSave, cmdCancel, cmdAction01, cmdAction02, cmdAction03, cmdAction04, cmdAction05,
