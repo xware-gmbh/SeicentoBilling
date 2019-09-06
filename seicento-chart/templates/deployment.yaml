@@ -53,19 +53,21 @@ spec:
         - name: APP_STAGE
           value: {{ .Values.APP_STAGE | quote }}
         - name: DB_PWD_TEST
-          value: {{ .Values.DB_URL_TEST | quote }}
-        - name: DB_URL_TEST
-          value: {{ .Values.DB_USR_TEST | quote }}
-        - name: DB_USR_TEST
           value: {{ .Values.DB_PWD_TEST | quote }}
+        - name: DB_URL_TEST
+          value: {{ .Values.DB_URL_TEST | quote }}
+        - name: DB_USR_TEST
+          value: {{ .Values.DB_USR_TEST | quote }}
         - name: clientid
-          value: {{ .Values.tenantid | quote }}
-        - name: clientkey
           value: {{ .Values.clientid | quote }}
-        - name: tenantid
+        - name: clientkey
           value: {{ .Values.clientkey | quote }}
+        - name: tenantid
+          value: {{ .Values.tenantid | quote }}
         - name: TOMCAT_ALLOW_REMOTE_MANAGEMENT
           value: {{ .Values.tomcatAllowRemoteManagement | quote }}
+        - name: CATALINA_HOME
+          value: /usr/local/tomcat
         ports:
         - name: http
           containerPort: 8080

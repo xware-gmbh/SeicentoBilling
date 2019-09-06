@@ -18,12 +18,12 @@
 # clientid: [Azure ClientID]
 # clientkey: [Azure Client Key]
 APP_STAGE: TEST
-DB_URL_TEST: jdbc:sqlserver://testing-mssql-linux.kubeapps:1433;databaseName=dbTestingSeicento;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;
+DB_URL_TEST: jdbc:sqlserver://testing-mssql-linux.kubeapps.svc.cluster.local:1433;databaseName=dbTestingSeicento;encrypt=true;trustServerCertificate=true;hostNameInCertificate=*.testing-mssql-linux.kubeapps.svc.cluster.local;loginTimeout=30;
 DB_USR_TEST: sa
 DB_PWD_TEST: GBtKC1jr6INk8xuPM285
 tenantid: 5b023340-9914-41fc-a387-5d3a12615797
 clientid: 3db9db91-b5c5-46e4-b875-343a0a0eb2f5
-clientkey: 3db9db91-b5c5-46e4-b875-343a0a0eb2f5
+clientkey: 87@uXq7/XRxxbpX+H2pmPqgwtR/z94sx
 
 ## Bitnami Tomcat image version
 ## ref: https://hub.docker.com/r/bitnami/tomcat/tags/
@@ -31,7 +31,7 @@ clientkey: 3db9db91-b5c5-46e4-b875-343a0a0eb2f5
 image:
   registry: docker.io
   repository: jmurihub/seicentobilling
-  tag: 2.2.0
+  tag: 2.3.0-dev
   ## Specify a imagePullPolicy
   ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
   ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
@@ -104,7 +104,7 @@ tomcatAllowRemoteManagement: 0
 service:
   type: LoadBalancer
   # HTTP Port
-  port: 8080
+  port: 19080
   ##
   ## loadBalancerIP:
   ## nodePorts:
