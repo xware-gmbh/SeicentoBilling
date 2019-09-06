@@ -3,6 +3,7 @@
 
 <?xdevuiml version="1.0"?>
 <?template BROWSER_XGA?>
+<?import com.xdev.ui.XdevButton?>
 <?import com.xdev.ui.XdevGridLayout?>
 <?import com.xdev.ui.XdevImage?>
 <?import com.xdev.ui.XdevLabel?>
@@ -19,21 +20,28 @@
         <XdevLabel styleName="h3" x:name="label" value="Excel Datei hochladen">
             <x:constraints gridx="2" gridy="1" weighty="0.0" weightx="0.2" width="0px" height="0px" />
         </XdevLabel>
-        <XdevLabel x:name="label2" value="Arbeitsblatt">
+        <XdevLabel description="Die Zahl entspricht dem Monat (z.B. 9 = September)" x:name="label2" value="Arbeitsblatt">
             <x:constraints gridx="1" gridy="2" weighty="0.0" weightx="0.0" width="0px" height="0px" />
         </XdevLabel>
         <XdevTextField columns="5" description="Welches Arbeitsblatt in Excel beginnend mit 0" x:name="textFieldSheet" value="2">
             <x:constraints gridx="2" gridy="2" weighty="0.0" weightx="0.2" width="0px" height="0px" />
         </XdevTextField>
-        <XdevLabel x:name="label3" value="Offset Zeile">
+        <XdevLabel description="Standardwert 15. Daten bis und mit dieser Zeile in Excel werden ignoriert." x:name="label3" value="Offset Zeile">
             <x:constraints gridx="1" gridy="3" weighty="0.0" weightx="0.0" width="0px" height="0px" />
         </XdevLabel>
         <XdevTextField columns="5" description="Startzeile der Rapporte beginnend bei 0" enabled="false" x:name="textFieldRow" value="15">
             <x:constraints gridx="2" gridy="3" weighty="0.0" weightx="0.2" width="0px" height="0px" />
         </XdevTextField>
         <XdevUpload buttonCaption="Start Prozess" x:name="upload">
-            <x:constraints gridx="1" gridy="4" weighty="0.0" weightx="0.0" width="0px" gridWidth="2" height="0px" />
+            <x:constraints gridx="1" gridy="4" weighty="0.0" weightx="0.0" width="-1px" gridWidth="2" height="100%" />
         </XdevUpload>
+        <XdevButton icon="FontAwesome.CLOSE" caption="Schliessen" x:name="cmdClose" x:shortcut="ESCAPE">
+            <x:constraints gridx="3" gridy="4" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+            <x:event>click.buttonClick</x:event>
+        </XdevButton>
+        <XdevLabel x:name="labelStatus" value="Label">
+            <x:constraints gridx="2" gridy="5" weighty="0.0" weightx="0.2" width="0px" height="0px" />
+        </XdevLabel>
     </XdevGridLayout>
 </XdevView>
 

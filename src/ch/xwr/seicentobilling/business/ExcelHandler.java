@@ -34,12 +34,13 @@ public class ExcelHandler {
 	private List<ProjectLine> PRList = null;
 
 
-	public void importReportLine(final File file, final int sheetnbr, final Periode periode) {
+	public void importReportLine(final File file, final int sheetnbr, final Periode periode) throws Exception {
 		final String filename = file.getPath();
 		//final POIFSFileSystem fs;
 		InputStream fs1 = null;
 		try {
 			//fs = new POIFSFileSystem(new FileInputStream(filename));
+	    	LOG.info("Open File " + filename + " for processing");
 			fs1 = new FileInputStream(filename);
 			this.hssfworkbook = new XSSFWorkbook(fs1);
 
@@ -47,13 +48,21 @@ public class ExcelHandler {
 			XSSFSheet sheet = null;
 			sheet = this.hssfworkbook.getSheetAt(sheetnbr);
 			this.PRList = new ArrayList<>();
+			LOG.debug("select sheet Nbr " + sheetnbr);
 
 		    //final HSSFRow row = null;
 		    XSSFRow row = null;
 		    for (int i = 15; i < sheet.getLastRowNum(); i++) {
 		    	LOG.info("Start processing Excel-line " + (i + 1));
 		    	row = sheet.getRow(i);
-		    	loopExcelRow(row);
+		    	try {
+			    	loopExcelRow(row);
+		    	} catch (final Exception e) {
+		    		LOG.error("Error on Line: " + (i + 1));
+		    		LOG.error(e.getMessage());
+
+		    		throw new Exception("Zeile " + (i + 1) + " konnte nicht verarbeitet werden. " + e.getLocalizedMessage());
+		    	}
 			}
 
 		    persistList(periode);
@@ -97,7 +106,7 @@ public class ExcelHandler {
 		}
 	}
 
-	private void loopExcelRow(final XSSFRow row) {
+	private void loopExcelRow(final XSSFRow row) throws Exception {
 		if (row == null) {
 			return;
 		}
@@ -155,13 +164,22 @@ public class ExcelHandler {
 			}
 		}
 
-		this.PRList.add(bean);
+		if (bean.getProject() != null && bean.getPrlReportDate() != null && bean.getPrlText().length() > 0) {
+			this.PRList.add(bean);
+		}
 	}
 
-	private Project findProject(final String project) {
+	private Project findProject(final String project) throws Exception {
+		if (project.equals("*")) {
+			return null;	//ignore line
+		}
 		final ProjectDAO dao = new ProjectDAO();
-		final Project bean = dao.findByName(project).get(0);
-		return bean;
+		try {
+			final Project bean = dao.findByName(project).get(0);
+			return bean;
+		} catch (final Exception e) {
+			throw new Exception ("Projekt nicht gefunden " + project + "!");
+		}
 	}
 
 
