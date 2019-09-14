@@ -597,12 +597,15 @@ public class ProjectLineTabView extends XdevView {
 	}
 
 	private void calcOverview() {
+		if (this.table.getSelectedItem() == null) {
+			return;
+		}
 		final Periode per = this.table.getSelectedItem().getBean();
-		final Calendar cal = Calendar.getInstance();
 		if (per == null) {
 			return;
 		}
 
+		final Calendar cal = Calendar.getInstance();
 		final YearMonth yearMonthObject = YearMonth.of(per.getPerYear(), per.getPerMonth().getValue());
 		final int daysInMonth = yearMonthObject.lengthOfMonth();
 

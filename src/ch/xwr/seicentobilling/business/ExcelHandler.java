@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -89,20 +90,35 @@ public class ExcelHandler {
 
 	}
 
-	private void persistList(final Periode periode) {
+	private void persistList(final Periode periode) throws Exception {
 		if (this.PRList == null || this.PRList.size() < 1) {
 			return;
 		}
+		LOG.info("Try to save: " + this.PRList.size() + " valid entries from excel!");
 		final ProjectLineDAO dao = new ProjectLineDAO();
 		final RowObjectManager man = new RowObjectManager();
 
 		for (final Iterator<ProjectLine> iterator = this.PRList.iterator(); iterator.hasNext();) {
 			final ProjectLine bean = iterator.next();
 
+			checkValidDate(bean, periode);
+
 			bean.setPeriode(periode);
 			dao.save(bean);
+			LOG.debug("saved record with id: " + bean.getPrlId());
 
 			man.updateObject(bean.getPrlId(), bean.getClass().getSimpleName());
+		}
+	}
+
+	private void checkValidDate(final ProjectLine bean, final Periode periode) throws Exception {
+		// Rapportdatum muss zu Periode passen
+		final Calendar cal = Calendar.getInstance();
+		cal.setTime(bean.getPrlReportDate());
+		final int imonth = cal.get(Calendar.MONTH) + 1;
+
+		if (imonth != periode.getPerMonth().getValue()) {
+			throw new Exception("Periode nicht gültig für Datum: " + bean.getPrlReportDate());
 		}
 	}
 
