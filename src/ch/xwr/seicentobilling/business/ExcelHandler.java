@@ -49,7 +49,7 @@ public class ExcelHandler {
 			XSSFSheet sheet = null;
 			sheet = this.hssfworkbook.getSheetAt(sheetnbr);
 			this.PRList = new ArrayList<>();
-			LOG.debug("select sheet Nbr " + sheetnbr);
+			LOG.info("select sheet Nbr " + sheetnbr + " " + this.hssfworkbook.getSheetName(sheetnbr));
 
 		    //final HSSFRow row = null;
 		    XSSFRow row = null;
@@ -92,6 +92,7 @@ public class ExcelHandler {
 
 	private void persistList(final Periode periode) throws Exception {
 		if (this.PRList == null || this.PRList.size() < 1) {
+			LOG.warn("No valid entry in List to save to ProjectLine!");
 			return;
 		}
 		LOG.info("Try to save: " + this.PRList.size() + " valid entries from excel!");
@@ -182,6 +183,8 @@ public class ExcelHandler {
 
 		if (bean.getProject() != null && bean.getPrlReportDate() != null && bean.getPrlText().length() > 0) {
 			this.PRList.add(bean);
+		} else {
+			LOG.debug("ignoring current line. Will not be added to list.");
 		}
 	}
 

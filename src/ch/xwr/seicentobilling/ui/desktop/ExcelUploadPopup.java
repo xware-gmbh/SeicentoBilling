@@ -140,6 +140,7 @@ public class ExcelUploadPopup extends XdevView {
 		this.label = new XdevLabel();
 		this.label2 = new XdevLabel();
 		this.textFieldSheet = new XdevTextField();
+		this.label4 = new XdevLabel();
 		this.label3 = new XdevLabel();
 		this.textFieldRow = new XdevTextField();
 		this.upload = new XdevUpload();
@@ -154,6 +155,9 @@ public class ExcelUploadPopup extends XdevView {
 		this.label2.setValue("Arbeitsblatt");
 		this.textFieldSheet.setDescription("Welches Arbeitsblatt in Excel beginnend mit 0");
 		this.textFieldSheet.setValue("2");
+		this.label4.setIcon(FontAwesome.INFO_CIRCLE);
+		this.label4.setDescription(
+				"Die Reihenfolge der Sheets in Excel ist wie folgt: Stammdaten, Dezember (Vorjahr), Januar, Februar..... MIt dieser Reihenfolge ist der Wert im Feld Arbeitsblatt korrekt berechnet.");
 		this.label3.setDescription("Standardwert 15. Daten bis und mit dieser Zeile in Excel werden ignoriert.");
 		this.label3.setValue("Offset Zeile");
 		this.textFieldRow.setDescription("Startzeile der Rapporte beginnend bei 0");
@@ -176,6 +180,8 @@ public class ExcelUploadPopup extends XdevView {
 		this.gridLayout.addComponent(this.label2, 0, 1);
 		this.textFieldSheet.setSizeUndefined();
 		this.gridLayout.addComponent(this.textFieldSheet, 1, 1);
+		this.label4.setSizeUndefined();
+		this.gridLayout.addComponent(this.label4, 2, 1);
 		this.label3.setSizeUndefined();
 		this.gridLayout.addComponent(this.label3, 0, 2);
 		this.textFieldRow.setSizeUndefined();
@@ -201,7 +207,7 @@ public class ExcelUploadPopup extends XdevView {
 	} // </generated-code>
 
 	// <generated-code name="variables">
-	private XdevLabel label, label2, label3, labelStatus;
+	private XdevLabel label, label2, label4, label3, labelStatus;
 	private XdevButton cmdClose;
 	private XdevUpload upload;
 	private XdevImage image;

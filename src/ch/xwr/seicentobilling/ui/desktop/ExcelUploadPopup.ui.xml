@@ -26,6 +26,9 @@
         <XdevTextField columns="5" description="Welches Arbeitsblatt in Excel beginnend mit 0" x:name="textFieldSheet" value="2">
             <x:constraints gridx="2" gridy="2" weighty="0.0" weightx="0.2" width="0px" height="0px" />
         </XdevTextField>
+        <XdevLabel icon="FontAwesome.INFO_CIRCLE" description="Die Reihenfolge der Sheets in Excel ist wie folgt: Stammdaten, Dezember (Vorjahr), Januar, Februar..... MIt dieser Reihenfolge ist der Wert im Feld Arbeitsblatt korrekt berechnet." x:name="label4">
+            <x:constraints gridx="3" gridy="2" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+        </XdevLabel>
         <XdevLabel description="Standardwert 15. Daten bis und mit dieser Zeile in Excel werden ignoriert." x:name="label3" value="Offset Zeile">
             <x:constraints gridx="1" gridy="3" weighty="0.0" weightx="0.0" width="0px" height="0px" />
         </XdevLabel>
