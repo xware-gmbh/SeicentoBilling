@@ -40,7 +40,7 @@
             <x:event>click.buttonClick</x:event>
         </XdevButton>
         <XdevLabel x:name="labelStatus" value="Label">
-            <x:constraints gridx="2" gridy="5" weighty="0.0" weightx="0.2" width="0px" height="0px" />
+            <x:constraints gridx="2" gridy="5" weighty="0.0" weightx="0.2" width="100%" gridWidth="2" height="0px" />
         </XdevLabel>
     </XdevGridLayout>
 </XdevView>

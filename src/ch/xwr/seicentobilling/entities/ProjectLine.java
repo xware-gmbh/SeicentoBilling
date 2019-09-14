@@ -40,6 +40,8 @@ public class ProjectLine implements java.io.Serializable {
 	private LovState.WorkType prlWorkType;
 	private Double prlRate;
 	private LovState.State prlState;
+	private Date prlTimeFrom;
+	private Date prlTimeTo;
 
 	public ProjectLine() {
 	}
@@ -79,7 +81,7 @@ public class ProjectLine implements java.io.Serializable {
 		this.project = project;
 	}
 
-	@Caption("PrlReportDate")
+	@Caption("RapportDatum")
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "prlReportDate", nullable = false, columnDefinition = "datetime", length = 23)
 	public Date getPrlReportDate() {
@@ -90,7 +92,7 @@ public class ProjectLine implements java.io.Serializable {
 		this.prlReportDate = prlReportDate;
 	}
 
-	@Caption("PrlHours")
+	@Caption("Stunden")
 	@Column(name = "prlHours", columnDefinition = "decimal", precision = 6)
 	public Double getPrlHours() {
 		return this.prlHours;
@@ -100,7 +102,7 @@ public class ProjectLine implements java.io.Serializable {
 		this.prlHours = prlHours;
 	}
 
-	@Caption("PrlText")
+	@Caption("Text")
 	@Column(name = "prlText", columnDefinition = "nvarchar")
 	public String getPrlText() {
 		return this.prlText;
@@ -120,7 +122,7 @@ public class ProjectLine implements java.io.Serializable {
 		this.prlitmId = prlitmId;
 	}
 
-	@Caption("PrlWorkType")
+	@Caption("Typ")
 	@Column(name = "prlWorkType", columnDefinition = "smallint")
 	public LovState.WorkType getPrlWorkType() {
 		return this.prlWorkType;
@@ -130,7 +132,7 @@ public class ProjectLine implements java.io.Serializable {
 		this.prlWorkType = prlWorkType;
 	}
 
-	@Caption("PrlRate")
+	@Caption("Ansatz")
 	@Column(name = "prlRate", columnDefinition = "decimal", precision = 6)
 	public Double getPrlRate() {
 		return this.prlRate;
@@ -140,7 +142,7 @@ public class ProjectLine implements java.io.Serializable {
 		this.prlRate = prlRate;
 	}
 
-	@Caption("PrlState")
+	@Caption("Status")
 	@Column(name = "prlState", columnDefinition = "smallint")
 	public LovState.State getPrlState() {
 		return this.prlState;
@@ -148,6 +150,26 @@ public class ProjectLine implements java.io.Serializable {
 
 	public void setPrlState(final LovState.State prlState) {
 		this.prlState = prlState;
+	}
+
+	@Caption("Von")
+	@Column(name = "prlTimeFrom")
+	public Date getPrlTimeFrom() {
+		return this.prlTimeFrom;
+	}
+
+	public void setPrlTimeFrom(final Date noname) {
+		this.prlTimeFrom = noname;
+	}
+
+	@Caption("Bis")
+	@Column(name = "prlTimeTo")
+	public Date getPrlTimeTo() {
+		return this.prlTimeTo;
+	}
+
+	public void setPrlTimeTo(final Date noname) {
+		this.prlTimeTo = noname;
 	}
 
 }

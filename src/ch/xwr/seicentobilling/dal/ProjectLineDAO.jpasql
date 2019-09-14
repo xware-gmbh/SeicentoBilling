@@ -3,5 +3,5 @@ import ch.xwr.seicentobilling.entities.Periode
 
 findByPeriode(Periode dao)
 {
-	select * from ProjectLine where periode = :dao order by prlReportDate desc
+	select * from ProjectLine where periode = :dao order by prlReportDate desc, prlTimeFrom asc
 }

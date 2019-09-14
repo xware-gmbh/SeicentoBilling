@@ -185,8 +185,9 @@ public class ExcelUploadPopup extends XdevView {
 		this.gridLayout.addComponent(this.upload, 0, 3, 1, 3);
 		this.cmdClose.setSizeUndefined();
 		this.gridLayout.addComponent(this.cmdClose, 2, 3);
-		this.labelStatus.setSizeUndefined();
-		this.gridLayout.addComponent(this.labelStatus, 1, 4);
+		this.labelStatus.setWidth(100, Unit.PERCENTAGE);
+		this.labelStatus.setHeight(-1, Unit.PIXELS);
+		this.gridLayout.addComponent(this.labelStatus, 1, 4, 2, 4);
 		this.gridLayout.setColumnExpandRatio(1, 20.0F);
 		final CustomComponent gridLayout_vSpacer = new CustomComponent();
 		gridLayout_vSpacer.setSizeFull();
