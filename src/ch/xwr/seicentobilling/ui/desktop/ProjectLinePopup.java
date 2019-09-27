@@ -389,12 +389,11 @@ public class ProjectLinePopup extends XdevView {
 		}
 		if (dateTo != null) {
 			dateTo = getDateCorrect(d1, dateTo);
-			if (dateTo.before(dateFrom)) {
+			if (dateFrom != null && dateTo.before(dateFrom)) {
 				dateTo = dateFrom;
 			}
 			this.datePrlReportDateTo.setValue(dateTo);
 		}
-
 	}
 
 	private Date getDateCorrect(final Date d1, final Date dateTm) {
