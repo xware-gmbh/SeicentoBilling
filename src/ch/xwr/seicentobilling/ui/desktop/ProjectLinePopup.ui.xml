@@ -113,6 +113,10 @@
                     <x:constraints weightx="0.0" width="0px" alignment="MIDDLE_LEFT" height="0px" />
                     <x:event>click.buttonClick</x:event>
                 </XdevButton>
+                <XdevButton icon="FontAwesome.CLOCK_O" caption="Start/Stop" x:name="cmdStartStop" x:shortcut="ESCAPE">
+                    <x:constraints weightx="0.0" width="0px" alignment="MIDDLE_LEFT" height="0px" />
+                    <x:event>click.buttonClick</x:event>
+                </XdevButton>
             </XdevHorizontalLayout>
             <XdevHorizontalLayout x:name="horizontalLayout2" margin="">
                 <x:constraints gridx="1" gridy="8" weighty="0.0" weightx="0.0" width="100%" gridWidth="2" height="-1px" />

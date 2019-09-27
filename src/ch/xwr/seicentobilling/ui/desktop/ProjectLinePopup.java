@@ -3,6 +3,7 @@ package ch.xwr.seicentobilling.ui.desktop;
 import java.text.DecimalFormat;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
@@ -367,11 +368,46 @@ public class ProjectLinePopup extends XdevView {
 	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
 	 */
 	private void datePrlReportDateTo_valueChange(final Property.ValueChangeEvent event) {
+		validateTimeFromTo();
 		//if (!this.datePrlReportDateTo.isModified()) {
-			final Date date2 = (Date) event.getProperty().getValue();
-			final Date dateFrom = this.datePrlReportDateFrom.getValue();
-			calcDurationFromTime(dateFrom, date2);
+			calcDurationFromTime();
 		//}
+	}
+
+	private void validateTimeFromTo() {
+		Date d1 = this.datePrlReportDate.getValue();
+		Date dateFrom = this.datePrlReportDateFrom.getValue();
+		Date dateTo = this.datePrlReportDateTo.getValue();
+
+		if (d1 == null) {
+			d1 = new Date();
+		}
+
+		if (dateFrom != null) {
+			dateFrom = getDateCorrect(d1, dateFrom);
+			this.datePrlReportDateFrom.setValue(dateFrom);
+		}
+		if (dateTo != null) {
+			dateTo = getDateCorrect(d1, dateTo);
+			if (dateTo.before(dateFrom)) {
+				dateTo = dateFrom;
+			}
+			this.datePrlReportDateTo.setValue(dateTo);
+		}
+
+	}
+
+	private Date getDateCorrect(final Date d1, final Date dateTm) {
+		final Calendar c1 = Calendar.getInstance();
+		c1.setTime(d1);
+		final Calendar c2 = Calendar.getInstance();
+		c2.setTime(dateTm);
+
+		c2.set(Calendar.YEAR, c1.get(Calendar.YEAR));
+		c2.set(Calendar.MONTH, c1.get(Calendar.MONTH));
+		c2.set(Calendar.DAY_OF_MONTH, c1.get(Calendar.DAY_OF_MONTH));
+
+		return c2.getTime();
 	}
 
 	/**
@@ -382,14 +418,16 @@ public class ProjectLinePopup extends XdevView {
 	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
 	 */
 	private void datePrlReportDateFrom_valueChange(final Property.ValueChangeEvent event) {
+		validateTimeFromTo();
 		//if (!this.datePrlReportDateFrom.isModified()) {
-			final Date dateFrom = (Date) event.getProperty().getValue();
-			final Date dateTo = this.datePrlReportDateTo.getValue();
-			calcDurationFromTime(dateFrom, dateTo);
+			calcDurationFromTime();
 		//}
 	}
 
-	private void calcDurationFromTime(final Date fromHH, final Date toHH) {
+	private void calcDurationFromTime() {
+		final Date fromHH = this.datePrlReportDateFrom.getValue();
+		final Date toHH = this.datePrlReportDateTo.getValue();
+
 		if (fromHH == null || toHH == null) {
 			return;
 		}
@@ -409,6 +447,40 @@ public class ProjectLinePopup extends XdevView {
 		hours = hours + dec;
 
 		this.txtPrlHours.setValue(new DecimalFormat("####.##").format(hours));
+	}
+
+	/**
+	 * Event handler delegate method for the {@link XdevButton}
+	 * {@link #cmdStartStop}.
+	 *
+	 * @see Button.ClickListener#buttonClick(Button.ClickEvent)
+	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
+	 */
+	private void cmdStartStop_buttonClick(final Button.ClickEvent event) {
+		final Date d1 = this.datePrlReportDate.getValue();
+		if (d1 == null) {
+			return;
+		}
+		final Calendar c1 = Calendar.getInstance();
+		c1.setTime(d1);
+		final Calendar c2 = Calendar.getInstance();
+		final Date d2 = new Date();  //now
+		c2.setTime(d2);
+
+		final int iminutes = c2.get(Calendar.MINUTE);
+		final Calendar c3 = Calendar.getInstance();
+		c3.set(c1.get(Calendar.YEAR), c1.get(Calendar.MONTH), c1.get(Calendar.DAY_OF_MONTH), c2.get(Calendar.HOUR_OF_DAY), iminutes);
+		final int mod = iminutes % 5;
+		c3.add(Calendar.MINUTE, iminutes == 0 ? -5 : -mod);
+
+		if (this.datePrlReportDateFrom.getValue() == null ) {
+			this.datePrlReportDateFrom.setValue(c3.getTime());
+		} else {
+			if (this.datePrlReportDateTo.getValue() == null ) {
+				this.datePrlReportDateTo.setValue(c3.getTime());
+			}
+		}
+
 	}
 
 	/*
@@ -441,6 +513,7 @@ public class ProjectLinePopup extends XdevView {
 		this.horizontalLayout = new XdevHorizontalLayout();
 		this.cmdSave = new XdevButton();
 		this.cmdCancel = new XdevButton();
+		this.cmdStartStop = new XdevButton();
 		this.horizontalLayout2 = new XdevHorizontalLayout();
 		this.cmdAction01 = new XdevButton();
 		this.cmdAction02 = new XdevButton();
@@ -493,6 +566,9 @@ public class ProjectLinePopup extends XdevView {
 		this.cmdCancel.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/cancel1.png"));
 		this.cmdCancel.setCaption(StringResourceUtils.optLocalizeString("{$cmdCancel.caption}", this));
 		this.cmdCancel.setClickShortcut(ShortcutAction.KeyCode.ESCAPE);
+		this.cmdStartStop.setIcon(FontAwesome.CLOCK_O);
+		this.cmdStartStop.setCaption("Start/Stop");
+		this.cmdStartStop.setClickShortcut(ShortcutAction.KeyCode.ESCAPE);
 		this.horizontalLayout2.setMargin(new MarginInfo(false));
 		this.cmdAction01.setCaption("K1");
 		this.cmdAction01.setDescription("CTRL + 1");
@@ -553,6 +629,9 @@ public class ProjectLinePopup extends XdevView {
 		this.cmdCancel.setSizeUndefined();
 		this.horizontalLayout.addComponent(this.cmdCancel);
 		this.horizontalLayout.setComponentAlignment(this.cmdCancel, Alignment.MIDDLE_LEFT);
+		this.cmdStartStop.setSizeUndefined();
+		this.horizontalLayout.addComponent(this.cmdStartStop);
+		this.horizontalLayout.setComponentAlignment(this.cmdStartStop, Alignment.MIDDLE_LEFT);
 		final CustomComponent horizontalLayout_spacer = new CustomComponent();
 		horizontalLayout_spacer.setSizeFull();
 		this.horizontalLayout.addComponent(horizontalLayout_spacer);
@@ -664,6 +743,7 @@ public class ProjectLinePopup extends XdevView {
 		this.btnSearch.addClickListener(event -> this.btnSearch_buttonClick(event));
 		this.cmdSave.addClickListener(event -> this.cmdSave_buttonClick(event));
 		this.cmdCancel.addClickListener(event -> this.cmdCancel_buttonClick(event));
+		this.cmdStartStop.addClickListener(event -> this.cmdStartStop_buttonClick(event));
 		this.cmdAction01.addClickListener(event -> this.cmdAction01_buttonClick(event));
 		this.cmdAction02.addClickListener(event -> this.cmdAction02_buttonClick(event));
 		this.cmdAction03.addClickListener(event -> this.cmdAction03_buttonClick(event));
@@ -680,8 +760,8 @@ public class ProjectLinePopup extends XdevView {
 	// <generated-code name="variables">
 	private XdevLabel lblPeriode, lblPrlReportDate, lblPrlFromTo, lblProject, lblPrlHours, lblPrlRate, lblPrlText,
 			lblPrlWorkType, lblPrlState;
-	private XdevButton btnSearch, cmdSave, cmdCancel, cmdAction01, cmdAction02, cmdAction03, cmdAction04, cmdAction05,
-			cmdAction06, cmdAction, cmdAction2, cmdAction3, cmdAction4;
+	private XdevButton btnSearch, cmdSave, cmdCancel, cmdStartStop, cmdAction01, cmdAction02, cmdAction03, cmdAction04,
+			cmdAction05, cmdAction06, cmdAction, cmdAction2, cmdAction3, cmdAction4;
 	private XdevHorizontalLayout horizontalLayout, horizontalLayout2;
 	private XdevPopupDateField datePrlReportDate, datePrlReportDateFrom, datePrlReportDateTo;
 	private XdevComboBox<?> comboBoxWorktype, comboBoxState;

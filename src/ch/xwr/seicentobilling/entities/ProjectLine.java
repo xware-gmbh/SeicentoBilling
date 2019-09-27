@@ -2,6 +2,7 @@ package ch.xwr.seicentobilling.entities;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
+import java.util.Calendar;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -85,6 +86,16 @@ public class ProjectLine implements java.io.Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "prlReportDate", nullable = false, columnDefinition = "datetime", length = 23)
 	public Date getPrlReportDate() {
+		if (this.prlReportDate != null) {
+			final Calendar c1 = Calendar.getInstance();
+			c1.setTime(this.prlReportDate);
+			c1.set(Calendar.HOUR_OF_DAY,0);
+			c1.set(Calendar.MINUTE,0);
+			c1.set(Calendar.SECOND,0);
+			c1.set(Calendar.MILLISECOND,0);
+			this.prlReportDate = c1.getTime();
+		}
+
 		return this.prlReportDate;
 	}
 

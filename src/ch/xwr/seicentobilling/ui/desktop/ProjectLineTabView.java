@@ -623,8 +623,8 @@ public class ProjectLineTabView extends XdevView {
 
 		initOverviewGrids(totalm);
 
-		for (int i = 0; i < daysInMonth; i++) {
-			cal.set(per.getPerYear(), per.getPerMonth().getValue() - 1, i+1);
+		for (int i = 1; i <= daysInMonth; i++) {
+			cal.set(per.getPerYear(), per.getPerMonth().getValue() - 1, i);
 			final SimpleDateFormat format1 = new SimpleDateFormat("EEE dd.MM.yyyy");
 			final int iday2 = cal.get(Calendar.DAY_OF_WEEK);
 

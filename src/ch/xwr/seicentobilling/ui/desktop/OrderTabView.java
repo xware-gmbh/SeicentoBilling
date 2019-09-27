@@ -982,7 +982,8 @@ public class OrderTabView extends XdevView {
 		this.cmdAdmin.setVisible(false);
 		this.table.setColumnReorderingAllowed(true);
 		this.table.setColumnCollapsingAllowed(true);
-		this.table.setContainerDataSource(Order.class, NestedProperty.of(Order_.customer, Customer_.cusNumber),
+		this.table.setContainerDataSource(Order.class, DAOs.get(OrderDAO.class).findAll(),
+				NestedProperty.of(Order_.customer, Customer_.cusNumber),
 				NestedProperty.of("customer.shortname", String.class),
 				NestedProperty.of(Order_.customer, Customer_.city, City_.ctyName));
 		this.table.setVisibleColumns(Order_.ordNumber.getName(), NestedProperty.path(Order_.customer, Customer_.cusNumber),
@@ -1127,7 +1128,7 @@ public class OrderTabView extends XdevView {
 		MasterDetail.connect(this.table, this.fieldGroup);
 
 		this.containerFilterComponent.setContainer(this.table.getBeanContainerDataSource(), "customer", "paymentCondition",
-				"project", "ordNumber", "ordState", "ordAmountBrut", "ordOrderDate", "ordBillDate", "ordPayDate");
+				"project", "ordNumber", "ordAmountBrut", "ordOrderDate", "ordBillDate", "ordPayDate", "ordState");
 		this.containerFilterComponent.setSearchableProperties("ordCreatedBy", "ordText", "customer.cusCompany",
 				"customer.cusName", "project.proName", "project.proExtReference");
 
