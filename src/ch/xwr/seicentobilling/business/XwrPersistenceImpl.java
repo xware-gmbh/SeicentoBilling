@@ -47,6 +47,7 @@ public class XwrPersistenceImpl implements Factory {
 				String stage = System.getenv("APP_STAGE");
 				if (stage != null) {
 					stage = stage.toUpperCase();
+					System.setProperty("APP_STAGE", stage);  //for log4J
 					final String dburl = System.getenv("DB_URL_" + stage);
 					if (dburl != null && dburl.length()>3) {
 						System.out.println("Read DB Connection from Environment: " + stage);
