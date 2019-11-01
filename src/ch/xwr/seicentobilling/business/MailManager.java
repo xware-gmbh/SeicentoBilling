@@ -37,10 +37,7 @@ public class MailManager {
         //mailSubject
         final String subject = getMailSubject(cmpRoot, objRoot, obean, billdate);
         //mailText
-        String body = getMailBody(cmpRoot, objRoot, obean, billdate);
-
-        final String wiki = "<https://xwr.visualstudio.com/XWare/_wiki/wikis/XWare.wiki?wikiVersion=GBwikiMaster%26pagePath=%2FSeicentoBilling%2FPDF Rechnung konfigurieren%26pageId=16>";
-        body = body + "%0D%0A" + "TODO: Check Link: " + wiki;
+        final String body = getMailBody(cmpRoot, objRoot, obean, billdate);
 
         //compose mail URL
         String url = "";

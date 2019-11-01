@@ -387,6 +387,7 @@ public class ExpensePopup extends XdevView {
 		this.txtExpAmount.setTabIndex(5);
 		this.txtExpAmount.setRequired(true);
 		this.lblVat.setValue(StringResourceUtils.optLocalizeString("{$lblVat.value}", this));
+		this.cmbVat.setTextInputAllowed(false);
 		this.cmbVat.setTabIndex(6);
 		this.cmbVat.setRequired(true);
 		this.cmbVat.setItemCaptionFromAnnotation(false);

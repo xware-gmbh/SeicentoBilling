@@ -42,7 +42,8 @@ public class ProjectLineDAO extends JPADAO<ProjectLine, Long> {
 
 		criteriaQuery.where(criteriaBuilder.equal(root.get(ProjectLine_.periode), daoParameter));
 
-		criteriaQuery.orderBy(criteriaBuilder.desc(root.get(ProjectLine_.prlReportDate)));
+		criteriaQuery.orderBy(criteriaBuilder.desc(root.get(ProjectLine_.prlReportDate)),
+				criteriaBuilder.asc(root.get(ProjectLine_.prlTimeFrom)));
 
 		final TypedQuery<ProjectLine> query = entityManager.createQuery(criteriaQuery);
 		query.setParameter(daoParameter, dao);

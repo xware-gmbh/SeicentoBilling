@@ -14,7 +14,7 @@ Anpassen docker-compose.yml. Die folgenden Werte unter _environment_ müssen ges
 
 ---
 APP_STAGE=TEST  
-DB_URL TEST=jdbc:sqlserver:[SERVER]:1433;database=[DBNAME];encrypt=true;trustServerCertificate=false; hostNameInCertificate=*.database.windows.net;loginTimeout=30;  
+DB_URL TEST=jdbc:sqlserver://[SERVER]:1433;database=[DBNAME];encrypt=true;trustServerCertificate=false; hostNameInCertificate=*.database.windows.net;loginTimeout=30;  
 DB_USR TEST=[DBUSER]  
 DB_PWD TEST=[DBPASSWORD]  
 tenantid=[Company.com]  

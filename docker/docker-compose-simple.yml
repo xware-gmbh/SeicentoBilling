@@ -7,7 +7,7 @@ services:
 
     environment:
       - APP_STAGE=TEST
-      - DB_URL_TEST=jdbc:sqlserver:[SERVER]:1433;database=[DBNAME];encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;
+      - DB_URL_TEST=jdbc:sqlserver://[SERVER]:1433;database=[DBNAME];encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;
       - DB_USR_TEST=[DBUSER]
       - DB_PWD_TEST=[DBPASSWORD]
       - tenantid=[Company.com]

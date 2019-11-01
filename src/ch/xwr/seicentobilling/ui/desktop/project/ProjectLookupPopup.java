@@ -61,7 +61,7 @@ public class ProjectLookupPopup extends XdevView {
 
 	public static Window getPopupWindow() {
 		final Window win = new Window();
-		win.setWidth("680");
+		win.setWidth("700");
 		win.setHeight("520");
 		win.center();
 		win.setModal(true);

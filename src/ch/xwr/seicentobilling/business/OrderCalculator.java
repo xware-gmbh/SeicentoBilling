@@ -2,22 +2,30 @@ package ch.xwr.seicentobilling.business;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import com.vaadin.external.org.slf4j.Logger;
+import com.vaadin.external.org.slf4j.LoggerFactory;
 import com.vaadin.ui.Field;
 import com.xdev.persistence.PersistenceUtils;
 import com.xdev.ui.XdevFieldGroup;
 
 import ch.xwr.seicentobilling.dal.OrderDAO;
 import ch.xwr.seicentobilling.dal.OrderLineDAO;
+import ch.xwr.seicentobilling.dal.VatLineDAO;
 import ch.xwr.seicentobilling.entities.Order;
 import ch.xwr.seicentobilling.entities.OrderLine;
 import ch.xwr.seicentobilling.entities.Vat;
+import ch.xwr.seicentobilling.entities.VatLine;
 
 public class OrderCalculator {
+	/** Logger initialized */
+	private static final Logger _logger = LoggerFactory.getLogger(OrderCalculator.class);
+
 
 	public OrderLine calculateLine(final OrderLine inp) {
 		if (0 == inp.getOdlQuantity()|| null == inp.getOdlPrice() || 0 == inp.getOdlPrice().doubleValue()) {
@@ -29,7 +37,7 @@ public class OrderCalculator {
 		}
 
 		final Double val1 = inp.getOdlQuantity() * inp.getOdlPrice().doubleValue();
-		final Double vat1 = getVatAmount(val1, inp.getVat());
+		final Double vat1 = getVatAmount(inp.getOrderhdr().getOrdBillDate(), val1, inp.getVat());
 		Double val2 = val1 + vat1;		//excl.
 		if (null !=inp.getVat() && inp.getVat().getVatInclude() == true) {
 			val2 = val1;
@@ -72,20 +80,47 @@ public class OrderCalculator {
 		return true;
 	}
 
-    private Double getVatAmount(final Double val1, final Vat vat) {
+    private Double getVatAmount(final Date date, final Double val1, final Vat vat) {
     	if (vat == null  || val1 == null) {
 			return new Double(0);
 		}
+
+    	final Date refDate = getRawDate(date);
+
+    	//TFS-240
+    	final VatLineDAO dao = new VatLineDAO();
+    	final List<VatLine> lst = dao.findByVatAndDate(vat, refDate);
+    	if (lst == null || lst.isEmpty()) {
+    		System.out.println("No VatLine found");
+    		_logger.warn("no VatLine found for vat: " + vat.getVatName() + " and Date: " + date);
+			return new Double(0);
+    	}
+
+    	final VatLine vl = lst.get(0);
+    	final double rate = vl.getVanRate().doubleValue();
     	double base = 100.;
 
 		if (vat.getVatInclude() == true) {
-			base = base + vat.getVatRate().doubleValue();
+			base = base + rate;
 		}
-
-    	final Double vat1 = val1 / base * vat.getVatRate();
+    	final Double vat1 = val1 / base * rate;
 
 		return swissCommercialRound(new BigDecimal(vat1));
 	}
+
+    //remove time
+    private Date getRawDate(final Date date) {
+    	try {
+    		final SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+    		final Date rawdate = sdf.parse(sdf.format(date));
+    		return rawdate;
+    	} catch (final Exception e) {
+
+    	}
+
+    	return date;
+
+    }
 
 //	private Double computePercentage(final Double input, final double d1) {
 //    	//Double output = input.divide(new Double(d1), RoundingMode.HALF_DOWN);

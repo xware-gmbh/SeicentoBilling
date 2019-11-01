@@ -66,7 +66,7 @@
                     <x:event>click.buttonClick</x:event>
                 </XdevButton>
             </XdevHorizontalLayout>
-            <XdevTable x:connectedForm="fieldGroup" columnReorderingAllowed="true" x:name="table" columnCollapsingAllowed="true" x:entity="Project" x:autoQuery="false">
+            <XdevTable columnReorderingAllowed="true" x:name="table" columnCollapsingAllowed="true" x:entity="Project" x:autoQuery="false">
                 <x:entityProperties>
                     <entry type="String" property="proName" caption="Name" />
                     <entry type="String" property="customer.shortname" caption="Kunde" />
@@ -172,7 +172,7 @@
                     <XdevLabel x:name="lblCostAccount" value="{$lblCostAccount.value}">
                         <x:constraints gridx="1" gridy="8" weighty="0.0" weightx="0.0" width="0px" height="0px" />
                     </XdevLabel>
-                    <XdevComboBox itemCaptionFromAnnotation="false" x:name="cmbCostAccount" x:entity="CostAccount">
+                    <XdevComboBox itemCaptionFromAnnotation="false" x:name="cmbCostAccount" x:entity="CostAccount" x:autoQuery="false">
                         <x:constraints gridx="2" gridy="8" weighty="0.0" weightx="1.0" width="100%" gridWidth="2" height="0px" />
                         <x:entityProperty>
                             <entry type="String" property="csaName" />
@@ -180,6 +180,7 @@
                         <x:typeArguments>
                             <typeArgument type="CostAccount" />
                         </x:typeArguments>
+                        <x:data methodName="findAllActive" />
                     </XdevComboBox>
                     <XdevLabel x:name="lblBillingAddress" value="R-Adresse">
                         <x:constraints gridx="1" gridy="9" top="46px" left="-1px" weighty="0.0" weightx="0.0" width="0px" height="0px" />
@@ -231,7 +232,7 @@
                     <XdevLabel x:name="lblProject" value="{$lblProject.value}">
                         <x:constraints gridx="1" gridy="3" weighty="0.0" weightx="0.0" width="0px" height="0px" />
                     </XdevLabel>
-                    <XdevComboBox x:name="cmbProject" x:entity="Project">
+                    <XdevComboBox x:name="cmbProject" x:entity="Project" x:autoQuery="false">
                         <x:constraints gridx="2" gridy="3" weighty="0.0" weightx="1.0" width="100%" gridWidth="2" height="0px" />
                         <x:entityProperty>
                             <entry type="String" property="proName" />
@@ -239,6 +240,7 @@
                         <x:typeArguments>
                             <typeArgument type="Project" />
                         </x:typeArguments>
+                        <x:data methodName="findAllActive" />
                     </XdevComboBox>
                     <XdevLabel x:name="lblProDescription" value="{$lblProDescription.value}">
                         <x:constraints gridx="1" gridy="4" weighty="0.0" weightx="0.0" width="0px" height="0px" />

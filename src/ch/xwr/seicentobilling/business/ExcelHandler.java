@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -34,12 +35,13 @@ public class ExcelHandler {
 	private List<ProjectLine> PRList = null;
 
 
-	public void importReportLine(final File file, final int sheetnbr, final Periode periode) {
+	public void importReportLine(final File file, final int sheetnbr, final Periode periode) throws Exception {
 		final String filename = file.getPath();
 		//final POIFSFileSystem fs;
 		InputStream fs1 = null;
 		try {
 			//fs = new POIFSFileSystem(new FileInputStream(filename));
+	    	LOG.info("Open File " + filename + " for processing");
 			fs1 = new FileInputStream(filename);
 			this.hssfworkbook = new XSSFWorkbook(fs1);
 
@@ -47,12 +49,21 @@ public class ExcelHandler {
 			XSSFSheet sheet = null;
 			sheet = this.hssfworkbook.getSheetAt(sheetnbr);
 			this.PRList = new ArrayList<>();
+			LOG.info("select sheet Nbr " + sheetnbr + " " + this.hssfworkbook.getSheetName(sheetnbr));
 
 		    //final HSSFRow row = null;
 		    XSSFRow row = null;
 		    for (int i = 15; i < sheet.getLastRowNum(); i++) {
+		    	LOG.info("Start processing Excel-line " + (i + 1));
 		    	row = sheet.getRow(i);
-		    	loopExcelRow(row);
+		    	try {
+			    	loopExcelRow(row);
+		    	} catch (final Exception e) {
+		    		LOG.error("Error on Line: " + (i + 1));
+		    		LOG.error(e.getMessage());
+
+		    		throw new Exception("Zeile " + (i + 1) + " konnte nicht verarbeitet werden. " + e.getLocalizedMessage());
+		    	}
 			}
 
 		    persistList(periode);
@@ -79,24 +90,40 @@ public class ExcelHandler {
 
 	}
 
-	private void persistList(final Periode periode) {
+	private void persistList(final Periode periode) throws Exception {
 		if (this.PRList == null || this.PRList.size() < 1) {
+			LOG.warn("No valid entry in List to save to ProjectLine!");
 			return;
 		}
+		LOG.info("Try to save: " + this.PRList.size() + " valid entries from excel!");
 		final ProjectLineDAO dao = new ProjectLineDAO();
 		final RowObjectManager man = new RowObjectManager();
 
 		for (final Iterator<ProjectLine> iterator = this.PRList.iterator(); iterator.hasNext();) {
 			final ProjectLine bean = iterator.next();
 
+			checkValidDate(bean, periode);
+
 			bean.setPeriode(periode);
 			dao.save(bean);
+			LOG.debug("saved record with id: " + bean.getPrlId());
 
 			man.updateObject(bean.getPrlId(), bean.getClass().getSimpleName());
 		}
 	}
 
-	private void loopExcelRow(final XSSFRow row) {
+	private void checkValidDate(final ProjectLine bean, final Periode periode) throws Exception {
+		// Rapportdatum muss zu Periode passen
+		final Calendar cal = Calendar.getInstance();
+		cal.setTime(bean.getPrlReportDate());
+		final int imonth = cal.get(Calendar.MONTH) + 1;
+
+		if (imonth != periode.getPerMonth().getValue()) {
+			throw new Exception("Periode nicht gültig für Datum: " + bean.getPrlReportDate());
+		}
+	}
+
+	private void loopExcelRow(final XSSFRow row) throws Exception {
 		if (row == null) {
 			return;
 		}
@@ -154,13 +181,24 @@ public class ExcelHandler {
 			}
 		}
 
-		this.PRList.add(bean);
+		if (bean.getProject() != null && bean.getPrlReportDate() != null && bean.getPrlText().length() > 0) {
+			this.PRList.add(bean);
+		} else {
+			LOG.debug("ignoring current line. Will not be added to list.");
+		}
 	}
 
-	private Project findProject(final String project) {
+	private Project findProject(final String project) throws Exception {
+		if (project.equals("*")) {
+			return null;	//ignore line
+		}
 		final ProjectDAO dao = new ProjectDAO();
-		final Project bean = dao.findByName(project).get(0);
-		return bean;
+		try {
+			final Project bean = dao.findByName(project).get(0);
+			return bean;
+		} catch (final Exception e) {
+			throw new Exception ("Projekt nicht gefunden " + project + "!");
+		}
 	}
 
 

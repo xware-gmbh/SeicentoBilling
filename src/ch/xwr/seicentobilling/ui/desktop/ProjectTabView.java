@@ -46,7 +46,6 @@ import com.xdev.ui.entitycomponent.table.XdevTable;
 import com.xdev.ui.filter.FilterData;
 import com.xdev.ui.filter.FilterOperator;
 import com.xdev.ui.filter.XdevContainerFilterComponent;
-import com.xdev.ui.masterdetail.MasterDetail;
 import com.xdev.ui.util.NestedProperty;
 import com.xdev.util.ConverterBuilder;
 
@@ -60,6 +59,7 @@ import ch.xwr.seicentobilling.business.Seicento;
 import ch.xwr.seicentobilling.dal.AddressDAO;
 import ch.xwr.seicentobilling.dal.CostAccountDAO;
 import ch.xwr.seicentobilling.dal.CustomerDAO;
+import ch.xwr.seicentobilling.dal.OrderDAO;
 import ch.xwr.seicentobilling.dal.ProjectDAO;
 import ch.xwr.seicentobilling.dal.VatDAO;
 import ch.xwr.seicentobilling.entities.Address;
@@ -152,6 +152,7 @@ public class ProjectTabView extends XdevView {
 		bean.setProRate(150);
 		bean.setProRemark("");
 		bean.setProDescription("");
+		bean.setProHoursEffective(new Double(0.));
 		bean.setProModel(LovState.ProModel.undefined);
 
 		final VatDAO dao = new VatDAO();
@@ -246,7 +247,8 @@ public class ProjectTabView extends XdevView {
 		this.table.removeAllItems();
 
 		this.table.refreshRowCache();
-		this.table.getBeanContainerDataSource().addAll(new ProjectDAO().findAll());
+		final List<Project> lst = new ProjectDAO().findAll();
+		this.table.getBeanContainerDataSource().addAll(lst);
 
 		// sort Table
 		final Object[] properties = { "proStartDate", "proEndDate" };
@@ -316,17 +318,24 @@ public class ProjectTabView extends XdevView {
 		setROFields();
 
 		if (this.table.getSelectedItem() != null) {
-			displayChildTables();
+			displayChildTables(this.table.getSelectedItem().getBean());
 		}
 
 	}
 
-	private void displayChildTables() {
-		final Project pro = this.table.getSelectedItem().getBean();
+	private void displayChildTables(final Project npro) {
+		Project prods = null;
+		if  (this.fieldGroup.getItemDataSource() !=null) {
+			prods = this.fieldGroup.getItemDataSource().getBean();
+		}
 
-		this.tableOrder.clear();
-		this.tableOrder.removeAllItems();
-		this.tableOrder.addItems(pro.getOrders());
+		if (prods == null || (npro.getProId() != prods.getProId())) {
+			this.fieldGroup.setItemDataSource(npro);
+
+			this.tableOrder.clear();
+			this.tableOrder.removeAllItems();
+			this.tableOrder.addItems(new OrderDAO().findByProject(npro));
+		}
 
 	}
 
@@ -379,6 +388,8 @@ public class ProjectTabView extends XdevView {
 			man.updateObject(this.fieldGroup.getItemDataSource().getBean().getProId(),
 					this.fieldGroup.getItemDataSource().getBean().getClass().getSimpleName());
 
+			//EntityManagerUtils.getEntityManger().flush();  //gibe es (nicht) mehr??
+
 			Notification.show("Save clicked", "Daten wurden gespeichert", Notification.Type.TRAY_NOTIFICATION);
 
 		} catch (final Exception e) {
@@ -387,9 +398,9 @@ public class ProjectTabView extends XdevView {
 			e.printStackTrace();
 		}
 
-		cmdReload_buttonClick(event);
 		setROFields();
-		this.table.select(this.fieldGroup.getItemDataSource().getBean());
+		//cmdReload_buttonClick(event);	//TODO: Slow
+		//this.table.select(this.fieldGroup.getItemDataSource().getBean());
 	}
 
 	private String getErrorText(final Exception e) {
@@ -629,7 +640,7 @@ public class ProjectTabView extends XdevView {
 		this.txtProRate.setRequired(true);
 		this.lblCostAccount.setValue(StringResourceUtils.optLocalizeString("{$lblCostAccount.value}", this));
 		this.cmbCostAccount.setItemCaptionFromAnnotation(false);
-		this.cmbCostAccount.setContainerDataSource(CostAccount.class);
+		this.cmbCostAccount.setContainerDataSource(CostAccount.class, DAOs.get(CostAccountDAO.class).findAllActive());
 		this.cmbCostAccount.setItemCaptionPropertyId(CostAccount_.csaName.getName());
 		this.lblBillingAddress.setValue("R-Adresse");
 		this.cmbBillingAddress.setItemCaptionFromAnnotation(false);
@@ -644,7 +655,7 @@ public class ProjectTabView extends XdevView {
 		this.cmbVat.setContainerDataSource(Vat.class);
 		this.cmbVat.setItemCaptionPropertyId("fullName");
 		this.lblProject.setValue(StringResourceUtils.optLocalizeString("{$lblProject.value}", this));
-		this.cmbProject.setContainerDataSource(Project.class);
+		this.cmbProject.setContainerDataSource(Project.class, DAOs.get(ProjectDAO.class).findAllActive());
 		this.cmbProject.setItemCaptionPropertyId(Project_.proName.getName());
 		this.lblProDescription.setValue(StringResourceUtils.optLocalizeString("{$lblProDescription.value}", this));
 		this.textArea.setRows(5);
@@ -696,8 +707,6 @@ public class ProjectTabView extends XdevView {
 		this.fieldGroup.bind(this.txtProContact, Project_.proContact.getName());
 		this.fieldGroup.bind(this.cmbBillingAddress, Project_.address.getName());
 		this.fieldGroup.bind(this.cbxInternal, Project_.internal.getName());
-
-		MasterDetail.connect(this.table, this.fieldGroup);
 
 		this.containerFilterComponent.setContainer(this.table.getBeanContainerDataSource(), "proStartDate", "proEndDate",
 				"vat", "customer", "costAccount", "proModel", "proState", "proProjectState");

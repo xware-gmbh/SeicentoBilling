@@ -2,6 +2,7 @@ package ch.xwr.seicentobilling.ui.desktop;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.Validator.InvalidValueException;
@@ -35,6 +36,7 @@ import ch.xwr.seicentobilling.dal.ItemDAO;
 import ch.xwr.seicentobilling.dal.OrderDAO;
 import ch.xwr.seicentobilling.dal.OrderLineDAO;
 import ch.xwr.seicentobilling.dal.VatDAO;
+import ch.xwr.seicentobilling.dal.VatLineDAO;
 import ch.xwr.seicentobilling.entities.CostAccount;
 import ch.xwr.seicentobilling.entities.CostAccount_;
 import ch.xwr.seicentobilling.entities.Item;
@@ -43,6 +45,7 @@ import ch.xwr.seicentobilling.entities.OrderLine;
 import ch.xwr.seicentobilling.entities.OrderLine_;
 import ch.xwr.seicentobilling.entities.Order_;
 import ch.xwr.seicentobilling.entities.Vat;
+import ch.xwr.seicentobilling.entities.VatLine;
 
 public class OrderLinePopup extends XdevView {
 	OrderCalculator CALC = new OrderCalculator();
@@ -244,6 +247,24 @@ public class OrderLinePopup extends XdevView {
 		}
 
 		calculateItem();
+		fetchVatRate();
+	}
+
+	private void fetchVatRate() {
+		final OrderLine newodl = this.fieldGroup.getItemDataSource().getBean();
+
+    	//TFS-240
+    	final VatLineDAO dao = new VatLineDAO();
+    	final List<VatLine> lst = dao.findByVatAndDate(newodl.getVat(), newodl.getOrderhdr().getOrdBillDate());
+    	double rate = 0;
+    	if (lst == null || lst.isEmpty()) {
+    		rate = 0;
+    	} else {
+        	final VatLine vl = lst.get(0);
+        	rate = vl.getVanRate().doubleValue();
+    	}
+    	this.lblVat.setValue("MwSt " + rate + "%");
+
 	}
 
 	/*
@@ -253,6 +274,7 @@ public class OrderLinePopup extends XdevView {
 	// <generated-code name="initUI">
 	private void initUI() {
 		this.form = new XdevGridLayout();
+		this.labelVatRate = new XdevLabel();
 		this.comboBoxState = new XdevComboBox<>();
 		this.lblOrder = new XdevLabel();
 		this.cmbOrder = new XdevComboBox<>();
@@ -282,6 +304,7 @@ public class OrderLinePopup extends XdevView {
 		this.cmdReset = new XdevButton();
 		this.fieldGroup = new XdevFieldGroup<>(OrderLine.class);
 
+		this.labelVatRate.setValue("Label");
 		this.comboBoxState.setTabIndex(12);
 		this.lblOrder.setValue(StringResourceUtils.optLocalizeString("{$lblOrder.value}", this));
 		this.cmbOrder.setTabIndex(1);
@@ -357,6 +380,8 @@ public class OrderLinePopup extends XdevView {
 		this.horizontalLayout.setComponentAlignment(this.cmdReset, Alignment.MIDDLE_CENTER);
 		this.form.setColumns(4);
 		this.form.setRows(11);
+		this.labelVatRate.setSizeUndefined();
+		this.form.addComponent(this.labelVatRate, 3, 1);
 		this.comboBoxState.setSizeUndefined();
 		this.form.addComponent(this.comboBoxState, 1, 8);
 		this.lblOrder.setSizeUndefined();
@@ -423,47 +448,27 @@ public class OrderLinePopup extends XdevView {
 		this.setContent(this.form);
 		this.setSizeFull();
 
-		this.cmbItem.addValueChangeListener(new Property.ValueChangeListener() {
-			@Override
-			public void valueChange(final Property.ValueChangeEvent event) {
-				OrderLinePopup.this.cmbItem_valueChange(event);
-			}
-		});
-		this.cmbVat.addValueChangeListener(new Property.ValueChangeListener() {
-			@Override
-			public void valueChange(final Property.ValueChangeEvent event) {
-				OrderLinePopup.this.cmbVat_valueChange(event);
-			}
-		});
-		this.txtOdlQuantity.addValueChangeListener(new Property.ValueChangeListener() {
-			@Override
-			public void valueChange(final Property.ValueChangeEvent event) {
-				OrderLinePopup.this.txtOdlQuantity_valueChange(event);
-			}
-		});
-		this.txtOdlPrice.addValueChangeListener(new Property.ValueChangeListener() {
-			@Override
-			public void valueChange(final Property.ValueChangeEvent event) {
-				OrderLinePopup.this.txtOdlPrice_valueChange(event);
-			}
-		});
+		this.cmbItem.addValueChangeListener(event -> this.cmbItem_valueChange(event));
+		this.cmbVat.addValueChangeListener(event -> this.cmbVat_valueChange(event));
+		this.txtOdlQuantity.addValueChangeListener(event -> this.txtOdlQuantity_valueChange(event));
+		this.txtOdlPrice.addValueChangeListener(event -> this.txtOdlPrice_valueChange(event));
 		this.cmdSave.addClickListener(event -> this.cmdSave_buttonClick(event));
 		this.cmdReset.addClickListener(event -> this.cmdReset_buttonClick(event));
 	} // </generated-code>
 
 	// <generated-code name="variables">
 	private XdevComboBox<Item> cmbItem;
-	private XdevLabel lblOrder, lblOdlNumber, lblItem, lblOdlQuantity, lblCostAccount, lblOdlPrice, lblVat,
-			lblOdlAmountBrut, lblOdlAmountNet, lblOdlText, lblOdlVatAmount, lblOdlState;
-	private XdevButton cmdReset, cmdSave;
+	private XdevLabel labelVatRate, lblOrder, lblOdlNumber, lblItem, lblVat, lblOdlQuantity, lblOdlPrice, lblOdlText,
+			lblCostAccount, lblOdlAmountBrut, lblOdlVatAmount, lblOdlAmountNet, lblOdlState;
+	private XdevButton cmdSave, cmdReset;
 	private XdevComboBox<CostAccount> cmbCostAccount;
 	private XdevComboBox<Vat> cmbVat;
 	private XdevHorizontalLayout horizontalLayout;
 	private XdevComboBox<?> comboBoxState;
 	private XdevGridLayout form;
 	private XdevComboBox<Order> cmbOrder;
-	private XdevTextField txtOdlNumber, txtOdlQuantity, txtOdlPrice, txtOdlAmountBrut, txtOdlAmountNet, txtOdlText,
-			txtOdlVatAmount;
+	private XdevTextField txtOdlNumber, txtOdlQuantity, txtOdlPrice, txtOdlText, txtOdlAmountBrut, txtOdlVatAmount,
+			txtOdlAmountNet;
 	private XdevFieldGroup<OrderLine> fieldGroup;
 	// </generated-code>
 

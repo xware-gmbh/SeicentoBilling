@@ -1,6 +1,6 @@
 #FROM dockregxwr-on.azurecr.io/tomcatbase:latest
-#FROM tomcat:9.0-jre8-alpine
-FROM tomcat:8.5.42-jdk8-openjdk
+FROM tomcat:9.0-jre8-alpine
+#FROM tomcat:8.5.42-jdk8-openjdk
 
 
 ENV CATALINA_HOME /usr/local/tomcat

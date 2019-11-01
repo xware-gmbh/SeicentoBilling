@@ -51,7 +51,7 @@ public class AddressSearchView extends XdevView {
 
 		final XdevBeanContainer<Customer> myList = this.table.getBeanContainerDataSource();
 		myList.removeAll();
-		myList.addAll(new CustomerDAO().findAllActiveByNumberDesc());
+		myList.addAll(new CustomerDAO().findAllCustomers());
 
 		this.table.refreshRowCache();
 		this.table.getBeanContainerDataSource().refresh();

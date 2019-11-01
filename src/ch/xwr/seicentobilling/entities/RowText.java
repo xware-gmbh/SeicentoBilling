@@ -64,7 +64,7 @@ public class RowText implements java.io.Serializable {
 	}
 
 	@Caption("RowObject")
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "txtobjId", nullable = false, columnDefinition = "bigint")
 	public RowObject getRowObject() {
 		return this.rowObject;

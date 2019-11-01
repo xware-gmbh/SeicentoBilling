@@ -63,7 +63,7 @@
         <XdevLabel x:name="lblVat" value="{$lblVat.value}">
             <x:constraints gridx="1" gridy="5" weighty="0.0" weightx="0.0" width="0px" height="0px" />
         </XdevLabel>
-        <XdevComboBox tabIndex="6" required="true" itemCaptionFromAnnotation="false" x:name="cmbVat" x:entity="Vat">
+        <XdevComboBox textInputAllowed="false" tabIndex="6" required="true" itemCaptionFromAnnotation="false" x:name="cmbVat" x:entity="Vat">
             <x:constraints gridx="2" gridy="5" weighty="0.0" weightx="0.7" width="100%" height="0px" />
             <x:entityProperty>
                 <entry type="String" property="fullName" />

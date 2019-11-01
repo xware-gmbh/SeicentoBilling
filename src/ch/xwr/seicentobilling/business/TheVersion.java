@@ -4,7 +4,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+import com.vaadin.external.org.slf4j.Logger;
+import com.vaadin.external.org.slf4j.LoggerFactory;
+
 public class TheVersion {
+	/** Logger initialized */
+	private static final Logger _logger = LoggerFactory.getLogger(TheVersion.class);
 
 	private final Properties prop;
 
@@ -14,9 +19,8 @@ public class TheVersion {
 		try {
 			this.prop.load(resourceAsStream);
 		} catch (final IOException e) {
-			// FIXME: This should be done by using a logging framework like
-			// log4j etc.
-			e.printStackTrace();
+			_logger.error("could not load version.properties");
+			_logger.error(e.getStackTrace().toString());
 		}
 
 //		System.out.println("Version: " + getEntryById("version"));

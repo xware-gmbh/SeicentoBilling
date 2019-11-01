@@ -1,0 +1,11 @@
+import ch.xwr.seicentobilling.entities.City
+
+findByName(String name)
+{
+	select * from City where ctyName = :name and ctyState = 1
+}
+
+findByZip(int zip)
+{
+	select * from City where ctyZip = :zip and ctyState = 1
+}

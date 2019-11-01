@@ -56,7 +56,7 @@ public class RowImage implements java.io.Serializable {
 	}
 
 	@Caption("RowObject")
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "rimobjId", nullable = false, columnDefinition = "bigint")
 	public RowObject getRowObject() {
 		return this.rowObject;
