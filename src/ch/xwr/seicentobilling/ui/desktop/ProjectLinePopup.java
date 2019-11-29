@@ -471,6 +471,8 @@ public class ProjectLinePopup extends XdevView {
 		c3.set(c1.get(Calendar.YEAR), c1.get(Calendar.MONTH), c1.get(Calendar.DAY_OF_MONTH), c2.get(Calendar.HOUR_OF_DAY), iminutes);
 		final int mod = iminutes % 5;
 		c3.add(Calendar.MINUTE, iminutes == 0 ? -5 : -mod);
+		c3.set(Calendar.SECOND, 0);
+		c3.set(Calendar.MILLISECOND, 0);
 
 		if (this.datePrlReportDateFrom.getValue() == null ) {
 			this.datePrlReportDateFrom.setValue(c3.getTime());
