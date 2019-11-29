@@ -44,6 +44,12 @@ public class Company implements java.io.Serializable {
 	private String cmpReportUsr;
 	private String cmpReportPwd;
 	private LovState.State cmpState;
+	private Boolean cmpAbaActive;
+	private String cmpAbaEndpointCus;
+	private String cmpAbaEndpointDoc;
+	private String cmpAbaUser;
+	private Integer cmpAbaMandator;
+	private Integer cmpAbaMaxDays;
 
 	public Company() {
 	}
@@ -131,7 +137,7 @@ public class Company implements java.io.Serializable {
 		this.cmpUid = cmpUid;
 	}
 
-	@Caption("CmpPhone")
+	@Caption("Telefon")
 	@Column(name = "cmpPhone", columnDefinition = "nvarchar")
 	public String getCmpPhone() {
 		return this.cmpPhone;
@@ -141,7 +147,7 @@ public class Company implements java.io.Serializable {
 		this.cmpPhone = cmpPhone;
 	}
 
-	@Caption("CmpMail")
+	@Caption("E-Mail")
 	@Column(name = "cmpMail", columnDefinition = "nvarchar")
 	public String getCmpMail() {
 		return this.cmpMail;
@@ -171,7 +177,7 @@ public class Company implements java.io.Serializable {
 		this.cmpBusiness = cmpBusiness;
 	}
 
-	@Caption("CmpLogo")
+	@Caption("Logo")
 	@Column(name = "cmpLogo", columnDefinition = "image")
 	public byte[] getCmpLogo() {
 		return this.cmpLogo;
@@ -181,7 +187,7 @@ public class Company implements java.io.Serializable {
 		this.cmpLogo = cmpLogo;
 	}
 
-	@Caption("CmpJasperUri")
+	@Caption("URI Jasper")
 	@Column(name = "cmpJasperUri", columnDefinition = "nchar")
 	public String getCmpJasperUri() {
 		return this.cmpJasperUri;
@@ -259,6 +265,66 @@ public class Company implements java.io.Serializable {
 
 	public void setCmpState(final  LovState.State noname) {
 		this.cmpState = noname;
+	}
+
+	@Caption("Schnittstelle Aktiv")
+	@Column(name = "cmpAbaActive", columnDefinition = "bit")
+	public Boolean getCmpAbaActive() {
+		return this.cmpAbaActive;
+	}
+
+	public void setCmpAbaActive(final Boolean noname) {
+		this.cmpAbaActive = noname;
+	}
+
+	@Caption("Endpoint Kunde")
+	@Column(name = "cmpAbaEndpointCus", columnDefinition = "nvarchar")
+	public String getCmpAbaEndpointCus() {
+		return this.cmpAbaEndpointCus;
+	}
+
+	public void setCmpAbaEndpointCus(final String noname) {
+		this.cmpAbaEndpointCus = noname;
+	}
+
+	@Caption("Endpoint Dokument")
+	@Column(name = "cmpAbaEndpointDoc", columnDefinition = "nvarchar")
+	public String getCmpAbaEndpointDoc() {
+		return this.cmpAbaEndpointDoc;
+	}
+
+	public void setCmpAbaEndpointDoc(final String noname) {
+		this.cmpAbaEndpointDoc = noname;
+	}
+
+	@Caption("Benutzer")
+	@Column(name = "cmpAbaUser", columnDefinition = "nvarchar")
+	public String getCmpAbaUser() {
+		return this.cmpAbaUser;
+	}
+
+	public void setCmpAbaUser(final String noname) {
+		this.cmpAbaUser = noname;
+	}
+
+	@Caption("Mandant")
+	@Column(name = "cmpAbaMandator", columnDefinition = "int")
+	public Integer getCmpAbaMandator() {
+		return this.cmpAbaMandator;
+	}
+
+	public void setCmpAbaMandator(final Integer noname) {
+		this.cmpAbaMandator = noname;
+	}
+
+	@Caption("Tage max")
+	@Column(name = "cmpAbaMaxDays", columnDefinition = "int")
+	public Integer getCmpAbaMaxDays() {
+		return this.cmpAbaMaxDays;
+	}
+
+	public void setCmpAbaMaxDays(final Integer noname) {
+		this.cmpAbaMaxDays = noname;
 	}
 
 }

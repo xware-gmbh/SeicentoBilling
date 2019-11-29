@@ -1,6 +1,7 @@
 package ch.xwr.seicentobilling.ui.desktop;
 
 import com.vaadin.data.Property;
+import com.vaadin.data.validator.IntegerRangeValidator;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -14,6 +15,7 @@ import com.xdev.dal.DAOs;
 import com.xdev.res.ApplicationResource;
 import com.xdev.res.StringResourceUtils;
 import com.xdev.ui.XdevButton;
+import com.xdev.ui.XdevCheckBox;
 import com.xdev.ui.XdevFieldGroup;
 import com.xdev.ui.XdevGridLayout;
 import com.xdev.ui.XdevHorizontalLayout;
@@ -234,6 +236,19 @@ public class CompanyTabView extends XdevView {
 		this.txtCmpReportUsr = new XdevTextField();
 		this.lblCmpReportPwd2 = new XdevLabel();
 		this.passwordField = new XdevPasswordField();
+		this.gridLayoutIfc = new XdevGridLayout();
+		this.lblCmpAbaActive = new XdevLabel();
+		this.cboCmpAbaActive = new XdevCheckBox();
+		this.lblCmpEndpointCus = new XdevLabel();
+		this.txtCmpAbaEndpointCus = new XdevTextField();
+		this.lblCmpEndpointDoc = new XdevLabel();
+		this.txtCmpEndpointDoc = new XdevTextField();
+		this.lblCmpAbaUser = new XdevLabel();
+		this.txtCmpAbaUser = new XdevTextField();
+		this.lblCmpAbaMandator = new XdevLabel();
+		this.txtCmpAbaMandator = new XdevTextField();
+		this.lblCmpAbaMaxDays = new XdevLabel();
+		this.txtCmpAbaMaxDays = new XdevTextField();
 		this.horizontalLayout = new XdevHorizontalLayout();
 		this.cmdSave = new XdevButton();
 		this.cmdReset = new XdevButton();
@@ -291,6 +306,15 @@ public class CompanyTabView extends XdevView {
 		this.lblCmpJasperUri2.setValue(StringResourceUtils.optLocalizeString("{$lblCmpJasperUri.value}", this));
 		this.lblCmpReportUsr2.setValue(StringResourceUtils.optLocalizeString("{$lblCmpReportUsr.value}", this));
 		this.lblCmpReportPwd2.setValue(StringResourceUtils.optLocalizeString("{$lblCmpReportPwd.value}", this));
+		this.lblCmpAbaActive.setValue("Abaconnect Aktiv");
+		this.cboCmpAbaActive.setCaption("");
+		this.lblCmpEndpointCus.setValue("Endpoint Debi");
+		this.lblCmpEndpointDoc.setValue("Endpoint Beleg");
+		this.lblCmpAbaUser.setValue("Benutzer");
+		this.lblCmpAbaMandator.setValue("Mandant");
+		this.txtCmpAbaMandator.addValidator(new IntegerRangeValidator("Ungültige Nummer für Mandant", 0, 9999));
+		this.lblCmpAbaMaxDays.setValue("Buffer Tage");
+		this.txtCmpAbaMaxDays.addValidator(new IntegerRangeValidator("Ungültige Anzahl Tage", 0, 180));
 		this.horizontalLayout.setMargin(new MarginInfo(false, false, true, true));
 		this.cmdSave.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/save1.png"));
 		this.cmdSave.setCaption(StringResourceUtils.optLocalizeString("{$cmdSave.caption}", this));
@@ -314,6 +338,12 @@ public class CompanyTabView extends XdevView {
 		this.fieldGroup.bind(this.txtCmpJasperUri, Company_.cmpJasperUri.getName());
 		this.fieldGroup.bind(this.txtCmpReportUsr, Company_.cmpReportUsr.getName());
 		this.fieldGroup.bind(this.passwordField, Company_.cmpReportPwd.getName());
+		this.fieldGroup.bind(this.cboCmpAbaActive, Company_.cmpAbaActive.getName());
+		this.fieldGroup.bind(this.txtCmpAbaEndpointCus, Company_.cmpAbaEndpointCus.getName());
+		this.fieldGroup.bind(this.txtCmpEndpointDoc, Company_.cmpAbaEndpointDoc.getName());
+		this.fieldGroup.bind(this.txtCmpAbaUser, Company_.cmpAbaUser.getName());
+		this.fieldGroup.bind(this.txtCmpAbaMandator, Company_.cmpAbaMandator.getName());
+		this.fieldGroup.bind(this.txtCmpAbaMaxDays, Company_.cmpAbaMaxDays.getName());
 
 		MasterDetail.connect(this.table, this.fieldGroup);
 
@@ -459,6 +489,42 @@ public class CompanyTabView extends XdevView {
 		gridLayoutJasper_vSpacer.setSizeFull();
 		this.gridLayoutJasper.addComponent(gridLayoutJasper_vSpacer, 0, 3, 1, 3);
 		this.gridLayoutJasper.setRowExpandRatio(3, 1.0F);
+		this.gridLayoutIfc.setColumns(2);
+		this.gridLayoutIfc.setRows(7);
+		this.lblCmpAbaActive.setSizeUndefined();
+		this.gridLayoutIfc.addComponent(this.lblCmpAbaActive, 0, 0);
+		this.cboCmpAbaActive.setSizeUndefined();
+		this.gridLayoutIfc.addComponent(this.cboCmpAbaActive, 1, 0);
+		this.lblCmpEndpointCus.setSizeUndefined();
+		this.gridLayoutIfc.addComponent(this.lblCmpEndpointCus, 0, 1);
+		this.txtCmpAbaEndpointCus.setWidth(100, Unit.PERCENTAGE);
+		this.txtCmpAbaEndpointCus.setHeight(-1, Unit.PIXELS);
+		this.gridLayoutIfc.addComponent(this.txtCmpAbaEndpointCus, 1, 1);
+		this.lblCmpEndpointDoc.setSizeUndefined();
+		this.gridLayoutIfc.addComponent(this.lblCmpEndpointDoc, 0, 2);
+		this.txtCmpEndpointDoc.setWidth(100, Unit.PERCENTAGE);
+		this.txtCmpEndpointDoc.setHeight(-1, Unit.PIXELS);
+		this.gridLayoutIfc.addComponent(this.txtCmpEndpointDoc, 1, 2);
+		this.lblCmpAbaUser.setSizeUndefined();
+		this.gridLayoutIfc.addComponent(this.lblCmpAbaUser, 0, 3);
+		this.txtCmpAbaUser.setWidth(100, Unit.PERCENTAGE);
+		this.txtCmpAbaUser.setHeight(-1, Unit.PIXELS);
+		this.gridLayoutIfc.addComponent(this.txtCmpAbaUser, 1, 3);
+		this.lblCmpAbaMandator.setSizeUndefined();
+		this.gridLayoutIfc.addComponent(this.lblCmpAbaMandator, 0, 4);
+		this.txtCmpAbaMandator.setWidth(100, Unit.PERCENTAGE);
+		this.txtCmpAbaMandator.setHeight(-1, Unit.PIXELS);
+		this.gridLayoutIfc.addComponent(this.txtCmpAbaMandator, 1, 4);
+		this.lblCmpAbaMaxDays.setSizeUndefined();
+		this.gridLayoutIfc.addComponent(this.lblCmpAbaMaxDays, 0, 5);
+		this.txtCmpAbaMaxDays.setWidth(100, Unit.PERCENTAGE);
+		this.txtCmpAbaMaxDays.setHeight(-1, Unit.PIXELS);
+		this.gridLayoutIfc.addComponent(this.txtCmpAbaMaxDays, 1, 5);
+		this.gridLayoutIfc.setColumnExpandRatio(1, 100.0F);
+		final CustomComponent gridLayoutIfc_vSpacer = new CustomComponent();
+		gridLayoutIfc_vSpacer.setSizeFull();
+		this.gridLayoutIfc.addComponent(gridLayoutIfc_vSpacer, 0, 6, 1, 6);
+		this.gridLayoutIfc.setRowExpandRatio(6, 1.0F);
 		this.gridLayout.setSizeFull();
 		this.tabSheet.addTab(this.gridLayout, StringResourceUtils.optLocalizeString("{$gridLayout.caption}", this), null);
 		this.gridLayoutNbr.setSizeFull();
@@ -466,6 +532,8 @@ public class CompanyTabView extends XdevView {
 				null);
 		this.gridLayoutJasper.setSizeFull();
 		this.tabSheet.addTab(this.gridLayoutJasper, "Jasper", null);
+		this.gridLayoutIfc.setSizeFull();
+		this.tabSheet.addTab(this.gridLayoutIfc, "Schnittstellen", null);
 		this.tabSheet.setSelectedTab(this.gridLayout);
 		this.cmdSave.setSizeUndefined();
 		this.horizontalLayout.addComponent(this.cmdSave);
@@ -503,19 +571,22 @@ public class CompanyTabView extends XdevView {
 	private XdevButton cmdNew, cmdDelete, cmdReload, cmdInfo, cmdSave, cmdReset;
 	private XdevLabel lblCmpName, lblCmpAddress, lblCmpZip, lblCmpPlace, lblCmpVatcode, lblCmpCurrency, lblCmpUid,
 			lblCmpPhone, lblCmpMail, lblCmpComm1, lblCmpBusiness, lblCmpBookingYear, lblCmpLastOrderNbr, lblCmpLastItemNbr,
-			lblCmpLastCustomerNbr, lblCmpJasperUri2, lblCmpReportUsr2, lblCmpReportPwd2;
+			lblCmpLastCustomerNbr, lblCmpJasperUri2, lblCmpReportUsr2, lblCmpReportPwd2, lblCmpAbaActive, lblCmpEndpointCus,
+			lblCmpEndpointDoc, lblCmpAbaUser, lblCmpAbaMandator, lblCmpAbaMaxDays;
 	private XdevTable<Company> table;
-	private XdevHorizontalLayout actionLayout, horizontalLayout;
 	private XdevPasswordField passwordField;
 	private XdevTabSheet tabSheet;
-	private XdevFieldGroup<Company> fieldGroup;
-	private XdevGridLayout gridLayoutData, gridLayout, gridLayoutNbr, gridLayoutJasper;
-	private XdevTextField txtCmpName, txtCmpAddress, txtCmpZip, txtCmpPlace, txtCmpVatcode, txtCmpCurrency, txtCmpUid,
-			txtCmpPhone, txtCmpMail, txtCmpComm1, txtCmpBusiness, txtCmpBookingYear, txtCmpLastOrderNbr, txtCmpLastItemNbr,
-			txtCmpLastCustomerNbr, txtCmpJasperUri, txtCmpReportUsr;
-	private XdevVerticalLayout verticalLayout;
+	private XdevGridLayout gridLayoutData, gridLayout, gridLayoutNbr, gridLayoutJasper, gridLayoutIfc;
 	private XdevHorizontalSplitPanel horizontalSplitPanel;
 	private XdevContainerFilterComponent containerFilterComponent;
+	private XdevHorizontalLayout actionLayout, horizontalLayout;
+	private XdevCheckBox cboCmpAbaActive;
+	private XdevFieldGroup<Company> fieldGroup;
+	private XdevTextField txtCmpName, txtCmpAddress, txtCmpZip, txtCmpPlace, txtCmpVatcode, txtCmpCurrency, txtCmpUid,
+			txtCmpPhone, txtCmpMail, txtCmpComm1, txtCmpBusiness, txtCmpBookingYear, txtCmpLastOrderNbr, txtCmpLastItemNbr,
+			txtCmpLastCustomerNbr, txtCmpJasperUri, txtCmpReportUsr, txtCmpAbaEndpointCus, txtCmpEndpointDoc, txtCmpAbaUser,
+			txtCmpAbaMandator, txtCmpAbaMaxDays;
+	private XdevVerticalLayout verticalLayout;
 	// </generated-code>
 
 }
