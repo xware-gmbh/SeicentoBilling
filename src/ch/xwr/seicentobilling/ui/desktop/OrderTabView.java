@@ -982,8 +982,7 @@ public class OrderTabView extends XdevView {
 		this.cmdAdmin.setVisible(false);
 		this.table.setColumnReorderingAllowed(true);
 		this.table.setColumnCollapsingAllowed(true);
-		this.table.setContainerDataSource(Order.class, DAOs.get(OrderDAO.class).findAll(),
-				NestedProperty.of(Order_.customer, Customer_.cusNumber),
+		this.table.setContainerDataSource(Order.class, NestedProperty.of(Order_.customer, Customer_.cusNumber),
 				NestedProperty.of("customer.shortname", String.class),
 				NestedProperty.of(Order_.customer, Customer_.city, City_.ctyName));
 		this.table.setVisibleColumns(Order_.ordNumber.getName(), NestedProperty.path(Order_.customer, Customer_.cusNumber),
@@ -1024,7 +1023,6 @@ public class OrderTabView extends XdevView {
 		this.tabSheet.setStyleName("framed");
 		this.gridLayoutHdr.setMargin(new MarginInfo(true, true, false, true));
 		this.lblOrdNumber.setValue(StringResourceUtils.optLocalizeString("{$lblOrdNumber.value}", this));
-		this.txtOrdNumber.setColumns(5);
 		this.txtOrdNumber.setConverter(ConverterBuilder.stringToBigInteger().groupingUsed(false).build());
 		this.lblCustomer.setValue(StringResourceUtils.optLocalizeString("{$lblCustomer.value}", this));
 		this.cmbCustomer.setRequired(true);
@@ -1046,12 +1044,10 @@ public class OrderTabView extends XdevView {
 				DAOs.get(PaymentConditionDAO.class).findAll());
 		this.cmbPaymentCondition.setItemCaptionPropertyId(PaymentCondition_.pacName.getName());
 		this.lblOrdAmountBrut.setValue(StringResourceUtils.optLocalizeString("{$lblOrdAmountBrut.value}", this));
-		this.txtOrdAmountBrut.setColumns(5);
 		this.txtOrdAmountBrut.setConverter(ConverterBuilder.stringToDouble().currency().build());
 		this.lblOrdAmountNet.setValue(StringResourceUtils.optLocalizeString("{$lblOrdAmountNet.value}", this));
 		this.txtOrdAmountNet.setConverter(ConverterBuilder.stringToDouble().currency().build());
 		this.lblOrdAmountVat.setValue(StringResourceUtils.optLocalizeString("{$lblOrdAmountVat.value}", this));
-		this.txtOrdAmountVat.setColumns(5);
 		this.txtOrdAmountVat.setConverter(ConverterBuilder.stringToDouble().currency().build());
 		this.txtOrdAmountVat.setEnabled(false);
 		this.gridLayoutDetails.setMargin(new MarginInfo(true, true, false, true));
@@ -1128,7 +1124,7 @@ public class OrderTabView extends XdevView {
 		MasterDetail.connect(this.table, this.fieldGroup);
 
 		this.containerFilterComponent.setContainer(this.table.getBeanContainerDataSource(), "customer", "paymentCondition",
-				"project", "ordNumber", "ordAmountBrut", "ordOrderDate", "ordBillDate", "ordPayDate", "ordState");
+				"project", "ordNumber", "ordState", "ordAmountBrut", "ordOrderDate", "ordBillDate", "ordPayDate");
 		this.containerFilterComponent.setSearchableProperties("ordCreatedBy", "ordText", "customer.cusCompany",
 				"customer.cusName", "project.proName", "project.proExtReference");
 
@@ -1216,6 +1212,7 @@ public class OrderTabView extends XdevView {
 		this.gridLayoutHdr.addComponent(this.lblOrdAmountVat, 0, 6);
 		this.txtOrdAmountVat.setSizeUndefined();
 		this.gridLayoutHdr.addComponent(this.txtOrdAmountVat, 1, 6);
+		this.gridLayoutHdr.setColumnExpandRatio(1, 10.0F);
 		this.gridLayoutHdr.setColumnExpandRatio(3, 10.0F);
 		final CustomComponent gridLayoutHdr_vSpacer = new CustomComponent();
 		gridLayoutHdr_vSpacer.setSizeFull();
