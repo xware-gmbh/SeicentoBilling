@@ -222,14 +222,14 @@
                     </XdevLabel>
                     <XdevTextField columns="5" x:name="txtCmpAbaMandator">
                         <x:constraints gridx="2" gridy="5" top="93px" left="-1px" weighty="0.0" weightx="1.0" width="100%" height="0px" />
-                        <x:validator x:type="IntegerRangeValidator" message="Ungültige Nummer für Mandant" min="0" max="9999" />
+                        <x:validator x:type="IntegerRangeValidator" message="Gültige Werte von 0-9999" min="0" max="9999" />
                     </XdevTextField>
                     <XdevLabel x:name="lblCmpAbaMaxDays" value="Buffer Tage">
                         <x:constraints gridx="1" gridy="6" top="101px" left="-1px" weighty="0.0" weightx="0.0" width="0px" height="0px" />
                     </XdevLabel>
                     <XdevTextField columns="5" x:name="txtCmpAbaMaxDays">
                         <x:constraints gridx="2" gridy="6" top="140px" left="-1px" weighty="0.0" weightx="1.0" width="100%" height="0px" />
-                        <x:validator x:type="IntegerRangeValidator" message="Ungültige Anzahl Tage" min="0" max="180" />
+                        <x:validator x:type="IntegerRangeValidator" message="Gültige Werte 0-180" min="0" max="180" />
                     </XdevTextField>
                 </XdevGridLayout>
             </XdevTabSheet>

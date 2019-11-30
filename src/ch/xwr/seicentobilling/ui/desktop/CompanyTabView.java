@@ -312,9 +312,9 @@ public class CompanyTabView extends XdevView {
 		this.lblCmpEndpointDoc.setValue("Endpoint Beleg");
 		this.lblCmpAbaUser.setValue("Benutzer");
 		this.lblCmpAbaMandator.setValue("Mandant");
-		this.txtCmpAbaMandator.addValidator(new IntegerRangeValidator("Ungültige Nummer für Mandant", 0, 9999));
+		this.txtCmpAbaMandator.addValidator(new IntegerRangeValidator("Gültige Werte von 0-9999", 0, 9999));
 		this.lblCmpAbaMaxDays.setValue("Buffer Tage");
-		this.txtCmpAbaMaxDays.addValidator(new IntegerRangeValidator("Ungültige Anzahl Tage", 0, 180));
+		this.txtCmpAbaMaxDays.addValidator(new IntegerRangeValidator("Gültige Werte 0-180", 0, 180));
 		this.horizontalLayout.setMargin(new MarginInfo(false, false, true, true));
 		this.cmdSave.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/save1.png"));
 		this.cmdSave.setCaption(StringResourceUtils.optLocalizeString("{$cmdSave.caption}", this));
