@@ -91,6 +91,7 @@
                 </x:typeArguments>
                 <x:data methodName="findAll" />
                 <x:event>valueChange.valueChange</x:event>
+                <x:event>itemClick.itemClick</x:event>
             </XdevTable>
         </XdevVerticalLayout>
         <XdevGridLayout x:name="gridLayoutData" margin="">
