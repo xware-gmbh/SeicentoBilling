@@ -42,6 +42,7 @@ public class CostAccount implements java.io.Serializable {
 	private Set<ResPlanning> resPlannings = new HashSet<>(0);
 	private Set<CostAccount> costAccounts = new HashSet<>(0);
 	private Set<OrderLine> orderLines = new HashSet<>(0);
+	private String csaExtRef;
 
 	public CostAccount() {
 	}
@@ -148,6 +149,16 @@ public class CostAccount implements java.io.Serializable {
 
 	public void setOrderLines(final Set<OrderLine> orderLines) {
 		this.orderLines = orderLines;
+	}
+
+	@Caption("Referenz extern")
+	@Column(name = "csaExtRef", columnDefinition = "nvarchar")
+	public String getCsaExtRef() {
+		return this.csaExtRef;
+	}
+
+	public void setCsaExtRef(final String noname) {
+		this.csaExtRef = noname;
 	}
 
 

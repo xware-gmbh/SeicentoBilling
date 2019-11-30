@@ -5,7 +5,9 @@
 <?template BROWSER_XGA?>
 <?import?>
 <?import ch.xwr.seicentobilling.entities.Company?>
+<?import com.vaadin.data.validator.IntegerRangeValidator?>
 <?import com.xdev.ui.XdevButton?>
+<?import com.xdev.ui.XdevCheckBox?>
 <?import com.xdev.ui.XdevFieldGroup?>
 <?import com.xdev.ui.XdevGridLayout?>
 <?import com.xdev.ui.XdevHorizontalLayout?>
@@ -189,6 +191,47 @@
                         <x:constraints gridx="2" gridy="3" weighty="0.0" weightx="1.0" width="0px" height="0px" />
                     </XdevPasswordField>
                 </XdevGridLayout>
+                <XdevGridLayout caption="Schnittstellen" x:name="gridLayoutIfc">
+                    <x:constraints top="653px" left="-1px" />
+                    <XdevLabel x:name="lblCmpAbaActive" value="Abaconnect Aktiv">
+                        <x:constraints gridx="1" gridy="1" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+                    </XdevLabel>
+                    <XdevCheckBox caption="" x:name="cboCmpAbaActive">
+                        <x:constraints gridx="2" gridy="1" weighty="0.0" weightx="1.0" width="0px" height="0px" />
+                    </XdevCheckBox>
+                    <XdevLabel x:name="lblCmpEndpointCus" value="Endpoint Debi">
+                        <x:constraints gridx="1" gridy="2" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+                    </XdevLabel>
+                    <XdevTextField columns="5" x:name="txtCmpAbaEndpointCus">
+                        <x:constraints gridx="2" gridy="2" weighty="0.0" weightx="1.0" width="100%" height="0px" />
+                    </XdevTextField>
+                    <XdevLabel x:name="lblCmpEndpointDoc" value="Endpoint Beleg">
+                        <x:constraints gridx="1" gridy="3" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+                    </XdevLabel>
+                    <XdevTextField columns="5" x:name="txtCmpEndpointDoc">
+                        <x:constraints gridx="2" gridy="3" weighty="0.0" weightx="1.0" width="100%" height="0px" />
+                    </XdevTextField>
+                    <XdevLabel x:name="lblCmpAbaUser" value="Benutzer">
+                        <x:constraints gridx="1" gridy="4" top="33px" left="-1px" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+                    </XdevLabel>
+                    <XdevTextField columns="5" x:name="txtCmpAbaUser">
+                        <x:constraints gridx="2" gridy="4" top="46px" left="-1px" weighty="0.0" weightx="1.0" width="100%" height="0px" />
+                    </XdevTextField>
+                    <XdevLabel x:name="lblCmpAbaMandator" value="Mandant">
+                        <x:constraints gridx="1" gridy="5" top="67px" left="-1px" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+                    </XdevLabel>
+                    <XdevTextField columns="5" x:name="txtCmpAbaMandator">
+                        <x:constraints gridx="2" gridy="5" top="93px" left="-1px" weighty="0.0" weightx="1.0" width="100%" height="0px" />
+                        <x:validator x:type="IntegerRangeValidator" message="Gültige Werte von 0-9999" min="0" max="9999" />
+                    </XdevTextField>
+                    <XdevLabel x:name="lblCmpAbaMaxDays" value="Buffer Tage">
+                        <x:constraints gridx="1" gridy="6" top="101px" left="-1px" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+                    </XdevLabel>
+                    <XdevTextField columns="5" x:name="txtCmpAbaMaxDays">
+                        <x:constraints gridx="2" gridy="6" top="140px" left="-1px" weighty="0.0" weightx="1.0" width="100%" height="0px" />
+                        <x:validator x:type="IntegerRangeValidator" message="Gültige Werte 0-180" min="0" max="180" />
+                    </XdevTextField>
+                </XdevGridLayout>
             </XdevTabSheet>
             <XdevFieldGroup x:name="fieldGroup" x:entityType="Company">
                 <x:typeArguments>
@@ -213,6 +256,12 @@
                     <entry name="txtCmpJasperUri" property="cmpJasperUri" />
                     <entry name="txtCmpReportUsr" property="cmpReportUsr" />
                     <entry name="passwordField" property="cmpReportPwd" />
+                    <entry name="cboCmpAbaActive" property="cmpAbaActive" />
+                    <entry name="txtCmpAbaEndpointCus" property="cmpAbaEndpointCus" />
+                    <entry name="txtCmpEndpointDoc" property="cmpAbaEndpointDoc" />
+                    <entry name="txtCmpAbaUser" property="cmpAbaUser" />
+                    <entry name="txtCmpAbaMandator" property="cmpAbaMandator" />
+                    <entry name="txtCmpAbaMaxDays" property="cmpAbaMaxDays" />
                 </x:fields>
             </XdevFieldGroup>
             <XdevHorizontalLayout x:name="horizontalLayout" margin="bl">

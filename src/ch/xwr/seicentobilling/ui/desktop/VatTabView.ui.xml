@@ -88,7 +88,7 @@
                             <XdevLabel x:name="lblVatSign" value="Zeichen">
                                 <x:constraints gridx="1" gridy="2" weighty="0.0" weightx="0.0" width="0px" height="0px" />
                             </XdevLabel>
-                            <XdevTextField columns="5" x:name="txtVatSign">
+                            <XdevTextField columns="5" x:name="txtVatSign" maxLength="5">
                                 <x:constraints gridx="2" gridy="2" weighty="0.0" weightx="1.0" width="-1px" height="0px" />
                             </XdevTextField>
                             <XdevLabel x:name="lblVatInclude" value="Inklusiv">
@@ -97,11 +97,17 @@
                             <XdevCheckBox caption="" x:name="chkVatInclude">
                                 <x:constraints gridx="2" gridy="3" weighty="0.0" weightx="1.0" width="100%" height="0px" />
                             </XdevCheckBox>
+                            <XdevLabel x:name="lblVatExtRef" value="Externe Ref">
+                                <x:constraints gridx="1" gridy="4" top="33px" left="-1px" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+                            </XdevLabel>
+                            <XdevTextField columns="5" x:name="txtVatExtRef" maxLength="20">
+                                <x:constraints gridx="2" gridy="4" top="46px" left="-1px" weighty="0.0" weightx="1.0" width="0px" height="0px" />
+                            </XdevTextField>
                             <XdevLabel x:name="lblVatState" value="Status">
-                                <x:constraints gridx="1" gridy="4" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+                                <x:constraints gridx="1" gridy="5" weighty="0.0" weightx="0.0" width="0px" height="0px" />
                             </XdevLabel>
                             <XdevComboBox x:name="comboBoxState">
-                                <x:constraints gridx="2" gridy="4" weighty="0.0" weightx="1.0" width="0px" height="0px" />
+                                <x:constraints gridx="2" gridy="5" weighty="0.0" weightx="1.0" width="0px" height="0px" />
                                 <x:typeArguments>
                                     <typeArgument type="?" />
                                 </x:typeArguments>
@@ -161,9 +167,9 @@
         </x:typeArguments>
         <x:fields>
             <entry name="txtVatName" property="vatName" />
-            <entry name="txtVatRate" property="vatRate" />
             <entry name="txtVatSign" property="vatSign" />
             <entry name="chkVatInclude" property="vatInclude" />
+            <entry name="txtVatExtRef" property="vatExtRef" />
             <entry name="comboBoxState" property="vatState" />
         </x:fields>
     </XdevFieldGroup>

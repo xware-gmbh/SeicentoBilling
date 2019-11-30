@@ -68,6 +68,8 @@ public class Customer implements java.io.Serializable {
 	private Set<ContactRelation> contactrelations2 = new HashSet<>();
 	private String fullname;
 	private Boolean cusSinglepdf;
+	private String cusExtRef1;
+	private String cusExtRef2;
 
 	public Customer() {
 	}
@@ -401,6 +403,26 @@ public class Customer implements java.io.Serializable {
 
 	public void setCusSinglepdf(final Boolean singlepdf) {
 		this.cusSinglepdf = singlepdf;
+	}
+
+	@Caption("Externe Referenz 1")
+	@Column(name = "cusExtRef1", columnDefinition = "nvarchar")
+	public String getCusExtRef1() {
+		return this.cusExtRef1;
+	}
+
+	public void setCusExtRef1(final String noname) {
+		this.cusExtRef1 = noname;
+	}
+
+	@Caption("Externe Referenz 2")
+	@Column(name = "cusExtRef2", columnDefinition = "nvarchar")
+	public String getCusExtRef2() {
+		return this.cusExtRef2;
+	}
+
+	public void setCusExtRef2(final String noname) {
+		this.cusExtRef2 = noname;
 	}
 
 }

@@ -17,6 +17,11 @@ findOrdersNotBooked()
 	select * from Order where ordBookedOn = null and ordState = 1 order by ordBillDate asc	
 }
 
+findOrdersNotPaid()
+{
+	select * from Order where ordPayDate = null and ordState = 1 order by ordBillDate asc	
+}
+
 findByBillNumber(int ordNumber)
 {
 	select * from Order where ordNumber = :ordNumber

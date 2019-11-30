@@ -31,6 +31,7 @@ import com.xdev.ui.masterdetail.MasterDetail;
 import ch.xwr.seicentobilling.business.ConfirmDialog;
 import ch.xwr.seicentobilling.business.LovState;
 import ch.xwr.seicentobilling.business.RowObjectManager;
+import ch.xwr.seicentobilling.business.Seicento;
 import ch.xwr.seicentobilling.dal.CostAccountDAO;
 import ch.xwr.seicentobilling.entities.CostAccount;
 import ch.xwr.seicentobilling.entities.CostAccount_;
@@ -47,9 +48,18 @@ public class CostAccountTabView extends XdevView {
 		//Type
 		this.comboBoxState.addItems((Object[])LovState.State.values());
 
+
+		setROFields();
 		setDefaultFilter();
 
+	}
 
+	private void setROFields() {
+		if (Seicento.hasRole("BillingAdmin")) {
+			this.txtCsaExtRef.setEnabled(true);
+		} else {
+			this.txtCsaExtRef.setEnabled(false);
+		}
 	}
 
 	private void setDefaultFilter() {
@@ -228,6 +238,8 @@ public class CostAccountTabView extends XdevView {
 		this.txtCsaName = new XdevTextField();
 		this.lblCostAccount = new XdevLabel();
 		this.cmbCostAccount = new XdevComboBox<>();
+		this.lblCsaExtRef = new XdevLabel();
+		this.txtCsaExtRef = new XdevTextField();
 		this.lblCsaState = new XdevLabel();
 		this.horizontalLayout2 = new XdevHorizontalLayout();
 		this.cmdSave = new XdevButton();
@@ -267,6 +279,8 @@ public class CostAccountTabView extends XdevView {
 		this.cmbCostAccount.setTabIndex(3);
 		this.cmbCostAccount.setContainerDataSource(CostAccount.class, DAOs.get(CostAccountDAO.class).findAllActive());
 		this.cmbCostAccount.setItemCaptionPropertyId(CostAccount_.csaCode.getName());
+		this.lblCsaExtRef.setValue("Externe Referenz");
+		this.txtCsaExtRef.setMaxLength(50);
 		this.lblCsaState.setValue(StringResourceUtils.optLocalizeString("{$lblCsaState.value}", this));
 		this.horizontalLayout2.setMargin(new MarginInfo(false));
 		this.cmdSave.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/save1.png"));
@@ -278,6 +292,7 @@ public class CostAccountTabView extends XdevView {
 		this.fieldGroup.bind(this.txtCsaCode, CostAccount_.csaCode.getName());
 		this.fieldGroup.bind(this.txtCsaName, CostAccount_.csaName.getName());
 		this.fieldGroup.bind(this.cmbCostAccount, CostAccount_.costAccount.getName());
+		this.fieldGroup.bind(this.txtCsaExtRef, CostAccount_.csaExtRef.getName());
 		this.fieldGroup.bind(this.comboBoxState, CostAccount_.csaState.getName());
 
 		MasterDetail.connect(this.table, this.fieldGroup);
@@ -321,9 +336,9 @@ public class CostAccountTabView extends XdevView {
 		this.horizontalLayout2.addComponent(this.cmdReset);
 		this.horizontalLayout2.setComponentAlignment(this.cmdReset, Alignment.MIDDLE_LEFT);
 		this.form.setColumns(2);
-		this.form.setRows(6);
+		this.form.setRows(7);
 		this.comboBoxState.setSizeUndefined();
-		this.form.addComponent(this.comboBoxState, 1, 3);
+		this.form.addComponent(this.comboBoxState, 1, 4);
 		this.lblCsaCode.setSizeUndefined();
 		this.form.addComponent(this.lblCsaCode, 0, 0);
 		this.txtCsaCode.setWidth(100, Unit.PERCENTAGE);
@@ -339,16 +354,21 @@ public class CostAccountTabView extends XdevView {
 		this.cmbCostAccount.setWidth(100, Unit.PERCENTAGE);
 		this.cmbCostAccount.setHeight(-1, Unit.PIXELS);
 		this.form.addComponent(this.cmbCostAccount, 1, 2);
+		this.lblCsaExtRef.setSizeUndefined();
+		this.form.addComponent(this.lblCsaExtRef, 0, 3);
+		this.txtCsaExtRef.setWidth(100, Unit.PERCENTAGE);
+		this.txtCsaExtRef.setHeight(-1, Unit.PIXELS);
+		this.form.addComponent(this.txtCsaExtRef, 1, 3);
 		this.lblCsaState.setSizeUndefined();
-		this.form.addComponent(this.lblCsaState, 0, 3);
+		this.form.addComponent(this.lblCsaState, 0, 4);
 		this.horizontalLayout2.setSizeUndefined();
-		this.form.addComponent(this.horizontalLayout2, 0, 4, 1, 4);
+		this.form.addComponent(this.horizontalLayout2, 0, 5, 1, 5);
 		this.form.setComponentAlignment(this.horizontalLayout2, Alignment.TOP_CENTER);
 		this.form.setColumnExpandRatio(1, 100.0F);
 		final CustomComponent form_vSpacer = new CustomComponent();
 		form_vSpacer.setSizeFull();
-		this.form.addComponent(form_vSpacer, 0, 5, 1, 5);
-		this.form.setRowExpandRatio(5, 1.0F);
+		this.form.addComponent(form_vSpacer, 0, 6, 1, 6);
+		this.form.setRowExpandRatio(6, 1.0F);
 		this.verticalLayout.setSizeFull();
 		this.horizontalSplitPanel.setFirstComponent(this.verticalLayout);
 		this.form.setSizeFull();
@@ -367,13 +387,13 @@ public class CostAccountTabView extends XdevView {
 
 	// <generated-code name="variables">
 	private XdevButton cmdNew, cmdDelete, cmdReload, cmdInfo, cmdSave, cmdReset;
-	private XdevLabel lblCsaCode, lblCsaName, lblCostAccount, lblCsaState;
+	private XdevLabel lblCsaCode, lblCsaName, lblCostAccount, lblCsaExtRef, lblCsaState;
 	private XdevTable<CostAccount> table;
 	private XdevComboBox<CostAccount> cmbCostAccount;
 	private XdevHorizontalLayout horizontalLayout, horizontalLayout2;
 	private XdevComboBox<?> comboBoxState;
 	private XdevGridLayout form;
-	private XdevTextField txtCsaCode, txtCsaName;
+	private XdevTextField txtCsaCode, txtCsaName, txtCsaExtRef;
 	private XdevVerticalLayout verticalLayout;
 	private XdevHorizontalSplitPanel horizontalSplitPanel;
 	private XdevContainerFilterComponent containerFilterComponent;

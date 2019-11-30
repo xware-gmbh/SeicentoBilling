@@ -6,7 +6,7 @@
 	<artifactId>seicentobilling</artifactId>
 	<packaging>war</packaging>
 	<name>SeicentoBilling</name>
-	<version>2.3.1</version>
+	<version>2.4.1-dev</version>
 	<build>
 		<resources>
 			<resource>
@@ -187,4 +187,6 @@
 			UTF-8
 		</project.build.sourceEncoding>
 	</properties>
+	<url>http://www.xwr.ch</url>
+	<description>Einfache Leistungserfassungs und Rechnungssstellungs Web-Applikation.</description>
 </project>

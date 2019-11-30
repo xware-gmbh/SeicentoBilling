@@ -42,6 +42,7 @@ public class Vat implements java.io.Serializable {
 	private Set<OrderLine> orderLines = new HashSet<>(0);
 	private Set<Expense> expenses = new HashSet<>(0);
 	private String fullName;
+	private String vatExtRef;
 
 	public Vat() {
 	}
@@ -161,6 +162,16 @@ public class Vat implements java.io.Serializable {
 
 	public void setFullName(final String fullName) {
 		this.fullName = fullName;
+	}
+
+	@Caption("Externe Referenz")
+	@Column(name = "vatExtRef", columnDefinition = "nvarchar")
+	public String getVatExtRef() {
+		return this.vatExtRef;
+	}
+
+	public void setVatExtRef(final String noname) {
+		this.vatExtRef = noname;
 	}
 
 
