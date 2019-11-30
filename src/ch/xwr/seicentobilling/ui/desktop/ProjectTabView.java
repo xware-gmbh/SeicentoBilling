@@ -8,6 +8,7 @@ import java.util.List;
 import org.apache.poi.ss.formula.functions.T;
 
 import com.vaadin.data.Property;
+import com.vaadin.event.ItemClickEvent;
 import com.vaadin.external.org.slf4j.Logger;
 import com.vaadin.external.org.slf4j.LoggerFactory;
 import com.vaadin.server.FontAwesome;
@@ -103,15 +104,15 @@ public class ProjectTabView extends XdevView {
 	}
 
 	private void setROFields() {
-		this.dateProLastBill.setEnabled(false);
-		this.txtProHoursEffective.setEnabled(false);
-
 		boolean hasData = true;
 		if (this.fieldGroup.getItemDataSource() == null) {
 			hasData = false;
 		}
 
 		setROComponents(hasData);
+
+		this.dateProLastBill.setEnabled(false);
+		this.txtProHoursEffective.setEnabled(false);
 	}
 
 	private void setROComponents(final boolean state) {
@@ -313,12 +314,11 @@ public class ProjectTabView extends XdevView {
 	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
 	 */
 	private void table_valueChange(final Property.ValueChangeEvent event) {
-		setROFields();
-
 		if (this.table.getSelectedItem() != null) {
 			displayChildTables(this.table.getSelectedItem().getBean());
 		}
 
+		setROFields();
 	}
 
 	private void displayChildTables(final Project npro) {
@@ -468,6 +468,16 @@ public class ProjectTabView extends XdevView {
 			this.cmbBillingAddress.addItems(dao.findByCustomerAndType(cus, LovCrm.AddressType.business));
 
 		}
+	}
+
+	/**
+	 * Event handler delegate method for the {@link XdevTable} {@link #table}.
+	 *
+	 * @see ItemClickEvent.ItemClickListener#itemClick(ItemClickEvent)
+	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
+	 */
+	private void table_itemClick(final ItemClickEvent event) {
+		setROFields();
 	}
 
 	/*
@@ -882,6 +892,7 @@ public class ProjectTabView extends XdevView {
 		this.cmdReport.addClickListener(event -> this.cmdReport_buttonClick(event));
 		this.cmdInfo.addClickListener(event -> this.cmdInfo_buttonClick(event));
 		this.table.addValueChangeListener(event -> this.table_valueChange(event));
+		this.table.addItemClickListener(event -> this.table_itemClick(event));
 		this.cmbCustomer.addValueChangeListener(event -> this.cmbCustomer_valueChange(event));
 		this.cmdSave.addClickListener(event -> this.cmdSave_buttonClick(event));
 		this.cmdReset.addClickListener(event -> this.cmdReset_buttonClick(event));
