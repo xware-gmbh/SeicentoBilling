@@ -3,6 +3,7 @@ package ch.xwr.seicentobilling.ui.desktop;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.filter.Compare;
 import com.vaadin.shared.ui.MarginInfo;
+import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CustomComponent;
@@ -74,8 +75,8 @@ public class RowObjectView extends XdevView {
 
 	public static Window getPopupWindow() {
 		final Window win = new Window();
-		win.setWidth("1030");
-		win.setHeight("720");
+		win.setWidth("1140");
+		win.setHeight("760");
 		win.center();
 		win.setModal(true);
 		return win;
@@ -491,8 +492,10 @@ public class RowObjectView extends XdevView {
 		this.txtObjId.setTabIndex(1);
 		this.lblObjAdded.setValue(StringResourceUtils.optLocalizeString("{$lblObjAdded.value}", this));
 		this.dateObjAdded.setTabIndex(5);
+		this.dateObjAdded.setResolution(Resolution.SECOND);
 		this.lblObjDeleted.setValue(StringResourceUtils.optLocalizeString("{$lblObjDeleted.value}", this));
 		this.dateObjDeleted.setTabIndex(9);
+		this.dateObjDeleted.setResolution(Resolution.SECOND);
 		this.lblEntity.setValue(StringResourceUtils.optLocalizeString("{$lblEntity.value}", this));
 		this.cmbEntity.setTabIndex(2);
 		this.cmbEntity.setContainerDataSource(Entity.class, DAOs.get(EntityDAO.class).findAll());
@@ -505,6 +508,7 @@ public class RowObjectView extends XdevView {
 		this.txtObjRowId.setTabIndex(3);
 		this.lblObjChanged.setValue(StringResourceUtils.optLocalizeString("{$lblObjChanged.value}", this));
 		this.dateObjChanged.setTabIndex(7);
+		this.dateObjChanged.setResolution(Resolution.SECOND);
 		this.lblDatabaseVersion.setValue(StringResourceUtils.optLocalizeString("{$lblDatabaseVersion.value}", this));
 		this.cmbDatabaseVersion.setTabIndex(11);
 		this.cmbDatabaseVersion.setContainerDataSource(DatabaseVersion.class, DAOs.get(DatabaseVersionDAO.class).findAll());
@@ -544,6 +548,7 @@ public class RowObjectView extends XdevView {
 		this.tableText.setVisibleColumns(RowText_.txtNumber.getName(), RowText_.txtFreetext.getName(),
 				RowText_.language.getName(), RowText_.txtState.getName());
 		this.tableText.setColumnHeader("txtNumber", "Nbr");
+		this.tableText.setColumnWidth("txtNumber", 60);
 		this.tableText.setColumnHeader("txtFreetext", "Text");
 		this.tableText.setColumnHeader("language", "Sprache");
 		this.tableText.setColumnHeader("txtState", "Status");
@@ -564,6 +569,7 @@ public class RowObjectView extends XdevView {
 				RowImage_.rimSize.getName(), RowImage_.rimType.getName(), RowImage_.rimMimetype.getName(),
 				RowImage_.rimState.getName(), "generated");
 		this.tableRowImage.setColumnHeader("rimNumber", "Nbr");
+		this.tableRowImage.setColumnWidth("rimNumber", 60);
 		this.tableRowImage.setColumnHeader("rimName", "Name");
 		this.tableRowImage.setColumnHeader("rimSize", "Grösse");
 		this.tableRowImage.setColumnHeader("rimType", "Typ");
@@ -727,7 +733,7 @@ public class RowObjectView extends XdevView {
 		this.tabSheet.addTab(this.verticalLayoutFile, "Dateien", null);
 		this.verticalLayoutParam.setSizeFull();
 		this.tabSheet.addTab(this.verticalLayoutParam, "Parameter", null);
-		this.tabSheet.setSelectedTab(this.verticalLayoutFile);
+		this.tabSheet.setSelectedTab(this.verticalLayoutText);
 		this.panel.setSizeFull();
 		this.verticalSplitPanel.setFirstComponent(this.panel);
 		this.tabSheet.setSizeFull();
@@ -739,21 +745,11 @@ public class RowObjectView extends XdevView {
 		this.cmdNewText.addClickListener(event -> this.cmdNewText_buttonClick(event));
 		this.cmdDeleteText.addClickListener(event -> this.cmdDeleteText_buttonClick(event));
 		this.cmdUpdateText.addClickListener(event -> this.cmdUpdateText_buttonClick(event));
-		this.tableText.addValueChangeListener(new Property.ValueChangeListener() {
-			@Override
-			public void valueChange(final Property.ValueChangeEvent event) {
-				RowObjectView.this.tableText_valueChange(event);
-			}
-		});
+		this.tableText.addValueChangeListener(event -> this.tableText_valueChange(event));
 		this.cmdNewFile.addClickListener(event -> this.cmdNewFile_buttonClick(event));
 		this.cmdDeleteFile.addClickListener(event -> this.cmdDeleteFile_buttonClick(event));
 		this.cmdUpdateFile.addClickListener(event -> this.cmdUpdateFile_buttonClick(event));
-		this.tableRowImage.addValueChangeListener(new Property.ValueChangeListener() {
-			@Override
-			public void valueChange(final Property.ValueChangeEvent event) {
-				RowObjectView.this.tableRowImage_valueChange(event);
-			}
-		});
+		this.tableRowImage.addValueChangeListener(event -> this.tableRowImage_valueChange(event));
 		this.cmdNewParam.addClickListener(event -> this.cmdNewParam_buttonClick(event));
 		this.cmdDeleteParam.addClickListener(event -> this.cmdDeleteParam_buttonClick(event));
 		this.cmdUpdateParam.addClickListener(event -> this.cmdUpdateParam_buttonClick(event));
