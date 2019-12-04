@@ -21,9 +21,6 @@ import org.apache.pdfbox.io.MemoryUsageSetting;
 import org.apache.pdfbox.multipdf.PDFMergerUtility;
 import org.apache.pdfbox.pdmodel.PDDocument;
 
-import com.vaadin.external.org.slf4j.Logger;
-import com.vaadin.external.org.slf4j.LoggerFactory;
-
 import ch.xwr.seicentobilling.dal.CompanyDAO;
 import ch.xwr.seicentobilling.dal.EntityDAO;
 import ch.xwr.seicentobilling.dal.PeriodeDAO;
@@ -38,7 +35,7 @@ import ch.xwr.seicentobilling.entities.RowParameter;
 
 public class JasperManager {
 	/** Logger initialized */
-	private static final Logger _logger = LoggerFactory.getLogger(OrderGenerator.class);
+	private static final org.apache.log4j.Logger _logger = org.apache.log4j.Logger.getLogger(JasperManager.class);
 
 	private final List<String> keys = new ArrayList<>();
 	private final List<String> values = new ArrayList<>();

@@ -4,12 +4,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-import com.vaadin.external.org.slf4j.Logger;
-import com.vaadin.external.org.slf4j.LoggerFactory;
-
 public class TheVersion {
 	/** Logger initialized */
-	private static final Logger _logger = LoggerFactory.getLogger(TheVersion.class);
+	private static final org.apache.log4j.Logger _logger = org.apache.log4j.Logger.getLogger(TheVersion.class);
 
 	private final Properties prop;
 

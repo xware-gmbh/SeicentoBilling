@@ -9,8 +9,6 @@ import java.util.TimeZone;
 
 import com.vaadin.annotations.Push;
 import com.vaadin.annotations.Theme;
-import com.vaadin.external.org.slf4j.Logger;
-import com.vaadin.external.org.slf4j.LoggerFactory;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.shared.communication.PushMode;
@@ -44,7 +42,8 @@ import ch.xwr.seicentobilling.ui.desktop.billing.OrderGenerateTabView;
 @Theme("SeicentoBilling")
 public class DesktopUI extends XdevUI {
 	/** Logger initialized */
-	private static final Logger LOG = LoggerFactory.getLogger(DesktopUI.class);
+	private static final org.apache.log4j.Logger LOG = org.apache.log4j.Logger.getLogger(DesktopUI.class);
+
 
 	private AzureUser currentUser;
 
@@ -146,13 +145,14 @@ public class DesktopUI extends XdevUI {
 	}
 
 	private void loadMyData() {
-		LOG.info("Load company Data...");
 
 		final CompanyDAO dao = new CompanyDAO();
 		final Company cmp = dao.getActiveConfig();
 
 		this.lblEnvironment.setValue(dao.getDbNameNativeSQL());
 		this.lblCompany.setValue(cmp.getCmpName());
+
+		LOG.info("Company Data loaded for " + cmp.getCmpName());
 	}
 
 	/**

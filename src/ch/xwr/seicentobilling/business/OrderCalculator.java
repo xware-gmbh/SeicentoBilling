@@ -8,8 +8,6 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-import com.vaadin.external.org.slf4j.Logger;
-import com.vaadin.external.org.slf4j.LoggerFactory;
 import com.vaadin.ui.Field;
 import com.xdev.persistence.PersistenceUtils;
 import com.xdev.ui.XdevFieldGroup;
@@ -24,7 +22,7 @@ import ch.xwr.seicentobilling.entities.VatLine;
 
 public class OrderCalculator {
 	/** Logger initialized */
-	private static final Logger _logger = LoggerFactory.getLogger(OrderCalculator.class);
+	private static final org.apache.log4j.Logger _logger = org.apache.log4j.Logger.getLogger(OrderCalculator.class);
 
 
 	public OrderLine calculateLine(final OrderLine inp) {

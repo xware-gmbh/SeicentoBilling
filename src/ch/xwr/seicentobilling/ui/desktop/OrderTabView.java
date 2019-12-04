@@ -10,8 +10,6 @@ import org.apache.poi.ss.formula.functions.T;
 
 import com.vaadin.data.Property;
 import com.vaadin.event.ItemClickEvent;
-import com.vaadin.external.org.slf4j.Logger;
-import com.vaadin.external.org.slf4j.LoggerFactory;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Page;
 import com.vaadin.shared.ui.MarginInfo;
@@ -78,7 +76,7 @@ public class OrderTabView extends XdevView {
 	private boolean isAdmin = false;
 
 	/** Logger initialized */
-	private static final Logger LOG = LoggerFactory.getLogger(OrderTabView.class);
+	private static final org.apache.log4j.Logger LOG = org.apache.log4j.Logger.getLogger(OrderTabView.class);
 
 
 	/**

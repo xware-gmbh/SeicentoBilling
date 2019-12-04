@@ -16,9 +16,6 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import com.vaadin.external.org.slf4j.Logger;
-import com.vaadin.external.org.slf4j.LoggerFactory;
-
 import ch.xwr.seicentobilling.dal.ProjectDAO;
 import ch.xwr.seicentobilling.dal.ProjectLineDAO;
 import ch.xwr.seicentobilling.entities.Periode;
@@ -27,7 +24,7 @@ import ch.xwr.seicentobilling.entities.ProjectLine;
 
 public class ExcelHandler {
 	/** Logger initialized */
-	private static final Logger LOG = LoggerFactory.getLogger(ExcelHandler.class);
+	private static final org.apache.log4j.Logger LOG = org.apache.log4j.Logger.getLogger(ExcelHandler.class);
 
 	/** the workbook */
 	protected XSSFWorkbook hssfworkbook = null;

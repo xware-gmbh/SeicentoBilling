@@ -3,8 +3,6 @@ package ch.xwr.seicentobilling.business;
 import java.util.Iterator;
 import java.util.List;
 
-import com.vaadin.external.org.slf4j.Logger;
-import com.vaadin.external.org.slf4j.LoggerFactory;
 import com.vaadin.server.VaadinSession;
 import com.xdev.security.authorization.Subject;
 import com.xdev.server.aa.openid.auth.AzureUser;
@@ -14,7 +12,7 @@ import ch.xwr.seicentobilling.entities.CostAccount;
 
 public class Seicento {
 	/** Logger initialized */
-	private static final Logger LOG = LoggerFactory.getLogger(Seicento.class);
+	private static final org.apache.log4j.Logger LOG = org.apache.log4j.Logger.getLogger(Seicento.class);
 
 	public static String getUserName() {
 		final Subject sub = VaadinSession.getCurrent().getAttribute(Subject.class);

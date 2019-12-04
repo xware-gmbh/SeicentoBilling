@@ -5,8 +5,6 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-import com.vaadin.external.org.slf4j.Logger;
-import com.vaadin.external.org.slf4j.LoggerFactory;
 import com.xdev.persistence.PersistenceUtils;
 
 import ch.xwr.seicentobilling.dal.ExpenseDAO;
@@ -15,7 +13,7 @@ import ch.xwr.seicentobilling.entities.Periode;
 
 public class ExpenseHandler {
 	/** Logger initialized */
-	private static final Logger LOG = LoggerFactory.getLogger(ExpenseHandler.class);
+	private static final org.apache.log4j.Logger LOG = org.apache.log4j.Logger.getLogger(ExpenseHandler.class);
 
 
 	public void copyExpensePeriode(final Periode from, final Periode toP) throws Exception {
