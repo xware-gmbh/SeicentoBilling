@@ -110,6 +110,7 @@ public class ExcelHandler {
 
 			man.updateObject(bean.getPrlId(), bean.getClass().getSimpleName());
 		}
+		dao.flush();
 	}
 
 	private void checkValidDate(final ProjectLine bean, final Periode periode) throws Exception {
