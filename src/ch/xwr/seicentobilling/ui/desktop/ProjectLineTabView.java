@@ -614,11 +614,14 @@ public class ProjectLineTabView extends XdevView {
 
 		final List<ProjectLine> ls = new ProjectLineDAO().findByPeriode(per);
 		for (final ProjectLine pln : ls) {
-			cal.setTime(pln.getPrlReportDate());
-			final int iday = cal.get(Calendar.DAY_OF_MONTH);
+			if (!pln.getPrlWorkType().equals(LovState.WorkType.expense)) {
+				//do not add expenses
+				cal.setTime(pln.getPrlReportDate());
+				final int iday = cal.get(Calendar.DAY_OF_MONTH);
 
-			hours[iday] = hours[iday] + pln.getPrlHours();
-			totalm = totalm + pln.getPrlHours();
+				hours[iday] = hours[iday] + pln.getPrlHours();
+				totalm = totalm + pln.getPrlHours();
+			}
 		}
 
 		initOverviewGrids(totalm);
