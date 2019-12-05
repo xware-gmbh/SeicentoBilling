@@ -6,7 +6,12 @@
 	<artifactId>seicentobilling</artifactId>
 	<packaging>war</packaging>
 	<name>SeicentoBilling</name>
-	<version>2.4.1-dev</version>
+	<version>2.4.1</version>
+	<description>
+		Einfache Leistungserfassungs und Rechnungssstellungs
+		Web-Applikation.
+	</description>
+	<url>http://www.xwr.ch</url>
 	<build>
 		<resources>
 			<resource>
@@ -181,12 +186,15 @@
 			<artifactId>logstash-gelf</artifactId>
 			<version>1.7.2</version>
 		</dependency>
+		<dependency>
+			<groupId>com.xdev-software</groupId>
+			<artifactId>xdev-server-mobilekit</artifactId>
+			<version>4.0.0</version>
+		</dependency>
 	</dependencies>
 	<properties>
 		<project.build.sourceEncoding>
 			UTF-8
 		</project.build.sourceEncoding>
 	</properties>
-	<url>http://www.xwr.ch</url>
-	<description>Einfache Leistungserfassungs und Rechnungssstellungs Web-Applikation.</description>
 </project>
