@@ -11,6 +11,8 @@
 <?import com.xdev.ui.XdevGridLayout?>
 <?import com.xdev.ui.XdevHorizontalLayout?>
 <?import com.xdev.ui.XdevLabel?>
+<?import com.xdev.ui.XdevMenuBar?>
+<?import com.xdev.ui.XdevMenuBar.XdevMenuItem?>
 <?import com.xdev.ui.XdevPanel?>
 <?import com.xdev.ui.XdevPopupDateField?>
 <?import com.xdev.ui.XdevTextField?>
@@ -26,14 +28,65 @@
             <x:constraints zpos="0" width="100%" height="100%" />
             <XdevHorizontalLayout styleName="dark" x:name="horizontalLayout" margin="">
                 <x:constraints weighty="0.0" width="100%" alignment="TOP_LEFT" height="0px" />
-                <XdevButton icon="WebContent/WEB-INF/resources/images/greenarrow_left32.png" caption="{$cmdBack.caption}" x:name="cmdBack">
-                    <x:constraints weightx="0.1" width="0px" alignment="MIDDLE_LEFT" height="0px" />
-                    <x:event>click.buttonClick</x:event>
-                </XdevButton>
+                <XdevMenuBar x:name="menuBarLeftTop">
+                    <x:constraints weightx="0.1" width="100%" alignment="MIDDLE_LEFT" height="0%" />
+                    <XdevMenuItem icon="FontAwesome.NAVICON" styleName="large-icons" x:name="mnuOperation" text="Optionen">
+                        <XdevMenuItem icon="FontAwesome.CLOCK_O" x:name="mnuStartStop" text="Start/Stop">
+                            <x:event>menuSelected.menuSelected</x:event>
+                        </XdevMenuItem>
+                        <XdevMenuItem x:name="mnuSeperator2" text="Seperator" x:separator="true">
+                            <x:constraints top="19px" left="-1px" />
+                        </XdevMenuItem>
+                        <XdevMenuItem icon="WebContent/WEB-INF/resources/images/delete3_16.png" x:name="mnuDeleteItem" text="Löschen" checkable="true">
+                            <x:event>menuSelected.menuSelected</x:event>
+                        </XdevMenuItem>
+                    </XdevMenuItem>
+                    <XdevMenuItem x:name="mnuDefaults" text="Template">
+                        <XdevMenuItem x:name="mnuTemplate1" text="Spesen">
+                            <x:event>menuSelected.menuSelected</x:event>
+                        </XdevMenuItem>
+                        <XdevMenuItem x:name="mnuTemplate2" text="Rapporte">
+                            <x:event>menuSelected.menuSelected</x:event>
+                        </XdevMenuItem>
+                        <XdevMenuItem x:name="mnuTemplate3" text="Vorlagen Rapport">
+                            <x:constraints top="19px" left="-1px" />
+                            <x:event>menuSelected.menuSelected</x:event>
+                        </XdevMenuItem>
+                        <XdevMenuItem x:name="mnuTemplate4" text="Rapporte">
+                            <x:constraints top="9px" left="-1px" />
+                            <x:event>menuSelected.menuSelected</x:event>
+                        </XdevMenuItem>
+                        <XdevMenuItem x:name="mnuTemplate5" text="Rapporte">
+                            <x:constraints top="19px" left="-1px" />
+                            <x:event>menuSelected.menuSelected</x:event>
+                        </XdevMenuItem>
+                        <XdevMenuItem x:name="mnuTemplate6" text="Rapporte">
+                            <x:constraints top="29px" left="-1px" />
+                            <x:event>menuSelected.menuSelected</x:event>
+                        </XdevMenuItem>
+                        <XdevMenuItem x:name="mnuTemplate7" text="Rapporte">
+                            <x:constraints top="39px" left="-1px" />
+                            <x:event>menuSelected.menuSelected</x:event>
+                        </XdevMenuItem>
+                        <XdevMenuItem x:name="mnuTemplate8" text="Rapporte">
+                            <x:constraints top="49px" left="-1px" />
+                            <x:event>menuSelected.menuSelected</x:event>
+                        </XdevMenuItem>
+                        <XdevMenuItem x:name="mnuTemplate9" text="Rapporte">
+                            <x:constraints top="69px" left="-1px" />
+                            <x:event>menuSelected.menuSelected</x:event>
+                        </XdevMenuItem>
+                        <XdevMenuItem x:name="mnuTemplate10" text="Rapporte">
+                            <x:constraints top="69px" left="-1px" />
+                            <x:event>menuSelected.menuSelected</x:event>
+                        </XdevMenuItem>
+                    </XdevMenuItem>
+                    <XdevMenuItem enabled="false" x:name="menuItem" text="Text" visible="false" />
+                </XdevMenuBar>
                 <XdevLabel styleName="colored h2 bold" x:name="label" value="Rapport">
                     <x:constraints weightx="0.1" width="0px" height="0px" />
                 </XdevLabel>
-                <XdevButton icon="WebContent/WEB-INF/resources/images/delete3_16.png" caption="{$cmdDelete.caption}" x:name="cmdDelete">
+                <XdevButton icon="WebContent/WEB-INF/resources/images/greenarrow_left32.png" caption="{$cmdBack.caption}" x:name="cmdBack">
                     <x:constraints weightx="0.1" width="0px" alignment="MIDDLE_RIGHT" height="0px" />
                     <x:event>click.buttonClick</x:event>
                 </XdevButton>
@@ -46,11 +99,22 @@
                 <XdevPopupDateField tabIndex="1" x:name="datePrlReportDate">
                     <x:constraints gridx="2" gridy="1" weighty="0.0" weightx="0.1" width="-1px" height="0px" />
                 </XdevPopupDateField>
+                <XdevLabel x:name="lblPrlReportFromTo" value="Von/Bis">
+                    <x:constraints gridx="1" gridy="2" top="33px" left="-1px" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+                </XdevLabel>
+                <XdevPopupDateField dateFormat="HH:mm" resolution="com.vaadin.shared.ui.datefield.Resolution.MINUTE" x:name="datePrlReportDateFrom">
+                    <x:constraints gridx="2" gridy="2" top="46px" left="-1px" weighty="0.0" weightx="0.1" width="100px" height="0px" />
+                    <x:event>valueChange.valueChange</x:event>
+                </XdevPopupDateField>
+                <XdevPopupDateField dateFormat="HH:mm" resolution="com.vaadin.shared.ui.datefield.Resolution.MINUTE" x:name="datePrlReportDateTo">
+                    <x:constraints gridx="2" gridy="3" top="93px" left="-1px" weighty="0.0" weightx="0.1" width="100px" height="0px" />
+                    <x:event>valueChange.valueChange</x:event>
+                </XdevPopupDateField>
                 <XdevLabel x:name="lblProject" value="{$lblProject.value}">
-                    <x:constraints gridx="1" gridy="2" weighty="0.0" weightx="0.0" width="0px" height="-1px" />
+                    <x:constraints gridx="1" gridy="4" weighty="0.0" weightx="0.0" width="0px" height="-1px" />
                 </XdevLabel>
                 <XdevComboBox tabIndex="2" x:name="cmbProject" x:entity="Project">
-                    <x:constraints gridx="2" gridy="2" weighty="0.0" weightx="0.1" width="100%" height="-1px" />
+                    <x:constraints gridx="2" gridy="4" weighty="0.0" weightx="0.1" width="80%" height="-1px" />
                     <x:entityProperty>
                         <entry type="String" property="proName" />
                     </x:entityProperty>
@@ -61,44 +125,32 @@
                     <x:event>valueChange.valueChange</x:event>
                 </XdevComboBox>
                 <XdevLabel x:name="lblPrlHours" value="{$lblPrlHours.value}">
-                    <x:constraints gridx="1" gridy="3" weighty="0.0" weightx="0.0" width="0px" height="0px" />
-                </XdevLabel>
-                <XdevTextField columns="5" tabIndex="3" x:name="txtPrlHours">
-                    <x:constraints gridx="2" gridy="3" weighty="0.0" weightx="0.1" width="-1px" height="0px" />
-                </XdevTextField>
-                <XdevLabel x:name="lblPrlText" value="{$lblPrlText.value}">
-                    <x:constraints gridx="1" gridy="4" weighty="0.0" weightx="0.0" width="0px" height="-1px" />
-                </XdevLabel>
-                <XdevTextField columns="5" tabIndex="4" x:name="txtPrlText">
-                    <x:constraints gridx="2" gridy="4" weighty="0.0" weightx="0.1" width="100%" height="-1px" />
-                </XdevTextField>
-                <XdevLabel x:name="lblPrlWorkType" value="{$lblPrlWorkType.value}">
                     <x:constraints gridx="1" gridy="5" weighty="0.0" weightx="0.0" width="0px" height="0px" />
                 </XdevLabel>
-                <XdevComboBox x:name="comboBoxWorktype">
+                <XdevTextField columns="5" tabIndex="3" x:name="txtPrlHours">
                     <x:constraints gridx="2" gridy="5" weighty="0.0" weightx="0.1" width="-1px" height="0px" />
+                </XdevTextField>
+                <XdevLabel x:name="lblPrlRate" value="{$lblPrlRate.value}">
+                    <x:constraints gridx="1" gridy="6" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+                </XdevLabel>
+                <XdevTextField columns="5" tabIndex="6" x:name="txtPrlRate">
+                    <x:constraints gridx="2" gridy="6" weighty="0.0" weightx="0.1" width="-1px" height="0px" />
+                </XdevTextField>
+                <XdevLabel x:name="lblPrlText" value="{$lblPrlText.value}">
+                    <x:constraints gridx="1" gridy="7" weighty="0.0" weightx="0.0" width="0px" height="-1px" />
+                </XdevLabel>
+                <XdevTextField columns="5" tabIndex="4" x:name="txtPrlText">
+                    <x:constraints gridx="2" gridy="7" weighty="0.0" weightx="0.1" width="100%" height="-1px" />
+                </XdevTextField>
+                <XdevLabel x:name="lblPrlWorkType" value="{$lblPrlWorkType.value}">
+                    <x:constraints gridx="1" gridy="8" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+                </XdevLabel>
+                <XdevComboBox x:name="comboBoxWorktype">
+                    <x:constraints gridx="2" gridy="8" weighty="0.0" weightx="0.1" width="-1px" height="0px" />
                     <x:typeArguments>
                         <typeArgument type="?" />
                     </x:typeArguments>
                 </XdevComboBox>
-                <XdevTextField columns="5" tabIndex="6" x:name="txtPrlRate">
-                    <x:constraints gridx="2" gridy="6" weighty="0.0" weightx="0.1" width="-1px" height="0px" />
-                </XdevTextField>
-                <XdevHorizontalLayout x:name="horizontalLayoutTemplate" margin="tr">
-                    <x:constraints gridx="2" gridy="7" weighty="0.0" weightx="0.1" width="100%" alignment="MIDDLE_RIGHT" height="-1px" />
-                    <XdevButton caption="Key 1" x:name="btnKey01">
-                        <x:constraints weightx="0.0" width="0px" alignment="MIDDLE_RIGHT" height="0px" />
-                        <x:event>click.buttonClick</x:event>
-                    </XdevButton>
-                    <XdevButton caption="Key 2" x:name="btnKey02">
-                        <x:constraints weightx="0.0" width="0px" alignment="MIDDLE_RIGHT" height="0px" />
-                        <x:event>click.buttonClick</x:event>
-                    </XdevButton>
-                    <XdevButton caption="Key 3" x:name="btnKey03">
-                        <x:constraints top="46px" left="-1px" weightx="0.0" width="-1px" height="0px" />
-                        <x:event>click.buttonClick</x:event>
-                    </XdevButton>
-                </XdevHorizontalLayout>
                 <XdevFieldGroup x:name="fieldGroup" x:entityType="ProjectLine">
                     <x:typeArguments>
                         <typeArgument type="ProjectLine" />
@@ -110,19 +162,22 @@
                         <entry name="txtPrlText" property="prlText" />
                         <entry name="comboBoxWorktype" property="prlWorkType" />
                         <entry name="txtPrlRate" property="prlRate" />
+                        <entry name="datePrlReportDateFrom" property="prlTimeFrom" />
+                        <entry name="datePrlReportDateTo" property="prlTimeTo" />
                     </x:fields>
                 </XdevFieldGroup>
-                <XdevLabel x:name="lblPrlRate" value="{$lblPrlRate.value}">
-                    <x:constraints gridx="1" gridy="6" weighty="0.0" weightx="0.0" width="0px" height="0px" />
-                </XdevLabel>
                 <XdevHorizontalLayout x:name="horizontalLayoutAction" margin="">
-                    <x:constraints gridx="1" gridy="8" weighty="0.0" weightx="0.0" width="0px" alignment="TOP_CENTER" gridWidth="2" height="0px" />
+                    <x:constraints gridx="1" gridy="9" weighty="0.0" weightx="0.0" width="0px" alignment="TOP_CENTER" gridWidth="2" height="0px" />
                     <XdevButton icon="WebContent/WEB-INF/resources/images/save1.png" caption="{$cmdSave.caption}" tabIndex="8" x:name="cmdSave">
                         <x:constraints weightx="0.0" width="0px" alignment="MIDDLE_LEFT" height="0px" />
                         <x:event>click.buttonClick</x:event>
                     </XdevButton>
                     <XdevButton icon="WebContent/WEB-INF/resources/images/cancel1.png" caption="{$cmdReset.caption}" tabIndex="7" x:name="cmdReset">
                         <x:constraints weightx="0.0" width="0px" alignment="MIDDLE_LEFT" height="0px" />
+                        <x:event>click.buttonClick</x:event>
+                    </XdevButton>
+                    <XdevButton caption="Key 1" x:name="btnKey01">
+                        <x:constraints weightx="0.0" width="0px" alignment="MIDDLE_RIGHT" height="0px" />
                         <x:event>click.buttonClick</x:event>
                     </XdevButton>
                 </XdevHorizontalLayout>

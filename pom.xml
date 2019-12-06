@@ -186,11 +186,6 @@
 			<artifactId>logstash-gelf</artifactId>
 			<version>1.7.2</version>
 		</dependency>
-		<dependency>
-			<groupId>com.xdev-software</groupId>
-			<artifactId>xdev-server-mobilekit</artifactId>
-			<version>4.0.0</version>
-		</dependency>
 	</dependencies>
 	<properties>
 		<project.build.sourceEncoding>
