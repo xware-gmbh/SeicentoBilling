@@ -101,11 +101,14 @@ public class PeriodeView extends XdevView {
 		this.verticalLayout = new XdevVerticalLayout();
 		this.table = new XdevTable<>();
 
+		this.setStyleName("large");
+		this.verticalLayout.setStyleName("large");
 		this.verticalLayout.setSpacing(false);
 		this.verticalLayout.setMargin(new MarginInfo(false));
+		this.table.setStyleName("large");
 		this.table.setContainerDataSource(Periode.class, false);
 		this.table.setVisibleColumns(Periode_.perName.getName());
-		this.table.setColumnHeader("perName", "Periode");
+		this.table.setColumnHeader("perName", "offene Perioden");
 
 		this.table.setSizeFull();
 		this.verticalLayout.addComponent(this.table);

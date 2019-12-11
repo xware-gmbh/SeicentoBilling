@@ -22,7 +22,7 @@
     <x:constraints zpos="0" width="100%" height="100%" />
     <XdevPanel caption="Rapportzeile bearbeiten" tabIndex="0" x:name="panel">
         <x:constraints gridHeight="1" gridx="1" zpos="0" gridy="1" weighty="0.0" weightx="0.0" width="100%" alignment="TOP_LEFT" gridWidth="1" height="100%" />
-        <XdevGridLayout x:name="form">
+        <XdevGridLayout x:name="form" margin="b">
             <x:constraints zpos="0" width="100%" height="100%" />
             <XdevLabel x:name="lblPeriode" value="{$lblPeriode.value}">
                 <x:constraints gridx="1" gridy="1" weighty="0.0" weightx="0.0" width="0px" height="-1px" />

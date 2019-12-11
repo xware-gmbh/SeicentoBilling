@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+
+<?xdevuiml version="1.0"?>
+<?template BROWSER_XGA?>
+<?import ch.xwr.seicentobilling.entities.ProjectLine?>
+<?import com.xdev.ui.XdevButton?>
+<?import com.xdev.ui.XdevHorizontalLayout?>
+<?import com.xdev.ui.XdevLabel?>
+<?import com.xdev.ui.XdevVerticalLayout?>
+<?import com.xdev.ui.XdevView?>
+<?import com.xdev.ui.entitycomponent.table.XdevTable?>
+<?import java.lang.String?>
+<XdevView xmlns:x="http://xml.xdev-software.com/xdevuiml" x:name="ProjectLineTextPopup">
+    <x:constraints zpos="0" width="100%" height="100%" />
+    <XdevVerticalLayout spacing="false" x:name="verticalLayout" margin="">
+        <x:constraints width="100%" zpos="0" height="100%" />
+        <XdevHorizontalLayout spacing="false" x:name="horizontalLayout" margin="">
+            <x:constraints weighty="0.0" width="100%" height="0px" />
+            <XdevButton icon="WebContent/WEB-INF/resources/images/greenarrow_left32.png" x:name="cmdLeft">
+                <x:constraints weightx="0.1" width="0px" alignment="MIDDLE_LEFT" height="0px" />
+                <x:event>click.buttonClick</x:event>
+            </XdevButton>
+            <XdevLabel styleName="colored" x:name="label" value="Textauswahl">
+                <x:constraints weightx="0.1" width="100%" height="0px" />
+            </XdevLabel>
+        </XdevHorizontalLayout>
+        <XdevTable x:name="table" x:entity="ProjectLine" x:autoQuery="false">
+            <x:entityProperties>
+                <entry type="String" property="prlText" caption="Text" />
+            </x:entityProperties>
+            <x:constraints weighty="1.0" width="100%" height="100%" />
+            <x:typeArguments>
+                <typeArgument type="ProjectLine" />
+            </x:typeArguments>
+            <x:event>itemClick.itemClick</x:event>
+        </XdevTable>
+    </XdevVerticalLayout>
+</XdevView>
+

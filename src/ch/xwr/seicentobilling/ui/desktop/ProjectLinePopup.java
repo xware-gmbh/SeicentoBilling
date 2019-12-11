@@ -493,9 +493,10 @@ public class ProjectLinePopup extends XdevView {
 		this.cmdAction4 = new XdevButton();
 		this.datePrlReportDateTo = new XdevPopupDateField();
 		this.fieldGroup = new XdevFieldGroup<>(ProjectLine.class);
-
+	
 		this.panel.setCaption("Rapportzeile bearbeiten");
 		this.panel.setTabIndex(0);
+		this.form.setMargin(new MarginInfo(false, false, true, false));
 		this.lblPeriode.setValue(StringResourceUtils.optLocalizeString("{$lblPeriode.value}", this));
 		this.cmbPeriode.setContainerDataSource(Periode.class);
 		this.cmbPeriode.setItemCaptionPropertyId(Periode_.perName.getName());
@@ -588,7 +589,7 @@ public class ProjectLinePopup extends XdevView {
 		this.fieldGroup.bind(this.datePrlReportDateFrom, ProjectLine_.prlTimeFrom.getName());
 		this.fieldGroup.bind(this.datePrlReportDateTo, ProjectLine_.prlTimeTo.getName());
 		this.fieldGroup.bind(this.comboBoxState, ProjectLine_.prlState.getName());
-
+	
 		this.cmdSave.setSizeUndefined();
 		this.horizontalLayout.addComponent(this.cmdSave);
 		this.horizontalLayout.setComponentAlignment(this.cmdSave, Alignment.MIDDLE_LEFT);
@@ -704,7 +705,7 @@ public class ProjectLinePopup extends XdevView {
 		this.panel.setSizeFull();
 		this.setContent(this.panel);
 		this.setSizeFull();
-
+	
 		this.datePrlReportDateFrom.addValueChangeListener(event -> this.datePrlReportDateFrom_valueChange(event));
 		this.btnSearch.addClickListener(event -> this.btnSearch_buttonClick(event));
 		this.cmdSave.addClickListener(event -> this.cmdSave_buttonClick(event));
