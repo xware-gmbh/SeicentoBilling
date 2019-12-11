@@ -55,6 +55,7 @@ import ch.xwr.seicentobilling.entities.Project_;
 import ch.xwr.seicentobilling.entities.Vat_;
 
 public class ExpenseTabView extends XdevView {
+	private Periode currentPeriode = null;
 
 	//private TableFieldFactory tfFac;
 	/**
@@ -287,10 +288,11 @@ public class ExpenseTabView extends XdevView {
 	}
 
 	private void reloadExpenseList() {
-		Periode bean = null;
-		if (this.table.getSelectedItem() != null) {
-			 bean = this.table.getSelectedItem().getBean();
+		if (this.table.getSelectedItem() == null) {
+			return;
 		}
+
+		final Periode bean = this.table.getSelectedItem().getBean();
 
 		final XdevBeanContainer<Expense> myCustomerList = this.tableLine.getBeanContainerDataSource();
 		myCustomerList.removeAll();
@@ -406,6 +408,14 @@ public class ExpenseTabView extends XdevView {
 	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
 	 */
 	private void table_valueChange(final Property.ValueChangeEvent event) {
+		Periode bean = (Periode) event.getProperty().getValue();
+		if (bean == null) {
+			bean =  this.currentPeriode;
+			this.table.select(bean);
+		} else {
+			this.currentPeriode = bean;
+		}
+
 //		Periode bean = null;
 //		if (this.table.getSelectedItem() != null) {
 //			 bean = this.table.getSelectedItem().getBean();

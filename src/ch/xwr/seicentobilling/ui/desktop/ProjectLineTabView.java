@@ -64,6 +64,7 @@ import ch.xwr.seicentobilling.entities.Project_;
 public class ProjectLineTabView extends XdevView {
 	/** Logger initialized */
 	private static final Logger LOG = LoggerFactory.getLogger(ProjectLineTabView.class);
+	private Periode currentPeriode = null;
 
 	/**
 	 *
@@ -148,6 +149,14 @@ public class ProjectLineTabView extends XdevView {
 	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
 	 */
 	private void table_valueChange(final Property.ValueChangeEvent event) {
+		Periode bean = (Periode) event.getProperty().getValue();
+		if (bean == null) {
+			bean =  this.currentPeriode ;
+			this.table.select(bean);
+		} else {
+			this.currentPeriode = bean;
+		}
+
 		reloadTableLineList();
 		setROFields();
 
