@@ -9,6 +9,7 @@
 <?import ch.xwr.seicentobilling.entities.Order?>
 <?import ch.xwr.seicentobilling.entities.OrderLine?>
 <?import ch.xwr.seicentobilling.entities.Vat?>
+<?import com.vaadin.data.validator.StringLengthValidator?>
 <?import com.xdev.ui.XdevButton?>
 <?import com.xdev.ui.XdevFieldGroup?>
 <?import com.xdev.ui.XdevGridLayout?>
@@ -118,6 +119,7 @@
         </XdevLabel>
         <XdevTextField columns="5" tabIndex="7" x:name="txtOdlText">
             <x:constraints gridx="2" gridy="5" weighty="0.0" weightx="1.0" width="100%" gridWidth="3" height="0px" />
+            <x:validator x:type="StringLengthValidator" message="Der Text darf maximal 80 Zeichen lang sein!" max="80" />
         </XdevTextField>
         <XdevLabel x:name="lblCostAccount" value="{$lblCostAccount.value}">
             <x:constraints gridx="1" gridy="6" weighty="0.0" weightx="0.0" width="0px" height="0px" />

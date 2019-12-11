@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.Validator.InvalidValueException;
+import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.Alignment;
@@ -334,6 +335,8 @@ public class OrderLinePopup extends XdevView {
 		this.txtOdlPrice.setTabIndex(6);
 		this.lblOdlText.setValue(StringResourceUtils.optLocalizeString("{$lblOdlText.value}", this));
 		this.txtOdlText.setTabIndex(7);
+		this.txtOdlText
+				.addValidator(new StringLengthValidator("Der Text darf maximal 80 Zeichen lang sein!", null, 80, true));
 		this.lblCostAccount.setValue(StringResourceUtils.optLocalizeString("{$lblCostAccount.value}", this));
 		this.cmbCostAccount.setTabIndex(8);
 		this.cmbCostAccount.setRequired(true);

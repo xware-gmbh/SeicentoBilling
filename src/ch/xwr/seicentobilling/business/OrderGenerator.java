@@ -185,6 +185,11 @@ public class OrderGenerator {
 
 				final OrderLine newodl = this._calc.calculateLine(pos);
 				dao.save(newodl);
+
+				//create objRoot
+				final RowObjectManager man = new RowObjectManager();
+				man.updateObject(newodl.getOdlId(), newodl.getClass().getSimpleName());
+
 			}
 
 		}

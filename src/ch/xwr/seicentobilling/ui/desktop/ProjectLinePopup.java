@@ -8,6 +8,7 @@ import java.util.Iterator;
 import org.apache.poi.ss.formula.functions.T;
 
 import com.vaadin.data.Property;
+import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.ui.MarginInfo;
@@ -493,7 +494,7 @@ public class ProjectLinePopup extends XdevView {
 		this.cmdAction4 = new XdevButton();
 		this.datePrlReportDateTo = new XdevPopupDateField();
 		this.fieldGroup = new XdevFieldGroup<>(ProjectLine.class);
-	
+
 		this.panel.setCaption("Rapportzeile bearbeiten");
 		this.panel.setTabIndex(0);
 		this.form.setMargin(new MarginInfo(false, false, true, false));
@@ -524,6 +525,8 @@ public class ProjectLinePopup extends XdevView {
 		this.txtPrlRate.setRequired(true);
 		this.lblPrlText.setValue(StringResourceUtils.optLocalizeString("{$lblPrlText.value}", this));
 		this.txtPrlText.setMaxLength(384);
+		this.txtPrlText
+				.addValidator(new StringLengthValidator("Der Text kann maximall 380 Zeichen lang sein.", null, 380, true));
 		this.lblPrlWorkType.setValue(StringResourceUtils.optLocalizeString("{$lblPrlWorkType.value}", this));
 		this.lblPrlState.setValue(StringResourceUtils.optLocalizeString("{$lblPrlState.value}", this));
 		this.horizontalLayout.setMargin(new MarginInfo(false));
@@ -589,7 +592,7 @@ public class ProjectLinePopup extends XdevView {
 		this.fieldGroup.bind(this.datePrlReportDateFrom, ProjectLine_.prlTimeFrom.getName());
 		this.fieldGroup.bind(this.datePrlReportDateTo, ProjectLine_.prlTimeTo.getName());
 		this.fieldGroup.bind(this.comboBoxState, ProjectLine_.prlState.getName());
-	
+
 		this.cmdSave.setSizeUndefined();
 		this.horizontalLayout.addComponent(this.cmdSave);
 		this.horizontalLayout.setComponentAlignment(this.cmdSave, Alignment.MIDDLE_LEFT);
@@ -705,7 +708,7 @@ public class ProjectLinePopup extends XdevView {
 		this.panel.setSizeFull();
 		this.setContent(this.panel);
 		this.setSizeFull();
-	
+
 		this.datePrlReportDateFrom.addValueChangeListener(event -> this.datePrlReportDateFrom_valueChange(event));
 		this.btnSearch.addClickListener(event -> this.btnSearch_buttonClick(event));
 		this.cmdSave.addClickListener(event -> this.cmdSave_buttonClick(event));

@@ -6,8 +6,6 @@ import java.util.TimeZone;
 
 import com.vaadin.annotations.Push;
 import com.vaadin.annotations.Theme;
-import com.vaadin.external.org.slf4j.Logger;
-import com.vaadin.external.org.slf4j.LoggerFactory;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.shared.communication.PushMode;
@@ -34,8 +32,7 @@ import ch.xwr.seicentobilling.entities.Company;
 @Theme("SeicentoBilling")
 public class PhoneUI extends XdevUI {
 	/** Logger initialized */
-	private static final Logger LOG = LoggerFactory.getLogger(PhoneUI.class);
-
+	private static final org.apache.log4j.Logger LOG = org.apache.log4j.Logger.getLogger(PhoneUI.class);
 	private AzureUser currentUser;
 
 	public PhoneUI() {
