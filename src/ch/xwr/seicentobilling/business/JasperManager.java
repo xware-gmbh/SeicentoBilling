@@ -12,7 +12,6 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -23,7 +22,6 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 
 import ch.xwr.seicentobilling.dal.CompanyDAO;
 import ch.xwr.seicentobilling.dal.EntityDAO;
-import ch.xwr.seicentobilling.dal.PeriodeDAO;
 import ch.xwr.seicentobilling.dal.RowObjectDAO;
 import ch.xwr.seicentobilling.dal.RowParameterDAO;
 import ch.xwr.seicentobilling.entities.Company;
@@ -37,6 +35,7 @@ public class JasperManager {
 	/** Logger initialized */
 	private static final org.apache.log4j.Logger _logger = org.apache.log4j.Logger.getLogger(JasperManager.class);
 
+	private Periode selectedPeriod = null;
 	private final List<String> keys = new ArrayList<>();
 	private final List<String> values = new ArrayList<>();
 
@@ -198,24 +197,7 @@ public class JasperManager {
 	}
 
 	private long getPeriode(final Order oBean) {
-		final PeriodeDAO dao = new PeriodeDAO();
-		final List<Periode> li = dao.findByCostAccount(Seicento.getLoggedInCostAccount());
-
-		final Calendar now = Calendar.getInstance(); // Gets the current date
-		now.setTime(oBean.getOrdBillDate());
-		int imonth = now.get(Calendar.MONTH);  //-1
-		if (imonth == 0) {
-			imonth = 12;
-		}
-
-		for (final Periode periode : li) {
-			if (periode.getPerMonth().ordinal() == imonth) {
-				return periode.getPerId();
-			}
-		}
-
-		_logger.warn("No valid Periode found for " + Seicento.getLoggedInCostAccount() + " ignoring Workreprot!");
-		return 0;
+		return getSelectedPeriod().getPerId();
 	}
 
 	private void resetParams() {
@@ -433,6 +415,14 @@ public class JasperManager {
 
     	return rooBean;
     }
+
+	public Periode getSelectedPeriod() {
+		return this.selectedPeriod;
+	}
+
+	public void setSelectedPeriod(final Periode selectedPeriod) {
+		this.selectedPeriod = selectedPeriod;
+	}
 
 //	private void downloadToWS(final String name) {
 //		final File inp = new File(name);
