@@ -7,6 +7,7 @@
 <?import ch.xwr.seicentobilling.entities.Periode?>
 <?import ch.xwr.seicentobilling.entities.Project?>
 <?import ch.xwr.seicentobilling.entities.ProjectLine?>
+<?import com.vaadin.data.validator.StringLengthValidator?>
 <?import com.xdev.ui.XdevButton?>
 <?import com.xdev.ui.XdevFieldGroup?>
 <?import com.xdev.ui.XdevGridLayout?>
@@ -22,7 +23,7 @@
     <x:constraints zpos="0" width="100%" height="100%" />
     <XdevPanel caption="Rapportzeile bearbeiten" tabIndex="0" x:name="panel">
         <x:constraints gridHeight="1" gridx="1" zpos="0" gridy="1" weighty="0.0" weightx="0.0" width="100%" alignment="TOP_LEFT" gridWidth="1" height="100%" />
-        <XdevGridLayout x:name="form">
+        <XdevGridLayout x:name="form" margin="b">
             <x:constraints zpos="0" width="100%" height="100%" />
             <XdevLabel x:name="lblPeriode" value="{$lblPeriode.value}">
                 <x:constraints gridx="1" gridy="1" weighty="0.0" weightx="0.0" width="0px" height="-1px" />
@@ -84,6 +85,7 @@
             </XdevLabel>
             <XdevTextField columns="5" x:name="txtPrlText" maxLength="384">
                 <x:constraints gridx="2" gridy="5" weighty="0.0" weightx="0.1" width="100%" gridWidth="3" height="0px" />
+                <x:validator x:type="StringLengthValidator" message="Der Text kann maximall 380 Zeichen lang sein." max="380" />
             </XdevTextField>
             <XdevLabel x:name="lblPrlWorkType" value="{$lblPrlWorkType.value}">
                 <x:constraints gridx="1" gridy="6" weighty="0.0" weightx="0.0" width="0px" height="-1px" />

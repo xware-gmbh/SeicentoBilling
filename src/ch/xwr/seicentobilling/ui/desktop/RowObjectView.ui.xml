@@ -57,28 +57,28 @@
                     </x:fields>
                 </XdevFieldGroup>
                 <XdevLabel x:name="lblObjId" value="{$lblObjId.value}">
-                    <x:constraints gridx="1" gridy="1" weighty="0.0" weightx="0.0" />
+                    <x:constraints gridx="1" gridy="1" weighty="0.0" weightx="0.0" width="0px" height="0px" />
                 </XdevLabel>
                 <XdevTextField columns="5" tabIndex="1" x:name="txtObjId">
-                    <x:constraints gridx="2" gridy="1" weighty="0.0" weightx="0.6" />
+                    <x:constraints gridx="2" gridy="1" weighty="0.0" weightx="0.6" width="0px" height="0px" />
                 </XdevTextField>
                 <XdevLabel x:name="lblObjAdded" value="{$lblObjAdded.value}">
-                    <x:constraints gridx="3" gridy="1" weighty="0.0" weightx="0.0" />
+                    <x:constraints gridx="3" gridy="1" weighty="0.0" weightx="0.0" width="0px" height="0px" />
                 </XdevLabel>
-                <XdevPopupDateField tabIndex="5" x:name="dateObjAdded">
-                    <x:constraints gridx="4" gridy="1" weighty="0.0" weightx="0.9" width="100%" />
+                <XdevPopupDateField tabIndex="5" resolution="com.vaadin.shared.ui.datefield.Resolution.SECOND" x:name="dateObjAdded">
+                    <x:constraints gridx="4" gridy="1" weighty="0.0" weightx="0.9" width="100%" height="0px" />
                 </XdevPopupDateField>
                 <XdevLabel x:name="lblObjDeleted" value="{$lblObjDeleted.value}">
-                    <x:constraints gridx="5" gridy="1" weighty="0.0" weightx="0.0" />
+                    <x:constraints gridx="5" gridy="1" weighty="0.0" weightx="0.0" width="0px" height="0px" />
                 </XdevLabel>
-                <XdevPopupDateField tabIndex="9" x:name="dateObjDeleted">
-                    <x:constraints gridx="6" gridy="1" weighty="0.0" weightx="0.8" width="100%" />
+                <XdevPopupDateField tabIndex="9" resolution="com.vaadin.shared.ui.datefield.Resolution.SECOND" x:name="dateObjDeleted">
+                    <x:constraints gridx="6" gridy="1" weighty="0.0" weightx="0.8" width="100%" height="0px" />
                 </XdevPopupDateField>
                 <XdevLabel x:name="lblEntity" value="{$lblEntity.value}">
-                    <x:constraints gridx="1" gridy="2" weighty="0.0" weightx="0.0" />
+                    <x:constraints gridx="1" gridy="2" weighty="0.0" weightx="0.0" width="0px" height="0px" />
                 </XdevLabel>
                 <XdevComboBox tabIndex="2" x:name="cmbEntity" x:entity="Entity">
-                    <x:constraints gridx="2" gridy="2" weighty="0.0" weightx="0.6" />
+                    <x:constraints gridx="2" gridy="2" weighty="0.0" weightx="0.6" width="0px" height="0px" />
                     <x:entityProperty>
                         <entry type="String" property="entName" />
                     </x:entityProperty>
@@ -88,34 +88,34 @@
                     <x:data methodName="findAll" />
                 </XdevComboBox>
                 <XdevLabel x:name="lblObjAddedBy" value="{$lblObjAddedBy.value}">
-                    <x:constraints gridx="3" gridy="2" weighty="0.0" weightx="0.0" />
+                    <x:constraints gridx="3" gridy="2" weighty="0.0" weightx="0.0" width="0px" height="0px" />
                 </XdevLabel>
                 <XdevTextField columns="5" tabIndex="6" x:name="txtObjAddedBy">
-                    <x:constraints gridx="4" gridy="2" weighty="0.0" weightx="0.9" width="100%" />
+                    <x:constraints gridx="4" gridy="2" weighty="0.0" weightx="0.9" width="100%" height="0px" />
                 </XdevTextField>
                 <XdevLabel x:name="lblObjDeletedBy" value="{$lblObjDeletedBy.value}">
-                    <x:constraints gridx="5" gridy="2" weighty="0.0" weightx="0.0" />
+                    <x:constraints gridx="5" gridy="2" weighty="0.0" weightx="0.0" width="0px" height="0px" />
                 </XdevLabel>
                 <XdevTextField columns="5" tabIndex="10" x:name="txtObjDeletedBy">
-                    <x:constraints gridx="6" gridy="2" weighty="0.0" weightx="0.8" width="100%" />
+                    <x:constraints gridx="6" gridy="2" weighty="0.0" weightx="0.8" width="100%" height="0px" />
                 </XdevTextField>
                 <XdevLabel x:name="lblObjRowId" value="{$lblObjRowId.value}">
-                    <x:constraints gridx="1" gridy="3" weighty="0.0" weightx="0.0" />
+                    <x:constraints gridx="1" gridy="3" weighty="0.0" weightx="0.0" width="0px" height="0px" />
                 </XdevLabel>
                 <XdevTextField columns="5" tabIndex="3" x:name="txtObjRowId">
-                    <x:constraints gridx="2" gridy="3" weighty="0.0" weightx="0.6" />
+                    <x:constraints gridx="2" gridy="3" weighty="0.0" weightx="0.6" width="0px" height="0px" />
                 </XdevTextField>
                 <XdevLabel x:name="lblObjChanged" value="{$lblObjChanged.value}">
-                    <x:constraints gridx="3" gridy="3" weighty="0.0" weightx="0.0" />
+                    <x:constraints gridx="3" gridy="3" weighty="0.0" weightx="0.0" width="0px" height="0px" />
                 </XdevLabel>
-                <XdevPopupDateField tabIndex="7" x:name="dateObjChanged">
-                    <x:constraints gridx="4" gridy="3" weighty="0.0" weightx="0.9" width="100%" />
+                <XdevPopupDateField tabIndex="7" resolution="com.vaadin.shared.ui.datefield.Resolution.SECOND" x:name="dateObjChanged">
+                    <x:constraints gridx="4" gridy="3" weighty="0.0" weightx="0.9" width="100%" height="0px" />
                 </XdevPopupDateField>
                 <XdevLabel x:name="lblDatabaseVersion" value="{$lblDatabaseVersion.value}">
-                    <x:constraints gridx="5" gridy="3" weighty="0.0" weightx="0.0" />
+                    <x:constraints gridx="5" gridy="3" weighty="0.0" weightx="0.0" width="0px" height="0px" />
                 </XdevLabel>
                 <XdevComboBox tabIndex="11" x:name="cmbDatabaseVersion" x:entity="DatabaseVersion">
-                    <x:constraints gridx="6" gridy="3" weighty="0.0" weightx="0.8" width="100%" />
+                    <x:constraints gridx="6" gridy="3" weighty="0.0" weightx="0.8" width="100%" height="0px" />
                     <x:entityProperty>
                         <entry type="String" property="dbvMicro" />
                     </x:entityProperty>
@@ -125,47 +125,47 @@
                     <x:data methodName="findAll" />
                 </XdevComboBox>
                 <XdevLabel x:name="lblObjChngcnt" value="{$lblObjChngcnt.value}">
-                    <x:constraints gridx="1" gridy="4" weighty="0.0" weightx="0.0" />
+                    <x:constraints gridx="1" gridy="4" weighty="0.0" weightx="0.0" width="0px" height="0px" />
                 </XdevLabel>
                 <XdevTextField columns="5" tabIndex="4" x:name="txtObjChngcnt">
-                    <x:constraints gridx="2" gridy="4" weighty="0.0" weightx="0.6" />
+                    <x:constraints gridx="2" gridy="4" weighty="0.0" weightx="0.6" width="0px" height="0px" />
                 </XdevTextField>
                 <XdevLabel x:name="lblObjChangedBy" value="{$lblObjChangedBy.value}">
-                    <x:constraints gridx="3" gridy="4" weighty="0.0" weightx="0.0" />
+                    <x:constraints gridx="3" gridy="4" weighty="0.0" weightx="0.0" width="0px" height="0px" />
                 </XdevLabel>
                 <XdevTextField columns="5" tabIndex="8" x:name="txtObjChangedBy">
-                    <x:constraints gridx="4" gridy="4" weighty="0.0" weightx="0.9" width="100%" />
+                    <x:constraints gridx="4" gridy="4" weighty="0.0" weightx="0.9" width="100%" height="0px" />
                 </XdevTextField>
                 <XdevLabel x:name="lblObjState" value="{$lblObjState.value}">
-                    <x:constraints gridx="5" gridy="4" weighty="0.0" weightx="0.0" />
+                    <x:constraints gridx="5" gridy="4" weighty="0.0" weightx="0.0" width="0px" height="0px" />
                 </XdevLabel>
                 <XdevTextField columns="5" tabIndex="12" x:name="txtObjState">
-                    <x:constraints gridx="6" gridy="4" weighty="0.0" weightx="0.8" width="100%" />
+                    <x:constraints gridx="6" gridy="4" weighty="0.0" weightx="0.8" width="100%" height="0px" />
                 </XdevTextField>
             </XdevGridLayout>
         </XdevPanel>
-        <XdevTabSheet styleName="framed" x:name="tabSheet" x:selectedTabIndex="1">
+        <XdevTabSheet styleName="framed" x:name="tabSheet" x:selectedTabIndex="0">
             <x:constraints splitPos="SECOND" width="100%" height="100%" />
             <XdevVerticalLayout caption="Text" x:name="verticalLayoutText">
                 <x:constraints width="100%" height="100%" />
                 <XdevHorizontalLayout spacing="false" x:name="horizontalLayout2" margin="r">
-                    <x:constraints weighty="0.0" width="100%" />
+                    <x:constraints weighty="0.0" width="100%" height="0px" />
                     <XdevButton icon="WebContent/WEB-INF/resources/images/new1_16.png" caption="New" x:name="cmdNewText">
-                        <x:constraints weightx="0.0" />
+                        <x:constraints weightx="0.0" width="0px" height="0px" />
                         <x:event>click.buttonClick</x:event>
                     </XdevButton>
                     <XdevButton icon="WebContent/WEB-INF/resources/images/delete3_16.png" caption="{$cmdDeleteText.caption}" x:name="cmdDeleteText">
-                        <x:constraints weightx="0.0" />
+                        <x:constraints weightx="0.0" width="0px" height="0px" />
                         <x:event>click.buttonClick</x:event>
                     </XdevButton>
                     <XdevButton icon="WebContent/WEB-INF/resources/images/edit1.png" caption="{$cmdUpdateText.caption}" x:name="cmdUpdateText">
-                        <x:constraints weightx="0.0" />
+                        <x:constraints weightx="0.0" width="0px" height="0px" />
                         <x:event>click.buttonClick</x:event>
                     </XdevButton>
                 </XdevHorizontalLayout>
                 <XdevTable x:name="tableText" x:entity="RowText">
                     <x:entityProperties>
-                        <entry type="Integer" property="txtNumber" caption="Nbr" />
+                        <entry type="Integer" property="txtNumber" caption="Nbr" width="60" />
                         <entry type="String" property="txtFreetext" caption="Text" />
                         <entry type="Language" property="language" caption="Sprache" />
                         <entry type="State" property="txtState" caption="Status" />
@@ -180,23 +180,23 @@
             <XdevVerticalLayout caption="Dateien" x:name="verticalLayoutFile">
                 <x:constraints width="100%" height="100%" />
                 <XdevHorizontalLayout spacing="false" x:name="actionLayout" margin="r">
-                    <x:constraints weighty="0.0" alignment="MIDDLE_LEFT" />
+                    <x:constraints weighty="0.0" width="0px" alignment="MIDDLE_LEFT" height="0px" />
                     <XdevButton icon="WebContent/WEB-INF/resources/images/new1_16.png" caption="{$cmdNewFile.caption}" x:name="cmdNewFile">
-                        <x:constraints weightx="0.0" alignment="MIDDLE_LEFT" />
+                        <x:constraints weightx="0.0" width="0px" alignment="MIDDLE_LEFT" height="0px" />
                         <x:event>click.buttonClick</x:event>
                     </XdevButton>
                     <XdevButton icon="WebContent/WEB-INF/resources/images/delete3_16.png" caption="{$cmdDeleteFile.caption}" x:name="cmdDeleteFile">
-                        <x:constraints weightx="0.0" />
+                        <x:constraints weightx="0.0" width="0px" height="0px" />
                         <x:event>click.buttonClick</x:event>
                     </XdevButton>
                     <XdevButton icon="WebContent/WEB-INF/resources/images/edit1.png" caption="{$cmdUpdateFile.caption}" x:name="cmdUpdateFile">
-                        <x:constraints weightx="0.0" />
+                        <x:constraints weightx="0.0" width="0px" height="0px" />
                         <x:event>click.buttonClick</x:event>
                     </XdevButton>
                 </XdevHorizontalLayout>
                 <XdevTable x:name="tableRowImage" x:entity="RowImage">
                     <x:entityProperties>
-                        <entry type="int" property="rimNumber" caption="Nbr" />
+                        <entry type="int" property="rimNumber" caption="Nbr" width="60" />
                         <entry type="String" property="rimName" caption="Name" />
                         <entry type="String" property="rimSize" caption="Grösse" />
                         <entry type="short" property="rimType" caption="Typ" />
@@ -214,17 +214,17 @@
             <XdevVerticalLayout caption="Parameter" x:name="verticalLayoutParam">
                 <x:constraints width="100%" height="100%" />
                 <XdevHorizontalLayout spacing="false" x:name="actionLayoutParam" margin="r">
-                    <x:constraints top="-148px" left="971px" weighty="0.0" alignment="MIDDLE_LEFT" />
+                    <x:constraints top="-148px" left="971px" weighty="0.0" width="0px" alignment="MIDDLE_LEFT" height="0px" />
                     <XdevButton icon="WebContent/WEB-INF/resources/images/new1_16.png" caption="{$cmdNewFile.caption}" x:name="cmdNewParam">
-                        <x:constraints weightx="0.0" alignment="MIDDLE_LEFT" />
+                        <x:constraints weightx="0.0" width="0px" alignment="MIDDLE_LEFT" height="0px" />
                         <x:event>click.buttonClick</x:event>
                     </XdevButton>
                     <XdevButton icon="WebContent/WEB-INF/resources/images/delete3_16.png" caption="{$cmdDeleteFile.caption}" x:name="cmdDeleteParam">
-                        <x:constraints weightx="0.0" />
+                        <x:constraints weightx="0.0" width="0px" height="0px" />
                         <x:event>click.buttonClick</x:event>
                     </XdevButton>
                     <XdevButton icon="WebContent/WEB-INF/resources/images/edit1.png" caption="{$cmdUpdateFile.caption}" x:name="cmdUpdateParam">
-                        <x:constraints weightx="0.0" />
+                        <x:constraints weightx="0.0" width="0px" height="0px" />
                         <x:event>click.buttonClick</x:event>
                     </XdevButton>
                 </XdevHorizontalLayout>

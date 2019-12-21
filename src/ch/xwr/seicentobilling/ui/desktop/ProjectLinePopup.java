@@ -1,9 +1,6 @@
 package ch.xwr.seicentobilling.ui.desktop;
 
 import java.text.DecimalFormat;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
@@ -11,6 +8,7 @@ import java.util.Iterator;
 import org.apache.poi.ss.formula.functions.T;
 
 import com.vaadin.data.Property;
+import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.ui.MarginInfo;
@@ -40,6 +38,7 @@ import com.xdev.util.ConverterBuilder;
 
 import ch.xwr.seicentobilling.business.LovState;
 import ch.xwr.seicentobilling.business.RowObjectManager;
+import ch.xwr.seicentobilling.business.helper.ProjectLineHelper;
 import ch.xwr.seicentobilling.dal.PeriodeDAO;
 import ch.xwr.seicentobilling.dal.ProjectDAO;
 import ch.xwr.seicentobilling.dal.ProjectLineDAO;
@@ -378,35 +377,23 @@ public class ProjectLinePopup extends XdevView {
 		Date d1 = this.datePrlReportDate.getValue();
 		Date dateFrom = this.datePrlReportDateFrom.getValue();
 		Date dateTo = this.datePrlReportDateTo.getValue();
+		final ProjectLineHelper hlp = new ProjectLineHelper();
 
 		if (d1 == null) {
 			d1 = new Date();
 		}
 
 		if (dateFrom != null) {
-			dateFrom = getDateCorrect(d1, dateFrom);
+			dateFrom = hlp.getDateCorrect(d1, dateFrom);
 			this.datePrlReportDateFrom.setValue(dateFrom);
 		}
 		if (dateTo != null) {
-			dateTo = getDateCorrect(d1, dateTo);
+			dateTo = hlp.getDateCorrect(d1, dateTo);
 			if (dateFrom != null && dateTo.before(dateFrom)) {
 				dateTo = dateFrom;
 			}
 			this.datePrlReportDateTo.setValue(dateTo);
 		}
-	}
-
-	private Date getDateCorrect(final Date d1, final Date dateTm) {
-		final Calendar c1 = Calendar.getInstance();
-		c1.setTime(d1);
-		final Calendar c2 = Calendar.getInstance();
-		c2.setTime(dateTm);
-
-		c2.set(Calendar.YEAR, c1.get(Calendar.YEAR));
-		c2.set(Calendar.MONTH, c1.get(Calendar.MONTH));
-		c2.set(Calendar.DAY_OF_MONTH, c1.get(Calendar.DAY_OF_MONTH));
-
-		return c2.getTime();
 	}
 
 	/**
@@ -431,19 +418,8 @@ public class ProjectLinePopup extends XdevView {
 			return;
 		}
 
-		final Instant instant1 = fromHH.toInstant();
-		final Instant instant2 = toHH.toInstant();
-		final long mins = ChronoUnit.MINUTES.between(instant1, instant2);
-		double hours = ChronoUnit.HOURS.between(instant1, instant2);
-
-		final int minutes = (int)(mins - (hours * 60));
-
-		//convert to decimal
-		double dec = 0.;
-		if (minutes != 0) {
-			dec =(100. / (60. / minutes) / 100.);
-		}
-		hours = hours + dec;
+		final ProjectLineHelper hlp = new ProjectLineHelper();
+		final double hours = hlp.calcDurationFromTime(fromHH, toHH);
 
 		this.txtPrlHours.setValue(new DecimalFormat("####.##").format(hours));
 	}
@@ -460,25 +436,15 @@ public class ProjectLinePopup extends XdevView {
 		if (d1 == null) {
 			return;
 		}
-		final Calendar c1 = Calendar.getInstance();
-		c1.setTime(d1);
-		final Calendar c2 = Calendar.getInstance();
-		final Date d2 = new Date();  //now
-		c2.setTime(d2);
 
-		final int iminutes = c2.get(Calendar.MINUTE);
-		final Calendar c3 = Calendar.getInstance();
-		c3.set(c1.get(Calendar.YEAR), c1.get(Calendar.MONTH), c1.get(Calendar.DAY_OF_MONTH), c2.get(Calendar.HOUR_OF_DAY), iminutes);
-		final int mod = iminutes % 5;
-		c3.add(Calendar.MINUTE, iminutes == 0 ? -5 : -mod);
-		c3.set(Calendar.SECOND, 0);
-		c3.set(Calendar.MILLISECOND, 0);
+		final ProjectLineHelper hlp = new ProjectLineHelper();
+		final Date retDate = hlp.getStartStopTime(d1);
 
 		if (this.datePrlReportDateFrom.getValue() == null ) {
-			this.datePrlReportDateFrom.setValue(c3.getTime());
+			this.datePrlReportDateFrom.setValue(retDate);
 		} else {
 			if (this.datePrlReportDateTo.getValue() == null ) {
-				this.datePrlReportDateTo.setValue(c3.getTime());
+				this.datePrlReportDateTo.setValue(retDate);
 			}
 		}
 
@@ -531,6 +497,7 @@ public class ProjectLinePopup extends XdevView {
 
 		this.panel.setCaption("Rapportzeile bearbeiten");
 		this.panel.setTabIndex(0);
+		this.form.setMargin(new MarginInfo(false, false, true, false));
 		this.lblPeriode.setValue(StringResourceUtils.optLocalizeString("{$lblPeriode.value}", this));
 		this.cmbPeriode.setContainerDataSource(Periode.class);
 		this.cmbPeriode.setItemCaptionPropertyId(Periode_.perName.getName());
@@ -558,6 +525,8 @@ public class ProjectLinePopup extends XdevView {
 		this.txtPrlRate.setRequired(true);
 		this.lblPrlText.setValue(StringResourceUtils.optLocalizeString("{$lblPrlText.value}", this));
 		this.txtPrlText.setMaxLength(384);
+		this.txtPrlText
+				.addValidator(new StringLengthValidator("Der Text kann maximall 380 Zeichen lang sein.", null, 380, true));
 		this.lblPrlWorkType.setValue(StringResourceUtils.optLocalizeString("{$lblPrlWorkType.value}", this));
 		this.lblPrlState.setValue(StringResourceUtils.optLocalizeString("{$lblPrlState.value}", this));
 		this.horizontalLayout.setMargin(new MarginInfo(false));

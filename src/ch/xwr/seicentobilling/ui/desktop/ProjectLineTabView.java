@@ -64,6 +64,7 @@ import ch.xwr.seicentobilling.entities.Project_;
 public class ProjectLineTabView extends XdevView {
 	/** Logger initialized */
 	private static final Logger LOG = LoggerFactory.getLogger(ProjectLineTabView.class);
+	private Periode currentPeriode = null;
 
 	/**
 	 *
@@ -148,6 +149,14 @@ public class ProjectLineTabView extends XdevView {
 	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
 	 */
 	private void table_valueChange(final Property.ValueChangeEvent event) {
+		Periode bean = (Periode) event.getProperty().getValue();
+		if (bean == null) {
+			bean =  this.currentPeriode ;
+			this.table.select(bean);
+		} else {
+			this.currentPeriode = bean;
+		}
+
 		reloadTableLineList();
 		setROFields();
 
@@ -614,11 +623,14 @@ public class ProjectLineTabView extends XdevView {
 
 		final List<ProjectLine> ls = new ProjectLineDAO().findByPeriode(per);
 		for (final ProjectLine pln : ls) {
-			cal.setTime(pln.getPrlReportDate());
-			final int iday = cal.get(Calendar.DAY_OF_MONTH);
+			if (!pln.getPrlWorkType().equals(LovState.WorkType.expense)) {
+				//do not add expenses
+				cal.setTime(pln.getPrlReportDate());
+				final int iday = cal.get(Calendar.DAY_OF_MONTH);
 
-			hours[iday] = hours[iday] + pln.getPrlHours();
-			totalm = totalm + pln.getPrlHours();
+				hours[iday] = hours[iday] + pln.getPrlHours();
+				totalm = totalm + pln.getPrlHours();
+			}
 		}
 
 		initOverviewGrids(totalm);

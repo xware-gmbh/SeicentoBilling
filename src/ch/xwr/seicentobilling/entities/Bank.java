@@ -34,10 +34,6 @@ public class Bank implements java.io.Serializable {
 	private Short bnkState;
 	private String bnkEsrTn;
 	private Long bnkCustomernbr;
-	private String bnkClearing;
-	private String bnkSwift;
-	private String bnkZip;
-
 	public Bank() {
 	}
 
@@ -133,36 +129,6 @@ public class Bank implements java.io.Serializable {
 
 	public void setBnkCustomernbr(final Long bnkCustomernbr) {
 		this.bnkCustomernbr = bnkCustomernbr;
-	}
-
-	@Caption("BnkClearing")
-	@Column(name = "bnkClearing", columnDefinition = "varchar", length = 50)
-	public String getBnkClearing() {
-		return this.bnkClearing;
-	}
-
-	public void setBnkClearing(final String bnkClearing) {
-		this.bnkClearing = bnkClearing;
-	}
-
-	@Caption("BnkSwift")
-	@Column(name = "bnkSwift", columnDefinition = "varchar", length = 50)
-	public String getBnkSwift() {
-		return this.bnkSwift;
-	}
-
-	public void setBnkSwift(final String bnkSwift) {
-		this.bnkSwift = bnkSwift;
-	}
-
-	@Caption("BnkZip")
-	@Column(name = "bnkZip", columnDefinition = "varchar", length = 50)
-	public String getBnkZip() {
-		return this.bnkZip;
-	}
-
-	public void setBnkZip(final String bnkZip) {
-		this.bnkZip = bnkZip;
 	}
 
 }

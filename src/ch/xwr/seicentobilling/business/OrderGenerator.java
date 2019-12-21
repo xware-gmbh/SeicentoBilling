@@ -6,9 +6,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-import com.vaadin.external.org.slf4j.Logger;
-import com.vaadin.external.org.slf4j.LoggerFactory;
-
 import ch.xwr.seicentobilling.business.model.billing.BillDto;
 import ch.xwr.seicentobilling.business.model.billing.BillLine;
 import ch.xwr.seicentobilling.business.model.billing.GuiGeneratorFields;
@@ -25,7 +22,7 @@ public class OrderGenerator {
 	private OrderCalculator _calc = null;
 	private GuiGeneratorFields _guifld = null;
 	/** Logger initialized */
-	private static final Logger _logger = LoggerFactory.getLogger(OrderGenerator.class);
+	private static final org.apache.log4j.Logger _logger = org.apache.log4j.Logger.getLogger(OrderGenerator.class);
 
 
 	public List<BillDto> proposeDraft(final Periode inp) {
@@ -188,6 +185,11 @@ public class OrderGenerator {
 
 				final OrderLine newodl = this._calc.calculateLine(pos);
 				dao.save(newodl);
+
+				//create objRoot
+				final RowObjectManager man = new RowObjectManager();
+				man.updateObject(newodl.getOdlId(), newodl.getClass().getSimpleName());
+
 			}
 
 		}

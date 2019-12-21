@@ -18,9 +18,6 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.jfree.util.Log;
 
-import com.vaadin.external.org.slf4j.Logger;
-import com.vaadin.external.org.slf4j.LoggerFactory;
-
 import ch.xwr.seicentobilling.business.LovCrm.BillReport;
 import ch.xwr.seicentobilling.business.LovCrm.BillTarget;
 import ch.xwr.seicentobilling.business.LovCrm.Department;
@@ -46,7 +43,7 @@ import ch.xwr.seicentobilling.entities.PaymentCondition;
 
 public class CrmExcelHandler {
 	/** Logger initialized */
-	private static final Logger LOG = LoggerFactory.getLogger(CrmExcelHandler.class);
+	private static final org.apache.log4j.Logger LOG = org.apache.log4j.Logger.getLogger(CrmExcelHandler.class);
 
 	/** the workbook */
 	protected XSSFWorkbook hssfworkbook = null;

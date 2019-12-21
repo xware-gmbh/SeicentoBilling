@@ -8,14 +8,14 @@
 <?import com.xdev.ui.XdevView?>
 <?import com.xdev.ui.entitycomponent.table.XdevTable?>
 <?import java.lang.String?>
-<XdevView xmlns:x="http://xml.xdev-software.com/xdevuiml" x:name="PeriodeView">
+<XdevView xmlns:x="http://xml.xdev-software.com/xdevuiml" styleName="large" x:name="PeriodeView">
     <x:constraints zpos="0" width="100%" height="100%" />
-    <XdevVerticalLayout spacing="false" x:name="verticalLayout" margin="">
+    <XdevVerticalLayout styleName="large" spacing="false" x:name="verticalLayout" margin="">
         <x:constraints zpos="0" width="100%" height="100%" />
         <x:event>attach.attach</x:event>
-        <XdevTable x:name="table" x:entity="Periode" x:autoQuery="false">
+        <XdevTable x:name="table" x:entity="Periode" styleName="large" x:autoQuery="false">
             <x:entityProperties>
-                <entry type="String" property="perName" caption="Periode" />
+                <entry type="String" property="perName" caption="offene Perioden" />
             </x:entityProperties>
             <x:constraints weighty="1.0" width="100%" height="100%" />
             <x:typeArguments>
