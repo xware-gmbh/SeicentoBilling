@@ -43,6 +43,7 @@
 		<class>ch.xwr.seicentobilling.entities.Address</class>
 		<class>ch.xwr.seicentobilling.entities.CustomerLink</class>
 		<class>ch.xwr.seicentobilling.entities.ContactRelation</class>
+		<class>ch.xwr.seicentobilling.entities.Conversion</class>
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
 		<properties>
 			<property name="hibernate.hbm2ddl.auto" value="" />

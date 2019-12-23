@@ -50,6 +50,8 @@ public class Company implements java.io.Serializable {
 	private String cmpAbaUser;
 	private Integer cmpAbaMandator;
 	private Integer cmpAbaMaxDays;
+	private String cmpAbaEndpointCre;
+	private String cmpAbaEndpointCreDoc;
 
 	public Company() {
 	}
@@ -267,7 +269,7 @@ public class Company implements java.io.Serializable {
 		this.cmpState = noname;
 	}
 
-	@Caption("Schnittstelle Aktiv")
+	@Caption("Schnittstelle BuHa Aktiv")
 	@Column(name = "cmpAbaActive", columnDefinition = "bit")
 	public Boolean getCmpAbaActive() {
 		return this.cmpAbaActive;
@@ -317,7 +319,7 @@ public class Company implements java.io.Serializable {
 		this.cmpAbaMandator = noname;
 	}
 
-	@Caption("Tage max")
+	@Caption("Max. Frist Tage Rechnung")
 	@Column(name = "cmpAbaMaxDays", columnDefinition = "int")
 	public Integer getCmpAbaMaxDays() {
 		return this.cmpAbaMaxDays;
@@ -325,6 +327,26 @@ public class Company implements java.io.Serializable {
 
 	public void setCmpAbaMaxDays(final Integer noname) {
 		this.cmpAbaMaxDays = noname;
+	}
+
+	@Caption("Endpoint Kredi")
+	@Column(name = "cmpAbaEndpointCre", columnDefinition = "nvarchar", length = 256)
+	public String getCmpAbaEndpointCre() {
+		return this.cmpAbaEndpointCre;
+	}
+
+	public void setCmpAbaEndpointCre(final String noname) {
+		this.cmpAbaEndpointCre = noname;
+	}
+
+	@Caption("Endpoint DokuKredi")
+	@Column(name = "cmpAbaEndpointCreDoc", columnDefinition = "nvarchar", length = 256)
+	public String getCmpAbaEndpointCreDoc() {
+		return this.cmpAbaEndpointCreDoc;
+	}
+
+	public void setCmpAbaEndpointCreDoc(final String noname) {
+		this.cmpAbaEndpointCreDoc = noname;
 	}
 
 }

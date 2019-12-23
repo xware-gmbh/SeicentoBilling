@@ -1,0 +1,6 @@
+import ch.xwr.seicentobilling.entities.Conversion
+
+findByValue(String groups, String subgroup, String key)
+{
+	select * from Conversion where cnvGroup = :groups and  cnvSubGroup = :subgroup and cnvValueIn = :key
+}

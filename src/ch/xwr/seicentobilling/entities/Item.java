@@ -44,6 +44,7 @@ public class Item implements java.io.Serializable {
 	private Set<OrderLine> orderLines = new HashSet<>(0);
 	@SuppressWarnings("unused")
 	private String prpShortName;
+	private Double itmAccount;
 
 	public Item() {
 	}
@@ -163,6 +164,16 @@ public class Item implements java.io.Serializable {
 
 	public void setPrpShortName(final String noname) {
 		this.prpShortName = noname;
+	}
+
+	@Caption("Konto")
+	@Column(name = "itmAccount", precision = 10, scale = 3, columnDefinition = "numeric")
+	public Double getItmAccount() {
+		return this.itmAccount;
+	}
+
+	public void setItmAccount(final Double noname) {
+		this.itmAccount = noname;
 	}
 
 }
