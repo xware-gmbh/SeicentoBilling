@@ -90,7 +90,7 @@
                         <x:constraints gridx="1" gridy="3" weighty="0.0" weightx="0.0" width="0px" height="0px" />
                     </XdevLabel>
                     <XdevTextField columns="5" x:name="txtCmpZip">
-                        <x:constraints gridx="2" gridy="3" weighty="0.0" weightx="1.0" width="100%" height="0px" />
+                        <x:constraints gridx="2" gridy="3" weighty="0.0" weightx="1.0" width="-1px" height="0px" />
                     </XdevTextField>
                     <XdevLabel x:name="lblCmpPlace" value="{$lblCmpPlace.value}">
                         <x:constraints gridx="1" gridy="4" weighty="0.0" weightx="0.0" width="0px" height="0px" />
@@ -98,47 +98,41 @@
                     <XdevTextField columns="5" x:name="txtCmpPlace">
                         <x:constraints gridx="2" gridy="4" weighty="0.0" weightx="1.0" width="100%" height="0px" />
                     </XdevTextField>
-                    <XdevLabel description="Wird nicht mehr verwendet. UID benutzen" x:name="lblCmpVatcode" value="{$lblCmpVatcode.value}">
+                    <XdevLabel x:name="lblCmpCurrency" value="{$lblCmpCurrency.value}">
                         <x:constraints gridx="1" gridy="5" weighty="0.0" weightx="0.0" width="0px" height="0px" />
                     </XdevLabel>
-                    <XdevTextField columns="5" x:name="txtCmpVatcode">
-                        <x:constraints gridx="2" gridy="5" weighty="0.0" weightx="1.0" width="100%" height="0px" />
-                    </XdevTextField>
-                    <XdevLabel x:name="lblCmpCurrency" value="{$lblCmpCurrency.value}">
-                        <x:constraints gridx="1" gridy="6" weighty="0.0" weightx="0.0" width="0px" height="0px" />
-                    </XdevLabel>
                     <XdevTextField columns="5" x:name="txtCmpCurrency">
-                        <x:constraints gridx="2" gridy="6" weighty="0.0" weightx="1.0" width="100%" height="0px" />
+                        <x:constraints gridx="2" gridy="5" weighty="0.0" weightx="1.0" width="-1px" height="0px" />
                     </XdevTextField>
                     <XdevLabel x:name="lblCmpUid" value="{$lblCmpUid.value}">
-                        <x:constraints gridx="1" gridy="7" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+                        <x:constraints gridx="1" gridy="6" weighty="0.0" weightx="0.0" width="0px" height="0px" />
                     </XdevLabel>
                     <XdevTextField columns="5" x:name="txtCmpUid">
-                        <x:constraints gridx="2" gridy="7" weighty="0.0" weightx="1.0" width="100%" height="0px" />
+                        <x:constraints gridx="2" gridy="6" weighty="0.0" weightx="1.0" width="100%" height="0px" />
                     </XdevTextField>
                     <XdevLabel x:name="lblCmpPhone" value="{$lblCmpPhone.value}">
-                        <x:constraints gridx="1" gridy="8" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+                        <x:constraints gridx="1" gridy="7" weighty="0.0" weightx="0.0" width="0px" height="0px" />
                     </XdevLabel>
                     <XdevTextField columns="5" x:name="txtCmpPhone">
-                        <x:constraints gridx="2" gridy="8" weighty="0.0" weightx="1.0" width="100%" height="0px" />
+                        <x:constraints gridx="2" gridy="7" weighty="0.0" weightx="1.0" width="100%" height="0px" />
                     </XdevTextField>
                     <XdevLabel x:name="lblCmpMail" value="{$lblCmpMail.value}">
-                        <x:constraints gridx="1" gridy="9" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+                        <x:constraints gridx="1" gridy="8" weighty="0.0" weightx="0.0" width="0px" height="0px" />
                     </XdevLabel>
                     <XdevTextField columns="5" x:name="txtCmpMail">
-                        <x:constraints gridx="2" gridy="9" weighty="0.0" weightx="1.0" width="100%" height="0px" />
+                        <x:constraints gridx="2" gridy="8" weighty="0.0" weightx="1.0" width="100%" height="0px" />
                     </XdevTextField>
                     <XdevLabel x:name="lblCmpComm1" value="{$lblCmpComm1.value}">
-                        <x:constraints gridx="1" gridy="10" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+                        <x:constraints gridx="1" gridy="9" weighty="0.0" weightx="0.0" width="0px" height="0px" />
                     </XdevLabel>
                     <XdevTextField columns="5" x:name="txtCmpComm1">
-                        <x:constraints gridx="2" gridy="10" weighty="0.0" weightx="1.0" width="100%" height="0px" />
+                        <x:constraints gridx="2" gridy="9" weighty="0.0" weightx="1.0" width="100%" height="0px" />
                     </XdevTextField>
                     <XdevLabel x:name="lblCmpBusiness" value="{$lblCmpBusiness.value}">
-                        <x:constraints gridx="1" gridy="11" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+                        <x:constraints gridx="1" gridy="10" weighty="0.0" weightx="0.0" width="0px" height="0px" />
                     </XdevLabel>
                     <XdevTextField columns="5" x:name="txtCmpBusiness">
-                        <x:constraints gridx="2" gridy="11" weighty="0.0" weightx="1.0" width="100%" height="0px" />
+                        <x:constraints gridx="2" gridy="10" weighty="0.0" weightx="1.0" width="100%" height="0px" />
                     </XdevTextField>
                 </XdevGridLayout>
                 <XdevGridLayout caption="{$gridLayoutNbr.caption}" x:name="gridLayoutNbr">
@@ -237,13 +231,6 @@
                         <x:constraints gridx="2" gridy="7" top="93px" left="-1px" weighty="0.0" weightx="1.0" width="100%" height="0px" />
                         <x:validator x:type="IntegerRangeValidator" message="Gültige Werte von 0-9999" min="0" max="9999" />
                     </XdevTextField>
-                    <XdevLabel x:name="lblCmpAbaMaxDays" value="Buffer Tage">
-                        <x:constraints gridx="1" gridy="8" top="101px" left="-1px" weighty="0.0" weightx="0.0" width="0px" height="0px" />
-                    </XdevLabel>
-                    <XdevTextField columns="5" x:name="txtCmpAbaMaxDays">
-                        <x:constraints gridx="2" gridy="8" top="140px" left="-1px" weighty="0.0" weightx="1.0" width="100%" height="0px" />
-                        <x:validator x:type="IntegerRangeValidator" message="Gültige Werte 0-180" min="0" max="180" />
-                    </XdevTextField>
                 </XdevGridLayout>
             </XdevTabSheet>
             <XdevFieldGroup x:name="fieldGroup" x:entityType="Company">
@@ -274,7 +261,6 @@
                     <entry name="txtCmpEndpointDoc" property="cmpAbaEndpointDoc" />
                     <entry name="txtCmpAbaUser" property="cmpAbaUser" />
                     <entry name="txtCmpAbaMandator" property="cmpAbaMandator" />
-                    <entry name="txtCmpAbaMaxDays" property="cmpAbaMaxDays" />
                     <entry name="txtCmpEndpointCre" property="cmpAbaEndpointCre" />
                     <entry name="txtCmpEndpointCreDoc" property="cmpAbaEndpointCreDoc" />
                 </x:fields>
