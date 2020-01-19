@@ -120,8 +120,11 @@ public class CustomerTabView extends XdevView {
 		setDefaultFilter();
 
 		if (Seicento.hasRole("BillingAdmin")) {
-			this.cmdAdmin.setEnabled(true);
-			this.cmdAdmin.setVisible(true);
+			this.cmdImport.setEnabled(true);
+			this.cmdImport.setVisible(true);
+
+			this.txtExtRef1.setEnabled(true);
+			this.txtExtRef2.setEnabled(true);
 		}
 	}
 
@@ -132,6 +135,7 @@ public class CustomerTabView extends XdevView {
 		if (this.fieldGroup.getItemDataSource() == null || this.fieldGroup.getItemDataSource().getBean() == null ) {
 			hasData = false;
 		}
+
 		setROComponents(hasData);
 	}
 
@@ -139,6 +143,15 @@ public class CustomerTabView extends XdevView {
 		this.cmdSave.setEnabled(state);
 		this.cmdReset.setEnabled(state);
 		this.tabSheet.setEnabled(state);
+
+		if (Seicento.hasRole("BillingAdmin") && state) {
+			this.txtExtRef1.setEnabled(true);
+			this.txtExtRef2.setEnabled(true);
+		} else {
+			this.txtExtRef1.setEnabled(false);
+			this.txtExtRef2.setEnabled(false);
+		}
+
 	}
 
 	private boolean isNew() {
@@ -1164,12 +1177,12 @@ public class CustomerTabView extends XdevView {
 	}
 
 	/**
-	 * Event handler delegate method for the {@link XdevButton} {@link #cmdAdmin}.
+	 * Event handler delegate method for the {@link XdevButton} {@link #cmdImport}.
 	 *
 	 * @see Button.ClickListener#buttonClick(Button.ClickEvent)
 	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
 	 */
-	private void cmdAdmin_buttonClick(final Button.ClickEvent event) {
+	private void cmdImport_buttonClick(final Button.ClickEvent event) {
 		final Window win = ImportContactsPopup.getPopupWindow();
 
 		win.addCloseListener(new CloseListener() {
@@ -1198,7 +1211,7 @@ public class CustomerTabView extends XdevView {
 		this.cmdReload = new XdevButton();
 		this.cmdReport = new XdevButton();
 		this.cmdInfo = new XdevButton();
-		this.cmdAdmin = new XdevButton();
+		this.cmdImport = new XdevButton();
 		this.table = new XdevTable<>();
 		this.form = new XdevGridLayout();
 		this.tabSheet = new XdevTabSheet();
@@ -1237,6 +1250,10 @@ public class CustomerTabView extends XdevView {
 		this.cbxAccountBillingReports = new XdevComboBox<>();
 		this.lblLabels = new XdevLabel();
 		this.twinColSelect = new XdevTwinColSelect<>();
+		this.lblExtRef1 = new XdevLabel();
+		this.txtExtRef1 = new XdevTextField();
+		this.lblExtRef2 = new XdevLabel();
+		this.txtExtRef2 = new XdevTextField();
 		this.gridLayoutAddress = new XdevGridLayout();
 		this.verticalSplitPanel = new XdevVerticalSplitPanel();
 		this.verticalLayoutAdr = new XdevVerticalLayout();
@@ -1296,10 +1313,10 @@ public class CustomerTabView extends XdevView {
 				new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/Printer_black_18.png"));
 		this.cmdInfo
 				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/info_small.jpg"));
-		this.cmdAdmin.setIcon(FontAwesome.GEAR);
-		this.cmdAdmin.setDescription("Import Kontakte");
-		this.cmdAdmin.setEnabled(false);
-		this.cmdAdmin.setVisible(false);
+		this.cmdImport.setIcon(FontAwesome.FILE_EXCEL_O);
+		this.cmdImport.setDescription("Import Kontakte");
+		this.cmdImport.setEnabled(false);
+		this.cmdImport.setVisible(false);
 		this.table.setColumnReorderingAllowed(true);
 		this.table.setColumnCollapsingAllowed(true);
 		this.table.setContainerDataSource(Customer.class, DAOs.get(CustomerDAO.class).findAllByNumberDesc(),
@@ -1372,6 +1389,8 @@ public class CustomerTabView extends XdevView {
 		this.twinColSelect.setIcon(FontAwesome.BOOKMARK);
 		this.twinColSelect.setContainerDataSource(LabelDefinition.class);
 		this.twinColSelect.setItemCaptionPropertyId(LabelDefinition_.cldText.getName());
+		this.lblExtRef1.setValue("Ext Ref 1");
+		this.lblExtRef2.setValue("Ext Ref 2");
 		this.gridLayoutAddress.setMargin(new MarginInfo(false));
 		this.verticalSplitPanel.setStyleName("large");
 		this.verticalSplitPanel.setSplitPosition(50.0F, Unit.PERCENTAGE);
@@ -1542,6 +1561,8 @@ public class CustomerTabView extends XdevView {
 		this.fieldGroup.bind(this.cbxAccountBillingType, Customer_.cusBillingTarget.getName());
 		this.fieldGroup.bind(this.cbxAccountBillingReports, Customer_.cusBillingReport.getName());
 		this.fieldGroup.bind(this.cbxSinglePdf, Customer_.cusSinglepdf.getName());
+		this.fieldGroup.bind(this.txtExtRef1, Customer_.cusExtRef1.getName());
+		this.fieldGroup.bind(this.txtExtRef2, Customer_.cusExtRef2.getName());
 
 		MasterDetail.connect(this.table, this.fieldGroup);
 
@@ -1565,9 +1586,9 @@ public class CustomerTabView extends XdevView {
 		this.cmdInfo.setSizeUndefined();
 		this.actionLayout.addComponent(this.cmdInfo);
 		this.actionLayout.setComponentAlignment(this.cmdInfo, Alignment.MIDDLE_CENTER);
-		this.cmdAdmin.setSizeUndefined();
-		this.actionLayout.addComponent(this.cmdAdmin);
-		this.actionLayout.setComponentAlignment(this.cmdAdmin, Alignment.MIDDLE_RIGHT);
+		this.cmdImport.setSizeUndefined();
+		this.actionLayout.addComponent(this.cmdImport);
+		this.actionLayout.setComponentAlignment(this.cmdImport, Alignment.MIDDLE_RIGHT);
 		final CustomComponent actionLayout_spacer = new CustomComponent();
 		actionLayout_spacer.setSizeFull();
 		this.actionLayout.addComponent(actionLayout_spacer);
@@ -1641,7 +1662,7 @@ public class CustomerTabView extends XdevView {
 		this.gridLayoutContact.addComponent(gridLayoutContact_vSpacer, 0, 9, 3, 9);
 		this.gridLayoutContact.setRowExpandRatio(9, 1.0F);
 		this.gridLayoutFlags.setColumns(3);
-		this.gridLayoutFlags.setRows(7);
+		this.gridLayoutFlags.setRows(9);
 		this.lblAccountManager.setSizeUndefined();
 		this.gridLayoutFlags.addComponent(this.lblAccountManager, 0, 0);
 		this.txtAccountManager.setWidth(100, Unit.PERCENTAGE);
@@ -1671,12 +1692,20 @@ public class CustomerTabView extends XdevView {
 		this.gridLayoutFlags.addComponent(this.lblLabels, 0, 5);
 		this.twinColSelect.setSizeUndefined();
 		this.gridLayoutFlags.addComponent(this.twinColSelect, 1, 5);
+		this.lblExtRef1.setSizeUndefined();
+		this.gridLayoutFlags.addComponent(this.lblExtRef1, 0, 6);
+		this.txtExtRef1.setSizeUndefined();
+		this.gridLayoutFlags.addComponent(this.txtExtRef1, 1, 6);
+		this.lblExtRef2.setSizeUndefined();
+		this.gridLayoutFlags.addComponent(this.lblExtRef2, 0, 7);
+		this.txtExtRef2.setSizeUndefined();
+		this.gridLayoutFlags.addComponent(this.txtExtRef2, 1, 7);
 		this.gridLayoutFlags.setColumnExpandRatio(1, 100.0F);
 		this.gridLayoutFlags.setColumnExpandRatio(2, 100.0F);
 		final CustomComponent gridLayoutFlags_vSpacer = new CustomComponent();
 		gridLayoutFlags_vSpacer.setSizeFull();
-		this.gridLayoutFlags.addComponent(gridLayoutFlags_vSpacer, 0, 6, 2, 6);
-		this.gridLayoutFlags.setRowExpandRatio(6, 1.0F);
+		this.gridLayoutFlags.addComponent(gridLayoutFlags_vSpacer, 0, 8, 2, 8);
+		this.gridLayoutFlags.setRowExpandRatio(8, 1.0F);
 		this.cmdNewAddress.setSizeUndefined();
 		this.horizontalLayoutAddress.addComponent(this.cmdNewAddress);
 		this.horizontalLayoutAddress.setComponentAlignment(this.cmdNewAddress, Alignment.MIDDLE_CENTER);
@@ -1862,7 +1891,7 @@ public class CustomerTabView extends XdevView {
 		this.cmdReload.addClickListener(event -> this.cmdReload_buttonClick(event));
 		this.cmdReport.addClickListener(event -> this.cmdReport_buttonClick(event));
 		this.cmdInfo.addClickListener(event -> this.cmdInfo_buttonClick(event));
-		this.cmdAdmin.addClickListener(event -> this.cmdAdmin_buttonClick(event));
+		this.cmdImport.addClickListener(event -> this.cmdImport_buttonClick(event));
 		this.table.addValueChangeListener(event -> this.table_valueChange(event));
 		this.tabSheet.addSelectedTabChangeListener(event -> this.tabSheet_selectedTabChange(event));
 		this.cmdNewAddress.addClickListener(event -> this.cmdNewAddress_buttonClick(event));
@@ -1891,7 +1920,7 @@ public class CustomerTabView extends XdevView {
 	} // </generated-code>
 
 	// <generated-code name="variables">
-	private XdevButton cmdNew, cmdDelete, cmdReload, cmdReport, cmdInfo, cmdAdmin, cmdNewAddress, cmdDeleteAddress,
+	private XdevButton cmdNew, cmdDelete, cmdReload, cmdReport, cmdInfo, cmdImport, cmdNewAddress, cmdDeleteAddress,
 			cmdEditAddress, cmdReloadAddress, cmdInfoAddress, cmdNewCustomerLink, cmdDeleteCustomerLink,
 			cmdEditCustomerLink, cmdReloadCustomerLink, cmdInfoCustomerLink, cmdNewActivity, cmdDeleteActivity,
 			cmdEditActivity, cmdReloadActivity, cmdInfoActivity, cmdNewRelation, cmdDeleteRelation, cmdSave, cmdReset;
@@ -1909,11 +1938,12 @@ public class CustomerTabView extends XdevView {
 	private XdevTable<Project> tableProject;
 	private XdevTable<Order> tableOrder;
 	private XdevTextField txtCusNumber, txtCusCompany, txtCusName, txtCusFirstName, txtCusAddress, txtAccountManager,
-			txtCusInfo;
+			txtCusInfo, txtExtRef1, txtExtRef2;
 	private XdevTwinColSelect<LabelDefinition> twinColSelect;
 	private XdevTable<ContactRelation> tableRelation;
 	private XdevLabel lblCusNumber, lblType, lblAnrede, lblCusCompany, lblCusName, lblCusFirstName, lblCity, lblBirthdate,
-			lblCusState, lblAccountManager, lblCusInfo, lblPaymentCondition, lblBillingTarget, lblBillingReports, lblLabels;
+			lblCusState, lblAccountManager, lblCusInfo, lblPaymentCondition, lblBillingTarget, lblBillingReports, lblLabels,
+			lblExtRef1, lblExtRef2;
 	private XdevTable<Activity> tableActivity;
 	private XdevComboBox<PaymentCondition> cmbPaymentCondition;
 	private XdevTabSheet tabSheet;

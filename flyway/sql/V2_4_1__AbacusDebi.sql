@@ -18,8 +18,8 @@ IF COL_LENGTH('[dbo].[Customer]', 'cusExtRef1') IS NULL
 BEGIN
     ALTER TABLE [dbo].[Customer]
     ADD 
-	cusExtRef1  nvarchar(20) NULL,
-	cusExtRef2  nvarchar(20) NULL;
+	cusExtRef1  nvarchar(36) NULL,
+	cusExtRef2  nvarchar(36) NULL;
 END
 
 /****** Object: Company : abacusparam ***/
