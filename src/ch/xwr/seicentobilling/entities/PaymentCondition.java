@@ -35,6 +35,7 @@ public class PaymentCondition implements java.io.Serializable {
 	private Short pacState;
 	private Set<Order> orders = new HashSet<>(0);
 	private Set<Customer> customers = new HashSet<>(0);
+	private String pacExtRef1;
 
 	public PaymentCondition() {
 	}
@@ -110,6 +111,16 @@ public class PaymentCondition implements java.io.Serializable {
 
 	public void setCustomers(final Set<Customer> customers) {
 		this.customers = customers;
+	}
+
+	@Caption("Ext Referenz 1")
+	@Column(name = "pacExtRef1", length = 20)
+	public String getPacExtRef1() {
+		return this.pacExtRef1;
+	}
+
+	public void setPacExtRef1(final String noname) {
+		this.pacExtRef1 = noname;
 	}
 
 }
