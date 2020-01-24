@@ -393,7 +393,7 @@ public class ExpenseTemplateTabView extends XdevView {
 		this.lblExtVat.setValue("MwSt");
 		this.comboBoxVat.setTabIndex(4);
 		this.comboBoxVat.setItemCaptionFromAnnotation(false);
-		this.comboBoxVat.setContainerDataSource(Vat.class, DAOs.get(VatDAO.class).findAll());
+		this.comboBoxVat.setContainerDataSource(Vat.class, DAOs.get(VatDAO.class).findAllInclusive());
 		this.comboBoxVat.setItemCaptionPropertyId("fullName");
 		this.lblExtAccount.setValue("Konto");
 		this.comboBoxAccount.setTabIndex(5);

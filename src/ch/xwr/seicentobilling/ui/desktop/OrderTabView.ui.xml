@@ -164,7 +164,7 @@
                                 <x:constraints gridx="1" gridy="5" weighty="0.0" weightx="0.0" width="0px" height="0px" />
                             </XdevLabel>
                             <XdevComboBox x:name="cmbProject" x:entity="Project">
-                                <x:constraints gridx="2" gridy="5" weighty="0.0" weightx="0.1" width="0px" height="0px" />
+                                <x:constraints gridx="2" gridy="5" weighty="0.0" weightx="0.1" width="100%" height="0px" />
                                 <x:entityProperty>
                                     <entry type="String" property="proName" />
                                 </x:entityProperty>
@@ -176,7 +176,7 @@
                                 <x:constraints gridx="3" gridy="5" weighty="0.0" weightx="0.0" width="0px" height="0px" />
                             </XdevLabel>
                             <XdevComboBox required="true" itemCaptionFromAnnotation="false" x:name="cmbPaymentCondition" x:entity="PaymentCondition">
-                                <x:constraints gridx="4" gridy="5" weighty="0.0" weightx="0.1" width="0px" height="0px" />
+                                <x:constraints gridx="4" gridy="5" weighty="0.0" weightx="0.1" width="100%" height="0px" />
                                 <x:entityProperty>
                                     <entry type="String" property="pacName" />
                                 </x:entityProperty>

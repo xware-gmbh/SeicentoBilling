@@ -1,0 +1,5 @@
+import ch.xwr.seicentobilling.entities.Vat
+findAllInclusive()
+{
+	select * from Vat where vatInclude = true and vatState = 1 
+}
