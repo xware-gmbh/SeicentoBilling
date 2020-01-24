@@ -115,7 +115,7 @@ public class ProjectLinePopup extends XdevView {
 
 	public static Window getPopupWindow() {
 		final Window win = new Window();
-		win.setWidth("780");
+		win.setWidth("820");
 		win.setHeight("480");
 		win.center();
 		win.setModal(true);
@@ -497,7 +497,7 @@ public class ProjectLinePopup extends XdevView {
 
 		this.panel.setCaption("Rapportzeile bearbeiten");
 		this.panel.setTabIndex(0);
-		this.form.setMargin(new MarginInfo(false, false, true, false));
+		this.form.setMargin(new MarginInfo(false, true, true, true));
 		this.lblPeriode.setValue(StringResourceUtils.optLocalizeString("{$lblPeriode.value}", this));
 		this.cmbPeriode.setContainerDataSource(Periode.class);
 		this.cmbPeriode.setItemCaptionPropertyId(Periode_.perName.getName());

@@ -13,6 +13,7 @@ import com.xdev.dal.DAOs;
 import com.xdev.res.ApplicationResource;
 import com.xdev.res.StringResourceUtils;
 import com.xdev.ui.XdevButton;
+import com.xdev.ui.XdevCheckBox;
 import com.xdev.ui.XdevFieldGroup;
 import com.xdev.ui.XdevGridLayout;
 import com.xdev.ui.XdevHorizontalLayout;
@@ -84,6 +85,7 @@ public class PeriodePopup extends XdevView {
 		dao.setPerState(LovState.State.active);
 		dao.setPerBookedExpense(LovState.BookingType.offen);
 		dao.setPerBookedProject(LovState.BookingType.offen);
+		dao.setPerSignOffExpense(false);
 
 		// dao.setCostAccount(null);
 
@@ -169,15 +171,17 @@ public class PeriodePopup extends XdevView {
 		this.textFieldYear = new XdevTextField();
 		this.lblPerBookedExpense = new XdevLabel();
 		this.comboBoxBookedExp = new XdevComboBox<>();
+		this.cboSignOffExpense = new XdevCheckBox();
 		this.lblPerBookedProject = new XdevLabel();
 		this.comboBoxBookedPro = new XdevComboBox<>();
-		this.comboBoxState = new XdevComboBox<>();
 		this.lblPerState = new XdevLabel();
+		this.comboBoxState = new XdevComboBox<>();
 		this.horizontalLayout = new XdevHorizontalLayout();
 		this.cmdSave = new XdevButton();
 		this.cmdCancel = new XdevButton();
 		this.fieldGroup = new XdevFieldGroup<>(Periode.class);
 
+		this.setCaption("");
 		this.lblCostAccount.setValue(StringResourceUtils.optLocalizeString("{$lblCostAccount.value}", this));
 		this.cmbCostAccount.setRequired(true);
 		this.cmbCostAccount.setContainerDataSource(CostAccount.class, DAOs.get(CostAccountDAO.class).findAll());
@@ -191,6 +195,9 @@ public class PeriodePopup extends XdevView {
 		this.textFieldYear.setRequired(true);
 		this.textFieldYear.setMaxLength(4);
 		this.lblPerBookedExpense.setValue(StringResourceUtils.optLocalizeString("{$lblPerBookedExpense.value}", this));
+		this.cboSignOffExpense.setCaption("Freigabe Buchhaltung");
+		this.cboSignOffExpense
+				.setDescription("Das Feld kann durch den Buchhalter gesetzt werden für die Freigabe an die Buchhaltung");
 		this.lblPerBookedProject.setValue(StringResourceUtils.optLocalizeString("{$lblPerBookedProject.value}", this));
 		this.lblPerState.setValue(StringResourceUtils.optLocalizeString("{$lblPerState.value}", this));
 		this.horizontalLayout.setMargin(new MarginInfo(false));
@@ -202,6 +209,7 @@ public class PeriodePopup extends XdevView {
 		this.fieldGroup.bind(this.txtPerName, Periode_.perName.getName());
 		this.fieldGroup.bind(this.comboBoxMonth, Periode_.perMonth.getName());
 		this.fieldGroup.bind(this.comboBoxBookedExp, Periode_.perBookedExpense.getName());
+		this.fieldGroup.bind(this.cboSignOffExpense, Periode_.perSignOffExpense.getName());
 		this.fieldGroup.bind(this.comboBoxBookedPro, Periode_.perBookedProject.getName());
 		this.fieldGroup.bind(this.comboBoxState, Periode_.perState.getName());
 		this.fieldGroup.bind(this.textFieldYear, Periode_.perYear.getName());
@@ -212,7 +220,7 @@ public class PeriodePopup extends XdevView {
 		this.cmdCancel.setSizeUndefined();
 		this.horizontalLayout.addComponent(this.cmdCancel);
 		this.horizontalLayout.setComponentAlignment(this.cmdCancel, Alignment.MIDDLE_LEFT);
-		this.form.setColumns(2);
+		this.form.setColumns(3);
 		this.form.setRows(9);
 		this.lblCostAccount.setSizeUndefined();
 		this.form.addComponent(this.lblCostAccount, 0, 0);
@@ -223,7 +231,7 @@ public class PeriodePopup extends XdevView {
 		this.form.addComponent(this.lblPerName, 0, 1);
 		this.txtPerName.setWidth(100, Unit.PERCENTAGE);
 		this.txtPerName.setHeight(-1, Unit.PIXELS);
-		this.form.addComponent(this.txtPerName, 1, 1);
+		this.form.addComponent(this.txtPerName, 1, 1, 2, 1);
 		this.lblPerMonth.setSizeUndefined();
 		this.form.addComponent(this.lblPerMonth, 0, 2);
 		this.comboBoxMonth.setSizeUndefined();
@@ -236,14 +244,16 @@ public class PeriodePopup extends XdevView {
 		this.form.addComponent(this.lblPerBookedExpense, 0, 4);
 		this.comboBoxBookedExp.setSizeUndefined();
 		this.form.addComponent(this.comboBoxBookedExp, 1, 4);
+		this.cboSignOffExpense.setSizeUndefined();
+		this.form.addComponent(this.cboSignOffExpense, 2, 4);
 		this.lblPerBookedProject.setSizeUndefined();
 		this.form.addComponent(this.lblPerBookedProject, 0, 5);
 		this.comboBoxBookedPro.setSizeUndefined();
 		this.form.addComponent(this.comboBoxBookedPro, 1, 5);
-		this.comboBoxState.setSizeUndefined();
-		this.form.addComponent(this.comboBoxState, 1, 6);
 		this.lblPerState.setSizeUndefined();
 		this.form.addComponent(this.lblPerState, 0, 6);
+		this.comboBoxState.setSizeUndefined();
+		this.form.addComponent(this.comboBoxState, 1, 6);
 		this.horizontalLayout.setSizeUndefined();
 		this.form.addComponent(this.horizontalLayout, 0, 7, 1, 7);
 		this.form.setComponentAlignment(this.horizontalLayout, Alignment.TOP_CENTER);
@@ -251,7 +261,7 @@ public class PeriodePopup extends XdevView {
 		this.form.setColumnExpandRatio(1, 100.0F);
 		final CustomComponent form_vSpacer = new CustomComponent();
 		form_vSpacer.setSizeFull();
-		this.form.addComponent(form_vSpacer, 0, 8, 1, 8);
+		this.form.addComponent(form_vSpacer, 0, 8, 2, 8);
 		this.form.setRowExpandRatio(8, 1.0F);
 		this.form.setSizeFull();
 		this.setContent(this.form);
@@ -269,6 +279,7 @@ public class PeriodePopup extends XdevView {
 	private XdevHorizontalLayout horizontalLayout;
 	private XdevFieldGroup<Periode> fieldGroup;
 	private XdevComboBox<?> comboBoxMonth, comboBoxBookedExp, comboBoxBookedPro, comboBoxState;
+	private XdevCheckBox cboSignOffExpense;
 	private XdevGridLayout form;
 	private XdevTextField txtPerName, textFieldYear;
 	// </generated-code>

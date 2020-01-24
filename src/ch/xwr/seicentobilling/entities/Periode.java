@@ -44,6 +44,7 @@ public class Periode implements java.io.Serializable {
 	private LovState.State perState;
 	private Set<Expense> expenses = new HashSet<>(0);
 	private Set<ProjectLine> projectLines = new HashSet<>(0);
+	private Boolean perSignOffExpense;
 
 	public Periode() {
 	}
@@ -168,4 +169,14 @@ public class Periode implements java.io.Serializable {
     	final String name = "" + getPerYear() + "-" + month + " " + getCostAccount().getCsaName();
     	this.setPerName(name);
     }
+
+	@Caption("Freigabe Buchhaltung")
+	@Column(name = "perSignOffExpense")
+	public Boolean getPerSignOffExpense() {
+		return this.perSignOffExpense;
+	}
+
+	public void setPerSignOffExpense(final Boolean noname) {
+		this.perSignOffExpense = noname;
+	}
 }

@@ -706,7 +706,8 @@ public class ExpenseTabView extends XdevView {
 		this.table.setContainerDataSource(Periode.class, DAOs.get(PeriodeDAO.class).findAll(),
 				NestedProperty.of(Periode_.costAccount, CostAccount_.csaName));
 		this.table.setVisibleColumns(Periode_.perName.getName(), Periode_.perYear.getName(), Periode_.perMonth.getName(),
-				Periode_.perBookedExpense.getName(), Periode_.perBookedProject.getName(), Periode_.perState.getName(),
+				Periode_.perSignOffExpense.getName(), Periode_.perBookedExpense.getName(),
+				Periode_.perBookedProject.getName(), Periode_.perState.getName(),
 				NestedProperty.path(Periode_.costAccount, CostAccount_.csaName));
 		this.table.setColumnHeader("perName", "Periode");
 		this.table.setColumnHeader("perYear", "Jahr");
@@ -714,6 +715,10 @@ public class ExpenseTabView extends XdevView {
 		this.table.setColumnCollapsed("perYear", true);
 		this.table.setColumnHeader("perMonth", "Monat");
 		this.table.setColumnCollapsed("perMonth", true);
+		this.table.setColumnHeader("perSignOffExpense", "Freigabe");
+		this.table.setConverter("perSignOffExpense",
+				ConverterBuilder.stringToBoolean().trueString("Ja").falseString("Nein").build());
+		this.table.setColumnWidth("perSignOffExpense", 80);
 		this.table.setColumnHeader("perBookedExpense", "Buchhaltung");
 		this.table.setColumnHeader("perBookedProject", "Gebucht Projekt");
 		this.table.setColumnCollapsed("perBookedProject", true);
