@@ -26,7 +26,7 @@ import ch.xwr.seicentobilling.dal.VatDAO;
 import ch.xwr.seicentobilling.dal.VatLineDAO;
 
 /**
- * Vat
+ * Vat AB#275
  */
 //@EntityListeners(RowObjectListener.class)
 @DAO(daoClass = VatDAO.class)
