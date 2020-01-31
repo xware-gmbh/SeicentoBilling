@@ -2,7 +2,6 @@ package ch.xwr.seicentobilling.business;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
@@ -12,13 +11,12 @@ import com.vaadin.ui.Field;
 import com.xdev.persistence.PersistenceUtils;
 import com.xdev.ui.XdevFieldGroup;
 
+import ch.xwr.seicentobilling.business.helper.VatHelper;
 import ch.xwr.seicentobilling.dal.OrderDAO;
 import ch.xwr.seicentobilling.dal.OrderLineDAO;
-import ch.xwr.seicentobilling.dal.VatLineDAO;
 import ch.xwr.seicentobilling.entities.Order;
 import ch.xwr.seicentobilling.entities.OrderLine;
 import ch.xwr.seicentobilling.entities.Vat;
-import ch.xwr.seicentobilling.entities.VatLine;
 
 public class OrderCalculator {
 	/** Logger initialized */
@@ -83,42 +81,11 @@ public class OrderCalculator {
 			return new Double(0);
 		}
 
-    	final Date refDate = getRawDate(date);
-
-    	//TFS-240
-    	final VatLineDAO dao = new VatLineDAO();
-    	final List<VatLine> lst = dao.findByVatAndDate(vat, refDate);
-    	if (lst == null || lst.isEmpty()) {
-    		System.out.println("No VatLine found");
-    		_logger.warn("no VatLine found for vat: " + vat.getVatName() + " and Date: " + date);
-			return new Double(0);
-    	}
-
-    	final VatLine vl = lst.get(0);
-    	final double rate = vl.getVanRate().doubleValue();
-    	double base = 100.;
-
-		if (vat.getVatInclude() == true) {
-			base = base + rate;
-		}
-    	final Double vat1 = val1 / base * rate;
-
+    	final VatHelper vhl = new VatHelper();
+    	final Double vat1 = vhl.getVatAmount(date, val1, vat);
 		return swissCommercialRound(new BigDecimal(vat1));
+
 	}
-
-    //remove time
-    private Date getRawDate(final Date date) {
-    	try {
-    		final SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
-    		final Date rawdate = sdf.parse(sdf.format(date));
-    		return rawdate;
-    	} catch (final Exception e) {
-
-    	}
-
-    	return date;
-
-    }
 
 //	private Double computePercentage(final Double input, final double d1) {
 //    	//Double output = input.divide(new Double(d1), RoundingMode.HALF_DOWN);
@@ -196,6 +163,7 @@ public class OrderCalculator {
 	}
 
 	public Order copyOrder(final Order bean) {
+		_logger.debug("start copyOrder: " + bean.getOrdNumber());
 		final OrderDAO dao = new OrderDAO();
 		final Integer newOrdNbr = getNewOrderNumber(false, 0);
 		final Order source = dao.find(bean.getOrdId());

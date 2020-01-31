@@ -321,7 +321,7 @@ public class OrderLinePopup extends XdevView {
 		this.lblVat.setValue(StringResourceUtils.optLocalizeString("{$lblVat.value}", this));
 		this.cmbVat.setTabIndex(4);
 		this.cmbVat.setItemCaptionFromAnnotation(false);
-		this.cmbVat.setContainerDataSource(Vat.class, DAOs.get(VatDAO.class).findAll());
+		this.cmbVat.setContainerDataSource(Vat.class, DAOs.get(VatDAO.class).findAllActive());
 		this.cmbVat.setItemCaptionPropertyId("fullName");
 		this.lblOdlQuantity.setValue(StringResourceUtils.optLocalizeString("{$lblOdlQuantity.value}", this));
 		this.txtOdlQuantity

@@ -641,7 +641,7 @@ public class ProjectTabView extends XdevView {
 		this.lblVat.setValue(StringResourceUtils.optLocalizeString("{$lblVat.value}", this));
 		this.cmbVat.setRequired(true);
 		this.cmbVat.setItemCaptionFromAnnotation(false);
-		this.cmbVat.setContainerDataSource(Vat.class);
+		this.cmbVat.setContainerDataSource(Vat.class, DAOs.get(VatDAO.class).findAllActive());
 		this.cmbVat.setItemCaptionPropertyId("fullName");
 		this.lblProject.setValue(StringResourceUtils.optLocalizeString("{$lblProject.value}", this));
 		this.cmbProject.setContainerDataSource(Project.class, DAOs.get(ProjectDAO.class).findAllActive());

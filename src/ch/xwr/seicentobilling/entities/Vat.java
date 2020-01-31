@@ -2,7 +2,10 @@ package ch.xwr.seicentobilling.entities;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -20,6 +23,7 @@ import com.xdev.util.Caption;
 
 import ch.xwr.seicentobilling.business.LovState;
 import ch.xwr.seicentobilling.dal.VatDAO;
+import ch.xwr.seicentobilling.dal.VatLineDAO;
 
 /**
  * Vat
@@ -154,8 +158,25 @@ public class Vat implements java.io.Serializable {
 	@Column(name = "FULLNAME", insertable = false, updatable = false)
 	@Transient
 	public String getFullName() {
+    	Date date = new Date();
+    	try {
+    		final SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+    		final Date rawdate = sdf.parse(sdf.format(date));
+    		date = rawdate;
+    	} catch (final Exception e) {
+    	}
+
+    	final VatLineDAO dao = new VatLineDAO();
+    	VatLine vl = null;
+    	final List<VatLine> lst = dao.findByVatAndDate(this, date);
+    	if (lst == null || lst.isEmpty()) {
+    		vl = new VatLine();
+    	} else {
+    		vl = lst.get(0);
+    	}
+
 		final StringBuffer sb = new StringBuffer("");
-		sb.append(this.vatSign).append(" - ").append(this.vatName).append(", ").append(this.vatState);
+		sb.append(this.vatSign).append(" - ").append(this.vatName).append(", ").append(vl.getVanRate()).append("% ").append(this.vatState);
 
 		this.fullName = sb.toString();
 		return this.fullName;

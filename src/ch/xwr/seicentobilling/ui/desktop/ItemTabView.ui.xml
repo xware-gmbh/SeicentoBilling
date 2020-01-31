@@ -146,7 +146,7 @@
             <XdevLabel x:name="lblVat" value="{$lblVat.value}">
                 <x:constraints gridx="1" gridy="7" weighty="0.0" weightx="0.0" width="0px" height="0px" />
             </XdevLabel>
-            <XdevComboBox tabIndex="2" required="true" itemCaptionFromAnnotation="false" x:name="cmbVat" x:entity="Vat">
+            <XdevComboBox tabIndex="2" required="true" itemCaptionFromAnnotation="false" x:name="cmbVat" x:entity="Vat" x:autoQuery="false">
                 <x:constraints gridx="2" gridy="7" weighty="0.0" weightx="1.0" width="100%" height="0px" />
                 <x:entityProperty>
                     <entry type="String" property="fullName" />
@@ -154,7 +154,7 @@
                 <x:typeArguments>
                     <typeArgument type="Vat" />
                 </x:typeArguments>
-                <x:data methodName="findAll" />
+                <x:data methodName="findAllActive" />
             </XdevComboBox>
             <XdevLabel description="Externe BuHa Ertrags-Konto Nummer" x:name="lblAccount" value="Konto#">
                 <x:constraints gridx="1" gridy="8" top="33px" left="-1px" weighty="0.0" weightx="0.0" width="0px" height="0px" />

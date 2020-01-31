@@ -344,7 +344,7 @@ public class ItemTabView extends XdevView {
 		this.cmbVat.setTabIndex(2);
 		this.cmbVat.setRequired(true);
 		this.cmbVat.setItemCaptionFromAnnotation(false);
-		this.cmbVat.setContainerDataSource(Vat.class, DAOs.get(VatDAO.class).findAll());
+		this.cmbVat.setContainerDataSource(Vat.class, DAOs.get(VatDAO.class).findAllActive());
 		this.cmbVat.setItemCaptionPropertyId("fullName");
 		this.lblAccount.setDescription("Externe BuHa Ertrags-Konto Nummer");
 		this.lblAccount.setValue("Konto#");

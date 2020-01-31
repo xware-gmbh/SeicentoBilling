@@ -168,6 +168,9 @@ public class Project implements java.io.Serializable {
 	@Caption("ProHours")
 	@Column(name = "proHours", columnDefinition = "int")
 	public Integer getProHours() {
+		if (this.proHours == null) {
+			this.proHours = new Integer(1);
+		}
 		return this.proHours;
 	}
 
@@ -261,6 +264,9 @@ public class Project implements java.io.Serializable {
 	@Caption("HoursEffective")
 	@Column(name = "proHoursEffective", columnDefinition = "decimal", precision = 18, updatable=false, insertable=false, nullable=false)
 	public Double getProHoursEffective() {
+		if (this.proHoursEffective == null) {
+			this.proHoursEffective = new Double(0.);
+		}
 		return this.proHoursEffective;
 	}
 
