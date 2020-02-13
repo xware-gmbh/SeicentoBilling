@@ -321,7 +321,7 @@ public class CompanyTabView extends XdevView {
 		this.txtCmpAbaUser.setMaxLength(20);
 		this.lblCmpAbaMandator.setValue("Mandant");
 		this.txtCmpAbaMandator.setConverter(ConverterBuilder.stringToDouble().groupingUsed(false).build());
-		this.txtCmpAbaMandator.addValidator(new IntegerRangeValidator("Gültige Werte von 0-9999", 0, 9999));
+		this.txtCmpAbaMandator.addValidator(new IntegerRangeValidator("Gültige Werte von 0-99'999", 0, 99999));
 		this.horizontalLayout.setMargin(new MarginInfo(false, false, true, true));
 		this.cmdSave.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/save1.png"));
 		this.cmdSave.setCaption(StringResourceUtils.optLocalizeString("{$cmdSave.caption}", this));

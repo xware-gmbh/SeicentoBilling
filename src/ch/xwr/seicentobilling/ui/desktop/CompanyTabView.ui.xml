@@ -229,7 +229,7 @@
                     <XdevTextField columns="5" x:name="txtCmpAbaMandator">
                         <converter numberType="Double" numberFormatType="number" currency="default" groupingUsed="false" converterType="STRING_TO_NUMBER" locale="default" />
                         <x:constraints gridx="2" gridy="7" top="93px" left="-1px" weighty="0.0" weightx="1.0" width="100%" height="0px" />
-                        <x:validator x:type="IntegerRangeValidator" message="Gültige Werte von 0-9999" min="0" max="9999" />
+                        <x:validator x:type="IntegerRangeValidator" message="Gültige Werte von 0-99'999" min="0" max="99999" />
                     </XdevTextField>
                 </XdevGridLayout>
             </XdevTabSheet>
