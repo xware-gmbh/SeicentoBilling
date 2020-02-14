@@ -195,7 +195,7 @@ public class PeriodePopup extends XdevView {
 		this.textFieldYear.setRequired(true);
 		this.textFieldYear.setMaxLength(4);
 		this.lblPerBookedExpense.setValue(StringResourceUtils.optLocalizeString("{$lblPerBookedExpense.value}", this));
-		this.cboSignOffExpense.setCaption("Freigabe Buchhaltung");
+		this.cboSignOffExpense.setCaption("Freigabe Buchhalter");
 		this.cboSignOffExpense
 				.setDescription("Das Feld kann durch den Buchhalter gesetzt werden für die Freigabe an die Buchhaltung");
 		this.lblPerBookedProject.setValue(StringResourceUtils.optLocalizeString("{$lblPerBookedProject.value}", this));

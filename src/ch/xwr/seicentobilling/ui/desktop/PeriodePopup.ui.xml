@@ -64,7 +64,7 @@
                 <typeArgument type="?" />
             </x:typeArguments>
         </XdevComboBox>
-        <XdevCheckBox caption="Freigabe Buchhaltung" description="Das Feld kann durch den Buchhalter gesetzt werden für die Freigabe an die Buchhaltung" x:name="cboSignOffExpense">
+        <XdevCheckBox caption="Freigabe Buchhalter" description="Das Feld kann durch den Buchhalter gesetzt werden für die Freigabe an die Buchhaltung" x:name="cboSignOffExpense">
             <x:constraints gridx="3" gridy="5" weighty="0.0" weightx="0.0" width="0px" height="0px" />
         </XdevCheckBox>
         <XdevLabel x:name="lblPerBookedProject" value="{$lblPerBookedProject.value}">
