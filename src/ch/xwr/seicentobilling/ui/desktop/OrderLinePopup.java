@@ -275,7 +275,6 @@ public class OrderLinePopup extends XdevView {
 	// <generated-code name="initUI">
 	private void initUI() {
 		this.form = new XdevGridLayout();
-		this.labelVatRate = new XdevLabel();
 		this.comboBoxState = new XdevComboBox<>();
 		this.lblOrder = new XdevLabel();
 		this.cmbOrder = new XdevComboBox<>();
@@ -305,7 +304,6 @@ public class OrderLinePopup extends XdevView {
 		this.cmdReset = new XdevButton();
 		this.fieldGroup = new XdevFieldGroup<>(OrderLine.class);
 
-		this.labelVatRate.setValue("Label");
 		this.comboBoxState.setTabIndex(12);
 		this.lblOrder.setValue(StringResourceUtils.optLocalizeString("{$lblOrder.value}", this));
 		this.cmbOrder.setTabIndex(1);
@@ -323,7 +321,7 @@ public class OrderLinePopup extends XdevView {
 		this.lblVat.setValue(StringResourceUtils.optLocalizeString("{$lblVat.value}", this));
 		this.cmbVat.setTabIndex(4);
 		this.cmbVat.setItemCaptionFromAnnotation(false);
-		this.cmbVat.setContainerDataSource(Vat.class, DAOs.get(VatDAO.class).findAll());
+		this.cmbVat.setContainerDataSource(Vat.class, DAOs.get(VatDAO.class).findAllActive());
 		this.cmbVat.setItemCaptionPropertyId("fullName");
 		this.lblOdlQuantity.setValue(StringResourceUtils.optLocalizeString("{$lblOdlQuantity.value}", this));
 		this.txtOdlQuantity
@@ -383,8 +381,6 @@ public class OrderLinePopup extends XdevView {
 		this.horizontalLayout.setComponentAlignment(this.cmdReset, Alignment.MIDDLE_CENTER);
 		this.form.setColumns(4);
 		this.form.setRows(11);
-		this.labelVatRate.setSizeUndefined();
-		this.form.addComponent(this.labelVatRate, 3, 1);
 		this.comboBoxState.setSizeUndefined();
 		this.form.addComponent(this.comboBoxState, 1, 8);
 		this.lblOrder.setSizeUndefined();
@@ -461,8 +457,8 @@ public class OrderLinePopup extends XdevView {
 
 	// <generated-code name="variables">
 	private XdevComboBox<Item> cmbItem;
-	private XdevLabel labelVatRate, lblOrder, lblOdlNumber, lblItem, lblVat, lblOdlQuantity, lblOdlPrice, lblOdlText,
-			lblCostAccount, lblOdlAmountBrut, lblOdlVatAmount, lblOdlAmountNet, lblOdlState;
+	private XdevLabel lblOrder, lblOdlNumber, lblItem, lblVat, lblOdlQuantity, lblOdlPrice, lblOdlText, lblCostAccount,
+			lblOdlAmountBrut, lblOdlVatAmount, lblOdlAmountNet, lblOdlState;
 	private XdevButton cmdSave, cmdReset;
 	private XdevComboBox<CostAccount> cmbCostAccount;
 	private XdevComboBox<Vat> cmbVat;

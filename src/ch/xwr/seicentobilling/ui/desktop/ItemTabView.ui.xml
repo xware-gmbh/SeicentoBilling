@@ -80,7 +80,7 @@
                 </x:typeArguments>
             </XdevComboBox>
             <XdevComboBox x:name="cbxState">
-                <x:constraints gridx="2" gridy="8" weighty="0.0" weightx="1.0" width="0px" height="0px" />
+                <x:constraints gridx="2" gridy="9" weighty="0.0" weightx="1.0" width="0px" height="0px" />
                 <x:typeArguments>
                     <typeArgument type="?" />
                 </x:typeArguments>
@@ -97,6 +97,7 @@
                     <entry name="txtItmPrice1" property="itmPrice1" />
                     <entry name="txtItmPrice2" property="itmPrice2" />
                     <entry name="cbxUnit" property="itmUnit" />
+                    <entry name="txtAccount" property="itmAccount" />
                     <entry name="cbxState" property="itmState" />
                 </x:fields>
             </XdevFieldGroup>
@@ -145,7 +146,7 @@
             <XdevLabel x:name="lblVat" value="{$lblVat.value}">
                 <x:constraints gridx="1" gridy="7" weighty="0.0" weightx="0.0" width="0px" height="0px" />
             </XdevLabel>
-            <XdevComboBox tabIndex="2" required="true" itemCaptionFromAnnotation="false" x:name="cmbVat" x:entity="Vat">
+            <XdevComboBox tabIndex="2" required="true" itemCaptionFromAnnotation="false" x:name="cmbVat" x:entity="Vat" x:autoQuery="false">
                 <x:constraints gridx="2" gridy="7" weighty="0.0" weightx="1.0" width="100%" height="0px" />
                 <x:entityProperty>
                     <entry type="String" property="fullName" />
@@ -153,13 +154,20 @@
                 <x:typeArguments>
                     <typeArgument type="Vat" />
                 </x:typeArguments>
-                <x:data methodName="findAll" />
+                <x:data methodName="findAllActive" />
             </XdevComboBox>
+            <XdevLabel description="Externe BuHa Ertrags-Konto Nummer" x:name="lblAccount" value="Konto#">
+                <x:constraints gridx="1" gridy="8" top="33px" left="-1px" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+            </XdevLabel>
+            <XdevTextField columns="5" x:name="txtAccount">
+                <converter numberType="Double" numberFormatType="number" currency="default" groupingUsed="false" converterType="STRING_TO_NUMBER" locale="default" />
+                <x:constraints gridx="2" gridy="8" top="46px" left="-1px" weighty="0.0" weightx="1.0" width="-1px" height="0px" />
+            </XdevTextField>
             <XdevLabel x:name="lblItmState" value="{$lblItmState.value}">
-                <x:constraints gridx="1" gridy="8" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+                <x:constraints gridx="1" gridy="9" weighty="0.0" weightx="0.0" width="0px" height="0px" />
             </XdevLabel>
             <XdevHorizontalLayout x:name="horizontalLayout" margin="">
-                <x:constraints gridx="1" gridy="9" weighty="0.0" weightx="0.0" width="0px" alignment="MIDDLE_CENTER" gridWidth="2" height="0px" />
+                <x:constraints gridx="1" gridy="10" weighty="0.0" weightx="0.0" width="0px" alignment="MIDDLE_CENTER" gridWidth="2" height="0px" />
                 <XdevButton icon="WebContent/WEB-INF/resources/images/save1.png" caption="{$cmdSave.caption}" tabIndex="11" x:name="cmdSave">
                     <x:constraints weightx="0.0" width="0px" height="0px" />
                     <x:event>click.buttonClick</x:event>

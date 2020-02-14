@@ -1,0 +1,10 @@
+import ch.xwr.seicentobilling.entities.Vat
+findAllInclusive()
+{
+	select * from Vat where vatInclude = true and vatState = 1 order by vatSign asc
+}
+
+findAllActive()
+{
+	select * from Vat where vatState = 1 order by vatSign asc
+}

@@ -286,6 +286,8 @@ public class ItemTabView extends XdevView {
 		this.cmbItemGroup = new XdevComboBox<>();
 		this.lblVat = new XdevLabel();
 		this.cmbVat = new XdevComboBox<>();
+		this.lblAccount = new XdevLabel();
+		this.txtAccount = new XdevTextField();
 		this.lblItmState = new XdevLabel();
 		this.horizontalLayout = new XdevHorizontalLayout();
 		this.cmdSave = new XdevButton();
@@ -342,8 +344,11 @@ public class ItemTabView extends XdevView {
 		this.cmbVat.setTabIndex(2);
 		this.cmbVat.setRequired(true);
 		this.cmbVat.setItemCaptionFromAnnotation(false);
-		this.cmbVat.setContainerDataSource(Vat.class, DAOs.get(VatDAO.class).findAll());
+		this.cmbVat.setContainerDataSource(Vat.class, DAOs.get(VatDAO.class).findAllActive());
 		this.cmbVat.setItemCaptionPropertyId("fullName");
+		this.lblAccount.setDescription("Externe BuHa Ertrags-Konto Nummer");
+		this.lblAccount.setValue("Konto#");
+		this.txtAccount.setConverter(ConverterBuilder.stringToDouble().groupingUsed(false).build());
 		this.lblItmState.setValue(StringResourceUtils.optLocalizeString("{$lblItmState.value}", this));
 		this.horizontalLayout.setMargin(new MarginInfo(false));
 		this.cmdSave.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/save1.png"));
@@ -359,6 +364,7 @@ public class ItemTabView extends XdevView {
 		this.fieldGroup.bind(this.txtItmPrice1, Item_.itmPrice1.getName());
 		this.fieldGroup.bind(this.txtItmPrice2, Item_.itmPrice2.getName());
 		this.fieldGroup.bind(this.cbxUnit, Item_.itmUnit.getName());
+		this.fieldGroup.bind(this.txtAccount, Item_.itmAccount.getName());
 		this.fieldGroup.bind(this.cbxState, Item_.itmState.getName());
 
 		MasterDetail.connect(this.table, this.fieldGroup);
@@ -402,11 +408,11 @@ public class ItemTabView extends XdevView {
 		this.horizontalLayout.addComponent(this.cmdReset);
 		this.horizontalLayout.setComponentAlignment(this.cmdReset, Alignment.MIDDLE_RIGHT);
 		this.form.setColumns(2);
-		this.form.setRows(10);
+		this.form.setRows(11);
 		this.cbxUnit.setSizeUndefined();
 		this.form.addComponent(this.cbxUnit, 1, 4);
 		this.cbxState.setSizeUndefined();
-		this.form.addComponent(this.cbxState, 1, 7);
+		this.form.addComponent(this.cbxState, 1, 8);
 		this.lblItmIdent.setSizeUndefined();
 		this.form.addComponent(this.lblItmIdent, 0, 0);
 		this.txtItmIdent.setWidth(100, Unit.PERCENTAGE);
@@ -439,16 +445,20 @@ public class ItemTabView extends XdevView {
 		this.cmbVat.setWidth(100, Unit.PERCENTAGE);
 		this.cmbVat.setHeight(-1, Unit.PIXELS);
 		this.form.addComponent(this.cmbVat, 1, 6);
+		this.lblAccount.setSizeUndefined();
+		this.form.addComponent(this.lblAccount, 0, 7);
+		this.txtAccount.setSizeUndefined();
+		this.form.addComponent(this.txtAccount, 1, 7);
 		this.lblItmState.setSizeUndefined();
-		this.form.addComponent(this.lblItmState, 0, 7);
+		this.form.addComponent(this.lblItmState, 0, 8);
 		this.horizontalLayout.setSizeUndefined();
-		this.form.addComponent(this.horizontalLayout, 0, 8, 1, 8);
+		this.form.addComponent(this.horizontalLayout, 0, 9, 1, 9);
 		this.form.setComponentAlignment(this.horizontalLayout, Alignment.MIDDLE_CENTER);
 		this.form.setColumnExpandRatio(1, 100.0F);
 		final CustomComponent form_vSpacer = new CustomComponent();
 		form_vSpacer.setSizeFull();
-		this.form.addComponent(form_vSpacer, 0, 9, 1, 9);
-		this.form.setRowExpandRatio(9, 1.0F);
+		this.form.addComponent(form_vSpacer, 0, 10, 1, 10);
+		this.form.setRowExpandRatio(10, 1.0F);
 		this.verticalLayout.setSizeFull();
 		this.horizontalSplitPanel.setFirstComponent(this.verticalLayout);
 		this.form.setSizeFull();
@@ -468,7 +478,8 @@ public class ItemTabView extends XdevView {
 
 	// <generated-code name="variables">
 	private XdevButton cmdNew, cmdDelete, cmdReload, cmdInfo, cmdSave, cmdReset;
-	private XdevLabel lblItmIdent, lblItmName, lblItmPrice1, lblItmPrice2, lblItmUnit, lblItemGroup, lblVat, lblItmState;
+	private XdevLabel lblItmIdent, lblItmName, lblItmPrice1, lblItmPrice2, lblItmUnit, lblItemGroup, lblVat, lblAccount,
+			lblItmState;
 	private XdevFieldGroup<Item> fieldGroup;
 	private XdevGridLayout form;
 	private XdevHorizontalSplitPanel horizontalSplitPanel;
@@ -477,7 +488,7 @@ public class ItemTabView extends XdevView {
 	private XdevHorizontalLayout actionLayout, horizontalLayout;
 	private XdevComboBox<Vat> cmbVat;
 	private XdevComboBox<?> cbxUnit, cbxState;
-	private XdevTextField txtItmIdent, txtItmName, txtItmPrice1, txtItmPrice2;
+	private XdevTextField txtItmIdent, txtItmName, txtItmPrice1, txtItmPrice2, txtAccount;
 	private XdevVerticalLayout verticalLayout;
 	private XdevTable<Item> table;
 	// </generated-code>

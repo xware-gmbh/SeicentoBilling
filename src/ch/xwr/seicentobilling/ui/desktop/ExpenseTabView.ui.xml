@@ -70,6 +70,9 @@
                         <converter numberType="Integer" numberFormatType="number" currency="default" converterType="STRING_TO_NUMBER" locale="default" />
                     </entry>
                     <entry type="Integer" property="perMonth" caption="Monat" collapsed="true" />
+                    <entry type="Boolean" property="perSignOffExpense" caption="Freigabe" width="80">
+                        <converter trueString="Ja" currency="default" converterType="STRING_TO_BOOLEAN" locale="default" falseString="Nein" />
+                    </entry>
                     <entry type="Short" property="perBookedExpense" caption="Buchhaltung" />
                     <entry type="Short" property="perBookedProject" caption="Gebucht Projekt" collapsed="true" />
                     <entry type="State" property="perState" caption="Status" collapsed="true" />

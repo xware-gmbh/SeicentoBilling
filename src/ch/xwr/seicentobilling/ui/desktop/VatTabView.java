@@ -399,6 +399,8 @@ public class VatTabView extends XdevView {
 		this.chkVatInclude = new XdevCheckBox();
 		this.lblVatExtRef = new XdevLabel();
 		this.txtVatExtRef = new XdevTextField();
+		this.lblVatExtRef2 = new XdevLabel();
+		this.txtVatExtRef1 = new XdevTextField();
 		this.lblVatState = new XdevLabel();
 		this.comboBoxState = new XdevComboBox<>();
 		this.horizontalLayout3 = new XdevHorizontalLayout();
@@ -438,8 +440,12 @@ public class VatTabView extends XdevView {
 		this.txtVatSign.setMaxLength(5);
 		this.lblVatInclude.setValue("Inklusiv");
 		this.chkVatInclude.setCaption("");
-		this.lblVatExtRef.setValue("Externe Ref");
+		this.lblVatExtRef.setDescription("z.B. Umsatzsteuer");
+		this.lblVatExtRef.setValue("Ext Ref 1");
 		this.txtVatExtRef.setMaxLength(20);
+		this.lblVatExtRef2.setDescription("z.B. Vorsteuer");
+		this.lblVatExtRef2.setValue("Ext Ref 2");
+		this.txtVatExtRef1.setMaxLength(20);
 		this.lblVatState.setValue("Status");
 		this.horizontalLayout3.setSpacing(false);
 		this.horizontalLayout3.setMargin(new MarginInfo(false, true, false, false));
@@ -468,6 +474,7 @@ public class VatTabView extends XdevView {
 		this.fieldGroup.bind(this.txtVatSign, Vat_.vatSign.getName());
 		this.fieldGroup.bind(this.chkVatInclude, Vat_.vatInclude.getName());
 		this.fieldGroup.bind(this.txtVatExtRef, Vat_.vatExtRef.getName());
+		this.fieldGroup.bind(this.txtVatExtRef1, Vat_.vatExtRef1.getName());
 		this.fieldGroup.bind(this.comboBoxState, Vat_.vatState.getName());
 
 		MasterDetail.connect(this.table, this.fieldGroup);
@@ -505,7 +512,7 @@ public class VatTabView extends XdevView {
 		this.verticalLayout.setComponentAlignment(this.table, Alignment.MIDDLE_CENTER);
 		this.verticalLayout.setExpandRatio(this.table, 100.0F);
 		this.gridLayout2.setColumns(2);
-		this.gridLayout2.setRows(6);
+		this.gridLayout2.setRows(7);
 		this.lblVatName.setSizeUndefined();
 		this.gridLayout2.addComponent(this.lblVatName, 0, 0);
 		this.txtVatName.setWidth(100, Unit.PERCENTAGE);
@@ -524,15 +531,19 @@ public class VatTabView extends XdevView {
 		this.gridLayout2.addComponent(this.lblVatExtRef, 0, 3);
 		this.txtVatExtRef.setSizeUndefined();
 		this.gridLayout2.addComponent(this.txtVatExtRef, 1, 3);
+		this.lblVatExtRef2.setSizeUndefined();
+		this.gridLayout2.addComponent(this.lblVatExtRef2, 0, 4);
+		this.txtVatExtRef1.setSizeUndefined();
+		this.gridLayout2.addComponent(this.txtVatExtRef1, 1, 4);
 		this.lblVatState.setSizeUndefined();
-		this.gridLayout2.addComponent(this.lblVatState, 0, 4);
+		this.gridLayout2.addComponent(this.lblVatState, 0, 5);
 		this.comboBoxState.setSizeUndefined();
-		this.gridLayout2.addComponent(this.comboBoxState, 1, 4);
+		this.gridLayout2.addComponent(this.comboBoxState, 1, 5);
 		this.gridLayout2.setColumnExpandRatio(1, 100.0F);
 		final CustomComponent gridLayout2_vSpacer = new CustomComponent();
 		gridLayout2_vSpacer.setSizeFull();
-		this.gridLayout2.addComponent(gridLayout2_vSpacer, 0, 5, 1, 5);
-		this.gridLayout2.setRowExpandRatio(5, 1.0F);
+		this.gridLayout2.addComponent(gridLayout2_vSpacer, 0, 6, 1, 6);
+		this.gridLayout2.setRowExpandRatio(6, 1.0F);
 		this.cmdNewLine.setSizeUndefined();
 		this.horizontalLayout3.addComponent(this.cmdNewLine);
 		this.horizontalLayout3.setComponentAlignment(this.cmdNewLine, Alignment.MIDDLE_CENTER);
@@ -600,7 +611,7 @@ public class VatTabView extends XdevView {
 
 	// <generated-code name="variables">
 	private XdevButton cmdNew, cmdDelete, cmdReload, cmdInfo, cmdNewLine, cmdEditLine, cmdDeletLine, cmdSave, cmdReset;
-	private XdevLabel lblVatName, lblVatSign, lblVatInclude, lblVatExtRef, lblVatState;
+	private XdevLabel lblVatName, lblVatSign, lblVatInclude, lblVatExtRef, lblVatExtRef2, lblVatState;
 	private XdevTabSheet tabSheet;
 	private XdevPanel panel;
 	private XdevFieldGroup<Vat> fieldGroup;
@@ -612,7 +623,7 @@ public class VatTabView extends XdevView {
 	private XdevHorizontalLayout horizontalLayout, horizontalLayout3, horizontalLayoutButtons;
 	private XdevComboBox<?> comboBoxState;
 	private XdevCheckBox chkVatInclude;
-	private XdevTextField txtVatName, txtVatSign, txtVatExtRef;
+	private XdevTextField txtVatName, txtVatSign, txtVatExtRef, txtVatExtRef1;
 	private XdevVerticalLayout verticalLayout, verticalLayout2;
 	// </generated-code>
 

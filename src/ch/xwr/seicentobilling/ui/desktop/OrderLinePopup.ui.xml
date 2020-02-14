@@ -23,9 +23,6 @@
     <x:constraints zpos="0" width="100%" height="100%" />
     <XdevGridLayout x:name="form">
         <x:constraints zpos="0" width="100%" height="100%" />
-        <XdevLabel x:name="labelVatRate" value="Label">
-            <x:constraints gridx="4" gridy="2" weighty="0.0" weightx="1.0" width="0px" height="0px" />
-        </XdevLabel>
         <XdevComboBox tabIndex="12" x:name="comboBoxState">
             <x:constraints gridx="2" gridy="9" weighty="0.0" weightx="1.0" width="0px" height="0px" />
             <x:typeArguments>
@@ -87,7 +84,7 @@
         <XdevLabel x:name="lblVat" value="{$lblVat.value}">
             <x:constraints gridx="3" gridy="3" weighty="0.0" weightx="0.0" width="0px" height="0px" />
         </XdevLabel>
-        <XdevComboBox tabIndex="4" itemCaptionFromAnnotation="false" x:name="cmbVat" x:entity="Vat">
+        <XdevComboBox tabIndex="4" itemCaptionFromAnnotation="false" x:name="cmbVat" x:entity="Vat" x:autoQuery="false">
             <x:constraints gridx="4" gridy="3" weighty="0.0" weightx="1.0" width="100%" height="0px" />
             <x:entityProperty>
                 <entry type="String" property="fullName" />
@@ -95,7 +92,7 @@
             <x:typeArguments>
                 <typeArgument type="Vat" />
             </x:typeArguments>
-            <x:data methodName="findAll" />
+            <x:data methodName="findAllActive" />
             <x:event>valueChange.valueChange</x:event>
         </XdevComboBox>
         <XdevLabel x:name="lblOdlQuantity" value="{$lblOdlQuantity.value}">

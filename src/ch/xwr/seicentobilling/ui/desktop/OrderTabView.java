@@ -1192,11 +1192,13 @@ public class OrderTabView extends XdevView {
 		this.gridLayoutHdr.addComponent(this.textArea, 1, 3, 3, 3);
 		this.lblProject.setSizeUndefined();
 		this.gridLayoutHdr.addComponent(this.lblProject, 0, 4);
-		this.cmbProject.setSizeUndefined();
+		this.cmbProject.setWidth(100, Unit.PERCENTAGE);
+		this.cmbProject.setHeight(-1, Unit.PIXELS);
 		this.gridLayoutHdr.addComponent(this.cmbProject, 1, 4);
 		this.lblPaymentCondition.setSizeUndefined();
 		this.gridLayoutHdr.addComponent(this.lblPaymentCondition, 2, 4);
-		this.cmbPaymentCondition.setSizeUndefined();
+		this.cmbPaymentCondition.setWidth(100, Unit.PERCENTAGE);
+		this.cmbPaymentCondition.setHeight(-1, Unit.PIXELS);
 		this.gridLayoutHdr.addComponent(this.cmbPaymentCondition, 3, 4);
 		this.lblOrdAmountBrut.setSizeUndefined();
 		this.gridLayoutHdr.addComponent(this.lblOrdAmountBrut, 0, 5);
