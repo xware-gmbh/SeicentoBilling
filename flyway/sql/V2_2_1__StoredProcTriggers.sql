@@ -127,7 +127,7 @@ GO
 
 CREATE TRIGGER dbo.tr_seicento_postSaveProject
    ON  dbo.Project 
-   AFTER UPDATE
+   AFTER INSERT, UPDATE
 AS 
 BEGIN
 	-- SET NOCOUNT ON added to prevent extra result sets from
