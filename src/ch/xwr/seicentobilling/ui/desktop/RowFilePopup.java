@@ -8,7 +8,6 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.Upload;
 import com.vaadin.ui.Upload.SucceededEvent;
 import com.vaadin.ui.Window;
-import com.xdev.dal.DAOs;
 import com.xdev.res.ApplicationResource;
 import com.xdev.res.StringResourceUtils;
 import com.xdev.ui.XdevButton;
@@ -29,7 +28,6 @@ import ch.xwr.seicentobilling.dal.RowObjectDAO;
 import ch.xwr.seicentobilling.entities.RowImage;
 import ch.xwr.seicentobilling.entities.RowImage_;
 import ch.xwr.seicentobilling.entities.RowObject;
-import ch.xwr.seicentobilling.entities.RowObject_;
 
 public class RowFilePopup extends XdevView {
 
@@ -102,7 +100,7 @@ public class RowFilePopup extends XdevView {
 		//set Bean + Fields
 		this.fieldGroup.setItemDataSource(bean);
 
-		this.comboBoxObject.setEnabled(false);
+		//this.comboBoxObject.setEnabled(false);
 		this.textFieldSize.setEnabled(false);
 		this.textFieldName.setEnabled(false);
 		this.textFieldMime.setEnabled(false);
@@ -142,8 +140,6 @@ public class RowFilePopup extends XdevView {
 	private void initUI() {
 		this.panel = new XdevPanel();
 		this.form = new XdevGridLayout();
-		this.labelObject = new XdevLabel();
-		this.comboBoxObject = new XdevComboBox<>();
 		this.labelNbr = new XdevLabel();
 		this.textField = new XdevTextField();
 		this.labelFile = new XdevLabel();
@@ -162,15 +158,12 @@ public class RowFilePopup extends XdevView {
 		this.cmdReset = new XdevButton();
 		this.fieldGroup = new XdevFieldGroup<>(RowImage.class);
 
-		this.labelObject.setValue(StringResourceUtils.optLocalizeString("{$labelObject.value}", this));
-		this.comboBoxObject.setItemCaptionFromAnnotation(false);
-		this.comboBoxObject.setContainerDataSource(RowObject.class, DAOs.get(RowObjectDAO.class).findAll());
-		this.comboBoxObject.setItemCaptionPropertyId(RowObject_.entity.getName());
 		this.labelNbr.setValue(StringResourceUtils.optLocalizeString("{$labelNbr.value}", this));
 		this.textField.setColumns(5);
 		this.textField.setTabIndex(2);
 		this.labelFile.setValue(StringResourceUtils.optLocalizeString("{$labelFile.value}", this));
 		this.textFieldName.setTabIndex(3);
+		this.upload.setButtonCaption("Upload...");
 		this.upload.setTabIndex(14);
 		this.upload.setImmediate(true);
 		this.lblMimeType.setValue(StringResourceUtils.optLocalizeString("{$lblMimeType.value}", this));
@@ -189,7 +182,6 @@ public class RowFilePopup extends XdevView {
 		this.cmdReset.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/cancel1.png"));
 		this.cmdReset.setCaption(StringResourceUtils.optLocalizeString("{$cmdReset.caption}", this));
 		this.cmdReset.setTabIndex(21);
-		this.fieldGroup.bind(this.comboBoxObject, RowImage_.rowObject.getName());
 		this.fieldGroup.bind(this.textField, RowImage_.rimNumber.getName());
 		this.fieldGroup.bind(this.textFieldName, RowImage_.rimName.getName());
 		this.fieldGroup.bind(this.textFieldMime, RowImage_.rimMimetype.getName());
@@ -204,49 +196,44 @@ public class RowFilePopup extends XdevView {
 		this.horizontalLayout.addComponent(this.cmdReset);
 		this.horizontalLayout.setComponentAlignment(this.cmdReset, Alignment.MIDDLE_LEFT);
 		this.form.setColumns(3);
-		this.form.setRows(9);
-		this.labelObject.setSizeUndefined();
-		this.form.addComponent(this.labelObject, 0, 0);
-		this.comboBoxObject.setWidth(100, Unit.PERCENTAGE);
-		this.comboBoxObject.setHeight(-1, Unit.PIXELS);
-		this.form.addComponent(this.comboBoxObject, 1, 0);
+		this.form.setRows(8);
 		this.labelNbr.setSizeUndefined();
-		this.form.addComponent(this.labelNbr, 0, 1);
+		this.form.addComponent(this.labelNbr, 0, 0);
 		this.textField.setSizeUndefined();
-		this.form.addComponent(this.textField, 1, 1);
+		this.form.addComponent(this.textField, 1, 0);
 		this.labelFile.setSizeUndefined();
-		this.form.addComponent(this.labelFile, 0, 2);
+		this.form.addComponent(this.labelFile, 0, 1);
 		this.textFieldName.setWidth(100, Unit.PERCENTAGE);
 		this.textFieldName.setHeight(-1, Unit.PIXELS);
-		this.form.addComponent(this.textFieldName, 1, 2);
+		this.form.addComponent(this.textFieldName, 1, 1);
 		this.upload.setSizeUndefined();
-		this.form.addComponent(this.upload, 2, 2);
+		this.form.addComponent(this.upload, 2, 1);
 		this.lblMimeType.setSizeUndefined();
-		this.form.addComponent(this.lblMimeType, 0, 3);
+		this.form.addComponent(this.lblMimeType, 0, 2);
 		this.textFieldMime.setWidth(100, Unit.PERCENTAGE);
 		this.textFieldMime.setHeight(-1, Unit.PIXELS);
-		this.form.addComponent(this.textFieldMime, 1, 3);
+		this.form.addComponent(this.textFieldMime, 1, 2);
 		this.textField4.setSizeUndefined();
-		this.form.addComponent(this.textField4, 1, 4);
+		this.form.addComponent(this.textField4, 1, 3);
 		this.labelSize.setSizeUndefined();
-		this.form.addComponent(this.labelSize, 0, 5);
+		this.form.addComponent(this.labelSize, 0, 4);
 		this.textFieldSize.setWidth(100, Unit.PERCENTAGE);
 		this.textFieldSize.setHeight(-1, Unit.PIXELS);
-		this.form.addComponent(this.textFieldSize, 1, 5);
+		this.form.addComponent(this.textFieldSize, 1, 4);
 		this.comboBoxState.setSizeUndefined();
-		this.form.addComponent(this.comboBoxState, 1, 6);
+		this.form.addComponent(this.comboBoxState, 1, 5);
 		this.labelType.setSizeUndefined();
-		this.form.addComponent(this.labelType, 0, 4);
+		this.form.addComponent(this.labelType, 0, 3);
 		this.labelState.setSizeUndefined();
-		this.form.addComponent(this.labelState, 0, 6);
+		this.form.addComponent(this.labelState, 0, 5);
 		this.horizontalLayout.setSizeUndefined();
-		this.form.addComponent(this.horizontalLayout, 1, 7);
+		this.form.addComponent(this.horizontalLayout, 1, 6);
 		this.form.setComponentAlignment(this.horizontalLayout, Alignment.TOP_RIGHT);
 		this.form.setColumnExpandRatio(2, 10.0F);
 		final CustomComponent form_vSpacer = new CustomComponent();
 		form_vSpacer.setSizeFull();
-		this.form.addComponent(form_vSpacer, 0, 8, 2, 8);
-		this.form.setRowExpandRatio(8, 1.0F);
+		this.form.addComponent(form_vSpacer, 0, 7, 2, 7);
+		this.form.setRowExpandRatio(7, 1.0F);
 		this.form.setSizeFull();
 		this.panel.setContent(this.form);
 		this.panel.setSizeFull();
@@ -258,11 +245,10 @@ public class RowFilePopup extends XdevView {
 	} // </generated-code>
 
 	// <generated-code name="variables">
-	private XdevLabel labelObject, labelNbr, labelFile, lblMimeType, labelSize, labelType, labelState;
+	private XdevLabel labelNbr, labelFile, lblMimeType, labelSize, labelType, labelState;
 	private XdevButton cmdSave, cmdReset;
 	private XdevUpload upload;
 	private XdevHorizontalLayout horizontalLayout;
-	private XdevComboBox<RowObject> comboBoxObject;
 	private XdevFieldGroup<RowImage> fieldGroup;
 	private XdevComboBox<?> comboBoxState;
 	private XdevPanel panel;
