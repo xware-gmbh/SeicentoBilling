@@ -1,6 +1,7 @@
 package ch.xwr.seicentobilling.ui.desktop;
 
 import com.vaadin.data.Property;
+import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.filter.Compare;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.shared.ui.MarginInfo;
@@ -402,15 +403,6 @@ public class RowObjectView extends XdevView {
 	}
 
 	/**
-	 * Event handler delegate method for the {@link XdevTable} {@link #tableText}.
-	 *
-	 * @see Property.ValueChangeListener#valueChange(Property.ValueChangeEvent)
-	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
-	 */
-	private void tableText_valueChange(final Property.ValueChangeEvent event) {
-	}
-
-	/**
 	 * Event handler delegate method for the {@link XdevTable}
 	 * {@link #tableRowImage}.
 	 *
@@ -442,7 +434,9 @@ public class RowObjectView extends XdevView {
 	 */
 	private void tableRowParam_itemClick(final ItemClickEvent event) {
 		if (event.isDoubleClick()) {
-			final Long beanId = this.tableRowParam.getSelectedItem().getBean().getPrmId();
+			@SuppressWarnings("unchecked")
+			final BeanItem<RowParameter> x = (BeanItem<RowParameter>) event.getItem();
+			final Long beanId = x.getBean().getPrmId(); //this.tableRowParam.getSelectedItem().getBean().getPrmId();
 			final Long objId = null;
 
 			UI.getCurrent().getSession().setAttribute("beanId", beanId);
@@ -461,7 +455,9 @@ public class RowObjectView extends XdevView {
 	 */
 	private void tableText_itemClick(final ItemClickEvent event) {
 		if (event.isDoubleClick()) {
-			final Long beanId = this.tableText.getSelectedItem().getBean().getTxtId();
+			@SuppressWarnings("unchecked")
+			final BeanItem<RowText> x = (BeanItem<RowText>) event.getItem();
+			final Long beanId = x.getBean().getTxtId(); //this.tableRowParam.getSelectedItem().getBean().getPrmId();
 			final Long objId = null;
 
 			UI.getCurrent().getSession().setAttribute("beanId", beanId);
@@ -785,7 +781,6 @@ public class RowObjectView extends XdevView {
 		this.cmdNewText.addClickListener(event -> this.cmdNewText_buttonClick(event));
 		this.cmdDeleteText.addClickListener(event -> this.cmdDeleteText_buttonClick(event));
 		this.cmdUpdateText.addClickListener(event -> this.cmdUpdateText_buttonClick(event));
-		this.tableText.addValueChangeListener(event -> this.tableText_valueChange(event));
 		this.tableText.addItemClickListener(event -> this.tableText_itemClick(event));
 		this.cmdNewFile.addClickListener(event -> this.cmdNewFile_buttonClick(event));
 		this.cmdDeleteFile.addClickListener(event -> this.cmdDeleteFile_buttonClick(event));
