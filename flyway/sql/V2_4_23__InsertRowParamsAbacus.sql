@@ -28,6 +28,6 @@ BEGIN
         (@ObjID, 'abacus' ,'soap', 'defcreditaccount', '3400', 1,1),
         (@ObjID, 'abacus' ,'soap', 'drymode', 'true', 3,1),
         (@ObjID, 'abacus' ,'soap', 'defcostaccount', '100', 1,1),
-        (@ObjID, 'abacus' ,'soap', 'maxdaysperiode', '30', 1,1) 
+        (@ObjID, 'abacus' ,'soap', 'maxdaysperiode', '30', 1,1), 
         (@ObjID, 'abacus' ,'soap', 'maxrecords', '3', 1,1) 
 END             
