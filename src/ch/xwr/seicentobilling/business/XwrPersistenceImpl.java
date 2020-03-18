@@ -51,9 +51,16 @@ public class XwrPersistenceImpl implements Factory {
 					final String dburl = System.getenv("DB_URL_" + stage);
 					if (dburl != null && dburl.length()>3) {
 						System.out.println("Read DB Connection from Environment: " + stage);
-					    properties.put("javax.persistence.jdbc.url", System.getenv("DB_URL_" + stage));
+						final String url = System.getenv("DB_URL_" + stage);
+					    properties.put("javax.persistence.jdbc.url", url);
 					    properties.put("javax.persistence.jdbc.user", System.getenv("DB_USR_" + stage));
 					    properties.put("javax.persistence.jdbc.password", System.getenv("DB_PWD_" + stage));
+
+					    if (url.startsWith("jdbc:postgresql:")) {
+						    properties.put("javax.persistence.jdbc.driver", "org.postgresql.Driver");
+						    properties.put("hibernate.dialect", "org.hibernate.dialect.PostgreSQL9Dialect");
+					    }
+
 					} else {
 						System.out.println("Read DB Connection from persistence.xml");
 					}

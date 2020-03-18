@@ -186,6 +186,12 @@
 			<artifactId>logstash-gelf</artifactId>
 			<version>1.7.2</version>
 		</dependency>
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>42.2.11</version>
+			<scope>runtime</scope>
+		</dependency>
 	</dependencies>
 	<properties>
 		<project.build.sourceEncoding>
