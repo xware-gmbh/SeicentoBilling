@@ -48,6 +48,9 @@
         <XdevLabel x:name="label" value="Zum Starten ersten Knopf drücken">
             <x:constraints gridx="1" gridy="4" weighty="0.0" weightx="0.0" width="100%" gridWidth="3" height="0px" />
         </XdevLabel>
+        <XdevLabel x:name="labelInfo" value="Rechnung:">
+            <x:constraints gridx="1" gridy="5" top="33px" left="-1px" weighty="0.0" weightx="0.0" width="100%" gridWidth="3" height="0px" />
+        </XdevLabel>
     </XdevGridLayout>
 </XdevView>
 

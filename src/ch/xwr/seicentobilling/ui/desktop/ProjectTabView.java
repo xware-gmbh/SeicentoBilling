@@ -5,6 +5,8 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.persistence.PersistenceException;
+
 import org.apache.poi.ss.formula.functions.T;
 
 import com.vaadin.data.Property;
@@ -199,28 +201,44 @@ public class ProjectTabView extends XdevView {
 			}
 
 			private void doDelete() {
-				final Project bean = ProjectTabView.this.table.getSelectedItem().getBean();
-				// Delete Record
-				final RowObjectManager man = new RowObjectManager();
-				man.deleteObject(bean.getProId(), bean.getClass().getSimpleName());
+				try {
 
-				ProjectTabView.this.table.removeItem(bean);
-				ProjectTabView.this.table.select(null);
+					final Project bean = ProjectTabView.this.table.getSelectedItem().getBean();
 
-				final ProjectDAO dao = new ProjectDAO();
-				dao.remove(bean);
+					final ProjectDAO dao = new ProjectDAO();
+					dao.remove(bean);
+					dao.flush();
 
-				ProjectTabView.this.fieldGroup.clear();
-				setROComponents(false);
+					// Delete Record
+					final RowObjectManager man = new RowObjectManager();
+					man.deleteObject(bean.getProId(), bean.getClass().getSimpleName());
 
-//				try {
-//					ProjectTabView.this.table.select(ProjectTabView.this.table.getCurrentPageFirstItemId());
-//				} catch (final Exception e) {
-//					// ignore
-//					ProjectTabView.this.fieldGroup.setItemDataSource(new Project());
-//				}
-				Notification.show("Datensatz löschen", "Datensatz wurde gelöscht!",
-						Notification.Type.TRAY_NOTIFICATION);
+					ProjectTabView.this.table.removeItem(bean);
+					ProjectTabView.this.table.select(null);
+
+					ProjectTabView.this.fieldGroup.clear();
+					setROComponents(false);
+
+	//				try {
+	//					ProjectTabView.this.table.select(ProjectTabView.this.table.getCurrentPageFirstItemId());
+	//				} catch (final Exception e) {
+	//					// ignore
+	//					ProjectTabView.this.fieldGroup.setItemDataSource(new Project());
+	//				}
+					Notification.show("Datensatz löschen", "Datensatz wurde gelöscht!",
+							Notification.Type.TRAY_NOTIFICATION);
+				} catch (final PersistenceException cx) {
+					String msg = cx.getMessage();
+					if (cx.getCause() != null) {
+						msg = cx.getCause().getMessage();
+						if (cx.getCause().getCause() != null) {
+							msg = cx.getCause().getCause().getMessage();
+						}
+					}
+					Notification.show("Fehler beim Löschen", msg, Notification.Type.ERROR_MESSAGE);
+					cx.printStackTrace();
+				}
+
 			}
 
 		});
@@ -389,6 +407,16 @@ public class ProjectTabView extends XdevView {
 			//EntityManagerUtils.getEntityManger().flush();  //gibe es (nicht) mehr??
 
 			Notification.show("Save clicked", "Daten wurden gespeichert", Notification.Type.TRAY_NOTIFICATION);
+		} catch (final PersistenceException cx) {
+			String msg = cx.getMessage();
+			if (cx.getCause() != null) {
+				msg = cx.getCause().getMessage();
+				if (cx.getCause().getCause() != null) {
+					msg = cx.getCause().getCause().getMessage();
+				}
+			}
+			Notification.show("Fehler beim Speichern", msg, Notification.Type.ERROR_MESSAGE);
+			cx.printStackTrace();
 		} catch (final Exception e) {
 			Notification.show("Fehler beim Speichern", e.getMessage(), Notification.Type.ERROR_MESSAGE);
 			e.printStackTrace();
