@@ -23,37 +23,37 @@
                     <x:constraints width="100%" height="100%" />
                     <x:event>attach.attach</x:event>
                     <XdevLabel x:name="label" value="Country">
-                        <x:constraints gridx="1" gridy="1" weighty="0.0" weightx="0.0" />
+                        <x:constraints gridx="1" gridy="1" weighty="0.0" weightx="0.0" width="0px" height="0px" />
                     </XdevLabel>
                     <XdevLabel x:name="labelCountry" value="Version">
-                        <x:constraints gridx="2" gridy="1" top="135px" left="-1px" weighty="0.0" weightx="0.0" />
+                        <x:constraints gridx="2" gridy="1" top="135px" left="-1px" weighty="0.0" weightx="0.0" width="0px" height="0px" />
                     </XdevLabel>
                     <XdevLabel x:name="label2" value="Language">
-                        <x:constraints gridx="1" gridy="2" top="33px" left="-1px" weighty="0.0" weightx="0.0" />
+                        <x:constraints gridx="1" gridy="2" top="33px" left="-1px" weighty="0.0" weightx="0.0" width="0px" height="0px" />
                     </XdevLabel>
                     <XdevLabel x:name="labelLanguage" value="Version">
-                        <x:constraints gridx="2" gridy="2" top="169px" left="-1px" weighty="0.0" weightx="0.0" />
+                        <x:constraints gridx="2" gridy="2" top="169px" left="-1px" weighty="0.0" weightx="0.0" width="0px" height="0px" />
                     </XdevLabel>
                     <XdevLabel x:name="label3" value="Time Zone">
-                        <x:constraints gridx="1" gridy="3" top="67px" left="-1px" weighty="0.0" weightx="0.0" />
+                        <x:constraints gridx="1" gridy="3" top="67px" left="-1px" weighty="0.0" weightx="0.0" width="0px" height="0px" />
                     </XdevLabel>
                     <XdevLabel x:name="labelTimeZone" value="Version">
-                        <x:constraints gridx="2" gridy="3" top="203px" left="-1px" weighty="0.0" weightx="0.0" />
+                        <x:constraints gridx="2" gridy="3" top="203px" left="-1px" weighty="0.0" weightx="0.0" width="0px" height="0px" />
                     </XdevLabel>
                     <XdevLabel x:name="label4" value="Version">
-                        <x:constraints gridx="1" gridy="4" top="101px" left="-1px" weighty="0.0" weightx="0.0" />
+                        <x:constraints gridx="1" gridy="4" top="101px" left="-1px" weighty="0.0" weightx="0.0" width="0px" height="0px" />
                     </XdevLabel>
                     <XdevLabel x:name="labelVersion" value="0.6">
-                        <x:constraints gridx="2" gridy="4" top="237px" left="-1px" weighty="0.0" weightx="0.0" />
+                        <x:constraints gridx="2" gridy="4" top="237px" left="-1px" weighty="0.0" weightx="0.0" width="0px" height="0px" />
                     </XdevLabel>
                     <XdevLabel x:name="labelArtifact" value="0.6">
-                        <x:constraints gridx="2" gridy="5" top="237px" left="-1px" weighty="0.0" weightx="0.0" />
+                        <x:constraints gridx="2" gridy="5" top="237px" left="-1px" weighty="0.0" weightx="0.0" width="0px" height="0px" />
                     </XdevLabel>
                     <XdevLabel x:name="label5" value="Username">
-                        <x:constraints gridx="1" gridy="6" top="135px" left="-1px" weighty="0.0" weightx="0.0" />
+                        <x:constraints gridx="1" gridy="6" top="135px" left="-1px" weighty="0.0" weightx="0.0" width="0px" height="0px" />
                     </XdevLabel>
                     <XdevLabel x:name="labelUsername" value="Version">
-                        <x:constraints gridx="2" gridy="6" top="237px" left="-1px" weighty="0.0" weightx="0.0" />
+                        <x:constraints gridx="2" gridy="6" top="237px" left="-1px" weighty="0.0" weightx="0.0" width="0px" height="0px" />
                     </XdevLabel>
                 </XdevGridLayout>
                 <XdevGridLayout caption="UserInfo" x:name="gridLayoutUsr" margin="trl">
@@ -62,9 +62,9 @@
                 </XdevGridLayout>
             </XdevTabSheet>
             <XdevHorizontalLayout x:name="horizontalLayout" margin="rbl">
-                <x:constraints weighty="0.05" />
+                <x:constraints weighty="0.05" width="0px" height="0px" />
                 <XdevButton caption="Schliessen" x:name="button">
-                    <x:constraints weightx="0.0" />
+                    <x:constraints weightx="0.0" width="0px" height="0px" />
                     <x:event>click.buttonClick</x:event>
                 </XdevButton>
             </XdevHorizontalLayout>

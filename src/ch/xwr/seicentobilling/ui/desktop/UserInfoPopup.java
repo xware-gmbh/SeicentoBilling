@@ -24,9 +24,10 @@ import com.xdev.ui.XdevView;
 
 import ch.xwr.seicentobilling.business.Seicento;
 import ch.xwr.seicentobilling.business.TheVersion;
+import ch.xwr.seicentobilling.business.helper.SeicentoUser;
 
 public class UserInfoPopup extends XdevView {
-	private AzureUser currentUser;
+	private SeicentoUser currentUser;
 	private Integer index;
 
 	/**
@@ -64,9 +65,14 @@ public class UserInfoPopup extends XdevView {
 
 		if (sub != null && sub instanceof AzureUser)
 		{
-			this.currentUser = (AzureUser) sub;
+			this.currentUser = new SeicentoUser();
+			this.currentUser.setAzureUser((AzureUser) sub);
+			showInfos();
+		} else if (sub != null && sub instanceof SeicentoUser){
+			this.currentUser = (SeicentoUser) sub;
 			showInfos();
 		}
+
 	}
 
 

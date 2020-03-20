@@ -7,6 +7,7 @@ import com.vaadin.server.VaadinSession;
 import com.xdev.security.authorization.Subject;
 import com.xdev.server.aa.openid.auth.AzureUser;
 
+import ch.xwr.seicentobilling.business.helper.SeicentoUser;
 import ch.xwr.seicentobilling.dal.CostAccountDAO;
 import ch.xwr.seicentobilling.entities.CostAccount;
 
@@ -23,9 +24,9 @@ public class Seicento {
 			return usr.name();
 		}
 
-		if (sub != null && sub instanceof MockupUser)
+		if (sub != null && sub instanceof SeicentoUser)
 		{
-			final MockupUser usr = (MockupUser) sub;
+			final SeicentoUser usr = (SeicentoUser) sub;
 			return usr.name();
 		}
 
@@ -39,14 +40,14 @@ public class Seicento {
 			return true;  //Dev Mode 1
 		}
 
-		if (sub instanceof MockupUser)
-		{
-			return true;
-		}
+//		if (sub instanceof MockupUser)
+//		{
+//			return true;
+//		}
 
-		if (sub instanceof AzureUser)
+		if (sub instanceof SeicentoUser)
 		{
-			final AzureUser usr = (AzureUser) sub;
+			final SeicentoUser usr = (SeicentoUser) sub;
 
 			if (usr != null && usr.getClaimSet().getClaims() != null) {
 				@SuppressWarnings("unchecked")
@@ -67,7 +68,7 @@ public class Seicento {
 		return false;
 	}
 
-	public static CostAccount getLoggedInCostAccount() {
+	public static CostAccount getLoggedInCostAccount(final String name) {
 		final CostAccountDAO dao = new CostAccountDAO();
 		CostAccount bean = null;
 		try {
@@ -88,5 +89,9 @@ public class Seicento {
 			}
 		}
 		return bean;
+	}
+
+	public static CostAccount getLoggedInCostAccount() {
+		return Seicento.getLoggedInCostAccount(getUserName());
 	}
 }
