@@ -1,4 +1,4 @@
-package ch.xwr.seicentobilling.business.helper;
+package ch.xwr.seicentobilling.business.auth;
 
 import java.net.URI;
 import java.util.Properties;

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<seicentoUsersXml version="1.0">
+	<user>
+		<name>admin</name>
+		<uid>admin</uid>
+		<password>changeme</password>
+		<role>SeicentoBillingAdmin</role>
+	</user>
+	<user>
+		<name>demo</name>
+		<uid>demo</uid>
+		<password>changeme</password>
+	</user>	
+</seicentoUsersXml>

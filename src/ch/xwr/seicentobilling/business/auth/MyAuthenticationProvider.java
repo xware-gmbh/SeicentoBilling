@@ -1,5 +1,5 @@
 
-package ch.xwr.seicentobilling.business;
+package ch.xwr.seicentobilling.business.auth;
 
 import com.xdev.security.authentication.Authenticator;
 import com.xdev.security.authentication.AuthenticatorProvider;
@@ -18,7 +18,7 @@ public class MyAuthenticationProvider
 		return INSTANCE;
 	}
 
-	private MockupAuthenticator authenticator;
+	private SeicentoUserAuthenticator authenticator;
 
 	private MyAuthenticationProvider() {
 	}
@@ -27,7 +27,7 @@ public class MyAuthenticationProvider
 	public Authenticator<CredentialsUsernamePassword, CredentialsUsernamePassword> provideAuthenticator() {
 		if (this.authenticator == null) {
 			final Class<? extends CredentialsUsernamePassword> authenticationEntityType = CredentialsUsernamePassword.class;
-			this.authenticator = new MockupAuthenticator(authenticationEntityType);
+			this.authenticator = new SeicentoUserAuthenticator(authenticationEntityType);
 			this.authenticator.setHashStrategy(new SHA2());
 		}
 

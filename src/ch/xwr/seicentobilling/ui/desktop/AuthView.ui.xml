@@ -38,7 +38,7 @@
                 <XdevPasswordField columns="20" caption="Password" x:name="txtPassword">
                     <x:constraints gridx="1" gridy="2" weighty="0.0" weightx="0.1" width="0px" height="0px" />
                 </XdevPasswordField>
-                <XdevButton caption="Login" styleName="friendly" x:name="cmdLogin2" x:shortcut="ENTER">
+                <XdevButton caption="Login" styleName="friendly" x:name="cmdLoginLocal" x:shortcut="ENTER">
                     <x:constraints gridx="1" gridy="3" weighty="0.0" weightx="0.1" width="0px" alignment="MIDDLE_RIGHT" height="0px" />
                     <x:event>click.buttonClick</x:event>
                 </XdevButton>

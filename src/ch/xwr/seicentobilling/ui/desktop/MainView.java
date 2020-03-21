@@ -9,7 +9,7 @@ import com.xdev.server.aa.openid.auth.AzureUser;
 import com.xdev.ui.XdevView;
 
 import ch.xwr.seicentobilling.business.Seicento;
-import ch.xwr.seicentobilling.business.helper.SeicentoUser;
+import ch.xwr.seicentobilling.business.auth.SeicentoUser;
 
 public class MainView extends XdevView {
 	//private AzureUser currentUser;

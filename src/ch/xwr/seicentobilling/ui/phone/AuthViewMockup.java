@@ -15,8 +15,8 @@ import com.xdev.ui.XdevPasswordField;
 import com.xdev.ui.XdevTextField;
 import com.xdev.ui.XdevView;
 
-import ch.xwr.seicentobilling.business.MockupUser;
-import ch.xwr.seicentobilling.business.MyAuthenticationProvider;
+import ch.xwr.seicentobilling.business.auth.MockupUser;
+import ch.xwr.seicentobilling.business.auth.MyAuthenticationProvider;
 
 public class AuthViewMockup extends XdevView implements com.xdev.security.authentication.ui.LoginView {
 

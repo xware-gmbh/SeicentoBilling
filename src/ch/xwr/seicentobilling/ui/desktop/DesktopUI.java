@@ -32,8 +32,8 @@ import com.xdev.ui.XdevUI;
 import com.xdev.ui.XdevVerticalLayout;
 import com.xdev.ui.XdevView;
 
-import ch.xwr.seicentobilling.business.helper.AzureHelper;
-import ch.xwr.seicentobilling.business.helper.SeicentoUser;
+import ch.xwr.seicentobilling.business.auth.AzureHelper;
+import ch.xwr.seicentobilling.business.auth.SeicentoUser;
 import ch.xwr.seicentobilling.dal.CompanyDAO;
 import ch.xwr.seicentobilling.entities.Company;
 import ch.xwr.seicentobilling.ui.desktop.billing.OrderGenerateTabView;

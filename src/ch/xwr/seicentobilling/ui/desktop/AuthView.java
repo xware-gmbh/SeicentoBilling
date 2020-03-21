@@ -18,9 +18,9 @@ import com.xdev.ui.XdevPasswordField;
 import com.xdev.ui.XdevTextField;
 import com.xdev.ui.XdevView;
 
-import ch.xwr.seicentobilling.business.MyAuthenticationProvider;
-import ch.xwr.seicentobilling.business.helper.AzureHelper;
-import ch.xwr.seicentobilling.business.helper.SeicentoUser;
+import ch.xwr.seicentobilling.business.auth.AzureHelper;
+import ch.xwr.seicentobilling.business.auth.MyAuthenticationProvider;
+import ch.xwr.seicentobilling.business.auth.SeicentoUser;
 
 public class AuthView extends XdevView implements com.xdev.security.authentication.ui.LoginView {
 
@@ -77,12 +77,12 @@ public class AuthView extends XdevView implements com.xdev.security.authenticati
 
 
 	/**
-	 * Event handler delegate method for the {@link XdevButton} {@link #cmdLogin2}.
+	 * Event handler delegate method for the {@link XdevButton} {@link #cmdLoginLocal}.
 	 *
 	 * @see Button.ClickListener#buttonClick(Button.ClickEvent)
 	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
 	 */
-	private void cmdLogin2_buttonClick(final Button.ClickEvent event) {
+	private void cmdLoginLocal_buttonClick(final Button.ClickEvent event) {
 		try {
 			final CredentialsUsernamePassword credentials = CredentialsUsernamePassword.New(getUsername(), getPassword());
 			final MyAuthenticationProvider authenticatorProvider = MyAuthenticationProvider.getInstance();
@@ -112,7 +112,7 @@ public class AuthView extends XdevView implements com.xdev.security.authenticati
 		this.gridLayout3 = new XdevGridLayout();
 		this.txtUsername = new XdevTextField();
 		this.txtPassword = new XdevPasswordField();
-		this.cmdLogin2 = new XdevButton();
+		this.cmdLoginLocal = new XdevButton();
 
 		this.panelMain.setCaption("Login");
 		this.panelMain.setTabIndex(0);
@@ -128,9 +128,9 @@ public class AuthView extends XdevView implements com.xdev.security.authenticati
 		this.panelLocal.setVisible(false);
 		this.txtUsername.setCaption("Username");
 		this.txtPassword.setCaption("Password");
-		this.cmdLogin2.setCaption("Login");
-		this.cmdLogin2.setStyleName("friendly");
-		this.cmdLogin2.setClickShortcut(ShortcutAction.KeyCode.ENTER);
+		this.cmdLoginLocal.setCaption("Login");
+		this.cmdLoginLocal.setStyleName("friendly");
+		this.cmdLoginLocal.setClickShortcut(ShortcutAction.KeyCode.ENTER);
 
 		this.gridLayout4.setSizeFull();
 		this.panelMain.setContent(this.gridLayout4);
@@ -152,9 +152,9 @@ public class AuthView extends XdevView implements com.xdev.security.authenticati
 		this.gridLayout3.addComponent(this.txtUsername, 0, 0);
 		this.txtPassword.setSizeUndefined();
 		this.gridLayout3.addComponent(this.txtPassword, 0, 1);
-		this.cmdLogin2.setSizeUndefined();
-		this.gridLayout3.addComponent(this.cmdLogin2, 0, 2);
-		this.gridLayout3.setComponentAlignment(this.cmdLogin2, Alignment.MIDDLE_RIGHT);
+		this.cmdLoginLocal.setSizeUndefined();
+		this.gridLayout3.addComponent(this.cmdLoginLocal, 0, 2);
+		this.gridLayout3.setComponentAlignment(this.cmdLoginLocal, Alignment.MIDDLE_RIGHT);
 		this.gridLayout3.setColumnExpandRatio(0, 10.0F);
 		final CustomComponent gridLayout3_vSpacer = new CustomComponent();
 		gridLayout3_vSpacer.setSizeFull();
@@ -180,11 +180,11 @@ public class AuthView extends XdevView implements com.xdev.security.authenticati
 		this.setContent(this.gridLayout);
 		this.setSizeFull();
 
-		this.cmdLogin2.addClickListener(event -> this.cmdLogin2_buttonClick(event));
+		this.cmdLoginLocal.addClickListener(event -> this.cmdLoginLocal_buttonClick(event));
 	} // </generated-code>
 
 	// <generated-code name="variables">
-	private XdevButton cmdLogin, cmdLogin2;
+	private XdevButton cmdLogin, cmdLoginLocal;
 	private XdevPasswordField txtPassword;
 	private XdevPanel panelMain, panelOauth, panelLocal;
 	private XdevGridLayout gridLayout, gridLayout4, gridLayout2, gridLayout3;

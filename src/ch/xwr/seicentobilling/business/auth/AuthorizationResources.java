@@ -1,5 +1,5 @@
 
-package ch.xwr.seicentobilling.business;
+package ch.xwr.seicentobilling.business.auth;
 
 import com.xdev.security.authorization.Resource;
 import com.xdev.security.authorization.ResourceEnum;

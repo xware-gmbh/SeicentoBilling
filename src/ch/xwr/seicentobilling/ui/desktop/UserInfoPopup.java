@@ -24,7 +24,7 @@ import com.xdev.ui.XdevView;
 
 import ch.xwr.seicentobilling.business.Seicento;
 import ch.xwr.seicentobilling.business.TheVersion;
-import ch.xwr.seicentobilling.business.helper.SeicentoUser;
+import ch.xwr.seicentobilling.business.auth.SeicentoUser;
 
 public class UserInfoPopup extends XdevView {
 	private SeicentoUser currentUser;

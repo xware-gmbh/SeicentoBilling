@@ -7,7 +7,7 @@ import com.vaadin.server.VaadinSession;
 import com.xdev.security.authorization.Subject;
 import com.xdev.server.aa.openid.auth.AzureUser;
 
-import ch.xwr.seicentobilling.business.helper.SeicentoUser;
+import ch.xwr.seicentobilling.business.auth.SeicentoUser;
 import ch.xwr.seicentobilling.dal.CostAccountDAO;
 import ch.xwr.seicentobilling.entities.CostAccount;
 

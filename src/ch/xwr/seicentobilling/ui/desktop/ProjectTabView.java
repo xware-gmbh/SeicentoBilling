@@ -423,7 +423,7 @@ public class ProjectTabView extends XdevView {
 		}
 
 		setROFields();
-		//cmdReload_buttonClick(event);	//TODO: Slow
+		//cmdReload_buttonClick(event);	//Slow
 		//this.table.select(this.fieldGroup.getItemDataSource().getBean());
 	}
 

@@ -1,4 +1,4 @@
-package ch.xwr.seicentobilling.business;
+package ch.xwr.seicentobilling.business.auth;
 
 import com.xdev.security.authentication.AuthenticationFailedException;
 import com.xdev.security.authentication.Authenticator;

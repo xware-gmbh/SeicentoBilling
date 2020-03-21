@@ -1,4 +1,4 @@
-package ch.xwr.seicentobilling.business;
+package ch.xwr.seicentobilling.business.auth;
 
 import java.io.Serializable;
 import java.util.Set;

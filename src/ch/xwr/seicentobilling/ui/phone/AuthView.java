@@ -11,7 +11,7 @@ import com.xdev.ui.XdevGridLayout;
 import com.xdev.ui.XdevPanel;
 import com.xdev.ui.XdevView;
 
-import ch.xwr.seicentobilling.business.helper.AzureHelper;
+import ch.xwr.seicentobilling.business.auth.AzureHelper;
 
 public class AuthView extends XdevView implements com.xdev.security.authentication.ui.LoginView {
 
