@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.Date;
 
 import com.vaadin.event.ItemClickEvent;
+import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Notification;
@@ -16,6 +17,7 @@ import com.xdev.ui.filter.FilterOperator;
 import com.xdev.ui.filter.XdevContainerFilterComponent;
 import com.xdev.ui.util.NestedProperty;
 
+import ch.xwr.seicentobilling.dal.RowObjectDAO;
 import ch.xwr.seicentobilling.entities.Entity_;
 import ch.xwr.seicentobilling.entities.RowObject;
 import ch.xwr.seicentobilling.entities.RowObject_;
@@ -61,9 +63,10 @@ public class RowObjectTabView extends XdevView {
 		if (event.isDoubleClick()) {
 			Notification.show("Event Triggered ", Notification.Type.TRAY_NOTIFICATION);
 
-//			final RowObjectDAO dao = new RowObjectDAO();
-//			final RowObject bean = dao.find((Long)event.getItemId());
-			final RowObject bean = (RowObject) event.getItemId();
+			final RowObjectDAO dao = new RowObjectDAO();
+			final RowObject bean = dao.find((Long)event.getItemId());
+
+//			final RowObject bean = (RowObject) event.getItemId();
 
 			final Window win = RowObjectView.getPopupWindow();
 
@@ -98,6 +101,7 @@ public class RowObjectTabView extends XdevView {
 		this.containerFilterComponent = new XdevContainerFilterComponent();
 		this.table = new XdevTable<>();
 
+		this.verticalLayout.setMargin(new MarginInfo(true, false, true, false));
 		this.table.setContainerDataSource(RowObject.class, NestedProperty.of(RowObject_.entity, Entity_.entName));
 		this.table.setVisibleColumns(NestedProperty.path(RowObject_.entity, Entity_.entName), RowObject_.objRowId.getName(),
 				RowObject_.objChngcnt.getName(), RowObject_.objAdded.getName(), RowObject_.objAddedBy.getName(),
