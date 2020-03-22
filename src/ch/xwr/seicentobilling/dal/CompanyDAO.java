@@ -40,13 +40,20 @@ public class CompanyDAO extends JPADAO<Company, Long> {
 	{
 		final org.hibernate.engine.spi.SessionImplementor sessionImp =
 		     (org.hibernate.engine.spi.SessionImplementor) em().getDelegate();
+		int pos1 = 0;
 		//do whatever you need with the metadata object...
 		try {
 			final DatabaseMetaData metadata = sessionImp.connection().getMetaData();
 
 			String cleanURI = metadata.getURL().toString().substring(5);  //removev jdbc:
-			final int pos1 = cleanURI.indexOf(';');
-			cleanURI = cleanURI.substring(12, (pos1-5));
+			if (cleanURI.startsWith("postgresql")) {
+				pos1 = cleanURI.indexOf('/', 15);
+				cleanURI = cleanURI.substring(13, (pos1-5));
+
+			} else {
+				pos1 = cleanURI.indexOf(';');
+				cleanURI = cleanURI.substring(12, (pos1-5));
+			}
 
 			return cleanURI;
 		} catch (final SQLException e) {

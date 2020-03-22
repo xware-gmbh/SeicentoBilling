@@ -2,7 +2,7 @@ version: '2'
 
 services:
   svc-billing:
-    image: jmurihub/seicentobilling:2.1.3
+    image: jmurihub/seicentobilling:20.0.1
     container_name: billing
 
     environment:
@@ -13,6 +13,8 @@ services:
       - tenantid=[Company.com]
       - clientid=[Azure ClientID]
       - clientkey=[Azure Client Key]
+        #mögliche Werte: azure, local  (default: azure)
+      - SEICENTO_LOGIN_METHOD=azure
     ports:
       - 19080:8080
     networks:

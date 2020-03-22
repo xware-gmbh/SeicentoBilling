@@ -1,7 +1,9 @@
 package ch.xwr.seicentobilling.ui.desktop;
 
 import com.vaadin.data.Property;
+import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.filter.Compare;
+import com.vaadin.event.ItemClickEvent;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.Alignment;
@@ -401,15 +403,6 @@ public class RowObjectView extends XdevView {
 	}
 
 	/**
-	 * Event handler delegate method for the {@link XdevTable} {@link #tableText}.
-	 *
-	 * @see Property.ValueChangeListener#valueChange(Property.ValueChangeEvent)
-	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
-	 */
-	private void tableText_valueChange(final Property.ValueChangeEvent event) {
-	}
-
-	/**
 	 * Event handler delegate method for the {@link XdevTable}
 	 * {@link #tableRowImage}.
 	 *
@@ -430,6 +423,49 @@ public class RowObjectView extends XdevView {
 
 		this.cmdDeleteFile.setEnabled(editable);
 		this.cmdUpdateFile.setEnabled(editable);
+	}
+
+	/**
+	 * Event handler delegate method for the {@link XdevTable}
+	 * {@link #tableRowParam}.
+	 *
+	 * @see ItemClickEvent.ItemClickListener#itemClick(ItemClickEvent)
+	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
+	 */
+	private void tableRowParam_itemClick(final ItemClickEvent event) {
+		if (event.isDoubleClick()) {
+			@SuppressWarnings("unchecked")
+			final BeanItem<RowParameter> x = (BeanItem<RowParameter>) event.getItem();
+			final Long beanId = x.getBean().getPrmId(); //this.tableRowParam.getSelectedItem().getBean().getPrmId();
+			final Long objId = null;
+
+			UI.getCurrent().getSession().setAttribute("beanId", beanId);
+			UI.getCurrent().getSession().setAttribute("objId", objId);
+
+			popupRowParam();
+		}
+
+	}
+
+	/**
+	 * Event handler delegate method for the {@link XdevTable} {@link #tableText}.
+	 *
+	 * @see ItemClickEvent.ItemClickListener#itemClick(ItemClickEvent)
+	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
+	 */
+	private void tableText_itemClick(final ItemClickEvent event) {
+		if (event.isDoubleClick()) {
+			@SuppressWarnings("unchecked")
+			final BeanItem<RowText> x = (BeanItem<RowText>) event.getItem();
+			final Long beanId = x.getBean().getTxtId(); //this.tableRowParam.getSelectedItem().getBean().getPrmId();
+			final Long objId = null;
+
+			UI.getCurrent().getSession().setAttribute("beanId", beanId);
+			UI.getCurrent().getSession().setAttribute("objId", objId);
+
+			popupRowText();
+		}
+
 	}
 
 	/*
@@ -745,7 +781,7 @@ public class RowObjectView extends XdevView {
 		this.cmdNewText.addClickListener(event -> this.cmdNewText_buttonClick(event));
 		this.cmdDeleteText.addClickListener(event -> this.cmdDeleteText_buttonClick(event));
 		this.cmdUpdateText.addClickListener(event -> this.cmdUpdateText_buttonClick(event));
-		this.tableText.addValueChangeListener(event -> this.tableText_valueChange(event));
+		this.tableText.addItemClickListener(event -> this.tableText_itemClick(event));
 		this.cmdNewFile.addClickListener(event -> this.cmdNewFile_buttonClick(event));
 		this.cmdDeleteFile.addClickListener(event -> this.cmdDeleteFile_buttonClick(event));
 		this.cmdUpdateFile.addClickListener(event -> this.cmdUpdateFile_buttonClick(event));
@@ -753,6 +789,7 @@ public class RowObjectView extends XdevView {
 		this.cmdNewParam.addClickListener(event -> this.cmdNewParam_buttonClick(event));
 		this.cmdDeleteParam.addClickListener(event -> this.cmdDeleteParam_buttonClick(event));
 		this.cmdUpdateParam.addClickListener(event -> this.cmdUpdateParam_buttonClick(event));
+		this.tableRowParam.addItemClickListener(event -> this.tableRowParam_itemClick(event));
 	} // </generated-code>
 
 	// <generated-code name="variables">

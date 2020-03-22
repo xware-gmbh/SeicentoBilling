@@ -241,6 +241,8 @@ public class CompanyTabView extends XdevView {
 		this.txtCmpAbaEndpointCus = new XdevTextField();
 		this.lblCmpEndpointDoc = new XdevLabel();
 		this.txtCmpEndpointDoc = new XdevTextField();
+		this.lblCmpEndpointPay = new XdevLabel();
+		this.txtCmpEndpointPay = new XdevTextField();
 		this.lblCmpEndpointCre = new XdevLabel();
 		this.txtCmpEndpointCre = new XdevTextField();
 		this.lblCmpEndpointDocCre = new XdevLabel();
@@ -308,13 +310,20 @@ public class CompanyTabView extends XdevView {
 		this.lblCmpAbaActive.setDescription("Ist die Schnittstelle zur externen Buchhaltung aktiv");
 		this.lblCmpAbaActive.setValue("Schnittstelle Aktiv");
 		this.cboCmpAbaActive.setCaption("");
+		this.lblCmpEndpointCus.setDescription("REST Url für Debitorenadresssen");
 		this.lblCmpEndpointCus.setValue("Endpoint Debi");
 		this.txtCmpAbaEndpointCus.setMaxLength(256);
+		this.lblCmpEndpointDoc.setDescription("REST Url für Debitorenbelege (Rechnungen)");
 		this.lblCmpEndpointDoc.setValue("Endpoint Beleg");
 		this.txtCmpEndpointDoc.setMaxLength(256);
+		this.lblCmpEndpointPay.setDescription("REST Url für bezahlte Rechnungen");
+		this.lblCmpEndpointPay.setValue("Endpoint Zahlung");
+		this.txtCmpEndpointPay.setMaxLength(256);
 		this.lblCmpEndpointCre.setValue("Endpoint Kredi");
+		this.txtCmpEndpointCre.setDescription("REST Url für Kreditoren-Adressen");
 		this.txtCmpEndpointCre.setMaxLength(256);
-		this.lblCmpEndpointDocCre.setValue("Endpoint Beleg Kredi");
+		this.lblCmpEndpointDocCre.setValue("Endpoint Spesen");
+		this.txtCmpEndpointCreDoc.setDescription("REST Url für Kreditoren Belege");
 		this.txtCmpEndpointCreDoc.setMaxLength(256);
 		this.lblCmpAbaUser.setDescription("Benutzername für Schnittstelle. Passwort wird dem Service direkt übergeben.");
 		this.lblCmpAbaUser.setValue("Benutzer");
@@ -347,6 +356,7 @@ public class CompanyTabView extends XdevView {
 		this.fieldGroup.bind(this.cboCmpAbaActive, Company_.cmpAbaActive.getName());
 		this.fieldGroup.bind(this.txtCmpAbaEndpointCus, Company_.cmpAbaEndpointCus.getName());
 		this.fieldGroup.bind(this.txtCmpEndpointDoc, Company_.cmpAbaEndpointDoc.getName());
+		this.fieldGroup.bind(this.txtCmpEndpointPay, Company_.cmpAbaEndpointPay.getName());
 		this.fieldGroup.bind(this.txtCmpAbaUser, Company_.cmpAbaUser.getName());
 		this.fieldGroup.bind(this.txtCmpAbaMandator, Company_.cmpAbaMandator.getName());
 		this.fieldGroup.bind(this.txtCmpEndpointCre, Company_.cmpAbaEndpointCre.getName());
@@ -490,7 +500,7 @@ public class CompanyTabView extends XdevView {
 		this.gridLayoutJasper.addComponent(gridLayoutJasper_vSpacer, 0, 3, 1, 3);
 		this.gridLayoutJasper.setRowExpandRatio(3, 1.0F);
 		this.gridLayoutIfc.setColumns(2);
-		this.gridLayoutIfc.setRows(8);
+		this.gridLayoutIfc.setRows(9);
 		this.lblCmpAbaActive.setSizeUndefined();
 		this.gridLayoutIfc.addComponent(this.lblCmpAbaActive, 0, 0);
 		this.cboCmpAbaActive.setSizeUndefined();
@@ -505,31 +515,36 @@ public class CompanyTabView extends XdevView {
 		this.txtCmpEndpointDoc.setWidth(100, Unit.PERCENTAGE);
 		this.txtCmpEndpointDoc.setHeight(-1, Unit.PIXELS);
 		this.gridLayoutIfc.addComponent(this.txtCmpEndpointDoc, 1, 2);
+		this.lblCmpEndpointPay.setSizeUndefined();
+		this.gridLayoutIfc.addComponent(this.lblCmpEndpointPay, 0, 3);
+		this.txtCmpEndpointPay.setWidth(100, Unit.PERCENTAGE);
+		this.txtCmpEndpointPay.setHeight(-1, Unit.PIXELS);
+		this.gridLayoutIfc.addComponent(this.txtCmpEndpointPay, 1, 3);
 		this.lblCmpEndpointCre.setSizeUndefined();
-		this.gridLayoutIfc.addComponent(this.lblCmpEndpointCre, 0, 3);
+		this.gridLayoutIfc.addComponent(this.lblCmpEndpointCre, 0, 4);
 		this.txtCmpEndpointCre.setWidth(100, Unit.PERCENTAGE);
 		this.txtCmpEndpointCre.setHeight(-1, Unit.PIXELS);
-		this.gridLayoutIfc.addComponent(this.txtCmpEndpointCre, 1, 3);
+		this.gridLayoutIfc.addComponent(this.txtCmpEndpointCre, 1, 4);
 		this.lblCmpEndpointDocCre.setSizeUndefined();
-		this.gridLayoutIfc.addComponent(this.lblCmpEndpointDocCre, 0, 4);
+		this.gridLayoutIfc.addComponent(this.lblCmpEndpointDocCre, 0, 5);
 		this.txtCmpEndpointCreDoc.setWidth(100, Unit.PERCENTAGE);
 		this.txtCmpEndpointCreDoc.setHeight(-1, Unit.PIXELS);
-		this.gridLayoutIfc.addComponent(this.txtCmpEndpointCreDoc, 1, 4);
+		this.gridLayoutIfc.addComponent(this.txtCmpEndpointCreDoc, 1, 5);
 		this.lblCmpAbaUser.setSizeUndefined();
-		this.gridLayoutIfc.addComponent(this.lblCmpAbaUser, 0, 5);
+		this.gridLayoutIfc.addComponent(this.lblCmpAbaUser, 0, 6);
 		this.txtCmpAbaUser.setWidth(100, Unit.PERCENTAGE);
 		this.txtCmpAbaUser.setHeight(-1, Unit.PIXELS);
-		this.gridLayoutIfc.addComponent(this.txtCmpAbaUser, 1, 5);
+		this.gridLayoutIfc.addComponent(this.txtCmpAbaUser, 1, 6);
 		this.lblCmpAbaMandator.setSizeUndefined();
-		this.gridLayoutIfc.addComponent(this.lblCmpAbaMandator, 0, 6);
+		this.gridLayoutIfc.addComponent(this.lblCmpAbaMandator, 0, 7);
 		this.txtCmpAbaMandator.setWidth(100, Unit.PERCENTAGE);
 		this.txtCmpAbaMandator.setHeight(-1, Unit.PIXELS);
-		this.gridLayoutIfc.addComponent(this.txtCmpAbaMandator, 1, 6);
+		this.gridLayoutIfc.addComponent(this.txtCmpAbaMandator, 1, 7);
 		this.gridLayoutIfc.setColumnExpandRatio(1, 100.0F);
 		final CustomComponent gridLayoutIfc_vSpacer = new CustomComponent();
 		gridLayoutIfc_vSpacer.setSizeFull();
-		this.gridLayoutIfc.addComponent(gridLayoutIfc_vSpacer, 0, 7, 1, 7);
-		this.gridLayoutIfc.setRowExpandRatio(7, 1.0F);
+		this.gridLayoutIfc.addComponent(gridLayoutIfc_vSpacer, 0, 8, 1, 8);
+		this.gridLayoutIfc.setRowExpandRatio(8, 1.0F);
 		this.gridLayout.setSizeFull();
 		this.tabSheet.addTab(this.gridLayout, StringResourceUtils.optLocalizeString("{$gridLayout.caption}", this), null);
 		this.gridLayoutNbr.setSizeFull();
@@ -577,7 +592,7 @@ public class CompanyTabView extends XdevView {
 	private XdevLabel lblCmpName, lblCmpAddress, lblCmpZip, lblCmpPlace, lblCmpCurrency, lblCmpUid, lblCmpPhone, lblCmpMail,
 			lblCmpComm1, lblCmpBusiness, lblCmpBookingYear, lblCmpLastOrderNbr, lblCmpLastItemNbr, lblCmpLastCustomerNbr,
 			lblCmpJasperUri2, lblCmpReportUsr2, lblCmpReportPwd2, lblCmpAbaActive, lblCmpEndpointCus, lblCmpEndpointDoc,
-			lblCmpEndpointCre, lblCmpEndpointDocCre, lblCmpAbaUser, lblCmpAbaMandator;
+			lblCmpEndpointPay, lblCmpEndpointCre, lblCmpEndpointDocCre, lblCmpAbaUser, lblCmpAbaMandator;
 	private XdevTable<Company> table;
 	private XdevPasswordField passwordField;
 	private XdevTabSheet tabSheet;
@@ -590,7 +605,7 @@ public class CompanyTabView extends XdevView {
 	private XdevTextField txtCmpName, txtCmpAddress, txtCmpZip, txtCmpPlace, txtCmpCurrency, txtCmpUid, txtCmpPhone,
 			txtCmpMail, txtCmpComm1, txtCmpBusiness, txtCmpBookingYear, txtCmpLastOrderNbr, txtCmpLastItemNbr,
 			txtCmpLastCustomerNbr, txtCmpJasperUri, txtCmpReportUsr, txtCmpAbaEndpointCus, txtCmpEndpointDoc,
-			txtCmpEndpointCre, txtCmpEndpointCreDoc, txtCmpAbaUser, txtCmpAbaMandator;
+			txtCmpEndpointPay, txtCmpEndpointCre, txtCmpEndpointCreDoc, txtCmpAbaUser, txtCmpAbaMandator;
 	private XdevVerticalLayout verticalLayout;
 	// </generated-code>
 

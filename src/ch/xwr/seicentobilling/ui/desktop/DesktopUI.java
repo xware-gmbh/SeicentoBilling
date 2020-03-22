@@ -21,7 +21,6 @@ import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.Window;
 import com.xdev.res.ApplicationResource;
 import com.xdev.security.authentication.ui.XdevAuthenticationNavigator;
-import com.xdev.server.aa.openid.auth.AzureUser;
 import com.xdev.server.aa.openid.helper.DiscoveryHelper;
 import com.xdev.ui.XdevHorizontalLayout;
 import com.xdev.ui.XdevImage;
@@ -33,7 +32,8 @@ import com.xdev.ui.XdevUI;
 import com.xdev.ui.XdevVerticalLayout;
 import com.xdev.ui.XdevView;
 
-import ch.xwr.seicentobilling.business.helper.AzureHelper;
+import ch.xwr.seicentobilling.business.auth.AzureHelper;
+import ch.xwr.seicentobilling.business.auth.SeicentoUser;
 import ch.xwr.seicentobilling.dal.CompanyDAO;
 import ch.xwr.seicentobilling.entities.Company;
 import ch.xwr.seicentobilling.ui.desktop.billing.OrderGenerateTabView;
@@ -44,8 +44,7 @@ public class DesktopUI extends XdevUI {
 	/** Logger initialized */
 	private static final org.apache.log4j.Logger LOG = org.apache.log4j.Logger.getLogger(DesktopUI.class);
 
-
-	private AzureUser currentUser;
+	private SeicentoUser currentUser;
 
 
 	public DesktopUI() {
@@ -82,8 +81,8 @@ public class DesktopUI extends XdevUI {
 
 			//this.currentUser = new AzureUser(null);
 
-			this.menuBarRight.setVisible(false);
-			this.menuBarRight.setEnabled(false);
+			//this.menuBarRight.setVisible(false);
+			//this.menuBarRight.setEnabled(false);
 
 		}
 	}
@@ -96,8 +95,11 @@ public class DesktopUI extends XdevUI {
 		 {
 			return true;  //Jetty
 		}
+
+		//for Tomcat use MockUser
 		if (loc.getPort() == 8080 && loc.getHost().equals("localhost")) {  //local tomcat
-			return true;
+			LOG.info("Local Tomcat...Set Login to Mockup if needed");
+		//	return true;
 		}
 
 		return false;
@@ -118,11 +120,11 @@ public class DesktopUI extends XdevUI {
 		this.menuBarRight.setEnabled(state);
 	}
 
-	public void loggedIn(final boolean lgin, final AzureUser user) {
+	public void loggedIn(final boolean lgin, final SeicentoUser user) {
 		this.currentUser = user;
 
 		if (lgin) {
-			LOG.info("User logged in " + user.name());
+			LOG.info("User logged in " + this.currentUser.name());
 			this.menuItemUser.setCaption(this.currentUser.name());
 			setLocale();
 		} else {
@@ -134,7 +136,7 @@ public class DesktopUI extends XdevUI {
 		enableMenu(lgin);
 	}
 
-	public AzureUser getUser() {
+	public SeicentoUser getUser() {
 		return this.currentUser;
 	}
 

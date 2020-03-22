@@ -2,31 +2,31 @@
 [Jasper Reports](https://community.jaspersoft.com/project/jasperreports-server) ist ein Reporting Tool Design + Server, welches zusammen mit SeicentoBilling genutzt werden kann.
 
 ### Setup
-1. Startup Docker Image: _docker run -itd -p 8080:8080 jmurihub/jasperserver:6.3.0_
-2. Load Reports into Server
-3. Anpassen DB Connection + Credentials
-4. Testreport starten.
-5. Konfigurieren Seicento
+1. Beziehen (Clone) Scripts von [Github - js-docker](https://github.com/xware-gmbh/js-docker)
+2. Anpassen .env Datei mit DB Angaben (DB-TYPE, DB-HOST, DB-NAME, User, Pw)
+3. Starten images "docker-compose up" (DB wird erstellt, wenn nicht vorhanden und JasperServer wird gestartet)
+4. Login Jasperserver (jasperadmin)
+5. Import/Load Reports (Verwalten/Servereinstellung/Importieren)
+6. Setzen Passwort für jasperadmin
+7. Konfigurieren DB Verbindung für Reports (Repository/Data Sources/SeicentoBilling (aktiv))  
+8. Testreport starten
+9. Konfigration Seicento überprüfen
 
-#### Step 1: Start Docker Image
-Nachdem der Container mit    _docker run -itd -p 8080:8080 jmurihub/jasperserver:6.3.0_    
-von der Kommandozeile erfolgreich gestartet wurde, ist Jasper unter der URL _localhost:8080/Jasperserver_ erreichbar.   
-Anmelden mit jasperadmin/jasperadmin
 
-#### Step 2: Load Reports into Server
+#### Step 5: Load Reports into Server
 1. Herunterladen der Datei JasperExport_LocalDocker.zip (in diesem Verzeichnis)
 2. Laden dieser Datei in Jasper unter: Verwalten/Servereinstellungen/Importieren
  
-#### Step 3: Anpassen DB Connection + Credentials
-1. Unter Root/Data Sources __MSSQL 2012 Express (Aktiv)__ überprüfen (Bearbeiten/Test Verbindung)
+#### Step 7: Anpassen DB Connection + Credentials
+1. Unter Root/Data Sources __SeicentoBilling (aktiv)__ überprüfen (Bearbeiten/Test Verbindung)
 2. Unter Verwalten/Benutzer - ändern Passwort für Benutzer jasperadmin + jasperuser. Das Passwort für jasperuser wird später bei der Konfiguration von Seicento benötigt.
 
-#### Step 4: Testreport starten
+#### Step 8: Testreport starten
 Beliebigen Report unter Root/Reports/XWare GmbH aufstarten.
 
 ![Jasperserver](https://github.com/xware-gmbh/SeicentoBilling/blob/master/docs/images/Jasper_BillingOverview.PNG "Jasperserver")
 
-#### Step 5: Seicento Konfigurieren
+#### Step 9: Seicento Konfigurieren
 In Seicento unter Optionen/Firma auf dem Tab Jasper die Credentials für den Benutzer jasperuser eintragen.
 Unter der URL sollte folgender Werte stehen:
  

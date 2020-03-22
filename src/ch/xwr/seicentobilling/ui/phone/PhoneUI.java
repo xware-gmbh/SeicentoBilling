@@ -24,7 +24,7 @@ import com.xdev.ui.XdevUI;
 import com.xdev.ui.XdevVerticalLayout;
 import com.xdev.ui.navigation.Navigation;
 
-import ch.xwr.seicentobilling.business.helper.AzureHelper;
+import ch.xwr.seicentobilling.business.auth.AzureHelper;
 import ch.xwr.seicentobilling.dal.CompanyDAO;
 import ch.xwr.seicentobilling.entities.Company;
 

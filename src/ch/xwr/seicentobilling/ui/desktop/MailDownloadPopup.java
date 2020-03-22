@@ -30,6 +30,7 @@ import ch.xwr.seicentobilling.business.Seicento;
 import ch.xwr.seicentobilling.dal.CostAccountDAO;
 import ch.xwr.seicentobilling.dal.PeriodeDAO;
 import ch.xwr.seicentobilling.entities.CostAccount;
+import ch.xwr.seicentobilling.entities.Customer;
 import ch.xwr.seicentobilling.entities.Order;
 import ch.xwr.seicentobilling.entities.Periode;
 
@@ -48,6 +49,22 @@ public class MailDownloadPopup extends XdevView {
 		this.orderBean = (Order) UI.getCurrent().getSession().getAttribute("orderbean");
 
 		initComboBoxes();
+		showInfoLabel();
+	}
+
+	private void showInfoLabel() {
+		final Customer cus = this.orderBean.getCustomer();
+		String info = "R#: " + this.orderBean.getOrdNumber() + " - ";
+		info = info + cus.getShortname() + "  - PDF-Typ: ";
+
+		if (cus.getCusBillingReport() != null) {
+			info = info + cus.getCusBillingReport().name();
+		}
+		if (cus.getCusSinglepdf() != null && cus.getCusSinglepdf()) {
+			info = info + " merge";
+		}
+
+		this.labelInfo.setValue(info);
 	}
 
 	private void initComboBoxes() {
@@ -118,8 +135,8 @@ public class MailDownloadPopup extends XdevView {
 	public static Window getPopupWindow() {
 		final Window win = new Window();
 
-		win.setWidth("520");
-		win.setHeight("240");
+		win.setWidth("530");
+		win.setHeight("270");
 		win.center();
 		win.setModal(true);
 		win.setContent(new MailDownloadPopup());
@@ -247,6 +264,7 @@ public class MailDownloadPopup extends XdevView {
 		this.cmdDownload = new XdevButton();
 		this.cmdMail = new XdevButton();
 		this.label = new XdevLabel();
+		this.labelInfo = new XdevLabel();
 
 		this.lblCstAccount.setDescription("Selektionskriterium für die Periode");
 		this.lblCstAccount.setValue("Kostenstelle");
@@ -265,9 +283,10 @@ public class MailDownloadPopup extends XdevView {
 		this.cmdMail.setCaption("Öffne Mail");
 		this.cmdMail.setEnabled(false);
 		this.label.setValue("Zum Starten ersten Knopf drücken");
+		this.labelInfo.setValue("Rechnung:");
 
 		this.gridLayout.setColumns(4);
-		this.gridLayout.setRows(5);
+		this.gridLayout.setRows(6);
 		this.lblCstAccount.setSizeUndefined();
 		this.gridLayout.addComponent(this.lblCstAccount, 0, 0);
 		this.comboBoxCst.setWidth(100, Unit.PERCENTAGE);
@@ -287,14 +306,17 @@ public class MailDownloadPopup extends XdevView {
 		this.label.setWidth(100, Unit.PERCENTAGE);
 		this.label.setHeight(-1, Unit.PIXELS);
 		this.gridLayout.addComponent(this.label, 0, 3, 2, 3);
+		this.labelInfo.setWidth(100, Unit.PERCENTAGE);
+		this.labelInfo.setHeight(-1, Unit.PIXELS);
+		this.gridLayout.addComponent(this.labelInfo, 0, 4, 2, 4);
 		final CustomComponent gridLayout_hSpacer = new CustomComponent();
 		gridLayout_hSpacer.setSizeFull();
-		this.gridLayout.addComponent(gridLayout_hSpacer, 3, 0, 3, 3);
+		this.gridLayout.addComponent(gridLayout_hSpacer, 3, 0, 3, 4);
 		this.gridLayout.setColumnExpandRatio(3, 1.0F);
 		final CustomComponent gridLayout_vSpacer = new CustomComponent();
 		gridLayout_vSpacer.setSizeFull();
-		this.gridLayout.addComponent(gridLayout_vSpacer, 0, 4, 2, 4);
-		this.gridLayout.setRowExpandRatio(4, 1.0F);
+		this.gridLayout.addComponent(gridLayout_vSpacer, 0, 5, 2, 5);
+		this.gridLayout.setRowExpandRatio(5, 1.0F);
 		this.gridLayout.setSizeFull();
 		this.setContent(this.gridLayout);
 		this.setSizeFull();
@@ -306,7 +328,7 @@ public class MailDownloadPopup extends XdevView {
 	} // </generated-code>
 
 	// <generated-code name="variables">
-	private XdevLabel lblCstAccount, lblPeriode, label;
+	private XdevLabel lblCstAccount, lblPeriode, label, labelInfo;
 	private XdevButton cmdStart, cmdDownload, cmdMail;
 	private XdevComboBox<CostAccount> comboBoxCst;
 	private XdevGridLayout gridLayout;

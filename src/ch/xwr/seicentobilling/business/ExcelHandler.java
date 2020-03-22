@@ -192,7 +192,7 @@ public class ExcelHandler {
 		}
 		final ProjectDAO dao = new ProjectDAO();
 		try {
-			final Project bean = dao.findByName(project).get(0);
+			final Project bean = dao.findEqNameIgnoreCase(project).get(0);
 			return bean;
 		} catch (final Exception e) {
 			throw new Exception ("Projekt nicht gefunden " + project + "!");

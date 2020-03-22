@@ -212,7 +212,10 @@ public class ProjectLinePopup extends XdevView {
 					final Project bean = new ProjectDAO().find(beanId);
 					prepareProjectCombo(bean);
 
-					ProjectLinePopup.this.txtPrlRate.setValue("" + bean.getProRate());
+					//nur setzene bei neuem Record
+					if (ProjectLinePopup.this.fieldGroup.getItemDataSource().getBean().getPrlId() == null) {
+						ProjectLinePopup.this.txtPrlRate.setValue("" + bean.getProRate());
+					}
 
 					//ProjectLinePopup.this.fieldGroupProject.setItemDataSource(bean);
 				}

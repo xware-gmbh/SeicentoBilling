@@ -5,6 +5,11 @@ findByName(String name)
 	select * from Project where proName like :name
 }
 
+findEqNameIgnoreCase(String name)
+{
+	select * from Project where lower(proName) = lower(:name)
+}
+
 findAllActive()
 {
 	select * from Project where proState = 1 order by proName asc

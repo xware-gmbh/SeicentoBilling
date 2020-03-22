@@ -14,7 +14,7 @@
 <?import java.util.Date?>
 <XdevView xmlns:x="http://xml.xdev-software.com/xdevuiml" x:name="RowObjectTabView">
     <x:constraints zpos="0" width="100%" height="100%" />
-    <XdevVerticalLayout x:name="verticalLayout">
+    <XdevVerticalLayout x:name="verticalLayout" margin="tb">
         <x:constraints zpos="0" width="100%" height="100%" />
         <XdevContainerFilterComponent x:searchableProperties="objAddedBy,objChangedBy,objDeletedBy" x:name="containerFilterComponent" x:filterableProperties="objRowId,objChngcnt,objAdded,objAddedBy,objChanged,objChangedBy,objDeleted,objDeletedBy,objState,entity.entName" x:container="table">
             <x:constraints weighty="0.0" width="100%" height="0%" />

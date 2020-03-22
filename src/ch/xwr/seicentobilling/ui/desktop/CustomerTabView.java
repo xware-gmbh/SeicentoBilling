@@ -7,6 +7,8 @@ import java.net.URLEncoder;
 import java.util.Collection;
 import java.util.Iterator;
 
+import javax.persistence.PersistenceException;
+
 import org.apache.poi.ss.formula.functions.T;
 import org.jfree.util.Log;
 
@@ -304,29 +306,45 @@ public class CustomerTabView extends XdevView {
 			}
 
 			private void doDelete() {
-				final Customer bean = CustomerTabView.this.table.getSelectedItem().getBean();
-				// Delete Record
-				final RowObjectManager man = new RowObjectManager();
-				man.deleteObject(bean.getCusId(), bean.getClass().getSimpleName());
+				try {
+					final Customer bean = CustomerTabView.this.table.getSelectedItem().getBean();
 
-				CustomerTabView.this.table.removeItem(bean);
-				CustomerTabView.this.table.select(null);
+					final CustomerDAO dao = new CustomerDAO();
+					dao.remove(bean);
+					dao.flush();
 
-				final CustomerDAO dao = new CustomerDAO();
-				dao.remove(bean);
-				//CustomerTabView.this.table.getBeanContainerDataSource().refresh();
+					// Delete Record
+					final RowObjectManager man = new RowObjectManager();
+					man.deleteObject(bean.getCusId(), bean.getClass().getSimpleName());
 
-				CustomerTabView.this.fieldGroup.clear();
-				setROComponents(false);
+					//CustomerTabView.this.table.getBeanContainerDataSource().refresh();
+					CustomerTabView.this.table.removeItem(bean);
+					CustomerTabView.this.table.select(null);
 
-//				try {
-//					CustomerTabView.this.table.select(CustomerTabView.this.table.getCurrentPageFirstItemId());
-//				} catch (final Exception e) {
-//					// ignore
-//					CustomerTabView.this.fieldGroup.setItemDataSource(new Customer());
-//				}
-				Notification.show("Datensatz löschen", "Datensatz wurde gelöscht!",
-						Notification.Type.TRAY_NOTIFICATION);
+					CustomerTabView.this.fieldGroup.clear();
+					setROComponents(false);
+
+//					try {
+//						CustomerTabView.this.table.select(CustomerTabView.this.table.getCurrentPageFirstItemId());
+//					} catch (final Exception e) {
+//						// ignore
+//						CustomerTabView.this.fieldGroup.setItemDataSource(new Customer());
+//					}
+					Notification.show("Datensatz löschen", "Datensatz wurde gelöscht!",
+							Notification.Type.TRAY_NOTIFICATION);
+
+				} catch (final PersistenceException cx) {
+					String msg = cx.getMessage();
+					if (cx.getCause() != null) {
+						msg = cx.getCause().getMessage();
+						if (cx.getCause().getCause() != null) {
+							msg = cx.getCause().getCause().getMessage();
+						}
+					}
+					Notification.show("Fehler beim Löschen", msg, Notification.Type.ERROR_MESSAGE);
+					cx.printStackTrace();
+				}
+
 			}
 
 		});

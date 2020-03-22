@@ -174,7 +174,7 @@
                     <x:typeArguments>
                         <typeArgument type="RowText" />
                     </x:typeArguments>
-                    <x:event>valueChange.valueChange</x:event>
+                    <x:event>itemClick.itemClick</x:event>
                 </XdevTable>
             </XdevVerticalLayout>
             <XdevVerticalLayout caption="Dateien" x:name="verticalLayoutFile">
@@ -242,6 +242,7 @@
                     <x:typeArguments>
                         <typeArgument type="RowParameter" />
                     </x:typeArguments>
+                    <x:event>itemClick.itemClick</x:event>
                 </XdevTable>
             </XdevVerticalLayout>
         </XdevTabSheet>

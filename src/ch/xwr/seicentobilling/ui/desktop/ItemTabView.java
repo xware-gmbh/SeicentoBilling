@@ -1,5 +1,7 @@
 package ch.xwr.seicentobilling.ui.desktop;
 
+import javax.persistence.PersistenceException;
+
 import com.vaadin.data.Property;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.Alignment;
@@ -190,22 +192,42 @@ public class ItemTabView extends XdevView {
 			}
 
 			private void doDelete() {
-				final Item bean = ItemTabView.this.table.getSelectedItem().getBean();
-				// Delete Record
-				final RowObjectManager man = new RowObjectManager();
-				man.deleteObject(bean.getItmId(), bean.getClass().getSimpleName());
-
-				final ItemDAO dao = new ItemDAO();
-				dao.remove(bean);
-				ItemTabView.this.table.getBeanContainerDataSource().refresh();
-
 				try {
-					ItemTabView.this.table.select(ItemTabView.this.table.getCurrentPageFirstItemId());
-				} catch (final Exception e) {
-					//ignore
-					ItemTabView.this.fieldGroup.setItemDataSource(new Item());
+					final Item bean = ItemTabView.this.table.getSelectedItem().getBean();
+
+					final ItemDAO dao = new ItemDAO();
+					dao.remove(bean);
+					dao.flush();
+
+					// Delete Record
+					final RowObjectManager man = new RowObjectManager();
+					man.deleteObject(bean.getItmId(), bean.getClass().getSimpleName());
+
+					ItemTabView.this.table.removeItem(bean);
+					ItemTabView.this.table.select(null);
+					ItemTabView.this.fieldGroup.clear();
+
+					ItemTabView.this.table.getBeanContainerDataSource().refresh();
+
+					try {
+						ItemTabView.this.table.select(ItemTabView.this.table.getCurrentPageFirstItemId());
+					} catch (final Exception e) {
+						//ignore
+						ItemTabView.this.fieldGroup.setItemDataSource(new Item());
+					}
+					Notification.show("Datensatz löschen", "Datensatz wurde gelöscht!", Notification.Type.TRAY_NOTIFICATION);
+
+				} catch (final PersistenceException cx) {
+					String msg = cx.getMessage();
+					if (cx.getCause() != null) {
+						msg = cx.getCause().getMessage();
+						if (cx.getCause().getCause() != null) {
+							msg = cx.getCause().getCause().getMessage();
+						}
+					}
+					Notification.show("Fehler beim Löschen", msg, Notification.Type.ERROR_MESSAGE);
+					cx.printStackTrace();
 				}
-				Notification.show("Datensatz löschen", "Datensatz wurde gelöscht!", Notification.Type.TRAY_NOTIFICATION);
 			}
 
 		});

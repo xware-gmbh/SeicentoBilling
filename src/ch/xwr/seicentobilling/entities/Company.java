@@ -52,6 +52,7 @@ public class Company implements java.io.Serializable {
 	private Integer cmpAbaMaxDays;
 	private String cmpAbaEndpointCre;
 	private String cmpAbaEndpointCreDoc;
+	private String cmpAbaEndpointPay;
 
 	public Company() {
 	}
@@ -347,6 +348,16 @@ public class Company implements java.io.Serializable {
 
 	public void setCmpAbaEndpointCreDoc(final String noname) {
 		this.cmpAbaEndpointCreDoc = noname;
+	}
+
+	@Caption("Endpoint Debi Payment")
+	@Column(name = "cmpAbaEndpointPay", length = 256, columnDefinition = "nvarchar")
+	public String getCmpAbaEndpointPay() {
+		return this.cmpAbaEndpointPay;
+	}
+
+	public void setCmpAbaEndpointPay(final String noname) {
+		this.cmpAbaEndpointPay = noname;
 	}
 
 }

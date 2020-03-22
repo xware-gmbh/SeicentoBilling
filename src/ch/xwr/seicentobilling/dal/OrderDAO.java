@@ -43,7 +43,8 @@ public class OrderDAO extends JPADAO<Order, Long> {
 
 		criteriaQuery.where(criteriaBuilder.equal(root.get(Order_.customer), daoParameter));
 
-		criteriaQuery.orderBy(criteriaBuilder.desc(root.get(Order_.ordBillDate)));
+		criteriaQuery.orderBy(criteriaBuilder.desc(root.get(Order_.ordBillDate)),
+				criteriaBuilder.asc(root.get(Order_.ordNumber)));
 
 		final TypedQuery<Order> query = entityManager.createQuery(criteriaQuery);
 		query.setParameter(daoParameter, dao);
@@ -66,7 +67,8 @@ public class OrderDAO extends JPADAO<Order, Long> {
 
 		criteriaQuery.where(criteriaBuilder.equal(root.get(Order_.project), daoParameter));
 
-		criteriaQuery.orderBy(criteriaBuilder.desc(root.get(Order_.ordBillDate)));
+		criteriaQuery.orderBy(criteriaBuilder.desc(root.get(Order_.ordBillDate)),
+				criteriaBuilder.asc(root.get(Order_.ordNumber)));
 
 		final TypedQuery<Order> query = entityManager.createQuery(criteriaQuery);
 		query.setParameter(daoParameter, dao);
@@ -88,7 +90,8 @@ public class OrderDAO extends JPADAO<Order, Long> {
 		criteriaQuery.where(criteriaBuilder.and(criteriaBuilder.isNull(root.get(Order_.ordBookedOn)),
 				criteriaBuilder.equal(root.get(Order_.ordState), criteriaBuilder.literal(1))));
 
-		criteriaQuery.orderBy(criteriaBuilder.asc(root.get(Order_.ordBillDate)));
+		criteriaQuery.orderBy(criteriaBuilder.asc(root.get(Order_.ordBillDate)),
+				criteriaBuilder.asc(root.get(Order_.ordNumber)));
 
 		final TypedQuery<Order> query = entityManager.createQuery(criteriaQuery);
 		return query.getResultList();
@@ -130,7 +133,8 @@ public class OrderDAO extends JPADAO<Order, Long> {
 		criteriaQuery.where(criteriaBuilder.and(criteriaBuilder.isNull(root.get(Order_.ordPayDate)),
 				criteriaBuilder.equal(root.get(Order_.ordState), criteriaBuilder.literal(1))));
 
-		criteriaQuery.orderBy(criteriaBuilder.asc(root.get(Order_.ordBillDate)));
+		criteriaQuery.orderBy(criteriaBuilder.asc(root.get(Order_.ordBillDate)),
+				criteriaBuilder.asc(root.get(Order_.ordNumber)));
 
 		final TypedQuery<Order> query = entityManager.createQuery(criteriaQuery);
 		return query.getResultList();

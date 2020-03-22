@@ -1,7 +1,6 @@
 
 package ch.xwr.seicentobilling.ui.tablet;
 
-import ch.xwr.seicentobilling.business.MyAuthenticationProvider;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -17,6 +16,8 @@ import com.xdev.ui.XdevPanel;
 import com.xdev.ui.XdevPasswordField;
 import com.xdev.ui.XdevTextField;
 import com.xdev.ui.XdevView;
+
+import ch.xwr.seicentobilling.business.auth.MyAuthenticationProvider;
 
 public class AuthView extends XdevView implements com.xdev.security.authentication.ui.LoginView {
 
