@@ -29,22 +29,21 @@ Folgende technische Komponenten kommen zum Einsatz
 * Microsoft SQL oder PostgreSQL als Datenbank
 * [Jasperserver](https://community.jaspersoft.com/project/jasperreports-server)
 * [Docker](https://docker.com)
-* Azure AD
+* Azure AD (optional)
  
 
 ## Installation SeicentoBilling als Docker Image
 Folgende Voraussetzungen müssen erfüllt sein für die Installation:
-* bestehendes Azure AD Konto
 * Docker (auf lokaler Maschine mit Docker Desktop unter Windows - ab Version 18.x)
 * Verfügbarer DB Server (MSSQL oder PostgreSQL)
 
 ### Installation Steps
 1. Bereitstellen einer SQL DB ([Anleitung](https://github.com/xware-gmbh/SeicentoBilling-cmdline)) 
-2. Registrieren einer App im Azure Portal ([Anleitung](https://github.com/xware-gmbh/SeicentoBilling/tree/master/docs/azuread))
-3. Starten des Docker Containers ([Anleitung](https://github.com/xware-gmbh/SeicentoBilling/tree/master/docs/docker))
+2. Starten des Docker Containers ([Anleitung](https://github.com/xware-gmbh/SeicentoBilling/tree/master/docs/docker))
 
 Optional:
 * Setup Jasperserver/Reports ([Anleitung](https://github.com/xware-gmbh/SeicentoBilling/tree/master/docs/jasperserver))
+* Registrieren einer App im Azure Portal ([Anleitung](https://github.com/xware-gmbh/SeicentoBilling/tree/master/docs/azuread))
 * Erstellen eines Reverse Proxy mit nginx ([Anleitung](https://github.com/xware-gmbh/SeicentoBilling/tree/master/docs/nginx))
 
 ## Features

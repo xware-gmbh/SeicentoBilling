@@ -83,7 +83,7 @@ public class MailDownloadPopup extends XdevView {
 	private void initCmbPeriode(final CostAccount selectedCst) {
 		final PeriodeDAO dao = new PeriodeDAO();
 		final XdevBeanItemContainer<Periode> cstList = new XdevBeanItemContainer<>(Periode.class);
-		cstList.addAll(dao.findByCostAccountOpenPeriode(selectedCst));
+		cstList.addAll(dao.findByCostAccountTop(selectedCst, 6));
 
 		this.comboBoxPeriode.clear();
 		this.comboBoxPeriode.setContainerDataSource(cstList);
