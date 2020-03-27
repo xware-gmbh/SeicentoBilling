@@ -1586,7 +1586,7 @@ public class CustomerTabView extends XdevView {
 
 		this.containerFilterComponent.setContainer(this.table.getBeanContainerDataSource(), "city.ctyName", "city.ctyZip",
 				"cusNumber", "cusName", "cusCompany", "cusFirstName", "cusAccountType", "cusState",
-				"labelDefinitions.cldId");
+				"labelDefinitions.cldId", "cusAccountManager");
 		this.containerFilterComponent.setSearchableProperties("cusCompany", "cusName", "city.ctyName", "cusFirstName");
 
 		this.cmdNew.setSizeUndefined();
