@@ -358,6 +358,9 @@ public class JasperManager {
 
     	if (cus.getCusBillingReport() != null) {
     		if (key.equalsIgnoreCase("reportWork")) {
+    			if (hasNoReports()) {
+    				return true;
+    			}
     			if (cus.getCusBillingReport() == LovCrm.BillReport.working) {
 					return true;
 				}
@@ -395,6 +398,14 @@ public class JasperManager {
 		}
         return false;
     }
+
+	private boolean hasNoReports() {
+		if (getSelectedPeriod().getProjectLines().size() > 0) {
+			return true;
+		}
+		// No Reportlines to print
+		return false;
+	}
 
 	private String getRowParameter(final RowObject objRoot, final String group, final String subgroup, final String key)
     {
