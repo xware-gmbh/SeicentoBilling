@@ -76,7 +76,7 @@
                     <x:event>click.buttonClick</x:event>
                 </XdevButton>
             </XdevHorizontalLayout>
-            <XdevTable x:connectedForm="fieldGroup" columnReorderingAllowed="true" x:name="table" columnCollapsingAllowed="true" x:entity="Order">
+            <XdevTable x:connectedForm="fieldGroup" columnReorderingAllowed="true" x:name="table" columnCollapsingAllowed="true" x:entity="Order" x:autoQuery="false">
                 <x:entityProperties>
                     <entry type="int" property="ordNumber" caption="Nummer">
                         <converter numberType="BigInteger" numberFormatType="number" currency="default" groupingUsed="false" converterType="STRING_TO_NUMBER" locale="default" />
@@ -107,6 +107,7 @@
                 <x:typeArguments>
                     <typeArgument type="Order" />
                 </x:typeArguments>
+                <x:data methodName="findAll" />
                 <x:event>valueChange.valueChange</x:event>
                 <x:event>itemClick.itemClick</x:event>
             </XdevTable>
