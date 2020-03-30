@@ -1,6 +1,5 @@
 package ch.xwr.seicentobilling.business;
 
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,9 +7,6 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.PersistenceException;
 import javax.servlet.ServletContext;
-
-import org.apache.log4j.Appender;
-import org.apache.log4j.LogManager;
 
 import com.xdev.persistence.PersistenceManager;
 import com.xdev.persistence.PersistenceManager.Factory;
@@ -84,22 +80,9 @@ public class XwrPersistenceImpl implements Factory {
 
 				final String gelf = System.getenv("GELF_URL");
 				if (gelf == null || gelf.isEmpty()) {
-					removeGelfAppender();
+					Seicento.removeGelfAppender();
 				} else {
 					System.setProperty("GELF_URL", gelf);  //for log4J
-				}
-			}
-
-
-			private void removeGelfAppender() {
-				Appender ap = null;
-				final org.apache.log4j.Logger root = LogManager.getRootLogger();
-				final Enumeration<?> lsa = root.getAllAppenders();
-				while (lsa.hasMoreElements()) {
-					ap = (Appender) lsa.nextElement();
-					if (ap.getName().equalsIgnoreCase("gelf")) {
-						root.removeAppender(ap);
-					}
 				}
 			}
 

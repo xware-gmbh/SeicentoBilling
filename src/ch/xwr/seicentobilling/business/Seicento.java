@@ -1,7 +1,11 @@
 package ch.xwr.seicentobilling.business;
 
+import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
+
+import org.apache.log4j.Appender;
+import org.apache.log4j.LogManager;
 
 import com.vaadin.server.VaadinSession;
 import com.xdev.security.authorization.Subject;
@@ -94,4 +98,17 @@ public class Seicento {
 	public static CostAccount getLoggedInCostAccount() {
 		return Seicento.getLoggedInCostAccount(getUserName());
 	}
+
+	public static void removeGelfAppender() {
+		Appender ap = null;
+		final org.apache.log4j.Logger root = LogManager.getRootLogger();
+		final Enumeration<?> lsa = root.getAllAppenders();
+		while (lsa.hasMoreElements()) {
+			ap = (Appender) lsa.nextElement();
+			if (ap.getName().equalsIgnoreCase("gelf")) {
+				root.removeAppender(ap);
+			}
+		}
+	}
+
 }

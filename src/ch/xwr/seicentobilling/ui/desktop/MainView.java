@@ -51,6 +51,7 @@ public class MainView extends XdevView {
 			main.loggedIn(true, this.currentUser);
 		} else {
 			System.out.println("logged in Preview / DevEnv. DesktopUI not available!");
+			Seicento.removeGelfAppender();
 		}
 
 	}

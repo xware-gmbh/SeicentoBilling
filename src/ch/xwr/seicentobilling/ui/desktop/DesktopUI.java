@@ -32,6 +32,7 @@ import com.xdev.ui.XdevUI;
 import com.xdev.ui.XdevVerticalLayout;
 import com.xdev.ui.XdevView;
 
+import ch.xwr.seicentobilling.business.Seicento;
 import ch.xwr.seicentobilling.business.auth.AzureHelper;
 import ch.xwr.seicentobilling.business.auth.SeicentoUser;
 import ch.xwr.seicentobilling.dal.CompanyDAO;
@@ -74,10 +75,11 @@ public class DesktopUI extends XdevUI {
 	//only for local testing with preview
 	private void checkLocalDevEnv() {
 		if (isLocalDevEnv()) {
-			LOG.info("Local DEV Environment.... enable Menues");
+			LOG.info("Local DEV Environment.... enable Menues, disable Gelf");
 
 			//Eclipse Preview (does not have Path in Jetty)
 			enableMenu(true);
+			Seicento.removeGelfAppender();
 
 			//this.currentUser = new AzureUser(null);
 

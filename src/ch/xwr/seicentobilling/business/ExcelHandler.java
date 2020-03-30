@@ -132,12 +132,19 @@ public class ExcelHandler {
 
 		for (int i = 0; i < row.getLastCellNum(); i++) {
 	        cell = row.getCell((short) i);
+	        if (cell == null) {
+	        	if (i == 0) {
+	        		return;
+	        	} else {
+	        		continue;
+	        	}
+	        }
 	        //final int type = cell.getCellType();
 
 	        switch (i) {
 			case 0:
 				final String mandat = cell.getStringCellValue();
-				if (mandat.isEmpty()) {
+				if (mandat == null || mandat.isEmpty()) {
 					return;
 				}
 				break;
