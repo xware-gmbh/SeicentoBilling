@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+
+<?xdevuiml version="1.0"?>
+<?template BROWSER_XGA?>
+<?import ch.xwr.seicentobilling.entities.Expense?>
+<?import ch.xwr.seicentobilling.entities.ProjectLine?>
+<?import com.xdev.ui.XdevButton?>
+<?import com.xdev.ui.XdevVerticalLayout?>
+<?import com.xdev.ui.XdevView?>
+<?import com.xdev.ui.entitycomponent.table.XdevTable?>
+<?import java.lang.String?>
+<XdevView xmlns:x="http://xml.xdev-software.com/xdevuiml" x:name="TextListPopup">
+    <x:constraints zpos="0" width="100%" height="100%" />
+    <XdevVerticalLayout x:name="verticalLayout" margin="t">
+        <x:constraints zpos="0" width="100%" height="100%" />
+        <XdevTable caption="Textauswahl Spesen" x:name="tableExpense" x:entity="Expense" icon="FontAwesome.COMMENTING" x:autoQuery="false">
+            <x:entityProperties>
+                <entry type="String" property="expText" caption="Spesentext" />
+            </x:entityProperties>
+            <x:constraints weighty="1.0" width="100%" height="100%" />
+            <x:typeArguments>
+                <typeArgument type="Expense" />
+            </x:typeArguments>
+            <x:event>itemClick.itemClick</x:event>
+        </XdevTable>
+        <XdevTable caption="Textauswahl Rapporte" x:name="table" x:entity="ProjectLine" icon="FontAwesome.COMMENTING" x:autoQuery="false">
+            <x:entityProperties>
+                <entry type="String" property="prlText" />
+            </x:entityProperties>
+            <x:constraints weighty="1.0" width="100%" height="100%" />
+            <x:typeArguments>
+                <typeArgument type="ProjectLine" />
+            </x:typeArguments>
+            <x:event>itemClick.itemClick</x:event>
+        </XdevTable>
+        <XdevButton caption="Button" x:name="cmdCancel" visible="false" x:shortcut="ESCAPE">
+            <x:constraints weighty="0.0" width="0px" height="0px" />
+            <x:event>click.buttonClick</x:event>
+        </XdevButton>
+    </XdevVerticalLayout>
+</XdevView>
+
