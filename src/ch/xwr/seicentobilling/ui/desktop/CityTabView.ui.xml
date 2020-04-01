@@ -30,7 +30,7 @@
                 <x:constraints weighty="0.0" width="100%" height="0%" />
             </XdevContainerFilterComponent>
             <XdevHorizontalLayout spacing="false" x:name="horizontalLayout" margin="">
-                <x:constraints weighty="0.0" width="100px" alignment="MIDDLE_LEFT" height="0px" />
+                <x:constraints weighty="0.0" width="100%" alignment="MIDDLE_LEFT" height="0px" />
                 <XdevButton icon="WebContent/WEB-INF/resources/images/new1_16.png" description="{$cmdNew.description}" x:name="cmdNew">
                     <x:constraints weightx="0.0" width="0px" height="0px" />
                     <x:event>click.buttonClick</x:event>
@@ -45,6 +45,10 @@
                 </XdevButton>
                 <XdevButton icon="WebContent/WEB-INF/resources/images/info_small.jpg" x:name="cmdInfo">
                     <x:constraints weightx="0.0" width="0px" height="0px" />
+                    <x:event>click.buttonClick</x:event>
+                </XdevButton>
+                <XdevButton icon="FontAwesome.FILE_EXCEL_O" description="Import PLZ csv" x:name="cmdImport">
+                    <x:constraints weighty="0.0" weightx="0.0" width="0px" alignment="MIDDLE_RIGHT" height="0px" />
                     <x:event>click.buttonClick</x:event>
                 </XdevButton>
             </XdevHorizontalLayout>
