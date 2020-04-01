@@ -157,19 +157,32 @@
                         <converter maximumFractionDigits="2" numberType="Double" numberFormatType="number" minimumFractionDigits="2" currency="default" converterType="STRING_TO_NUMBER" locale="default" />
                         <x:constraints gridx="4" gridy="5" weighty="0.0" weightx="1.0" width="-1px" height="0px" />
                     </XdevTextField>
-                    <XdevLabel x:name="lblProIntensityPercent" value="{$lblProIntensityPercent.value}">
-                        <x:constraints gridx="1" gridy="6" weighty="0.0" weightx="0.0" width="0px" height="0px" />
-                    </XdevLabel>
-                    <XdevTextField columns="5" x:name="txtProIntensityPercent">
-                        <x:constraints gridx="2" gridy="6" weighty="0.0" weightx="1.0" width="-1px" height="0px" />
-                    </XdevTextField>
                     <XdevLabel x:name="lblProRate" value="{$lblProRate.value}">
-                        <x:constraints gridx="1" gridy="7" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+                        <x:constraints gridx="1" gridy="6" weighty="0.0" weightx="0.0" width="0px" height="0px" />
                     </XdevLabel>
                     <XdevTextField columns="5" required="true" x:name="txtProRate">
                         <converter maximumFractionDigits="2" numberType="Double" numberFormatType="number" minimumFractionDigits="2" currency="default" converterType="STRING_TO_NUMBER" locale="default" />
+                        <x:constraints gridx="2" gridy="6" weighty="0.0" weightx="1.0" width="-1px" height="0px" />
+                    </XdevTextField>
+                    <XdevLabel x:name="lblProIntensityPercent" value="{$lblProIntensityPercent.value}">
+                        <x:constraints gridx="1" gridy="7" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+                    </XdevLabel>
+                    <XdevTextField columns="5" x:name="txtProIntensityPercent">
                         <x:constraints gridx="2" gridy="7" weighty="0.0" weightx="1.0" width="-1px" height="0px" />
                     </XdevTextField>
+                    <XdevLabel x:name="lblVat" value="{$lblVat.value}">
+                        <x:constraints gridx="3" gridy="7" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+                    </XdevLabel>
+                    <XdevComboBox required="true" itemCaptionFromAnnotation="false" x:name="cmbVat" x:entity="Vat" x:autoQuery="false">
+                        <x:constraints gridx="4" gridy="7" weighty="0.0" weightx="1.0" width="100%" height="0px" />
+                        <x:entityProperty>
+                            <entry type="String" property="fullName" />
+                        </x:entityProperty>
+                        <x:typeArguments>
+                            <typeArgument type="Vat" />
+                        </x:typeArguments>
+                        <x:data methodName="findAllActive" />
+                    </XdevComboBox>
                     <XdevLabel x:name="lblCostAccount" value="{$lblCostAccount.value}">
                         <x:constraints gridx="1" gridy="8" weighty="0.0" weightx="0.0" width="0px" height="0px" />
                     </XdevLabel>
@@ -218,24 +231,11 @@
                     <XdevCheckBox caption="Internes Projekt" x:name="cbxInternal">
                         <x:constraints gridx="3" gridy="1" weighty="0.0" weightx="1.0" width="0px" height="0px" />
                     </XdevCheckBox>
-                    <XdevLabel x:name="lblVat" value="{$lblVat.value}">
+                    <XdevLabel x:name="lblProject" value="{$lblProject.value}">
                         <x:constraints gridx="1" gridy="2" weighty="0.0" weightx="0.0" width="0px" height="0px" />
                     </XdevLabel>
-                    <XdevComboBox required="true" itemCaptionFromAnnotation="false" x:name="cmbVat" x:entity="Vat" x:autoQuery="false">
-                        <x:constraints gridx="2" gridy="2" weighty="0.0" weightx="1.0" width="100%" height="0px" />
-                        <x:entityProperty>
-                            <entry type="String" property="fullName" />
-                        </x:entityProperty>
-                        <x:typeArguments>
-                            <typeArgument type="Vat" />
-                        </x:typeArguments>
-                        <x:data methodName="findAllActive" />
-                    </XdevComboBox>
-                    <XdevLabel x:name="lblProject" value="{$lblProject.value}">
-                        <x:constraints gridx="1" gridy="3" weighty="0.0" weightx="0.0" width="0px" height="0px" />
-                    </XdevLabel>
                     <XdevComboBox x:name="cmbProject" x:entity="Project" x:autoQuery="false">
-                        <x:constraints gridx="2" gridy="3" weighty="0.0" weightx="1.0" width="100%" gridWidth="2" height="0px" />
+                        <x:constraints gridx="2" gridy="2" weighty="0.0" weightx="1.0" width="100%" gridWidth="2" height="0px" />
                         <x:entityProperty>
                             <entry type="String" property="proName" />
                         </x:entityProperty>
@@ -245,31 +245,31 @@
                         <x:data methodName="findAllActive" />
                     </XdevComboBox>
                     <XdevLabel x:name="lblProDescription" value="{$lblProDescription.value}">
-                        <x:constraints gridx="1" gridy="4" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+                        <x:constraints gridx="1" gridy="3" weighty="0.0" weightx="0.0" width="0px" height="0px" />
                     </XdevLabel>
                     <XdevTextArea columns="5" x:name="textArea">
-                        <x:constraints gridx="2" gridy="4" weighty="0.0" weightx="1.0" width="100%" gridWidth="2" height="0px" />
+                        <x:constraints gridx="2" gridy="3" weighty="0.0" weightx="1.0" width="100%" gridWidth="2" height="0px" />
                     </XdevTextArea>
                     <XdevLabel x:name="lblProRemark" value="{$lblProRemark.value}">
-                        <x:constraints gridx="1" gridy="5" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+                        <x:constraints gridx="1" gridy="4" weighty="0.0" weightx="0.0" width="0px" height="0px" />
                     </XdevLabel>
                     <XdevTextArea columns="5" x:name="textAreaRem" rows="2">
-                        <x:constraints gridx="2" gridy="5" weighty="0.0" weightx="1.0" width="100%" gridWidth="2" height="0px" />
+                        <x:constraints gridx="2" gridy="4" weighty="0.0" weightx="1.0" width="100%" gridWidth="2" height="0px" />
                     </XdevTextArea>
                     <XdevLabel x:name="lblProProjectState" value="{$lblProProjectState.value}">
-                        <x:constraints gridx="1" gridy="6" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+                        <x:constraints gridx="1" gridy="5" weighty="0.0" weightx="0.0" width="0px" height="0px" />
                     </XdevLabel>
                     <XdevComboBox x:name="cbxProState">
-                        <x:constraints gridx="2" gridy="6" weighty="0.0" weightx="1.0" width="0px" height="0px" />
+                        <x:constraints gridx="2" gridy="5" weighty="0.0" weightx="1.0" width="0px" height="0px" />
                         <x:typeArguments>
                             <typeArgument type="?" />
                         </x:typeArguments>
                     </XdevComboBox>
                     <XdevLabel x:name="lblProLastBill" value="{$lblProLastBill.value}">
-                        <x:constraints gridx="1" gridy="7" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+                        <x:constraints gridx="1" gridy="6" weighty="0.0" weightx="0.0" width="0px" height="0px" />
                     </XdevLabel>
                     <XdevPopupDateField x:name="dateProLastBill">
-                        <x:constraints gridx="2" gridy="7" weighty="0.0" weightx="1.0" width="100%" height="0px" />
+                        <x:constraints gridx="2" gridy="6" weighty="0.0" weightx="1.0" width="100%" height="0px" />
                     </XdevPopupDateField>
                 </XdevGridLayout>
                 <XdevGridLayout caption="Referenzen" x:name="gridLayoutRef" margin="">

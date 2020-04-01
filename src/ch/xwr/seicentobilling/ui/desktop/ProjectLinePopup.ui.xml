@@ -223,8 +223,47 @@
                 <x:constraints weightx="0.0" width="0px" height="0px" />
                 <x:event>click.buttonClick</x:event>
             </XdevButton>
-            <XdevButton icon="FontAwesome.BOOKMARK" caption="Def 1" x:name="cmdDefault1">
+            <XdevButton icon="FontAwesome.BOOKMARK" caption="Def 1" x:name="cmdDefault1" x:shortcut="CTRL+NUM1">
                 <x:constraints top="93px" left="-1px" weightx="0.0" width="0px" height="0px" />
+                <x:event>click.buttonClick</x:event>
+            </XdevButton>
+        </XdevHorizontalLayout>
+        <XdevHorizontalLayout spacing="false" x:name="horizontalLayoutShortcut" margin="">
+            <x:constraints gridHeight="1" gridx="2" gridy="7" weighty="0.0" weightx="0.0" width="0px" alignment="TOP_LEFT" gridWidth="1" height="100%" />
+            <XdevButton caption="B2" styleName="tray tiny" x:name="cmd2" x:shortcut="CTRL+NUM2">
+                <x:constraints weightx="0.0" width="0px" height="0px" />
+                <x:event>click.buttonClick</x:event>
+            </XdevButton>
+            <XdevButton caption="B3" styleName="tray tiny" x:name="cmd3" x:shortcut="CTRL+NUM3">
+                <x:constraints weightx="0.0" width="0px" height="0px" />
+                <x:event>click.buttonClick</x:event>
+            </XdevButton>
+            <XdevButton caption="B4" styleName="tray tiny" x:name="cmd4" x:shortcut="CTRL+NUM4">
+                <x:constraints top="46px" left="-1px" weightx="0.0" width="0px" height="0px" />
+                <x:event>click.buttonClick</x:event>
+            </XdevButton>
+            <XdevButton caption="B5" styleName="tray tiny" x:name="cmd5" x:shortcut="CTRL+NUM5">
+                <x:constraints top="93px" left="-1px" weightx="0.0" width="0px" height="0px" />
+                <x:event>click.buttonClick</x:event>
+            </XdevButton>
+            <XdevButton caption="B6" styleName="tray tiny" x:name="cmd6" x:shortcut="CTRL+NUM6">
+                <x:constraints top="131px" left="-1px" weightx="0.0" width="0px" height="0px" />
+                <x:event>click.buttonClick</x:event>
+            </XdevButton>
+            <XdevButton caption="B7" styleName="tray tiny" x:name="cmd7" x:shortcut="CTRL+NUM7">
+                <x:constraints top="131px" left="-1px" weightx="0.0" width="0px" height="0px" />
+                <x:event>click.buttonClick</x:event>
+            </XdevButton>
+            <XdevButton caption="B8" styleName="tray tiny" x:name="cmd8" x:shortcut="CTRL+NUM8">
+                <x:constraints top="131px" left="-1px" weightx="0.0" width="0px" height="0px" />
+                <x:event>click.buttonClick</x:event>
+            </XdevButton>
+            <XdevButton caption="B9" styleName="tray tiny" x:name="cmd9" x:shortcut="CTRL+NUM9">
+                <x:constraints top="131px" left="-1px" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+                <x:event>click.buttonClick</x:event>
+            </XdevButton>
+            <XdevButton caption="B10" styleName="tray tiny" x:name="cmd10" x:shortcut="CTRL+NUM0">
+                <x:constraints top="131px" left="-1px" weightx="0.0" width="0px" height="0px" />
                 <x:event>click.buttonClick</x:event>
             </XdevButton>
         </XdevHorizontalLayout>

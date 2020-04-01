@@ -103,11 +103,21 @@ public class ExcelHandler {
 
 			bean.setPeriode(periode);
 			dao.save(bean);
-			LOG.debug("saved record with id: " + bean.getPrlId());
+			LOG.debug("saved record with id: " + bean.getPrlId() + " Projekt: " + bean.getProject().getProName() + " KST: " + bean.getPeriode().getPerName());
 
 			man.updateObject(bean.getPrlId(), bean.getClass().getSimpleName());
+			Thread.sleep(100);  //give DB trigger some time
+			reread(bean);
 		}
 		dao.flush();
+	}
+
+	private void reread(final ProjectLine bean) {
+		final ProjectLineDAO dao = new ProjectLineDAO();
+		final ProjectLine rbean = dao.find(bean.getPrlId());
+		if (rbean.getPrlId() != bean.getPrlId()) {
+			LOG.warn("id's are not the same in reread");
+		}
 	}
 
 	private void checkValidDate(final ProjectLine bean, final Periode periode) throws Exception {
