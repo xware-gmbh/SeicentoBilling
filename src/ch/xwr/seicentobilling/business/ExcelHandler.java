@@ -11,6 +11,8 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.persistence.PersistenceException;
+
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -66,11 +68,14 @@ public class ExcelHandler {
 		    persistList(periode);
 
 		} catch (final FileNotFoundException e) {
-			LOG.error("Bookkepping " + e);
+			LOG.error("Excel " + e);
 		} catch (final IOException e) {
-			LOG.error("Bookkepping " + e);
+			LOG.error("Excel " + e);
+		} catch (final Exception ex) {
+			LOG.error("Import Excel " + ex);
 		} finally {
 			closeFile(fs1);
+			fs1 = null;
 		}
 
 
@@ -93,23 +98,36 @@ public class ExcelHandler {
 			return;
 		}
 		LOG.info("Try to save: " + this.PRList.size() + " valid entries from excel!");
-		final ProjectLineDAO dao = new ProjectLineDAO();
-		final RowObjectManager man = new RowObjectManager();
 
-		for (final Iterator<ProjectLine> iterator = this.PRList.iterator(); iterator.hasNext();) {
-			final ProjectLine bean = iterator.next();
+		try {
+			final ProjectLineDAO dao = new ProjectLineDAO();
+			final RowObjectManager man = new RowObjectManager();
 
-			checkValidDate(bean, periode);
+			for (final Iterator<ProjectLine> iterator = this.PRList.iterator(); iterator.hasNext();) {
+				final ProjectLine bean = iterator.next();
 
-			bean.setPeriode(periode);
-			dao.save(bean);
-			LOG.debug("saved record with id: " + bean.getPrlId() + " Projekt: " + bean.getProject().getProName() + " KST: " + bean.getPeriode().getPerName());
+				checkValidDate(bean, periode);
 
-			man.updateObject(bean.getPrlId(), bean.getClass().getSimpleName());
-			Thread.sleep(100);  //give DB trigger some time
-			reread(bean);
+				bean.setPeriode(periode);
+				dao.save(bean);
+				LOG.debug("saved record with id: " + bean.getPrlId() + " Projekt: " + bean.getProject().getProName() + " KST: " + bean.getPeriode().getPerName());
+
+				man.updateObject(bean.getPrlId(), bean.getClass().getSimpleName());
+				Thread.sleep(100);  //give DB trigger some time
+				reread(bean);
+			}
+			dao.flush();
+		} catch (final PersistenceException cx) {
+			String msg = cx.getMessage();
+			if (cx.getCause() != null) {
+				msg = cx.getCause().getMessage();
+				if (cx.getCause().getCause() != null) {
+					msg = cx.getCause().getCause().getMessage();
+				}
+			}
+			LOG.error(msg);
 		}
-		dao.flush();
+
 	}
 
 	private void reread(final ProjectLine bean) {
