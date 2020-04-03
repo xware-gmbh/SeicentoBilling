@@ -33,6 +33,12 @@ public class ExcelHandler {
 
 	private List<ProjectLine> PRList = null;
 
+	private int iTotRead = 0;
+	private int iTotSaved = 0;
+
+	private String sheetName = "";
+
+
 
 	public void importReportLine(final File file, final int sheetnbr, final Periode periode) throws Exception {
 		final String filename = file.getPath();
@@ -47,13 +53,15 @@ public class ExcelHandler {
 			//HSSFSheet sheet = null;
 			XSSFSheet sheet = null;
 			sheet = this.hssfworkbook.getSheetAt(sheetnbr);
+			this.sheetName  = this.hssfworkbook.getSheetName(sheetnbr);
 			this.PRList = new ArrayList<>();
-			LOG.info("select sheet Nbr " + sheetnbr + " " + this.hssfworkbook.getSheetName(sheetnbr));
+			LOG.info("select sheet Nbr " + sheetnbr + " " + this.sheetName);
 
 		    //final HSSFRow row = null;
 		    XSSFRow row = null;
 		    for (int i = 15; i < sheet.getLastRowNum(); i++) {
 		    	LOG.info("Start processing Excel-line " + (i + 1));
+		    	this.iTotRead++;
 		    	row = sheet.getRow(i);
 		    	try {
 			    	loopExcelRow(row);
@@ -111,6 +119,7 @@ public class ExcelHandler {
 				bean.setPeriode(periode);
 				dao.save(bean);
 				LOG.debug("saved record with id: " + bean.getPrlId() + " Projekt: " + bean.getProject().getProName() + " KST: " + bean.getPeriode().getPerName());
+				this.iTotSaved++;
 
 				man.updateObject(bean.getPrlId(), bean.getClass().getSimpleName());
 				Thread.sleep(100);  //give DB trigger some time
@@ -232,6 +241,10 @@ public class ExcelHandler {
 		} catch (final Exception e) {
 			throw new Exception ("Projekt nicht gefunden " + project + "!");
 		}
+	}
+
+	public String getResultString() {
+		return "Total Zeilen gelesen "  + this.sheetName + ": " + this.iTotRead + "  Total Records gespeichert: " + this.iTotSaved;
 	}
 
 

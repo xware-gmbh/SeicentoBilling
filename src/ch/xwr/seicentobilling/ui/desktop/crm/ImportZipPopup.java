@@ -1,38 +1,40 @@
 package ch.xwr.seicentobilling.ui.desktop.crm;
 
-import java.io.File;
+import org.apache.log4j.LogManager;
 
 import com.vaadin.event.ShortcutAction;
-import com.vaadin.external.org.slf4j.Logger;
-import com.vaadin.external.org.slf4j.LoggerFactory;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
-import com.vaadin.ui.Upload;
-import com.vaadin.ui.Upload.SucceededEvent;
+import com.vaadin.ui.UI;
+import com.vaadin.ui.Upload.ProgressListener;
 import com.vaadin.ui.Window;
-import com.xdev.res.ApplicationResource;
+import com.vaadin.ui.Window.CloseEvent;
+import com.vaadin.ui.Window.CloseListener;
 import com.xdev.ui.XdevButton;
+import com.xdev.ui.XdevGridLayout;
 import com.xdev.ui.XdevHorizontalLayout;
-import com.xdev.ui.XdevImage;
 import com.xdev.ui.XdevLabel;
 import com.xdev.ui.XdevLink;
-import com.xdev.ui.XdevUpload;
+import com.xdev.ui.XdevPanel;
+import com.xdev.ui.XdevProgressBar;
+import com.xdev.ui.XdevTextArea;
 import com.xdev.ui.XdevVerticalLayout;
 import com.xdev.ui.XdevView;
 
-import ch.xwr.seicentobilling.business.UploadReceiverExcel;
 import ch.xwr.seicentobilling.business.crm.ZipImporter;
-import ch.xwr.seicentobilling.ui.desktop.ExcelUploadPopup;
+import ch.xwr.seicentobilling.business.helper.FileUploadDto;
+import ch.xwr.seicentobilling.ui.desktop.FileUploaderPopup;
 
-public class ImportZipPopup extends XdevView {
+public class ImportZipPopup extends XdevView implements ProgressListener {
 	/** Logger initialized */
-	private static final Logger LOG = LoggerFactory.getLogger(ExcelUploadPopup.class);
-
+	private static final org.apache.log4j.Logger LOG = LogManager.getLogger(ImportZipPopup.class);
+	FileUploadDto result = null;
 	/**
 	 *
 	 */
@@ -40,17 +42,20 @@ public class ImportZipPopup extends XdevView {
 		super();
 		this.initUI();
 
-		setupUploader();
+		//setupUploader();
 
-		this.labelStatus.setValue("");
+		this.lblStatus.setValue("");
+		this.lblFileName.setValue("");
+		this.lblSize.setValue("");
+		this.lblCount.setValue("");
 
 	}
 
 	public static Window getPopupWindow() {
 		final Window win = new Window();
 
-		win.setWidth("600");
-		win.setHeight("260");
+		win.setWidth("760");
+		win.setHeight("300");
 		win.center();
 		win.setModal(true);
 		win.setContent(new ImportZipPopup());
@@ -58,55 +63,82 @@ public class ImportZipPopup extends XdevView {
 		return win;
 	}
 
-	private void setupUploader() {
-		//uploader
-		final UploadReceiverExcel rec = new UploadReceiverExcel();
-		this.upload.setReceiver(rec);
-
-        this.upload.addSucceededListener(new Upload.SucceededListener() {
-            @Override
-			public void uploadSucceeded(final SucceededEvent event) {
-                // This method gets called when the upload finished successfully
-        	    //System.out.println("________________ UPLOAD SUCCEEDED y");
-        	    rec.uploadSucceeded(event);
-        		Notification.show("Datei erfolgreich hochgeladen", Type.TRAY_NOTIFICATION);
-        		LOG.info("Excel Datei hochgeladen " + event.getFilename());
-
-        	    processUploadedFile(rec.getOutFile());
-            }
-
-        });
-	}
-
-	private void processUploadedFile(final File outFile) {
-		try {
-			final ZipImporter imp = new ZipImporter();
-			imp.readFile(outFile);
-
-			Notification.show("Excel Datei importiert", Type.TRAY_NOTIFICATION);
-			LOG.info("Excel Datei erfolgreich importiert");
-
-			this.upload.setEnabled(false);
-			this.labelStatus.setValue("Daten erfolgreich importiert/aktualisiert");
-
-		} catch (final Exception e) {
-			this.labelStatus.setValue("Importieren ist fehlgeschlagen!");
-			Notification.show("Fehler beim Importieren", e.getMessage(), Notification.Type.ERROR_MESSAGE);
-			LOG.error(e.getLocalizedMessage());
-		} finally {
-			//cleanup
-			outFile.delete();
-		}
-
-	}
-
 	/**
-	 * Event handler delegate method for the {@link XdevButton} {@link #cmdClose}.
+	 * Event handler delegate method for the {@link XdevButton} {@link #cmdProcess}.
 	 *
 	 * @see Button.ClickListener#buttonClick(Button.ClickEvent)
 	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
 	 */
-	private void cmdClose_buttonClick(final Button.ClickEvent event) {
+	private void cmdProcess_buttonClick(final Button.ClickEvent event) {
+
+		try {
+//			this.progressBar.setVisible(true);
+//			this.progressBar.clear();
+//			this.progressBar.setImmediate(true);
+//			this.progressBar.setValue((float) this.result.getSize());
+//			this.progressBar.setIndeterminate(true);
+
+			final ZipImporter imp = new ZipImporter();
+			imp.addProgressListener(this);
+			imp.readFile(this.result.getUpfile());
+
+			Notification.show("Excel Datei importiert", Type.TRAY_NOTIFICATION);
+			LOG.info("Excel Datei erfolgreich importiert");
+			this.lblStatus.setValue(imp.getResultString());
+		} catch (final Exception e) {
+			Notification.show("Fehler beim Importieren", e.getMessage(), Notification.Type.ERROR_MESSAGE);
+			LOG.error(e.getLocalizedMessage());
+		} finally {
+			// cleanup
+			this.cmdProcess.setEnabled(false);
+			//this.progressBar.setIndeterminate(false);
+			this.result.getUpfile().delete();
+		}
+
+	}
+
+	@Override
+	public void updateProgress(final long readBytes, final long contentLength) {
+		this.progressBar.setValue((float) readBytes);
+		this.lblCount.setValue("" +readBytes);
+
+		getUI().access(()->this.progressBar.setValue((float) readBytes));
+	}
+
+	/**
+	 * Event handler delegate method for the {@link XdevButton} {@link #cmdUpload}.
+	 *
+	 * @see Button.ClickListener#buttonClick(Button.ClickEvent)
+	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
+	 */
+	private void cmdUpload_buttonClick(final Button.ClickEvent event) {
+		final FileUploadDto p1 = new FileUploadDto();
+		p1.setFilter("*.csv");
+		p1.setSubject("Import City csv Datei");
+		UI.getCurrent().getSession().setAttribute("uploaddto", p1);
+
+		final Window win = FileUploaderPopup.getPopupWindow();
+		win.addCloseListener(new CloseListener() {
+			@Override
+			public void windowClose(final CloseEvent e) {
+				ImportZipPopup.this.result = (FileUploadDto) UI.getCurrent().getSession().getAttribute("uploaddto");
+				ImportZipPopup.this.cmdProcess.setEnabled(ImportZipPopup.this.result.isSuccess());
+				ImportZipPopup.this.lblStatus.setValue(ImportZipPopup.this.result.getMessage());
+				ImportZipPopup.this.lblSize.setValue("" + (ImportZipPopup.this.result.getSize() / 1000) + " KB");
+				ImportZipPopup.this.lblFileName.setValue(ImportZipPopup.this.result.getUpfile().getName());
+			}
+		});
+		this.getUI().addWindow(win);
+
+	}
+
+	/**
+	 * Event handler delegate method for the {@link XdevButton} {@link #button}.
+	 *
+	 * @see Button.ClickListener#buttonClick(Button.ClickEvent)
+	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
+	 */
+	private void button_buttonClick(final Button.ClickEvent event) {
 		((Window) this.getParent()).close();
 	}
 
@@ -116,94 +148,151 @@ public class ImportZipPopup extends XdevView {
 	 */
 	// <generated-code name="initUI">
 	private void initUI() {
+		this.panel = new XdevPanel();
 		this.verticalLayout = new XdevVerticalLayout();
-		this.horizontalLayoutTitle = new XdevHorizontalLayout();
-		this.image = new XdevImage();
-		this.label = new XdevLabel();
 		this.horizontalLayout2 = new XdevHorizontalLayout();
-		this.label2 = new XdevLabel();
+		this.textArea = new XdevTextArea();
 		this.link = new XdevLink();
 		this.horizontalLayoutUpload = new XdevHorizontalLayout();
-		this.upload = new XdevUpload();
-		this.cmdClose = new XdevButton();
-		this.horizontalLayoutFooteer = new XdevHorizontalLayout();
-		this.labelStatus = new XdevLabel();
+		this.gridLayout = new XdevGridLayout();
+		this.label3 = new XdevLabel();
+		this.lblFileName = new XdevLabel();
+		this.lblSize = new XdevLabel();
+		this.label = new XdevLabel();
+		this.lblStatus = new XdevLabel();
+		this.horizontalLayout = new XdevHorizontalLayout();
+		this.cmdUpload = new XdevButton();
+		this.cmdProcess = new XdevButton();
+		this.label2 = new XdevLabel();
+		this.button = new XdevButton();
+		this.horizontalLayoutFooter = new XdevHorizontalLayout();
+		this.lblCount = new XdevLabel();
+		this.progressBar = new XdevProgressBar();
 
+		this.panel.setIcon(FontAwesome.FILE_EXCEL_O);
+		this.panel.setCaption("Ortschaften importieren (csv)");
+		this.panel.setTabIndex(0);
 		this.verticalLayout.setMargin(new MarginInfo(false, true, true, true));
-		this.horizontalLayoutTitle.setSpacing(false);
-		this.horizontalLayoutTitle.setMargin(new MarginInfo(false, true, false, true));
-		this.image.setSource(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/excel24.png"));
-		this.label.setStyleName("h3");
-		this.label.setValue("Excel csv Datei hochladen");
-		this.horizontalLayout2.setMargin(new MarginInfo(false, true, false, true));
-		this.label2.setDescription("Die Zahl entspricht dem Monat (z.B. 9 = September)");
-		this.label2.setValue("Plz Verzeichnis");
+		this.horizontalLayout2.setCaption("");
+		this.horizontalLayout2.setMargin(new MarginInfo(false));
+		this.textArea.setValue(
+				"Die Funktion ermöglicht den Import des offiziellen Plz Stammsatzes der Post. Eine aktuelle Datei kann unter https://opendata.swiss/de/dataset/plz_verzeichnis bezogen werden.");
+		this.textArea.setReadOnly(true);
+		this.textArea.setRows(3);
 		this.link.setTargetName("_blank");
 		this.link.setCaption("Link Opendata");
 		this.link.setResource(new ExternalResource("https://opendata.swiss/de/dataset/plz_verzeichnis"));
-		this.upload.setButtonCaption("Start Prozess");
-		this.cmdClose.setIcon(FontAwesome.CLOSE);
-		this.cmdClose.setCaption("Schliessen");
-		this.cmdClose.setClickShortcut(ShortcutAction.KeyCode.ESCAPE);
-		this.horizontalLayoutFooteer.setMargin(new MarginInfo(false, true, false, true));
-		this.labelStatus.setValue("Label");
+		this.horizontalLayoutUpload.setMargin(new MarginInfo(false));
+		this.gridLayout.setMargin(new MarginInfo(false));
+		this.label3.setValue("Datei");
+		this.lblFileName.setValue("Label");
+		this.lblSize.setValue("Label");
+		this.label.setValue("Status");
+		this.lblStatus.setValue("Label");
+		this.horizontalLayout.setMargin(new MarginInfo(false));
+		this.cmdUpload.setIcon(FontAwesome.UPLOAD);
+		this.cmdUpload.setCaption("Datei...");
+		this.cmdProcess.setIcon(FontAwesome.ROCKET);
+		this.cmdProcess.setCaption("Importieren");
+		this.cmdProcess.setEnabled(false);
+		this.button.setIcon(FontAwesome.CLOSE);
+		this.button.setCaption("Abbrechen");
+		this.button.setClickShortcut(ShortcutAction.KeyCode.ESCAPE);
+		this.horizontalLayoutFooter.setMargin(new MarginInfo(false, true, true, false));
+		this.lblCount.setValue("Label");
 
-		this.image.setWidth(100, Unit.PIXELS);
-		this.image.setHeight(100, Unit.PIXELS);
-		this.horizontalLayoutTitle.addComponent(this.image);
-		this.horizontalLayoutTitle.setComponentAlignment(this.image, Alignment.MIDDLE_LEFT);
-		this.horizontalLayoutTitle.setExpandRatio(this.image, 10.0F);
-		this.label.setSizeUndefined();
-		this.horizontalLayoutTitle.addComponent(this.label);
-		this.horizontalLayoutTitle.setExpandRatio(this.label, 40.0F);
-		this.label2.setSizeUndefined();
-		this.horizontalLayout2.addComponent(this.label2);
-		this.horizontalLayout2.setExpandRatio(this.label2, 10.0F);
+		this.textArea.setWidth(100, Unit.PERCENTAGE);
+		this.textArea.setHeight(-1, Unit.PIXELS);
+		this.horizontalLayout2.addComponent(this.textArea);
+		this.horizontalLayout2.setComponentAlignment(this.textArea, Alignment.MIDDLE_CENTER);
+		this.horizontalLayout2.setExpandRatio(this.textArea, 80.0F);
 		this.link.setSizeUndefined();
 		this.horizontalLayout2.addComponent(this.link);
 		this.horizontalLayout2.setExpandRatio(this.link, 20.0F);
-		this.upload.setWidth(100, Unit.PERCENTAGE);
-		this.upload.setHeight(-1, Unit.PIXELS);
-		this.horizontalLayoutUpload.addComponent(this.upload);
-		this.horizontalLayoutUpload.setExpandRatio(this.upload, 10.0F);
-		this.cmdClose.setSizeUndefined();
-		this.horizontalLayoutUpload.addComponent(this.cmdClose);
-		this.horizontalLayoutUpload.setExpandRatio(this.cmdClose, 10.0F);
-		this.labelStatus.setWidth(100, Unit.PERCENTAGE);
-		this.labelStatus.setHeight(-1, Unit.PIXELS);
-		this.horizontalLayoutFooteer.addComponent(this.labelStatus);
-		this.horizontalLayoutFooteer.setExpandRatio(this.labelStatus, 10.0F);
-		this.horizontalLayoutTitle.setWidth(100, Unit.PERCENTAGE);
-		this.horizontalLayoutTitle.setHeight(-1, Unit.PIXELS);
-		this.verticalLayout.addComponent(this.horizontalLayoutTitle);
+		this.gridLayout.setColumns(3);
+		this.gridLayout.setRows(2);
+		this.label3.setSizeUndefined();
+		this.gridLayout.addComponent(this.label3, 0, 0);
+		this.lblFileName.setSizeUndefined();
+		this.gridLayout.addComponent(this.lblFileName, 1, 0);
+		this.lblSize.setSizeUndefined();
+		this.gridLayout.addComponent(this.lblSize, 2, 0);
+		this.label.setSizeUndefined();
+		this.gridLayout.addComponent(this.label, 0, 1);
+		this.lblStatus.setWidth(100, Unit.PERCENTAGE);
+		this.lblStatus.setHeight(-1, Unit.PIXELS);
+		this.gridLayout.addComponent(this.lblStatus, 1, 1, 2, 1);
+		this.gridLayout.setComponentAlignment(this.lblStatus, Alignment.MIDDLE_CENTER);
+		this.gridLayout.setColumnExpandRatio(1, 10.0F);
+		this.gridLayout.setColumnExpandRatio(2, 10.0F);
+		this.gridLayout.setRowExpandRatio(1, 10.0F);
+		this.gridLayout.setSizeFull();
+		this.horizontalLayoutUpload.addComponent(this.gridLayout);
+		this.horizontalLayoutUpload.setComponentAlignment(this.gridLayout, Alignment.MIDDLE_CENTER);
+		this.horizontalLayoutUpload.setExpandRatio(this.gridLayout, 10.0F);
+		this.cmdUpload.setSizeUndefined();
+		this.horizontalLayout.addComponent(this.cmdUpload);
+		this.cmdProcess.setSizeUndefined();
+		this.horizontalLayout.addComponent(this.cmdProcess);
+		this.label2.setWidth(78, Unit.PIXELS);
+		this.label2.setHeight(-1, Unit.PIXELS);
+		this.horizontalLayout.addComponent(this.label2);
+		this.horizontalLayout.setComponentAlignment(this.label2, Alignment.MIDDLE_CENTER);
+		this.button.setSizeUndefined();
+		this.horizontalLayout.addComponent(this.button);
+		this.horizontalLayout.setComponentAlignment(this.button, Alignment.MIDDLE_CENTER);
+		final CustomComponent horizontalLayout_spacer = new CustomComponent();
+		horizontalLayout_spacer.setSizeFull();
+		this.horizontalLayout.addComponent(horizontalLayout_spacer);
+		this.horizontalLayout.setExpandRatio(horizontalLayout_spacer, 1.0F);
+		this.lblCount.setSizeUndefined();
+		this.horizontalLayoutFooter.addComponent(this.lblCount);
+		this.horizontalLayoutFooter.setComponentAlignment(this.lblCount, Alignment.TOP_CENTER);
+		this.progressBar.setSizeUndefined();
+		this.horizontalLayoutFooter.addComponent(this.progressBar);
+		this.horizontalLayoutFooter.setComponentAlignment(this.progressBar, Alignment.TOP_CENTER);
+		this.horizontalLayoutFooter.setExpandRatio(this.progressBar, 10.0F);
 		this.horizontalLayout2.setWidth(100, Unit.PERCENTAGE);
 		this.horizontalLayout2.setHeight(-1, Unit.PIXELS);
 		this.verticalLayout.addComponent(this.horizontalLayout2);
 		this.horizontalLayoutUpload.setWidth(100, Unit.PERCENTAGE);
 		this.horizontalLayoutUpload.setHeight(-1, Unit.PIXELS);
 		this.verticalLayout.addComponent(this.horizontalLayoutUpload);
-		this.verticalLayout.setExpandRatio(this.horizontalLayoutUpload, 10.0F);
-		this.horizontalLayoutFooteer.setWidth(100, Unit.PERCENTAGE);
-		this.horizontalLayoutFooteer.setHeight(-1, Unit.PIXELS);
-		this.verticalLayout.addComponent(this.horizontalLayoutFooteer);
-		this.verticalLayout.setComponentAlignment(this.horizontalLayoutFooteer, Alignment.MIDDLE_CENTER);
-		this.verticalLayout.setExpandRatio(this.horizontalLayoutFooteer, 10.0F);
+		this.verticalLayout.setExpandRatio(this.horizontalLayoutUpload, 20.0F);
+		this.horizontalLayout.setWidth(100, Unit.PERCENTAGE);
+		this.horizontalLayout.setHeight(-1, Unit.PIXELS);
+		this.verticalLayout.addComponent(this.horizontalLayout);
+		this.verticalLayout.setComponentAlignment(this.horizontalLayout, Alignment.MIDDLE_CENTER);
+		this.verticalLayout.setExpandRatio(this.horizontalLayout, 10.0F);
+		this.horizontalLayoutFooter.setWidth(100, Unit.PERCENTAGE);
+		this.horizontalLayoutFooter.setHeight(-1, Unit.PIXELS);
+		this.verticalLayout.addComponent(this.horizontalLayoutFooter);
+		this.verticalLayout.setComponentAlignment(this.horizontalLayoutFooter, Alignment.MIDDLE_CENTER);
+		this.verticalLayout.setExpandRatio(this.horizontalLayoutFooter, 10.0F);
 		this.verticalLayout.setWidth(100, Unit.PERCENTAGE);
 		this.verticalLayout.setHeight(-1, Unit.PIXELS);
-		this.setContent(this.verticalLayout);
+		this.panel.setContent(this.verticalLayout);
+		this.panel.setWidth(100, Unit.PERCENTAGE);
+		this.panel.setHeight(-1, Unit.PIXELS);
+		this.setContent(this.panel);
 		this.setSizeFull();
 
-		this.cmdClose.addClickListener(event -> this.cmdClose_buttonClick(event));
+		this.cmdUpload.addClickListener(event -> this.cmdUpload_buttonClick(event));
+		this.cmdProcess.addClickListener(event -> this.cmdProcess_buttonClick(event));
+		this.button.addClickListener(event -> this.button_buttonClick(event));
 	} // </generated-code>
 
 	// <generated-code name="variables">
-	private XdevLabel label, label2, labelStatus;
-	private XdevButton cmdClose;
-	private XdevUpload upload;
-	private XdevHorizontalLayout horizontalLayoutTitle, horizontalLayout2, horizontalLayoutUpload, horizontalLayoutFooteer;
-	private XdevImage image;
+	private XdevLabel label3, lblFileName, lblSize, label, lblStatus, label2, lblCount;
+	private XdevButton cmdUpload, cmdProcess, button;
+	private XdevHorizontalLayout horizontalLayout2, horizontalLayoutUpload, horizontalLayout, horizontalLayoutFooter;
+	private XdevTextArea textArea;
+	private XdevProgressBar progressBar;
+	private XdevPanel panel;
 	private XdevLink link;
+	private XdevGridLayout gridLayout;
 	private XdevVerticalLayout verticalLayout;
 	// </generated-code>
+
 
 }

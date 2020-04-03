@@ -47,7 +47,7 @@
                     <x:constraints weightx="0.0" width="0px" height="0px" />
                     <x:event>click.buttonClick</x:event>
                 </XdevButton>
-                <XdevButton icon="FontAwesome.FILE_EXCEL_O" description="Import PLZ csv" x:name="cmdImport">
+                <XdevButton icon="FontAwesome.FILE_EXCEL_O" description="Import PLZ csv" enabled="false" x:name="cmdImport" visible="false">
                     <x:constraints weighty="0.0" weightx="0.0" width="0px" alignment="MIDDLE_RIGHT" height="0px" />
                     <x:event>click.buttonClick</x:event>
                 </XdevButton>

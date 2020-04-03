@@ -4,51 +4,79 @@
 <?xdevuiml version="1.0"?>
 <?template BROWSER_XGA?>
 <?import com.xdev.ui.XdevButton?>
+<?import com.xdev.ui.XdevGridLayout?>
 <?import com.xdev.ui.XdevHorizontalLayout?>
-<?import com.xdev.ui.XdevImage?>
 <?import com.xdev.ui.XdevLabel?>
 <?import com.xdev.ui.XdevLink?>
-<?import com.xdev.ui.XdevUpload?>
+<?import com.xdev.ui.XdevPanel?>
+<?import com.xdev.ui.XdevProgressBar?>
+<?import com.xdev.ui.XdevTextArea?>
 <?import com.xdev.ui.XdevVerticalLayout?>
 <?import com.xdev.ui.XdevView?>
 <XdevView xmlns:x="http://xml.xdev-software.com/xdevuiml" x:name="ImportZipPopup">
-    <x:constraints zpos="0" width="100%" height="100%" />
-    <XdevVerticalLayout x:name="verticalLayout" margin="rbl">
-        <x:constraints gridHeight="1" zpos="0" gridx="1" gridy="1" weighty="0.0" weightx="0.1" width="100%" alignment="TOP_LEFT" gridWidth="1" height="-1px" />
-        <XdevHorizontalLayout spacing="false" x:name="horizontalLayoutTitle" margin="rl">
-            <x:constraints gridHeight="1" gridx="1" gridy="1" weighty="0.0" weightx="0.1" width="100%" alignment="TOP_LEFT" gridWidth="1" height="-1px" />
-            <XdevImage source="WebContent/WEB-INF/resources/images/excel24.png" x:name="image">
-                <x:constraints gridHeight="1" gridx="1" gridy="1" weighty="0.0" weightx="0.1" width="100px" alignment="MIDDLE_LEFT" gridWidth="1" height="100px" />
-            </XdevImage>
-            <XdevLabel styleName="h3" x:name="label" value="Excel csv Datei hochladen">
-                <x:constraints gridHeight="1" gridx="2" gridy="1" weighty="0.0" weightx="0.4" width="0px" alignment="TOP_LEFT" gridWidth="1" height="0px" />
-            </XdevLabel>
-        </XdevHorizontalLayout>
-        <XdevHorizontalLayout x:name="horizontalLayout2" margin="rl">
-            <x:constraints gridHeight="1" gridx="1" gridy="1" weighty="0.0" weightx="0.0" width="100%" alignment="TOP_LEFT" gridWidth="1" height="-1px" />
-            <XdevLabel description="Die Zahl entspricht dem Monat (z.B. 9 = September)" x:name="label2" value="Plz Verzeichnis">
-                <x:constraints gridHeight="1" gridx="1" gridy="1" weighty="0.0" weightx="0.1" width="0px" alignment="TOP_LEFT" gridWidth="1" height="0px" />
-            </XdevLabel>
-            <XdevLink targetName="_blank" caption="Link Opendata" x:name="link" resource="https://opendata.swiss/de/dataset/plz_verzeichnis">
-                <x:constraints gridHeight="1" gridx="2" gridy="1" weighty="0.0" weightx="0.2" width="0px" alignment="TOP_LEFT" gridWidth="1" height="0px" />
-            </XdevLink>
-        </XdevHorizontalLayout>
-        <XdevHorizontalLayout x:name="horizontalLayoutUpload">
-            <x:constraints gridHeight="1" gridx="1" gridy="1" weighty="0.1" weightx="0.0" width="100%" alignment="TOP_LEFT" gridWidth="1" height="-1px" />
-            <XdevUpload buttonCaption="Start Prozess" x:name="upload">
-                <x:constraints gridHeight="1" gridx="1" gridy="1" weighty="0.1" weightx="0.1" width="100%" alignment="TOP_LEFT" gridWidth="1" height="0px" />
-            </XdevUpload>
-            <XdevButton icon="FontAwesome.CLOSE" caption="Schliessen" x:name="cmdClose" x:shortcut="ESCAPE">
-                <x:constraints gridHeight="1" gridx="2" gridy="1" weighty="0.0" weightx="0.1" width="0px" alignment="TOP_LEFT" gridWidth="1" height="0px" />
-                <x:event>click.buttonClick</x:event>
-            </XdevButton>
-        </XdevHorizontalLayout>
-        <XdevHorizontalLayout x:name="horizontalLayoutFooteer" margin="rl">
-            <x:constraints weighty="0.1" width="100%" height="-1px" />
-            <XdevLabel x:name="labelStatus" value="Label">
-                <x:constraints gridHeight="1" gridx="1" gridy="1" weighty="0.0" weightx="0.1" width="100%" alignment="TOP_LEFT" gridWidth="1" height="0px" />
-            </XdevLabel>
-        </XdevHorizontalLayout>
-    </XdevVerticalLayout>
+    <x:constraints width="100%" zpos="0" height="100%" />
+    <XdevPanel icon="FontAwesome.FILE_EXCEL_O" caption="Ortschaften importieren (csv)" tabIndex="0" x:name="panel">
+        <x:constraints zpos="0" weightx="0.0" width="100%" alignment="MIDDLE_CENTER" height="-1px" />
+        <XdevVerticalLayout x:name="verticalLayout" margin="rbl">
+            <x:constraints gridHeight="1" zpos="0" gridx="1" gridy="1" weighty="0.0" weightx="0.1" width="100%" alignment="TOP_LEFT" gridWidth="1" height="-1px" />
+            <XdevHorizontalLayout caption="" x:name="horizontalLayout2" margin="">
+                <x:constraints gridHeight="1" gridx="1" gridy="1" weighty="0.0" weightx="0.0" width="100%" alignment="TOP_LEFT" gridWidth="1" height="-1px" />
+                <XdevTextArea columns="4" x:name="textArea" value="Die Funktion ermöglicht den Import des offiziellen Plz Stammsatzes der Post. Eine aktuelle Datei kann unter https://opendata.swiss/de/dataset/plz_verzeichnis bezogen werden." readOnly="true" rows="3">
+                    <x:constraints weightx="0.8" width="100%" height="0px" />
+                </XdevTextArea>
+                <XdevLink targetName="_blank" caption="Link Opendata" x:name="link" resource="https://opendata.swiss/de/dataset/plz_verzeichnis">
+                    <x:constraints gridHeight="1" gridx="2" gridy="1" weighty="0.0" weightx="0.2" width="0px" alignment="TOP_LEFT" gridWidth="1" height="0px" />
+                </XdevLink>
+            </XdevHorizontalLayout>
+            <XdevHorizontalLayout x:name="horizontalLayoutUpload" margin="">
+                <x:constraints gridHeight="1" gridx="1" gridy="1" weighty="0.2" weightx="0.0" width="100%" alignment="TOP_LEFT" gridWidth="1" height="-1px" />
+                <XdevGridLayout x:name="gridLayout" margin="">
+                    <x:constraints weightx="0.1" width="100%" height="100%" />
+                    <XdevLabel x:name="label3" value="Datei">
+                        <x:constraints gridx="1" gridy="1" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+                    </XdevLabel>
+                    <XdevLabel x:name="lblFileName" value="Label">
+                        <x:constraints gridx="2" gridy="1" weighty="0.0" weightx="0.1" width="0px" height="0px" />
+                    </XdevLabel>
+                    <XdevLabel x:name="lblSize" value="Label">
+                        <x:constraints gridx="3" gridy="1" top="33px" left="-1px" weighty="0.0" weightx="0.1" width="0px" height="0px" />
+                    </XdevLabel>
+                    <XdevLabel x:name="label" value="Status">
+                        <x:constraints gridx="1" gridy="2" top="33px" left="-1px" weighty="0.1" weightx="0.0" width="0px" height="0px" />
+                    </XdevLabel>
+                    <XdevLabel x:name="lblStatus" value="Label">
+                        <x:constraints gridx="2" gridy="2" weighty="0.1" weightx="0.1" width="100%" alignment="MIDDLE_CENTER" gridWidth="2" height="0px" />
+                    </XdevLabel>
+                </XdevGridLayout>
+            </XdevHorizontalLayout>
+            <XdevHorizontalLayout x:name="horizontalLayout" margin="">
+                <x:constraints weighty="0.1" width="100%" height="-1px" />
+                <XdevButton icon="FontAwesome.UPLOAD" caption="Datei..." x:name="cmdUpload">
+                    <x:constraints gridHeight="1" gridx="3" gridy="1" weighty="0.0" weightx="0.0" width="0px" alignment="TOP_LEFT" gridWidth="1" height="0px" />
+                    <x:event>click.buttonClick</x:event>
+                </XdevButton>
+                <XdevButton icon="FontAwesome.ROCKET" caption="Importieren" enabled="false" x:name="cmdProcess">
+                    <x:constraints gridHeight="1" gridx="3" gridy="2" weighty="0.0" weightx="0.0" width="0px" alignment="TOP_LEFT" gridWidth="1" height="0px" />
+                    <x:event>click.buttonClick</x:event>
+                </XdevButton>
+                <XdevLabel x:name="label2">
+                    <x:constraints weightx="0.0" width="78px" height="0px" />
+                </XdevLabel>
+                <XdevButton icon="FontAwesome.CLOSE" caption="Abbrechen" x:name="button" x:shortcut="ESCAPE">
+                    <x:constraints weightx="0.0" width="0px" height="0px" />
+                    <x:event>click.buttonClick</x:event>
+                </XdevButton>
+            </XdevHorizontalLayout>
+            <XdevHorizontalLayout x:name="horizontalLayoutFooter" margin="rb">
+                <x:constraints weighty="0.1" width="100%" height="-1px" />
+                <XdevLabel x:name="lblCount" value="Label">
+                    <x:constraints weightx="0.0" width="0px" alignment="TOP_CENTER" height="0px" />
+                </XdevLabel>
+                <XdevProgressBar x:name="progressBar">
+                    <x:constraints weightx="0.1" width="0px" alignment="TOP_CENTER" height="0px" />
+                </XdevProgressBar>
+            </XdevHorizontalLayout>
+        </XdevVerticalLayout>
+    </XdevPanel>
 </XdevView>
 

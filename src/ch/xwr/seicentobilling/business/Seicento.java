@@ -111,4 +111,13 @@ public class Seicento {
 		}
 	}
 
+	public static long getMemory() {
+		System.gc();
+	    final Runtime rt = Runtime.getRuntime();
+	    final long usedMB = (rt.totalMemory() - rt.freeMemory()) / 1024 / 1024;
+	    LOG.debug("memory usage MB: " + usedMB);
+	    return usedMB;
+	}
+
+
 }

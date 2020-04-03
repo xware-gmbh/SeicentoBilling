@@ -9,10 +9,13 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 
-import com.vaadin.external.org.slf4j.Logger;
-import com.vaadin.external.org.slf4j.LoggerFactory;
+import org.apache.log4j.LogManager;
+
+import com.vaadin.ui.Upload.ProgressListener;
 
 import ch.xwr.seicentobilling.business.LovState;
 import ch.xwr.seicentobilling.business.crm.model.ZipModel;
@@ -21,32 +24,72 @@ import ch.xwr.seicentobilling.entities.City;
 
 public final class ZipImporter {
 	/** Logger initialized */
-	private static final Logger LOG = LoggerFactory.getLogger(ZipImporter.class);
+	private static final org.apache.log4j.Logger LOG = LogManager.getLogger(ZipImporter.class);
+
 	private String header[] = null;
 	private String rowdata[] = null;
+	int icount=0;
+	int iNew = 0;
+	int iUpdate = 0;
 
 	private final CityDAO dao = new CityDAO();
+    private LinkedHashSet<ProgressListener> progressListeners;
+
 
 	public void readFile(final File fn) {
+		if (!fn.exists() || !fn.canRead()) {
+			LOG.error("File for City Import does not exist or can not be read " + fn.getName());
+			return;
+		}
+
+		LOG.info("Start processing file " + fn.getName());
 		BufferedReader csvReader = null;
 		try {
 			csvReader = new BufferedReader(new FileReader(fn));
 			loopLines(csvReader);
 			csvReader.close();
+
 		} catch (final FileNotFoundException e) {
 			LOG.error("IO", e);
 		} catch (final IOException e) {
 			LOG.error("IO", e);
+		} finally {
+			fn.delete();
 		}
+
+		LOG.info("[END] Number of lines processed " + this.icount + " New: " + this.iNew + " Updated: " + this.iUpdate);
+	}
+
+    public void addProgressListener(final ProgressListener listener) {
+        if (this.progressListeners == null) {
+            this.progressListeners = new LinkedHashSet<>();
+        }
+        this.progressListeners.add(listener);
+    }
+
+    protected void fireUpdateProgress(final long totalBytes, final long contentLength) {
+        // this is implemented differently than other listeners to maintain
+        // backwards compatibility
+        if (this.progressListeners != null) {
+            for (final Iterator<ProgressListener> it = this.progressListeners
+                    .iterator(); it.hasNext();) {
+                final ProgressListener l = it.next();
+                l.updateProgress(totalBytes, contentLength);
+            }
+        }
+    }
+
+	public String getResultString() {
+		return ("Number of lines processed " + this.icount + " New: " + this.iNew + " Updated: " + this.iUpdate);
 	}
 
 	private void loopLines(final BufferedReader csvReader) throws IOException {
 		String row = "";
-		int icount=0;
 		while ((row = csvReader.readLine()) != null) {
-			icount++;
+			this.icount++;
+			fireUpdateProgress(this.icount, this.icount);
 		    final String[] data = row.split(";");
-			if (icount == 1) {
+			if (this.icount == 1) {
 				this.header = data;
 				LOG.debug("Header Line with " + this.header.length + " Fields.");
 			} else {
@@ -55,11 +98,10 @@ public final class ZipImporter {
 			    if (isModelValid(line)) {
 				    upsertCity(line);
 			    } else {
-			    	LOG.warn("Row " + icount + "is not valid");
+			    	LOG.warn("Row " + this.icount + "is not valid");
 			    }
 			}
 		}
-
 	}
 
 	private boolean isModelValid(final ZipModel line) {
@@ -86,8 +128,10 @@ public final class ZipImporter {
 		final List<City> ls = this.dao.findByZip(line.getPostleitzahl());
 		if (ls == null || ls.isEmpty()) {
 			bean = getNewBean(line);
+			this.iNew++;
 		} else {
 			bean = updateBean(ls.get(0), line);  //first bean
+			this.iUpdate++;
 		}
 		this.dao.save(bean);
 		LOG.debug("Record written to Database with id: " +  bean.getCtyId());
@@ -146,4 +190,5 @@ public final class ZipImporter {
 		LOG.error("Field " + key + " not found in csv File");
 		return -1;
 	}
+
 }
