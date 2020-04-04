@@ -32,7 +32,7 @@ import com.xdev.ui.XdevUpload;
 import com.xdev.ui.XdevVerticalLayout;
 import com.xdev.ui.XdevView;
 
-import ch.xwr.seicentobilling.business.helper.FileUploadDto;
+import ch.xwr.seicentobilling.business.model.generic.FileUploadDto;
 
 public class FileUploaderPopup extends XdevView  implements Upload.SucceededListener,
 															Upload.FailedListener,
@@ -43,12 +43,13 @@ public class FileUploaderPopup extends XdevView  implements Upload.SucceededList
 	/** Logger initialized */
 	private static final org.apache.log4j.Logger LOG = LogManager.getLogger(FileUploaderPopup.class);
 
-    private final long maxSize = (40 * 1024 * 1024);  //max size MB
+    private long maxSize = 0;
 	private long contentLength = 0;
 	private File file = null;
 	private final String directory = "";
 	protected boolean cancelled = false;
 	private FileUploadDto dto = null;
+	private String filter = "*";
 
 	/**
 	 *
@@ -63,11 +64,14 @@ public class FileUploaderPopup extends XdevView  implements Upload.SucceededList
 
 		this.lblSubject.setValue(this.dto.getSubject());
 		this.lblFileType.setValue(this.dto.getFilter());
-		this.lblMaxSize.setValue(getMaxSize());
+		this.lblMaxSize.setValue(getMaxSizeInfo());
+
+		this.maxSize = this.dto.getMaxSize();
+		this.filter = this.dto.getFilter();
 
 	}
 
-	private String getMaxSize() {
+	private String getMaxSizeInfo() {
         return "Max: " + (this.maxSize / 1024 / 1024) + " Mb";
 	}
 
@@ -100,6 +104,13 @@ public class FileUploaderPopup extends XdevView  implements Upload.SucceededList
         this.dto.setUpfile(new File("unknown"));
 	}
 
+	public void setMaxSize(final long maxSize) {
+		this.maxSize = maxSize;
+	}
+
+	public long getMaxSize() {
+		return this.maxSize;
+	}
 
 	@Override
 	public void uploadFinished(final FinishedEvent event) {
@@ -118,18 +129,20 @@ public class FileUploaderPopup extends XdevView  implements Upload.SucceededList
             FileUploaderPopup.this.upload.interruptUpload();
             return;
         }
-
+        final Float pval = new Float(readBytes / (float) contentLength);
 		FileUploaderPopup.this.horizontalLayoutProgress.setVisible(true);
-		FileUploaderPopup.this.progressBar.setValue(new Float(readBytes / (float) contentLength));
+		FileUploaderPopup.this.progressBar.setValue(pval);
 	}
 
 	@Override
 	public OutputStream receiveUpload(final String filename, final String mimeType) {
 		LOG.debug("receiveUpload file: " + filename + " typ: " + mimeType);
-		this.progressBar.setValue((float) 13);
+		this.progressBar.setValue((float) 0);
+
 
 		FileOutputStream fos = null;
 		try {
+			checkFileExtension(filename);
 
 			// Get path to servlet's temp directory
 			final File directory = (File) VaadinServlet.getCurrent().getServletContext()
@@ -152,6 +165,22 @@ public class FileUploaderPopup extends XdevView  implements Upload.SucceededList
 		LOG.debug("upload to: " + this.file.toString());
 		return fos;
  	}
+
+	private void checkFileExtension(final String filename) throws IOException {
+		if (this.filter != null && this.filter.length() > 1) {
+			final String f2 = this.filter.replaceAll("\\*", "");
+			final String[] fa = f2.split(",");
+
+			for (int i = 0; i < fa.length; i++) {
+				final String ext = fa[i].toLowerCase();
+				if (filename.toLowerCase().endsWith(ext)) {
+					return;
+				}
+			}
+			this.dto.setMessage("invalid file extension in " + filename);
+			throw new IOException(this.dto.getMessage());
+		}
+	}
 
 	@Override
 	public void uploadFailed(final FailedEvent event) {
@@ -257,7 +286,7 @@ public class FileUploaderPopup extends XdevView  implements Upload.SucceededList
 		this.lblFileType.setValue("Filter");
 		this.lblMaxSize.setValue("Max. Grösse");
 		this.horizontalLayoutUpload.setMargin(new MarginInfo(false, true, false, false));
-		this.upload.setButtonCaption("Start Prozess");
+		this.upload.setButtonCaption("Start Upload");
 		this.cmdClose.setIcon(FontAwesome.CLOSE);
 		this.cmdClose.setCaption("Abbrechen");
 		this.cmdClose.setClickShortcut(ShortcutAction.KeyCode.ESCAPE);

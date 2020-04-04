@@ -4,6 +4,7 @@ import java.io.File;
 
 import org.apache.log4j.LogManager;
 
+import com.vaadin.event.FieldEvents;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.ui.MarginInfo;
@@ -28,7 +29,7 @@ import com.xdev.ui.XdevVerticalLayout;
 import com.xdev.ui.XdevView;
 
 import ch.xwr.seicentobilling.business.ExcelHandler;
-import ch.xwr.seicentobilling.business.helper.FileUploadDto;
+import ch.xwr.seicentobilling.business.model.generic.FileUploadDto;
 import ch.xwr.seicentobilling.entities.Periode;
 
 public class ExcelUploadPopup extends XdevView {
@@ -167,11 +168,22 @@ public class ExcelUploadPopup extends XdevView {
 			LOG.error(e.getLocalizedMessage());
 		} finally {
 			// cleanup
-			this.cmdProcess.setEnabled(false);
-			//this.progressBar.setIndeterminate(false);
+			this.horizontalLayoutFooter.setVisible(false);
 			this.result.getUpfile().delete();
 		}
 
+	}
+
+
+	/**
+	 * Event handler delegate method for the {@link XdevButton} {@link #cmdProcess}.
+	 *
+	 * @see FieldEvents.FocusListener#focus(FieldEvents.FocusEvent)
+	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
+	 */
+	private void cmdProcess_focus(final FieldEvents.FocusEvent event) {
+		this.horizontalLayoutFooter.setVisible(true);
+		this.progressBar.setIndeterminate(true);
 	}
 
 
@@ -239,10 +251,12 @@ public class ExcelUploadPopup extends XdevView {
 		this.cmdProcess.setIcon(FontAwesome.ROCKET);
 		this.cmdProcess.setCaption("Importieren");
 		this.cmdProcess.setEnabled(false);
+		this.cmdProcess.setDisableOnClick(true);
 		this.cmdCancel.setIcon(FontAwesome.CLOSE);
 		this.cmdCancel.setCaption("Abbrechen");
 		this.cmdCancel.setClickShortcut(ShortcutAction.KeyCode.ESCAPE);
 		this.horizontalLayoutFooter.setMargin(new MarginInfo(false, true, true, false));
+		this.horizontalLayoutFooter.setVisible(false);
 		this.lblCount.setValue("Label");
 
 		this.textArea.setWidth(100, Unit.PERCENTAGE);
@@ -330,6 +344,7 @@ public class ExcelUploadPopup extends XdevView {
 
 		this.cmdUpload.addClickListener(event -> this.cmdUpload_buttonClick(event));
 		this.cmdProcess.addClickListener(event -> this.cmdProcess_buttonClick(event));
+		this.cmdProcess.addFocusListener(event -> this.cmdProcess_focus(event));
 		this.cmdCancel.addClickListener(event -> this.cmdCancel_buttonClick(event));
 	} // </generated-code>
 

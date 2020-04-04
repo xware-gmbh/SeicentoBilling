@@ -31,7 +31,7 @@ import ch.xwr.seicentobilling.business.ConfirmDialog;
 import ch.xwr.seicentobilling.business.LovState;
 import ch.xwr.seicentobilling.business.RowObjectManager;
 import ch.xwr.seicentobilling.business.Seicento;
-import ch.xwr.seicentobilling.business.helper.FileUploadDto;
+import ch.xwr.seicentobilling.business.model.generic.FileUploadDto;
 import ch.xwr.seicentobilling.dal.CityDAO;
 import ch.xwr.seicentobilling.entities.City;
 import ch.xwr.seicentobilling.entities.City_;

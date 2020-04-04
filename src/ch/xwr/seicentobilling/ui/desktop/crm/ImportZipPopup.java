@@ -2,9 +2,12 @@ package ch.xwr.seicentobilling.ui.desktop.crm;
 
 import org.apache.log4j.LogManager;
 
+import com.vaadin.annotations.Push;
+import com.vaadin.event.FieldEvents;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.FontAwesome;
+import com.vaadin.shared.communication.PushMode;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -27,14 +30,21 @@ import com.xdev.ui.XdevTextArea;
 import com.xdev.ui.XdevVerticalLayout;
 import com.xdev.ui.XdevView;
 
+import ch.xwr.seicentobilling.business.Seicento;
 import ch.xwr.seicentobilling.business.crm.ZipImporter;
-import ch.xwr.seicentobilling.business.helper.FileUploadDto;
+import ch.xwr.seicentobilling.business.crm.ZipImporter2;
+import ch.xwr.seicentobilling.business.helper.GuiThread;
+import ch.xwr.seicentobilling.business.model.generic.FileUploadDto;
 import ch.xwr.seicentobilling.ui.desktop.FileUploaderPopup;
 
+@Push(PushMode.MANUAL)
 public class ImportZipPopup extends XdevView implements ProgressListener {
 	/** Logger initialized */
 	private static final org.apache.log4j.Logger LOG = LogManager.getLogger(ImportZipPopup.class);
 	FileUploadDto result = null;
+	private Float cur2;
+    volatile double current = 0.0;
+
 	/**
 	 *
 	 */
@@ -70,39 +80,67 @@ public class ImportZipPopup extends XdevView implements ProgressListener {
 	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
 	 */
 	private void cmdProcess_buttonClick(final Button.ClickEvent event) {
+		Seicento.getMemory();
+
+		this.horizontalLayoutFooter.setVisible(true);
+		//UI.getCurrent().access(()->this.horizontalLayoutFooter.setVisible(true));
+//		UI.getCurrent().setPollInterval(500);
+		//startV1();
 
 		try {
-//			this.progressBar.setVisible(true);
-//			this.progressBar.clear();
-//			this.progressBar.setImmediate(true);
-//			this.progressBar.setValue((float) this.result.getSize());
-//			this.progressBar.setIndeterminate(true);
+
+//			final WorkThread th = new WorkThread(this.result);
+//			th.start();
 
 			final ZipImporter imp = new ZipImporter();
 			imp.addProgressListener(this);
 			imp.readFile(this.result.getUpfile());
 
 			Notification.show("Excel Datei importiert", Type.TRAY_NOTIFICATION);
-			LOG.info("Excel Datei erfolgreich importiert");
 			this.lblStatus.setValue(imp.getResultString());
+			LOG.info("Excel Datei erfolgreich importiert");
+			Seicento.getMemory();
+
 		} catch (final Exception e) {
 			Notification.show("Fehler beim Importieren", e.getMessage(), Notification.Type.ERROR_MESSAGE);
 			LOG.error(e.getLocalizedMessage());
 		} finally {
 			// cleanup
-			this.cmdProcess.setEnabled(false);
+			//this.cmdProcess.setEnabled(false);
+			this.horizontalLayoutFooter.setVisible(false);
 			//this.progressBar.setIndeterminate(false);
-			this.result.getUpfile().delete();
+			//this.result.getUpfile().delete();
 		}
+
+		//UI.getCurrent().setPollInterval(-1);
 
 	}
 
 	@Override
 	public void updateProgress(final long readBytes, final long contentLength) {
-		this.progressBar.setValue((float) readBytes);
 		this.lblCount.setValue("" +readBytes);
+		final Float pv = new Float((float)readBytes / 100);
+//		this.cur2 = pv;
+//		this.current = pv.doubleValue();
 
-		getUI().access(()->this.progressBar.setValue((float) readBytes));
+		this.progressBar.setValue(pv);
+		UI.getCurrent().access(()->this.progressBar.setValue(pv));
+
+
+//        UI.getCurrent().access(new Runnable() {
+//            @Override
+//            public void run() {
+//            	//final float current = ImportZipPopup.this.cur2.floatValue();
+//            	ImportZipPopup.this.progressBar.setValue(ImportZipPopup.this.cur2);
+//                if (ImportZipPopup.this.current < 1.0) {
+//                	ImportZipPopup.this.lblStatus.setValue("" +
+//                        ((int)(ImportZipPopup.this.current*100)) + "% done");
+//				} else {
+//					ImportZipPopup.this.lblStatus.setValue("all done");
+//				}
+//            }
+//        });
+
 	}
 
 	/**
@@ -133,13 +171,54 @@ public class ImportZipPopup extends XdevView implements ProgressListener {
 	}
 
 	/**
-	 * Event handler delegate method for the {@link XdevButton} {@link #button}.
+	 * Event handler delegate method for the {@link XdevButton} {@link #cmdCancel}.
 	 *
 	 * @see Button.ClickListener#buttonClick(Button.ClickEvent)
 	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
 	 */
-	private void button_buttonClick(final Button.ClickEvent event) {
+	private void cmdCancel_buttonClick(final Button.ClickEvent event) {
 		((Window) this.getParent()).close();
+	}
+
+	private void startV1() {
+		// TODO remove after testing: also delete GuiThread / ZimpImporter2
+        final GuiThread thread = new GuiThread(this.result.getUpfile(), this.progressBar, this.lblStatus);
+        thread.start();
+
+        // Enable polling and set frequency to 0.5 seconds
+        //UI.getCurrent().setPollInterval(1000);
+
+        // Disable the button until the work is done
+        this.progressBar.setEnabled(true);
+        //this.button.setEnabled(false);
+
+        this.lblCount.setValue("running...");
+	}
+
+	private void startV2() {
+		// TODO: Delete after testing
+        final ZipImporter2 thread = new ZipImporter2(this.result.getUpfile(), this.progressBar, this.lblCount);
+        thread.start();
+
+        // Enable polling and set frequency to 0.5 seconds
+        UI.getCurrent().setPollInterval(500);
+
+        // Disable the button until the work is done
+        this.progressBar.setEnabled(true);
+        //this.button.setEnabled(false);
+
+        this.lblCount.setValue("running...");
+	}
+
+	/**
+	 * Event handler delegate method for the {@link XdevButton} {@link #cmdProcess}.
+	 *
+	 * @see FieldEvents.FocusListener#focus(FieldEvents.FocusEvent)
+	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
+	 */
+	private void cmdProcess_focus(final FieldEvents.FocusEvent event) {
+		this.horizontalLayoutFooter.setVisible(true);
+		this.progressBar.setIndeterminate(true);
 	}
 
 	/*
@@ -164,7 +243,7 @@ public class ImportZipPopup extends XdevView implements ProgressListener {
 		this.cmdUpload = new XdevButton();
 		this.cmdProcess = new XdevButton();
 		this.label2 = new XdevLabel();
-		this.button = new XdevButton();
+		this.cmdCancel = new XdevButton();
 		this.horizontalLayoutFooter = new XdevHorizontalLayout();
 		this.lblCount = new XdevLabel();
 		this.progressBar = new XdevProgressBar();
@@ -195,11 +274,14 @@ public class ImportZipPopup extends XdevView implements ProgressListener {
 		this.cmdProcess.setIcon(FontAwesome.ROCKET);
 		this.cmdProcess.setCaption("Importieren");
 		this.cmdProcess.setEnabled(false);
-		this.button.setIcon(FontAwesome.CLOSE);
-		this.button.setCaption("Abbrechen");
-		this.button.setClickShortcut(ShortcutAction.KeyCode.ESCAPE);
+		this.cmdProcess.setDisableOnClick(true);
+		this.cmdCancel.setIcon(FontAwesome.CLOSE);
+		this.cmdCancel.setCaption("Abbrechen");
+		this.cmdCancel.setClickShortcut(ShortcutAction.KeyCode.ESCAPE);
 		this.horizontalLayoutFooter.setMargin(new MarginInfo(false, true, true, false));
+		this.horizontalLayoutFooter.setVisible(false);
 		this.lblCount.setValue("Label");
+		this.progressBar.setEnabled(false);
 
 		this.textArea.setWidth(100, Unit.PERCENTAGE);
 		this.textArea.setHeight(-1, Unit.PIXELS);
@@ -238,9 +320,9 @@ public class ImportZipPopup extends XdevView implements ProgressListener {
 		this.label2.setHeight(-1, Unit.PIXELS);
 		this.horizontalLayout.addComponent(this.label2);
 		this.horizontalLayout.setComponentAlignment(this.label2, Alignment.MIDDLE_CENTER);
-		this.button.setSizeUndefined();
-		this.horizontalLayout.addComponent(this.button);
-		this.horizontalLayout.setComponentAlignment(this.button, Alignment.MIDDLE_CENTER);
+		this.cmdCancel.setSizeUndefined();
+		this.horizontalLayout.addComponent(this.cmdCancel);
+		this.horizontalLayout.setComponentAlignment(this.cmdCancel, Alignment.MIDDLE_CENTER);
 		final CustomComponent horizontalLayout_spacer = new CustomComponent();
 		horizontalLayout_spacer.setSizeFull();
 		this.horizontalLayout.addComponent(horizontalLayout_spacer);
@@ -248,9 +330,10 @@ public class ImportZipPopup extends XdevView implements ProgressListener {
 		this.lblCount.setSizeUndefined();
 		this.horizontalLayoutFooter.addComponent(this.lblCount);
 		this.horizontalLayoutFooter.setComponentAlignment(this.lblCount, Alignment.TOP_CENTER);
-		this.progressBar.setSizeUndefined();
+		this.progressBar.setWidth(100, Unit.PERCENTAGE);
+		this.progressBar.setHeight(-1, Unit.PIXELS);
 		this.horizontalLayoutFooter.addComponent(this.progressBar);
-		this.horizontalLayoutFooter.setComponentAlignment(this.progressBar, Alignment.TOP_CENTER);
+		this.horizontalLayoutFooter.setComponentAlignment(this.progressBar, Alignment.MIDDLE_CENTER);
 		this.horizontalLayoutFooter.setExpandRatio(this.progressBar, 10.0F);
 		this.horizontalLayout2.setWidth(100, Unit.PERCENTAGE);
 		this.horizontalLayout2.setHeight(-1, Unit.PIXELS);
@@ -265,7 +348,7 @@ public class ImportZipPopup extends XdevView implements ProgressListener {
 		this.verticalLayout.setComponentAlignment(this.horizontalLayout, Alignment.MIDDLE_CENTER);
 		this.verticalLayout.setExpandRatio(this.horizontalLayout, 10.0F);
 		this.horizontalLayoutFooter.setWidth(100, Unit.PERCENTAGE);
-		this.horizontalLayoutFooter.setHeight(-1, Unit.PIXELS);
+		this.horizontalLayoutFooter.setHeight(60, Unit.PIXELS);
 		this.verticalLayout.addComponent(this.horizontalLayoutFooter);
 		this.verticalLayout.setComponentAlignment(this.horizontalLayoutFooter, Alignment.MIDDLE_CENTER);
 		this.verticalLayout.setExpandRatio(this.horizontalLayoutFooter, 10.0F);
@@ -279,12 +362,13 @@ public class ImportZipPopup extends XdevView implements ProgressListener {
 
 		this.cmdUpload.addClickListener(event -> this.cmdUpload_buttonClick(event));
 		this.cmdProcess.addClickListener(event -> this.cmdProcess_buttonClick(event));
-		this.button.addClickListener(event -> this.button_buttonClick(event));
+		this.cmdProcess.addFocusListener(event -> this.cmdProcess_focus(event));
+		this.cmdCancel.addClickListener(event -> this.cmdCancel_buttonClick(event));
 	} // </generated-code>
 
 	// <generated-code name="variables">
 	private XdevLabel label3, lblFileName, lblSize, label, lblStatus, label2, lblCount;
-	private XdevButton cmdUpload, cmdProcess, button;
+	private XdevButton cmdUpload, cmdProcess, cmdCancel;
 	private XdevHorizontalLayout horizontalLayout2, horizontalLayoutUpload, horizontalLayout, horizontalLayoutFooter;
 	private XdevTextArea textArea;
 	private XdevProgressBar progressBar;
@@ -295,4 +379,21 @@ public class ImportZipPopup extends XdevView implements ProgressListener {
 	// </generated-code>
 
 
+}
+
+//TODO: remove Class after Testing (EntityManager closed)
+class WorkThread extends Thread {
+	private static final org.apache.log4j.Logger LOG = LogManager.getLogger(WorkThread.class);
+	private FileUploadDto upDto = null;
+
+	public WorkThread(final FileUploadDto result) {
+		this.upDto = result;
+	}
+
+    @Override
+    public void run() {
+		final ZipImporter imp = new ZipImporter();
+		//imp.addProgressListener(this);
+		imp.readFile(this.upDto.getUpfile());
+    }
 }

@@ -79,8 +79,6 @@ public class ExcelHandler {
 			LOG.error("Excel " + e);
 		} catch (final IOException e) {
 			LOG.error("Excel " + e);
-		} catch (final Exception ex) {
-			LOG.error("Import Excel " + ex);
 		} finally {
 			closeFile(fs1);
 			fs1 = null;
@@ -154,7 +152,7 @@ public class ExcelHandler {
 		final int imonth = cal.get(Calendar.MONTH) + 1;
 
 		if (imonth != periode.getPerMonth().getValue()) {
-			throw new Exception("Periode nicht gültig für Datum: " + bean.getPrlReportDate());
+			throw new Exception("Periode " + periode.getPerName() + " nicht gültig für Sheet " + this.sheetName + " und Rapport-Datum: " + bean.getPrlReportDate());
 		}
 	}
 

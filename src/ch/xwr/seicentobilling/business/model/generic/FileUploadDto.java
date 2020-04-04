@@ -1,4 +1,4 @@
-package ch.xwr.seicentobilling.business.helper;
+package ch.xwr.seicentobilling.business.model.generic;
 
 import java.io.File;
 
@@ -9,6 +9,7 @@ public class FileUploadDto {
 	private boolean success = false;
 	private String message = "";
 	private long size = 0;
+	private long maxSize = (45 * 1024 * 1024);  //max size 40 MB;
 
 	public String getSubject() {
 		return this.subject;
@@ -45,6 +46,12 @@ public class FileUploadDto {
 	}
 	public void setSize(final long size) {
 		this.size = size;
+	}
+	public long getMaxSize() {
+		return this.maxSize;
+	}
+	public void setMaxSize(final long maxSize) {
+		this.maxSize = maxSize;
 	}
 
 }

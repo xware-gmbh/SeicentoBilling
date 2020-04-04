@@ -31,7 +31,7 @@
             </XdevHorizontalLayout>
             <XdevHorizontalLayout x:name="horizontalLayoutUpload" margin="r">
                 <x:constraints gridHeight="1" gridx="1" gridy="1" weighty="0.1" weightx="0.0" width="100%" alignment="TOP_LEFT" gridWidth="1" height="-1px" />
-                <XdevUpload buttonCaption="Start Prozess" x:name="upload">
+                <XdevUpload buttonCaption="Start Upload" x:name="upload">
                     <x:constraints gridHeight="1" gridx="1" gridy="1" weighty="0.1" weightx="0.2" width="100%" alignment="TOP_LEFT" gridWidth="1" height="0px" />
                 </XdevUpload>
                 <XdevButton icon="FontAwesome.CLOSE" caption="Abbrechen" x:name="cmdClose" x:shortcut="ESCAPE">
