@@ -255,7 +255,7 @@ public class ImportZipPopup extends XdevView implements ProgressListener {
 		this.horizontalLayout2.setCaption("");
 		this.horizontalLayout2.setMargin(new MarginInfo(false));
 		this.textArea.setValue(
-				"Die Funktion ermöglicht den Import des offiziellen Plz Stammsatzes der Post. Eine aktuelle Datei kann unter https://opendata.swiss/de/dataset/plz_verzeichnis bezogen werden.");
+				"Die Funktion ermöglicht den Import des offiziellen Plz Stammsatzes der Post. Eine aktuelle Datei kann unter https://opendata.swiss/de/dataset/plz_verzeichnis bezogen werden. Das Feld plz_coff darf nicht leer sein.");
 		this.textArea.setReadOnly(true);
 		this.textArea.setRows(3);
 		this.link.setTargetName("_blank");

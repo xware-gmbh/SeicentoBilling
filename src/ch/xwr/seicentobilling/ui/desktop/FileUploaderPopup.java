@@ -62,13 +62,12 @@ public class FileUploaderPopup extends XdevView  implements Upload.SucceededList
 
 		setupUploader();
 
-		this.lblSubject.setValue(this.dto.getSubject());
-		this.lblFileType.setValue(this.dto.getFilter());
-		this.lblMaxSize.setValue(getMaxSizeInfo());
-
 		this.maxSize = this.dto.getMaxSize();
 		this.filter = this.dto.getFilter();
 
+		this.lblSubject.setValue(this.dto.getSubject());
+		this.lblFileType.setValue(this.dto.getFilter());
+		this.lblMaxSize.setValue(getMaxSizeInfo());
 	}
 
 	private String getMaxSizeInfo() {

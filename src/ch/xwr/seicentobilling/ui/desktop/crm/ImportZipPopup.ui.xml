@@ -21,7 +21,7 @@
             <x:constraints gridHeight="1" gridx="1" zpos="0" gridy="1" weighty="0.0" weightx="0.1" width="100%" alignment="TOP_LEFT" gridWidth="1" height="-1px" />
             <XdevHorizontalLayout caption="" x:name="horizontalLayout2" margin="">
                 <x:constraints gridHeight="1" gridx="1" gridy="1" weighty="0.0" weightx="0.0" width="100%" alignment="TOP_LEFT" gridWidth="1" height="-1px" />
-                <XdevTextArea columns="4" x:name="textArea" value="Die Funktion ermöglicht den Import des offiziellen Plz Stammsatzes der Post. Eine aktuelle Datei kann unter https://opendata.swiss/de/dataset/plz_verzeichnis bezogen werden." readOnly="true" rows="3">
+                <XdevTextArea columns="4" x:name="textArea" value="Die Funktion ermöglicht den Import des offiziellen Plz Stammsatzes der Post. Eine aktuelle Datei kann unter https://opendata.swiss/de/dataset/plz_verzeichnis bezogen werden. Das Feld plz_coff darf nicht leer sein." readOnly="true" rows="3">
                     <x:constraints weightx="0.8" width="100%" height="0px" />
                 </XdevTextArea>
                 <XdevLink targetName="_blank" caption="Link Opendata" x:name="link" resource="https://opendata.swiss/de/dataset/plz_verzeichnis">

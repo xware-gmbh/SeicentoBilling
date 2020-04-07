@@ -129,6 +129,9 @@ public final class ZipImporter {
 		} catch (final ParseException e) {
 			LOG.warn("Could not parse valid date " + line.getGilt_ab_date());
 		}
+		if (line.getPlz_coff() == null || line.getPlz_coff().trim().isEmpty()) {
+			return false; //skip
+		}
 
 		return true;
 	}
@@ -185,6 +188,8 @@ public final class ZipImporter {
 		zip.setPostleitzahl(Integer.parseInt(getField(ZipModel.ZIP)));
 		zip.setRec_art(Integer.parseInt(getField(ZipModel.REC_ART)));
 		zip.setGeo_point_2d(getField(ZipModel.GEO_POINT));
+		zip.setPlz_zz(Integer.parseInt(getField(ZipModel.PLZ_ZZ)));
+		zip.setPlz_coff(getField(ZipModel.PLZ_COFF));
 
 		return zip;
 	}

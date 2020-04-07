@@ -9,6 +9,8 @@ public class ZipModel {
 	private String kanton;
 	private String gilt_ab_date;
 	private String geo_point_2d;
+	private int plz_zz;
+	private String plz_coff;
 
 	public static String REC_ART = "rec_art";
 	public static String BFSNR = "bfsnr";
@@ -18,6 +20,8 @@ public class ZipModel {
 	public static String AREA = "kanton";
 	public static String VALID_FROM = "gilt_ab_dat";
 	public static String GEO_POINT = "geo_point_2d";
+	public static String PLZ_ZZ = "plz_zz";
+	public static String PLZ_COFF = "plz_coff";
 
 	public int getRec_art() {
 		return this.rec_art;
@@ -66,6 +70,18 @@ public class ZipModel {
 	}
 	public void setGeo_point_2d(final String geo_point_2d) {
 		this.geo_point_2d = geo_point_2d;
+	}
+	public int getPlz_zz() {
+		return this.plz_zz;
+	}
+	public void setPlz_zz(final int plz_zz) {
+		this.plz_zz = plz_zz;
+	}
+	public String getPlz_coff() {
+		return this.plz_coff;
+	}
+	public void setPlz_coff(final String plz_coff) {
+		this.plz_coff = plz_coff;
 	}
 
 
