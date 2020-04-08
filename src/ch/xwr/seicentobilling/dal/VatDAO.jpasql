@@ -8,3 +8,8 @@ findAllActive()
 {
 	select * from Vat where vatState = 1 order by vatSign asc
 }
+
+findByCode(String code)
+{
+	select * from Vat where vatSign = :code
+}

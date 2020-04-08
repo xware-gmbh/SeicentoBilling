@@ -57,6 +57,7 @@ import ch.xwr.seicentobilling.business.LovState;
 import ch.xwr.seicentobilling.business.ResourcePlanerHandler;
 import ch.xwr.seicentobilling.business.RowObjectManager;
 import ch.xwr.seicentobilling.business.Seicento;
+import ch.xwr.seicentobilling.business.helper.RowObjectAddonHandler;
 import ch.xwr.seicentobilling.dal.AddressDAO;
 import ch.xwr.seicentobilling.dal.CostAccountDAO;
 import ch.xwr.seicentobilling.dal.CustomerDAO;
@@ -76,6 +77,8 @@ import ch.xwr.seicentobilling.entities.Vat;
 public class ProjectTabView extends XdevView {
 	/** Logger initialized */
 	private static final Logger LOG = LoggerFactory.getLogger(ProjectTabView.class);
+
+	private Vat vatdefault = null;
 
 	/**
 	 *
@@ -98,11 +101,30 @@ public class ProjectTabView extends XdevView {
 		final boolean[] ordering = { false, false };
 		this.table.sort(properties, ordering);
 
+		setVatDefault();
 		// RO
 		// set RO Fields
 		setROFields();
 
 		setDefaultFilter();
+	}
+
+	private void setVatDefault() {
+		if (this.vatdefault == null) {
+			final RowObjectAddonHandler addon = new RowObjectAddonHandler(null);  //company
+			final String key = addon.getRowParameter("default", "vat", "code");
+
+			final VatDAO dao = new VatDAO();
+			List<Vat> vls = dao.findByCode(key);
+			if (vls.size() > 0) {
+				this.vatdefault = vls.get(0);
+			} else {
+				vls = dao.findAllActive();
+				if (vls.size() > 0) {
+					this.vatdefault = vls.get(0);
+				}
+			}
+		}
 	}
 
 	private void setROFields() {
@@ -156,12 +178,8 @@ public class ProjectTabView extends XdevView {
 		bean.setProHoursEffective(new Double(0.));
 		bean.setProModel(LovState.ProModel.undefined);
 
-		final VatDAO dao = new VatDAO();
-		final List<Vat> list = dao.findAll();
-		for (final Vat vat : list) {
-			if (vat.getVatState() == LovState.State.active) {
-				bean.setVat(vat);
-			}
+		if (this.vatdefault != null) {
+			bean.setVat(this.vatdefault);
 		}
 
 		CostAccount beanCsa = Seicento.getLoggedInCostAccount();

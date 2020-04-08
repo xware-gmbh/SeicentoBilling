@@ -21,7 +21,7 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.Upload.ProgressListener;
 
 import ch.xwr.seicentobilling.business.LovState;
-import ch.xwr.seicentobilling.business.crm.model.ZipModel;
+import ch.xwr.seicentobilling.business.model.crm.ZipModel;
 import ch.xwr.seicentobilling.dal.CityDAO;
 import ch.xwr.seicentobilling.entities.City;
 

@@ -1,4 +1,4 @@
-package ch.xwr.seicentobilling.business.crm.model;
+package ch.xwr.seicentobilling.business.model.crm;
 
 public class ZipModel {
 	private int rec_art;
