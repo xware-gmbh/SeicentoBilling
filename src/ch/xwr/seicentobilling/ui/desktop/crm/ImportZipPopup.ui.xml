@@ -63,7 +63,7 @@
                 <XdevLabel x:name="label2">
                     <x:constraints weightx="0.0" width="78px" height="0px" />
                 </XdevLabel>
-                <XdevButton icon="FontAwesome.CLOSE" caption="Abbrechen" x:name="cmdCancel" x:shortcut="ESCAPE">
+                <XdevButton icon="FontAwesome.CLOSE" caption="Schliessen" x:name="cmdCancel" x:shortcut="ESCAPE">
                     <x:constraints weightx="0.0" width="0px" height="0px" />
                     <x:event>click.buttonClick</x:event>
                 </XdevButton>

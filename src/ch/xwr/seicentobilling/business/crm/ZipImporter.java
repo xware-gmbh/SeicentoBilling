@@ -196,7 +196,7 @@ public final class ZipImporter {
 
 	private String getField(final String fieldname) {
 		final int idx = getIndex(fieldname);
-		if (this.rowdata.length < idx) {
+		if (this.rowdata.length <= idx) {
 			return "";
 		}
 		return this.rowdata[idx];

@@ -32,8 +32,6 @@ import com.xdev.ui.XdevView;
 
 import ch.xwr.seicentobilling.business.Seicento;
 import ch.xwr.seicentobilling.business.crm.ZipImporter;
-import ch.xwr.seicentobilling.business.crm.ZipImporter2;
-import ch.xwr.seicentobilling.business.helper.GuiThread;
 import ch.xwr.seicentobilling.business.model.generic.FileUploadDto;
 import ch.xwr.seicentobilling.ui.desktop.FileUploaderPopup;
 
@@ -42,7 +40,6 @@ public class ImportZipPopup extends XdevView implements ProgressListener {
 	/** Logger initialized */
 	private static final org.apache.log4j.Logger LOG = LogManager.getLogger(ImportZipPopup.class);
 	FileUploadDto result = null;
-	private Float cur2;
     volatile double current = 0.0;
 
 	/**
@@ -103,7 +100,7 @@ public class ImportZipPopup extends XdevView implements ProgressListener {
 
 		} catch (final Exception e) {
 			Notification.show("Fehler beim Importieren", e.getMessage(), Notification.Type.ERROR_MESSAGE);
-			LOG.error(e.getLocalizedMessage());
+			LOG.error("Fehler bei Import", e);
 		} finally {
 			// cleanup
 			//this.cmdProcess.setEnabled(false);
@@ -180,35 +177,35 @@ public class ImportZipPopup extends XdevView implements ProgressListener {
 		((Window) this.getParent()).close();
 	}
 
-	private void startV1() {
-		// TODO remove after testing: also delete GuiThread / ZimpImporter2
-        final GuiThread thread = new GuiThread(this.result.getUpfile(), this.progressBar, this.lblStatus);
-        thread.start();
+//	private void startV1() {
+//		// TODO remove after testing: also delete GuiThread / ZimpImporter2
+//        final GuiThread thread = new GuiThread(this.result.getUpfile(), this.progressBar, this.lblStatus);
+//        thread.start();
+//
+//        // Enable polling and set frequency to 0.5 seconds
+//        //UI.getCurrent().setPollInterval(1000);
+//
+//        // Disable the button until the work is done
+//        this.progressBar.setEnabled(true);
+//        //this.button.setEnabled(false);
+//
+//        this.lblCount.setValue("running...");
+//	}
 
-        // Enable polling and set frequency to 0.5 seconds
-        //UI.getCurrent().setPollInterval(1000);
-
-        // Disable the button until the work is done
-        this.progressBar.setEnabled(true);
-        //this.button.setEnabled(false);
-
-        this.lblCount.setValue("running...");
-	}
-
-	private void startV2() {
-		// TODO: Delete after testing
-        final ZipImporter2 thread = new ZipImporter2(this.result.getUpfile(), this.progressBar, this.lblCount);
-        thread.start();
-
-        // Enable polling and set frequency to 0.5 seconds
-        UI.getCurrent().setPollInterval(500);
-
-        // Disable the button until the work is done
-        this.progressBar.setEnabled(true);
-        //this.button.setEnabled(false);
-
-        this.lblCount.setValue("running...");
-	}
+//	private void startV2() {
+//		// TODO: Delete after testing
+//        final ZipImporter2 thread = new ZipImporter2(this.result.getUpfile(), this.progressBar, this.lblCount);
+//        thread.start();
+//
+//        // Enable polling and set frequency to 0.5 seconds
+//        UI.getCurrent().setPollInterval(500);
+//
+//        // Disable the button until the work is done
+//        this.progressBar.setEnabled(true);
+//        //this.button.setEnabled(false);
+//
+//        this.lblCount.setValue("running...");
+//	}
 
 	/**
 	 * Event handler delegate method for the {@link XdevButton} {@link #cmdProcess}.
@@ -276,7 +273,7 @@ public class ImportZipPopup extends XdevView implements ProgressListener {
 		this.cmdProcess.setEnabled(false);
 		this.cmdProcess.setDisableOnClick(true);
 		this.cmdCancel.setIcon(FontAwesome.CLOSE);
-		this.cmdCancel.setCaption("Abbrechen");
+		this.cmdCancel.setCaption("Schliessen");
 		this.cmdCancel.setClickShortcut(ShortcutAction.KeyCode.ESCAPE);
 		this.horizontalLayoutFooter.setMargin(new MarginInfo(false, true, true, false));
 		this.horizontalLayoutFooter.setVisible(false);
@@ -381,19 +378,19 @@ public class ImportZipPopup extends XdevView implements ProgressListener {
 
 }
 
-//TODO: remove Class after Testing (EntityManager closed)
-class WorkThread extends Thread {
-	private static final org.apache.log4j.Logger LOG = LogManager.getLogger(WorkThread.class);
-	private FileUploadDto upDto = null;
-
-	public WorkThread(final FileUploadDto result) {
-		this.upDto = result;
-	}
-
-    @Override
-    public void run() {
-		final ZipImporter imp = new ZipImporter();
-		//imp.addProgressListener(this);
-		imp.readFile(this.upDto.getUpfile());
-    }
-}
+////TODO: remove Class after Testing (EntityManager closed)
+//class WorkThread extends Thread {
+//	private static final org.apache.log4j.Logger LOG = LogManager.getLogger(WorkThread.class);
+//	private FileUploadDto upDto = null;
+//
+//	public WorkThread(final FileUploadDto result) {
+//		this.upDto = result;
+//	}
+//
+//    @Override
+//    public void run() {
+//		final ZipImporter imp = new ZipImporter();
+//		//imp.addProgressListener(this);
+//		imp.readFile(this.upDto.getUpfile());
+//    }
+//}
