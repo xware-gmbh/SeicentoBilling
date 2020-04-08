@@ -224,7 +224,7 @@ public class ExcelUploadPopup extends XdevView {
 		this.horizontalLayout2.setCaption("");
 		this.horizontalLayout2.setMargin(new MarginInfo(false));
 		this.textArea.setValue(
-				"Die Funktion ermöglicht es Rapporte von eienm Excel File zu importieren. Das Format der Excel Datei ist definiert und darf nicht abweichen. EinTemplate ist vom Admin erhältlich. Die Reihenfolge der Sheets in Excel ist wie folgt: Stammdaten, Dezember (Vorjahr), Januar, Februar..... Mit dieser Reihenfolge ist der Wert im Feld Arbeitsblatt korrekt berechnet.");
+				"Die Funktion ermöglicht es Rapporte von einem Excel File zu importieren. Das Format der Excel Datei ist definiert und darf nicht abweichen. EinTemplate ist vom Admin erhältlich. Die Reihenfolge der Sheets in Excel ist wie folgt: Stammdaten (0), Dezember Vorjahr (1), Januar (2), Februar.(3).... Mit dieser Reihenfolge ist der Wert im Feld Arbeitsblatt korrekt berechnet.");
 		this.textArea.setReadOnly(true);
 		this.textArea.setRows(4);
 		this.horizontalLayoutUpload.setMargin(new MarginInfo(false));
@@ -253,7 +253,7 @@ public class ExcelUploadPopup extends XdevView {
 		this.cmdProcess.setEnabled(false);
 		this.cmdProcess.setDisableOnClick(true);
 		this.cmdCancel.setIcon(FontAwesome.CLOSE);
-		this.cmdCancel.setCaption("Abbrechen");
+		this.cmdCancel.setCaption("Schliessen");
 		this.cmdCancel.setClickShortcut(ShortcutAction.KeyCode.ESCAPE);
 		this.horizontalLayoutFooter.setMargin(new MarginInfo(false, true, true, false));
 		this.horizontalLayoutFooter.setVisible(false);
