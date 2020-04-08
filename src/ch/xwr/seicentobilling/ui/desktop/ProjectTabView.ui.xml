@@ -102,7 +102,7 @@
                     <XdevLabel x:name="lblCustomer" value="{$lblCustomer.value}">
                         <x:constraints gridx="1" gridy="1" weighty="0.0" weightx="0.0" width="0px" height="0px" />
                     </XdevLabel>
-                    <XdevComboBox required="true" itemCaptionFromAnnotation="false" x:name="cmbCustomer" x:entity="Customer" x:autoQuery="false">
+                    <XdevComboBox required="true" itemCaptionFromAnnotation="false" x:name="cmbCustomer" filteringMode="com.vaadin.shared.ui.combobox.FilteringMode.CONTAINS" x:entity="Customer" x:autoQuery="false">
                         <x:constraints gridx="2" gridy="1" weighty="0.0" weightx="1.0" width="100%" gridWidth="3" height="0px" />
                         <x:entityProperty>
                             <entry type="String" property="fullname" />

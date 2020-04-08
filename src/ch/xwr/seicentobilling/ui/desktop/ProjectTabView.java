@@ -16,6 +16,7 @@ import com.vaadin.external.org.slf4j.LoggerFactory;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Page;
 import com.vaadin.shared.ui.MarginInfo;
+import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -649,6 +650,7 @@ public class ProjectTabView extends XdevView {
 		this.lblCustomer.setValue(StringResourceUtils.optLocalizeString("{$lblCustomer.value}", this));
 		this.cmbCustomer.setRequired(true);
 		this.cmbCustomer.setItemCaptionFromAnnotation(false);
+		this.cmbCustomer.setFilteringMode(FilteringMode.CONTAINS);
 		this.cmbCustomer.setContainerDataSource(Customer.class, DAOs.get(CustomerDAO.class).findAll());
 		this.cmbCustomer.setItemCaptionPropertyId("fullname");
 		this.lblProName.setValue(StringResourceUtils.optLocalizeString("{$lblProName.value}", this));
