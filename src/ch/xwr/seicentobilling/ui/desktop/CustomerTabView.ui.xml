@@ -135,6 +135,179 @@
             </XdevFieldGroup>
             <XdevTabSheet styleName="framed" x:name="tabSheet" x:selectedTabIndex="0">
                 <x:constraints gridx="1" gridy="1" weighty="1.0" weightx="1.0" width="100%" height="100%" />
+                <XdevGridLayout caption="Kontakt" x:name="gridLayoutContact">
+                    <x:constraints width="100%" height="100%" />
+                    <XdevLabel x:name="lblCusNumber" value="{$lblCusNumber.value}">
+                        <x:constraints gridx="1" gridy="1" weighty="0.0" weightx="0.2" width="0px" height="0px" />
+                    </XdevLabel>
+                    <XdevTextField columns="5" required="true" x:name="txtCusNumber">
+                        <x:constraints gridx="2" gridy="1" weighty="0.0" weightx="0.1" width="100%" height="0px" />
+                    </XdevTextField>
+                    <XdevLabel x:name="lblType" value="Kontakt Typ">
+                        <x:constraints gridx="1" gridy="2" weighty="0.0" weightx="0.2" width="0px" height="0px" />
+                    </XdevLabel>
+                    <XdevComboBox x:name="cbxAccountType">
+                        <x:constraints gridx="2" gridy="2" weighty="0.0" weightx="0.1" width="0px" height="0px" />
+                        <x:typeArguments>
+                            <typeArgument type="?" />
+                        </x:typeArguments>
+                    </XdevComboBox>
+                    <XdevLabel x:name="lblAnrede" value="Anrede">
+                        <x:constraints gridx="3" gridy="2" weighty="0.0" weightx="0.2" width="0px" height="0px" />
+                    </XdevLabel>
+                    <XdevComboBox x:name="cbxAccountSalutation">
+                        <x:constraints gridx="4" gridy="2" weighty="0.0" weightx="1.0" width="0px" height="0px" />
+                        <x:typeArguments>
+                            <typeArgument type="?" />
+                        </x:typeArguments>
+                    </XdevComboBox>
+                    <XdevLabel x:name="lblCusCompany" value="{$lblCusCompany.value}">
+                        <x:constraints gridx="1" gridy="3" weighty="0.0" weightx="0.2" width="0px" height="0px" />
+                    </XdevLabel>
+                    <XdevTextField columns="5" x:name="txtCusCompany" maxLength="40">
+                        <x:constraints gridx="2" gridy="3" weighty="0.0" weightx="0.1" width="100%" gridWidth="3" height="0px" />
+                    </XdevTextField>
+                    <XdevLabel x:name="lblCusName" value="{$lblCusName.value}">
+                        <x:constraints gridx="1" gridy="4" weighty="0.0" weightx="0.2" width="0px" height="0px" />
+                    </XdevLabel>
+                    <XdevTextField columns="5" required="true" x:name="txtCusName" maxLength="40">
+                        <x:constraints gridx="2" gridy="4" weighty="0.0" weightx="0.1" width="100%" gridWidth="3" height="0px" />
+                    </XdevTextField>
+                    <XdevLabel x:name="lblCusFirstName" value="{$lblCusFirstName.value}">
+                        <x:constraints gridx="1" gridy="5" weighty="0.0" weightx="0.2" width="0px" height="0px" />
+                    </XdevLabel>
+                    <XdevTextField columns="5" x:name="txtCusFirstName" maxLength="40">
+                        <x:constraints gridx="2" gridy="5" weighty="0.0" weightx="0.1" width="100%" height="0px" />
+                    </XdevTextField>
+                    <XdevLink targetName="_blank" icon="WebContent/WEB-INF/resources/images/gmaps32.PNG" caption="Adresse" x:name="linkMaps">
+                        <x:constraints gridx="1" gridy="6" weighty="0.0" weightx="0.2" width="0px" height="0px" />
+                    </XdevLink>
+                    <XdevTextField columns="5" x:name="txtCusAddress" maxLength="40">
+                        <x:constraints gridx="2" gridy="6" weighty="0.0" weightx="0.1" width="100%" gridWidth="3" height="0px" />
+                    </XdevTextField>
+                    <XdevLabel x:name="lblCity" value="{$lblCity.value}">
+                        <x:constraints gridx="1" gridy="7" weighty="0.0" weightx="0.2" width="0px" height="0px" />
+                    </XdevLabel>
+                    <XdevHorizontalLayout x:name="horizontalLayoutCity" margin="">
+                        <x:constraints gridx="2" gridy="7" weighty="0.0" weightx="0.1" width="360px" gridWidth="3" height="-1px" />
+                        <XdevTextField columns="5" x:name="txtZip" maxLength="5">
+                            <converter numberType="Integer" numberFormatType="number" currency="default" groupingUsed="false" converterType="STRING_TO_NUMBER" locale="default" maximumIntegerDigits="5" />
+                            <x:constraints weightx="0.2" width="70px" alignment="MIDDLE_LEFT" height="0px" />
+                            <x:event>valueChange.valueChange</x:event>
+                            <x:validator x:type="IntegerRangeValidator" message="Plz muss numerisch sein (99999)" max="99999" />
+                        </XdevTextField>
+                        <XdevComboBox required="true" itemCaptionFromAnnotation="false" x:name="cmbCity" x:entity="City">
+                            <x:constraints gridHeight="1" gridx="3" gridy="7" weighty="0.0" weightx="0.8" width="220px" alignment="MIDDLE_LEFT" gridWidth="2" height="0px" />
+                            <x:entityProperty>
+                                <entry type="String" property="ctyName" />
+                            </x:entityProperty>
+                            <x:typeArguments>
+                                <typeArgument type="City" />
+                            </x:typeArguments>
+                            <x:data methodName="findAll" />
+                            <x:event>valueChange.valueChange</x:event>
+                        </XdevComboBox>
+                        <XdevLabel x:name="lblCountry" value="CH">
+                            <x:constraints weightx="0.1" width="0px" alignment="MIDDLE_LEFT" height="0px" />
+                        </XdevLabel>
+                    </XdevHorizontalLayout>
+                    <XdevLabel x:name="lblBirthdate" value="Geburtsdatum">
+                        <x:constraints gridx="1" gridy="8" weighty="0.0" weightx="0.2" width="0px" height="0px" />
+                    </XdevLabel>
+                    <XdevPopupDateField x:name="datCusBirthdate">
+                        <x:constraints gridx="2" gridy="8" weighty="0.0" weightx="0.1" width="0px" height="0px" />
+                    </XdevPopupDateField>
+                    <XdevLabel x:name="lblCusState" value="{$lblCusState.value}">
+                        <x:constraints gridx="1" gridy="9" weighty="0.0" weightx="0.2" width="0px" height="0px" />
+                    </XdevLabel>
+                    <XdevComboBox x:name="cbxState">
+                        <x:constraints gridx="2" gridy="9" weighty="0.0" weightx="0.1" width="0px" height="0px" />
+                        <x:typeArguments>
+                            <typeArgument type="?" />
+                        </x:typeArguments>
+                    </XdevComboBox>
+                </XdevGridLayout>
+                <XdevGridLayout caption="Flags" x:name="gridLayoutFlags">
+                    <x:constraints width="100%" height="100%" />
+                    <XdevLabel x:name="lblAccountManager" value="Account Manager">
+                        <x:constraints gridx="1" gridy="1" top="140px" left="-1px" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+                    </XdevLabel>
+                    <XdevTextField columns="5" enabled="false" x:name="txtAccountManager" maxLength="40">
+                        <x:constraints gridx="2" gridy="1" top="140px" left="-1px" weighty="0.0" weightx="1.0" width="100%" height="0px" />
+                    </XdevTextField>
+                    <XdevLabel x:name="lblCusInfo" value="{$lblCusInfo.value}">
+                        <x:constraints gridx="1" gridy="2" weighty="0.0" weightx="0.2" width="0px" height="0px" />
+                    </XdevLabel>
+                    <XdevTextField columns="5" x:name="txtCusInfo">
+                        <x:constraints gridx="2" gridy="2" weighty="0.0" weightx="1.0" width="100%" gridWidth="2" height="0px" />
+                    </XdevTextField>
+                    <XdevLabel x:name="lblPaymentCondition" value="{$lblPaymentCondition.value}">
+                        <x:constraints gridx="1" gridy="3" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+                    </XdevLabel>
+                    <XdevComboBox required="true" itemCaptionFromAnnotation="false" x:name="cmbPaymentCondition" x:entity="PaymentCondition">
+                        <x:constraints gridx="2" gridy="3" weighty="0.0" weightx="1.0" width="100%" height="0px" />
+                        <x:entityProperty>
+                            <entry type="String" property="pacName" />
+                        </x:entityProperty>
+                        <x:typeArguments>
+                            <typeArgument type="PaymentCondition" />
+                        </x:typeArguments>
+                        <x:data methodName="findAll" />
+                    </XdevComboBox>
+                    <XdevLabel x:name="lblBillingTarget" value="Rechnungstyp">
+                        <x:constraints gridx="1" gridy="4" top="42px" left="-1px" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+                    </XdevLabel>
+                    <XdevComboBox itemCaptionFromAnnotation="false" x:name="cbxAccountBillingType">
+                        <x:constraints gridx="2" gridy="4" top="42px" left="-1px" weighty="0.0" weightx="1.0" width="-1px" height="0px" />
+                        <x:entityProperty>
+                            <entry type="String" property="pacName" />
+                        </x:entityProperty>
+                        <x:typeArguments>
+                            <typeArgument type="?" />
+                        </x:typeArguments>
+                        <x:data methodName="findAll" />
+                    </XdevComboBox>
+                    <XdevCheckBox caption="Single PDF" x:name="cbxSinglePdf">
+                        <x:constraints gridx="3" gridy="4" weighty="0.0" weightx="1.0" width="0px" height="0px" />
+                    </XdevCheckBox>
+                    <XdevLabel x:name="lblBillingReports" value="Rechnungsanhang">
+                        <x:constraints gridx="1" gridy="5" top="85px" left="-1px" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+                    </XdevLabel>
+                    <XdevComboBox itemCaptionFromAnnotation="false" x:name="cbxAccountBillingReports">
+                        <x:constraints gridx="2" gridy="5" top="85px" left="-1px" weighty="0.0" weightx="1.0" width="-1px" height="0px" />
+                        <x:entityProperty>
+                            <entry type="String" property="pacName" />
+                        </x:entityProperty>
+                        <x:typeArguments>
+                            <typeArgument type="?" />
+                        </x:typeArguments>
+                        <x:data methodName="findAll" />
+                    </XdevComboBox>
+                    <XdevLabel x:name="lblLabels" value="Label">
+                        <x:constraints gridx="1" gridy="6" weighty="0.0" weightx="0.2" width="0px" height="0px" />
+                    </XdevLabel>
+                    <XdevTwinColSelect itemCaptionFromAnnotation="false" x:name="twinColSelect" rightColumnCaption="aktiv" x:entity="LabelDefinition" icon="FontAwesome.BOOKMARK">
+                        <x:constraints gridx="2" gridy="6" weighty="0.0" weightx="1.0" width="0px" height="0px" />
+                        <x:entityProperty>
+                            <entry type="String" property="cldText" />
+                        </x:entityProperty>
+                        <x:typeArguments>
+                            <typeArgument type="LabelDefinition" />
+                        </x:typeArguments>
+                    </XdevTwinColSelect>
+                    <XdevLabel x:name="lblExtRef1" value="Ext Ref 1">
+                        <x:constraints gridx="1" gridy="7" top="33px" left="-1px" weighty="0.0" weightx="0.2" width="0px" height="0px" />
+                    </XdevLabel>
+                    <XdevTextField columns="5" x:name="txtExtRef1">
+                        <x:constraints gridx="2" gridy="7" weighty="0.0" weightx="1.0" width="0px" height="0px" />
+                    </XdevTextField>
+                    <XdevLabel x:name="lblExtRef2" value="Ext Ref 2">
+                        <x:constraints gridx="1" gridy="8" top="67px" left="-1px" weighty="0.0" weightx="0.2" width="0px" height="0px" />
+                    </XdevLabel>
+                    <XdevTextField columns="5" x:name="txtExtRef2">
+                        <x:constraints gridx="2" gridy="8" top="46px" left="-1px" weighty="0.0" weightx="1.0" width="0px" height="0px" />
+                    </XdevTextField>
+                </XdevGridLayout>
                 <XdevGridLayout caption="Adressen" x:name="gridLayoutAddress" margin="">
                     <x:constraints width="100%" height="100%" />
                     <XdevVerticalSplitPanel styleName="large" x:name="verticalSplitPanel">
@@ -229,179 +402,6 @@
                             </XdevTable>
                         </XdevVerticalLayout>
                     </XdevVerticalSplitPanel>
-                </XdevGridLayout>
-                <XdevGridLayout caption="Flags" x:name="gridLayoutFlags">
-                    <x:constraints width="100%" height="100%" />
-                    <XdevLabel x:name="lblAccountManager" value="Account Manager">
-                        <x:constraints gridx="1" gridy="1" top="140px" left="-1px" weighty="0.0" weightx="0.0" width="0px" height="0px" />
-                    </XdevLabel>
-                    <XdevTextField columns="5" enabled="false" x:name="txtAccountManager" maxLength="40">
-                        <x:constraints gridx="2" gridy="1" top="140px" left="-1px" weighty="0.0" weightx="1.0" width="100%" height="0px" />
-                    </XdevTextField>
-                    <XdevLabel x:name="lblCusInfo" value="{$lblCusInfo.value}">
-                        <x:constraints gridx="1" gridy="2" weighty="0.0" weightx="0.2" width="0px" height="0px" />
-                    </XdevLabel>
-                    <XdevTextField columns="5" x:name="txtCusInfo">
-                        <x:constraints gridx="2" gridy="2" weighty="0.0" weightx="1.0" width="100%" gridWidth="2" height="0px" />
-                    </XdevTextField>
-                    <XdevLabel x:name="lblPaymentCondition" value="{$lblPaymentCondition.value}">
-                        <x:constraints gridx="1" gridy="3" weighty="0.0" weightx="0.0" width="0px" height="0px" />
-                    </XdevLabel>
-                    <XdevComboBox required="true" itemCaptionFromAnnotation="false" x:name="cmbPaymentCondition" x:entity="PaymentCondition">
-                        <x:constraints gridx="2" gridy="3" weighty="0.0" weightx="1.0" width="100%" height="0px" />
-                        <x:entityProperty>
-                            <entry type="String" property="pacName" />
-                        </x:entityProperty>
-                        <x:typeArguments>
-                            <typeArgument type="PaymentCondition" />
-                        </x:typeArguments>
-                        <x:data methodName="findAll" />
-                    </XdevComboBox>
-                    <XdevLabel x:name="lblBillingTarget" value="Rechnungstyp">
-                        <x:constraints gridx="1" gridy="4" top="42px" left="-1px" weighty="0.0" weightx="0.0" width="0px" height="0px" />
-                    </XdevLabel>
-                    <XdevComboBox itemCaptionFromAnnotation="false" x:name="cbxAccountBillingType">
-                        <x:constraints gridx="2" gridy="4" top="42px" left="-1px" weighty="0.0" weightx="1.0" width="-1px" height="0px" />
-                        <x:entityProperty>
-                            <entry type="String" property="pacName" />
-                        </x:entityProperty>
-                        <x:typeArguments>
-                            <typeArgument type="?" />
-                        </x:typeArguments>
-                        <x:data methodName="findAll" />
-                    </XdevComboBox>
-                    <XdevCheckBox caption="Single PDF" x:name="cbxSinglePdf">
-                        <x:constraints gridx="3" gridy="4" weighty="0.0" weightx="1.0" width="0px" height="0px" />
-                    </XdevCheckBox>
-                    <XdevLabel x:name="lblBillingReports" value="Rechnungsanhang">
-                        <x:constraints gridx="1" gridy="5" top="85px" left="-1px" weighty="0.0" weightx="0.0" width="0px" height="0px" />
-                    </XdevLabel>
-                    <XdevComboBox itemCaptionFromAnnotation="false" x:name="cbxAccountBillingReports">
-                        <x:constraints gridx="2" gridy="5" top="85px" left="-1px" weighty="0.0" weightx="1.0" width="-1px" height="0px" />
-                        <x:entityProperty>
-                            <entry type="String" property="pacName" />
-                        </x:entityProperty>
-                        <x:typeArguments>
-                            <typeArgument type="?" />
-                        </x:typeArguments>
-                        <x:data methodName="findAll" />
-                    </XdevComboBox>
-                    <XdevLabel x:name="lblLabels" value="Label">
-                        <x:constraints gridx="1" gridy="6" weighty="0.0" weightx="0.2" width="0px" height="0px" />
-                    </XdevLabel>
-                    <XdevTwinColSelect itemCaptionFromAnnotation="false" x:name="twinColSelect" rightColumnCaption="aktiv" x:entity="LabelDefinition" icon="FontAwesome.BOOKMARK">
-                        <x:constraints gridx="2" gridy="6" weighty="0.0" weightx="1.0" width="0px" height="0px" />
-                        <x:entityProperty>
-                            <entry type="String" property="cldText" />
-                        </x:entityProperty>
-                        <x:typeArguments>
-                            <typeArgument type="LabelDefinition" />
-                        </x:typeArguments>
-                    </XdevTwinColSelect>
-                    <XdevLabel x:name="lblExtRef1" value="Ext Ref 1">
-                        <x:constraints gridx="1" gridy="7" top="33px" left="-1px" weighty="0.0" weightx="0.2" width="0px" height="0px" />
-                    </XdevLabel>
-                    <XdevTextField columns="5" x:name="txtExtRef1">
-                        <x:constraints gridx="2" gridy="7" weighty="0.0" weightx="1.0" width="0px" height="0px" />
-                    </XdevTextField>
-                    <XdevLabel x:name="lblExtRef2" value="Ext Ref 2">
-                        <x:constraints gridx="1" gridy="8" top="67px" left="-1px" weighty="0.0" weightx="0.2" width="0px" height="0px" />
-                    </XdevLabel>
-                    <XdevTextField columns="5" x:name="txtExtRef2">
-                        <x:constraints gridx="2" gridy="8" top="46px" left="-1px" weighty="0.0" weightx="1.0" width="0px" height="0px" />
-                    </XdevTextField>
-                </XdevGridLayout>
-                <XdevGridLayout caption="Kontakt" x:name="gridLayoutContact">
-                    <x:constraints width="100%" height="100%" />
-                    <XdevLabel x:name="lblCusNumber" value="{$lblCusNumber.value}">
-                        <x:constraints gridx="1" gridy="1" weighty="0.0" weightx="0.2" width="0px" height="0px" />
-                    </XdevLabel>
-                    <XdevTextField columns="5" required="true" x:name="txtCusNumber">
-                        <x:constraints gridx="2" gridy="1" weighty="0.0" weightx="0.1" width="100%" height="0px" />
-                    </XdevTextField>
-                    <XdevLabel x:name="lblType" value="Kontakt Typ">
-                        <x:constraints gridx="1" gridy="2" weighty="0.0" weightx="0.2" width="0px" height="0px" />
-                    </XdevLabel>
-                    <XdevComboBox x:name="cbxAccountType">
-                        <x:constraints gridx="2" gridy="2" weighty="0.0" weightx="0.1" width="0px" height="0px" />
-                        <x:typeArguments>
-                            <typeArgument type="?" />
-                        </x:typeArguments>
-                    </XdevComboBox>
-                    <XdevLabel x:name="lblAnrede" value="Anrede">
-                        <x:constraints gridx="3" gridy="2" weighty="0.0" weightx="0.2" width="0px" height="0px" />
-                    </XdevLabel>
-                    <XdevComboBox x:name="cbxAccountSalutation">
-                        <x:constraints gridx="4" gridy="2" weighty="0.0" weightx="1.0" width="0px" height="0px" />
-                        <x:typeArguments>
-                            <typeArgument type="?" />
-                        </x:typeArguments>
-                    </XdevComboBox>
-                    <XdevLabel x:name="lblCusCompany" value="{$lblCusCompany.value}">
-                        <x:constraints gridx="1" gridy="3" weighty="0.0" weightx="0.2" width="0px" height="0px" />
-                    </XdevLabel>
-                    <XdevTextField columns="5" x:name="txtCusCompany" maxLength="40">
-                        <x:constraints gridx="2" gridy="3" weighty="0.0" weightx="0.1" width="100%" gridWidth="3" height="0px" />
-                    </XdevTextField>
-                    <XdevLabel x:name="lblCusName" value="{$lblCusName.value}">
-                        <x:constraints gridx="1" gridy="4" weighty="0.0" weightx="0.2" width="0px" height="0px" />
-                    </XdevLabel>
-                    <XdevTextField columns="5" required="true" x:name="txtCusName" maxLength="40">
-                        <x:constraints gridx="2" gridy="4" weighty="0.0" weightx="0.1" width="100%" gridWidth="3" height="0px" />
-                    </XdevTextField>
-                    <XdevLabel x:name="lblCusFirstName" value="{$lblCusFirstName.value}">
-                        <x:constraints gridx="1" gridy="5" weighty="0.0" weightx="0.2" width="0px" height="0px" />
-                    </XdevLabel>
-                    <XdevTextField columns="5" x:name="txtCusFirstName" maxLength="40">
-                        <x:constraints gridx="2" gridy="5" weighty="0.0" weightx="0.1" width="100%" height="0px" />
-                    </XdevTextField>
-                    <XdevLink targetName="_blank" icon="WebContent/WEB-INF/resources/images/gmaps32.PNG" caption="Adresse" x:name="linkMaps">
-                        <x:constraints gridx="1" gridy="6" weighty="0.0" weightx="0.2" width="0px" height="0px" />
-                    </XdevLink>
-                    <XdevTextField columns="5" x:name="txtCusAddress" maxLength="40">
-                        <x:constraints gridx="2" gridy="6" weighty="0.0" weightx="0.1" width="100%" gridWidth="3" height="0px" />
-                    </XdevTextField>
-                    <XdevLabel x:name="lblCity" value="{$lblCity.value}">
-                        <x:constraints gridx="1" gridy="7" weighty="0.0" weightx="0.2" width="0px" height="0px" />
-                    </XdevLabel>
-                    <XdevHorizontalLayout x:name="horizontalLayoutCity" margin="">
-                        <x:constraints gridx="2" gridy="7" weighty="0.0" weightx="0.1" width="360px" gridWidth="3" height="-1px" />
-                        <XdevTextField columns="5" x:name="txtZip" maxLength="5">
-                            <converter numberType="Integer" numberFormatType="number" currency="default" groupingUsed="false" converterType="STRING_TO_NUMBER" locale="default" maximumIntegerDigits="5" />
-                            <x:constraints weightx="0.2" width="70px" alignment="MIDDLE_LEFT" height="0px" />
-                            <x:event>valueChange.valueChange</x:event>
-                            <x:validator x:type="IntegerRangeValidator" message="Plz muss numerisch sein (99999)" max="99999" />
-                        </XdevTextField>
-                        <XdevComboBox required="true" itemCaptionFromAnnotation="false" x:name="cmbCity" x:entity="City">
-                            <x:constraints gridHeight="1" gridx="3" gridy="7" weighty="0.0" weightx="0.8" width="220px" alignment="MIDDLE_LEFT" gridWidth="2" height="0px" />
-                            <x:entityProperty>
-                                <entry type="String" property="ctyName" />
-                            </x:entityProperty>
-                            <x:typeArguments>
-                                <typeArgument type="City" />
-                            </x:typeArguments>
-                            <x:data methodName="findAll" />
-                            <x:event>valueChange.valueChange</x:event>
-                        </XdevComboBox>
-                        <XdevLabel x:name="lblCountry" value="CH">
-                            <x:constraints weightx="0.1" width="0px" alignment="MIDDLE_LEFT" height="0px" />
-                        </XdevLabel>
-                    </XdevHorizontalLayout>
-                    <XdevLabel x:name="lblBirthdate" value="Geburtsdatum">
-                        <x:constraints gridx="1" gridy="8" weighty="0.0" weightx="0.2" width="0px" height="0px" />
-                    </XdevLabel>
-                    <XdevPopupDateField x:name="datCusBirthdate">
-                        <x:constraints gridx="2" gridy="8" weighty="0.0" weightx="0.1" width="0px" height="0px" />
-                    </XdevPopupDateField>
-                    <XdevLabel x:name="lblCusState" value="{$lblCusState.value}">
-                        <x:constraints gridx="1" gridy="9" weighty="0.0" weightx="0.2" width="0px" height="0px" />
-                    </XdevLabel>
-                    <XdevComboBox x:name="cbxState">
-                        <x:constraints gridx="2" gridy="9" weighty="0.0" weightx="0.1" width="0px" height="0px" />
-                        <x:typeArguments>
-                            <typeArgument type="?" />
-                        </x:typeArguments>
-                    </XdevComboBox>
                 </XdevGridLayout>
                 <XdevGridLayout caption="Aktivitäten" x:name="gridLayoutListActivity" margin="b">
                     <x:constraints width="100%" height="100%" />
