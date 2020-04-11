@@ -6,6 +6,7 @@ import com.vaadin.server.ClientConnector;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.UI;
 import com.xdev.res.ApplicationResource;
 import com.xdev.security.authorization.Subject;
 import com.xdev.server.aa.openid.auth.AzureUser;
@@ -14,9 +15,12 @@ import com.xdev.ui.XdevGridLayout;
 import com.xdev.ui.XdevView;
 import com.xdev.ui.navigation.Navigation;
 
+import ch.xwr.seicentobilling.business.Seicento;
+import ch.xwr.seicentobilling.business.auth.SeicentoUser;
+
 
 public class MainView extends XdevView {
-	private AzureUser currentUser;
+	private SeicentoUser currentUser;
 
 	/**
 	 *
@@ -41,17 +45,27 @@ public class MainView extends XdevView {
 	 */
 	private void gridLayout_attach(final ClientConnector.AttachEvent event) {
 		final Subject sub = VaadinSession.getCurrent().getAttribute(Subject.class);
+		this.currentUser = new SeicentoUser();
 
 		if (sub != null && sub instanceof AzureUser)
 		{
-			this.currentUser = (AzureUser) sub;
+			this.currentUser.setAzureUser((AzureUser) sub);
+		} else if (sub != null && sub instanceof SeicentoUser){
+			this.currentUser = (SeicentoUser) sub;
+		}
+		if (this.currentUser.getAssignedAccount() == null) {
+			this.currentUser.setAssignedAccount(Seicento.getLoggedInCostAccount(this.currentUser.name()));
+		}
+		VaadinSession.getCurrent().setAttribute(Subject.class, this.currentUser);
 
-			//this.label.setValue("Hallo " + this.currentUser.name() + "!");
+		final UI ux = this.getUI();
+		if (ux instanceof PhoneUI) {
 			final PhoneUI main = (PhoneUI) this.getUI(); //.getParent().getUI();
 			main.loggedIn(true, this.currentUser);
+		} else {
+			System.out.println("logged in Preview / DevEnv. PhoneUI not available!");
+			Seicento.removeGelfAppender();
 		}
-
-
 	}
 
 	/**

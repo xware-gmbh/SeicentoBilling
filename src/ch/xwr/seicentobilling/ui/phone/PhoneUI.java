@@ -15,7 +15,6 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.xdev.res.ApplicationResource;
 import com.xdev.security.authentication.ui.XdevAuthenticationNavigator;
-import com.xdev.server.aa.openid.auth.AzureUser;
 import com.xdev.server.aa.openid.helper.DiscoveryHelper;
 import com.xdev.ui.XdevButton;
 import com.xdev.ui.XdevHorizontalLayout;
@@ -25,15 +24,17 @@ import com.xdev.ui.XdevVerticalLayout;
 import com.xdev.ui.navigation.Navigation;
 
 import ch.xwr.seicentobilling.business.auth.AzureHelper;
+import ch.xwr.seicentobilling.business.auth.SeicentoUser;
 import ch.xwr.seicentobilling.dal.CompanyDAO;
 import ch.xwr.seicentobilling.entities.Company;
+import ch.xwr.seicentobilling.ui.desktop.AuthView;
 
 @Push(value = PushMode.MANUAL, transport = Transport.LONG_POLLING)
 @Theme("SeicentoBilling")
 public class PhoneUI extends XdevUI {
 	/** Logger initialized */
 	private static final org.apache.log4j.Logger LOG = org.apache.log4j.Logger.getLogger(PhoneUI.class);
-	private AzureUser currentUser;
+	private SeicentoUser currentUser;
 
 	public PhoneUI() {
 		super();
@@ -96,7 +97,7 @@ public class PhoneUI extends XdevUI {
 	}
 
 
-	public void loggedIn(final boolean lgin, final AzureUser user) {
+	public void loggedIn(final boolean lgin, final SeicentoUser user) {
 		this.currentUser = user;
 		setLocale();
 

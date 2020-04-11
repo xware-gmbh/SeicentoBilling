@@ -66,7 +66,7 @@ public class RowImage implements java.io.Serializable {
 		this.rowObject = rowObject;
 	}
 
-	@Caption("RimName")
+	@Caption("Name")
 	@Column(name = "rimName", columnDefinition = "nvarchar")
 	public String getRimName() {
 		return this.rimName;
@@ -96,7 +96,7 @@ public class RowImage implements java.io.Serializable {
 		this.rimImage = rimImage;
 	}
 
-	@Caption("RimState")
+	@Caption("Status")
 	@Column(name = "rimState", columnDefinition = "smallint")
 	public LovState.State getRimState() {
 		return this.rimState;
@@ -116,7 +116,7 @@ public class RowImage implements java.io.Serializable {
 		this.rimMimetype = rimMimetype;
 	}
 
-	@Caption("RimNumber")
+	@Caption("Nummer")
 	@Column(name = "rimNumber", nullable = false, columnDefinition = "int")
 	public int getRimNumber() {
 		return this.rimNumber;
@@ -126,7 +126,7 @@ public class RowImage implements java.io.Serializable {
 		this.rimNumber = rimNumber;
 	}
 
-	@Caption("RimType")
+	@Caption("Typ")
 	@Column(name = "rimType", nullable = false, columnDefinition = "smallint")
 	public short getRimType() {
 		return this.rimType;
@@ -136,7 +136,7 @@ public class RowImage implements java.io.Serializable {
 		this.rimType = rimType;
 	}
 
-	@Caption("RimSize")
+	@Caption("Grösse")
 	@Column(name = "rimSize", columnDefinition = "nvarchar")
 	public String getRimSize() {
 		return this.rimSize;

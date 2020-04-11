@@ -1,0 +1,7 @@
+import ch.xwr.seicentobilling.entities.RowObject
+import ch.xwr.seicentobilling.entities.RowImage
+
+findByObject(RowObject obj)
+{
+	select * from RowImage where rowObject = :obj order by rimNumber asc
+}

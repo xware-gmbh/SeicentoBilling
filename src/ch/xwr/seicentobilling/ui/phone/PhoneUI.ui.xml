@@ -3,9 +3,9 @@
 
 <?xdevuiml version="1.0"?>
 <?template NONE?>
+<?import ch.xwr.seicentobilling.ui.desktop.AuthView?>
 <?import ch.xwr.seicentobilling.ui.phone.AddressSearchView?>
 <?import ch.xwr.seicentobilling.ui.phone.AddressView?>
-<?import ch.xwr.seicentobilling.ui.phone.AuthView?>
 <?import ch.xwr.seicentobilling.ui.phone.ExpenseListView?>
 <?import ch.xwr.seicentobilling.ui.phone.ExpenseView?>
 <?import ch.xwr.seicentobilling.ui.phone.MainView?>
