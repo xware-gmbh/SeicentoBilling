@@ -3,6 +3,7 @@
 
 <?xdevuiml version="1.0"?>
 <?template BROWSER_XGA?>
+<?import?>
 <?import ch.xwr.seicentobilling.business.LovState.ExpType?>
 <?import ch.xwr.seicentobilling.business.LovState.ExpUnit?>
 <?import ch.xwr.seicentobilling.business.LovState.State?>
@@ -141,6 +142,7 @@
                             <entry type="ExpUnit" property="expUnit" caption="Einheit" collapsed="true" />
                             <entry type="Double" property="expQuantity" caption="Menge" collapsed="true" />
                             <entry type="Date" property="expBooked" caption="Gebucht" collapsed="true" />
+                            <entry type="" property="generated" caption="Beleg" generator="ch.xwr.seicentobilling.ui.desktop.FunctionExpenseAttachmentDownload.Generator" />
                         </x:entityProperties>
                         <x:constraints weighty="1.0" width="100%" height="100%" />
                         <x:typeArguments>
