@@ -1,5 +1,9 @@
 package ch.xwr.seicentobilling.ui.phone;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -9,6 +13,10 @@ import org.jfree.util.Log;
 
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.server.ExternalResource;
+import com.vaadin.server.FileDownloader;
+import com.vaadin.server.FontAwesome;
+import com.vaadin.server.Resource;
+import com.vaadin.server.StreamResource;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -30,6 +38,7 @@ import com.xdev.ui.navigation.Navigation;
 import com.xdev.ui.navigation.NavigationParameter;
 import com.xdev.util.ConverterBuilder;
 
+import ch.xwr.seicentobilling.business.crm.VcardHandler;
 import ch.xwr.seicentobilling.dal.CityDAO;
 import ch.xwr.seicentobilling.dal.CustomerLinkDAO;
 import ch.xwr.seicentobilling.entities.City;
@@ -43,6 +52,8 @@ public class AddressView extends XdevView {
 
 	@NavigationParameter
 	private Customer customer;
+	private VcardHandler vcard;
+
 	/**
 	 *
 	 */
@@ -71,9 +82,34 @@ public class AddressView extends XdevView {
 			setGoogleLink();
 			//setTelLink();
 			loadLinkTable();
+
 		}
 	}
 
+
+
+	private Resource getInputStream(final File fiv) {
+
+		final StreamResource.StreamSource source = new StreamResource.StreamSource() {
+
+			@Override
+			public InputStream getStream() {
+				FileInputStream inStream = null;
+				try {
+					inStream = new FileInputStream(fiv);
+				} catch (final FileNotFoundException e) {
+					e.printStackTrace();
+				}
+				return inStream;
+			}
+		};
+
+		final StreamResource newResource = new StreamResource(source, this.vcard.getFile().getName());
+		newResource.setMIMEType("text/vcard");
+		final Resource res = newResource;
+
+		return res;
+	}
 
 	private void loadLinkTable() {
 		final CustomerLinkDAO dao = new CustomerLinkDAO();
@@ -140,13 +176,41 @@ public class AddressView extends XdevView {
 	}
 
 	/**
-	 * Event handler delegate method for the {@link XdevButton} {@link #button}.
+	 * Event handler delegate method for the {@link XdevButton} {@link #cmdBack2}.
 	 *
 	 * @see Button.ClickListener#buttonClick(Button.ClickEvent)
 	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
 	 */
-	private void button_buttonClick(final Button.ClickEvent event) {
+	private void cmdBack2_buttonClick(final Button.ClickEvent event) {
 		goBack();
+	}
+
+
+	/**
+	 * Event handler delegate method for the {@link XdevButton} {@link #cmdVcard}.
+	 *
+	 * @see Button.ClickListener#buttonClick(Button.ClickEvent)
+	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
+	 */
+	private void cmdVcard_buttonClick(final Button.ClickEvent event) {
+		this.vcard = new VcardHandler(this.customer);
+		this.vcard.generateVcard();
+
+		final Button cmdDown = getDownButton();
+		final Resource res = getInputStream(this.vcard.getFile());
+		final FileDownloader fd = new FileDownloader(res);
+		fd.extend(cmdDown);
+
+		this.horizontalLayoutTitle.replaceComponent(this.cmdVcard, cmdDown);
+
+	}
+
+
+	private Button getDownButton() {
+		final Button down = new Button("Öffnen", FontAwesome.DOWNLOAD);
+		down.setCaption("Öffnen");
+
+		return down;
 	}
 
 
@@ -156,10 +220,14 @@ public class AddressView extends XdevView {
 	 */
 	// <generated-code name="initUI">
 	private void initUI() {
+		this.verticalLayoutMain = new XdevVerticalLayout();
+		this.horizontalLayoutTitle = new XdevHorizontalLayout();
+		this.cmdVcard = new XdevButton();
+		this.label = new XdevLabel();
+		this.cmdBack2 = new XdevButton();
 		this.panel = new XdevPanel();
 		this.verticalLayout = new XdevVerticalLayout();
 		this.form = new XdevGridLayout();
-		this.button = new XdevButton();
 		this.lblExpAmount = new XdevLabel();
 		this.txtCusName = new XdevTextField();
 		this.lblCompany = new XdevLabel();
@@ -173,11 +241,18 @@ public class AddressView extends XdevView {
 		this.table = new XdevTable<>();
 		this.fieldGroup = new XdevFieldGroup<>(Customer.class);
 
+		this.verticalLayoutMain.setMargin(new MarginInfo(false));
+		this.horizontalLayoutTitle.setStyleName("dark");
+		this.horizontalLayoutTitle.setMargin(new MarginInfo(false));
+		this.cmdVcard.setIcon(FontAwesome.FILE_TEXT);
+		this.cmdVcard.setCaption("Vcard");
+		this.label.setStyleName("colored bold");
+		this.label.setValue("Kontakte");
+		this.cmdBack2.setIcon(
+				new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/greenarrow_left32.png"));
+		this.cmdBack2.setCaption("Zurück");
 		this.verticalLayout.setMargin(new MarginInfo(false));
 		this.form.setMargin(new MarginInfo(false, false, true, true));
-		this.button.setIcon(
-				new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/greenarrow_left32.png"));
-		this.button.setCaption("Zurück");
 		this.lblExpAmount.setValue("Name");
 		this.lblCompany.setValue("Firma");
 		this.lblAddress.setValue("Adresse");
@@ -205,61 +280,79 @@ public class AddressView extends XdevView {
 		this.fieldGroup.bind(this.txtCusAddress, Customer_.cusAddress.getName());
 		this.fieldGroup.bind(this.cmbCity, Customer_.city.getName());
 
+		this.cmdVcard.setSizeUndefined();
+		this.horizontalLayoutTitle.addComponent(this.cmdVcard);
+		this.horizontalLayoutTitle.setComponentAlignment(this.cmdVcard, Alignment.MIDDLE_LEFT);
+		this.label.setSizeUndefined();
+		this.horizontalLayoutTitle.addComponent(this.label);
+		this.horizontalLayoutTitle.setComponentAlignment(this.label, Alignment.MIDDLE_CENTER);
+		this.horizontalLayoutTitle.setExpandRatio(this.label, 10.0F);
+		this.cmdBack2.setSizeUndefined();
+		this.horizontalLayoutTitle.addComponent(this.cmdBack2);
+		this.horizontalLayoutTitle.setComponentAlignment(this.cmdBack2, Alignment.MIDDLE_RIGHT);
+		this.horizontalLayoutTitle.setExpandRatio(this.cmdBack2, 10.0F);
 		this.form.setColumns(2);
-		this.form.setRows(8);
-		this.button.setSizeUndefined();
-		this.form.addComponent(this.button, 0, 0, 1, 0);
+		this.form.setRows(7);
 		this.lblExpAmount.setSizeUndefined();
-		this.form.addComponent(this.lblExpAmount, 0, 1);
+		this.form.addComponent(this.lblExpAmount, 0, 0);
 		this.txtCusName.setSizeFull();
-		this.form.addComponent(this.txtCusName, 1, 1);
+		this.form.addComponent(this.txtCusName, 1, 0);
 		this.lblCompany.setSizeUndefined();
-		this.form.addComponent(this.lblCompany, 0, 2);
+		this.form.addComponent(this.lblCompany, 0, 1);
 		this.txtCusCompany.setSizeFull();
-		this.form.addComponent(this.txtCusCompany, 1, 2);
+		this.form.addComponent(this.txtCusCompany, 1, 1);
 		this.lblAddress.setSizeUndefined();
-		this.form.addComponent(this.lblAddress, 0, 3);
+		this.form.addComponent(this.lblAddress, 0, 2);
 		this.txtCusAddress.setSizeFull();
-		this.form.addComponent(this.txtCusAddress, 1, 3);
+		this.form.addComponent(this.txtCusAddress, 1, 2);
 		this.lblPlace.setSizeUndefined();
-		this.form.addComponent(this.lblPlace, 0, 4);
+		this.form.addComponent(this.lblPlace, 0, 3);
 		this.cmbCity.setSizeFull();
-		this.form.addComponent(this.cmbCity, 1, 4);
+		this.form.addComponent(this.cmbCity, 1, 3);
 		this.linkMaps.setWidth(100, Unit.PERCENTAGE);
 		this.linkMaps.setHeight(-1, Unit.PIXELS);
-		this.form.addComponent(this.linkMaps, 0, 5, 1, 5);
+		this.form.addComponent(this.linkMaps, 0, 4, 1, 4);
 		this.horizontalLayout.setSizeUndefined();
-		this.form.addComponent(this.horizontalLayout, 0, 6);
+		this.form.addComponent(this.horizontalLayout, 0, 5);
 		this.form.setComponentAlignment(this.horizontalLayout, Alignment.TOP_CENTER);
 		this.table.setWidth(100, Unit.PERCENTAGE);
 		this.table.setHeight(300, Unit.PIXELS);
-		this.form.addComponent(this.table, 0, 7, 1, 7);
+		this.form.addComponent(this.table, 0, 6, 1, 6);
 		this.form.setColumnExpandRatio(1, 10.0F);
-		this.form.setRowExpandRatio(7, 50.0F);
+		this.form.setRowExpandRatio(6, 50.0F);
 		this.form.setWidth(100, Unit.PERCENTAGE);
 		this.form.setHeight(-1, Unit.PIXELS);
 		this.verticalLayout.addComponent(this.form);
 		this.verticalLayout.setComponentAlignment(this.form, Alignment.MIDDLE_CENTER);
 		this.verticalLayout.setSizeUndefined();
 		this.panel.setContent(this.verticalLayout);
+		this.horizontalLayoutTitle.setWidth(100, Unit.PERCENTAGE);
+		this.horizontalLayoutTitle.setHeight(-1, Unit.PIXELS);
+		this.verticalLayoutMain.addComponent(this.horizontalLayoutTitle);
 		this.panel.setSizeFull();
-		this.setContent(this.panel);
+		this.verticalLayoutMain.addComponent(this.panel);
+		this.verticalLayoutMain.setComponentAlignment(this.panel, Alignment.MIDDLE_CENTER);
+		this.verticalLayoutMain.setExpandRatio(this.panel, 10.0F);
+		this.verticalLayoutMain.setWidth(100, Unit.PERCENTAGE);
+		this.verticalLayoutMain.setHeight(-1, Unit.PIXELS);
+		this.setContent(this.verticalLayoutMain);
 		this.setSizeFull();
 
-		this.button.addClickListener(event -> this.button_buttonClick(event));
+		this.cmdVcard.addClickListener(event -> this.cmdVcard_buttonClick(event));
+		this.cmdBack2.addClickListener(event -> this.cmdBack2_buttonClick(event));
 	} // </generated-code>
 
 	// <generated-code name="variables">
-	private XdevButton button;
-	private XdevLabel lblExpAmount, lblCompany, lblAddress, lblPlace;
+	private XdevButton cmdVcard, cmdBack2;
+	private XdevLabel label, lblExpAmount, lblCompany, lblAddress, lblPlace;
 	private XdevFieldGroup<Customer> fieldGroup;
+	private XdevHorizontalLayout horizontalLayoutTitle, horizontalLayout;
 	private XdevComboBox<City> cmbCity;
-	private XdevHorizontalLayout horizontalLayout;
 	private XdevPanel panel;
 	private XdevGridLayout form;
 	private XdevTextField txtCusName, txtCusCompany, txtCusAddress;
 	private XdevLink linkMaps;
-	private XdevVerticalLayout verticalLayout;
+	private XdevVerticalLayout verticalLayoutMain, verticalLayout;
 	private XdevTable<CustomerLink> table;
 	// </generated-code>
 

@@ -53,7 +53,6 @@ import ch.xwr.seicentobilling.entities.LovAccount;
 import ch.xwr.seicentobilling.entities.Periode;
 import ch.xwr.seicentobilling.entities.Project;
 import ch.xwr.seicentobilling.entities.Project_;
-import ch.xwr.seicentobilling.entities.RowImage;
 import ch.xwr.seicentobilling.entities.RowObject;
 import ch.xwr.seicentobilling.entities.Vat;
 import ch.xwr.seicentobilling.entities.Vat_;
@@ -79,22 +78,22 @@ public class ExpenseView extends XdevView {
 		this.panel.getContent().setSizeUndefined();
 	}
 
-	private RowImage getRowImageBean() {
-		final RowObjectManager man = new RowObjectManager();
-		final Expense exp = this.fieldGroup.getItemDataSource().getBean();
-
-		final RowObject obj = man.getRowObject(exp.getClass().getSimpleName(), exp.getExpId());
-		RowImage bean = null;
-
-		if (obj != null && obj.getObjId() > 0) {
-			bean = new RowImage();
-			bean.setRimState(LovState.State.active);
-			bean.setRowObject(obj);
-			bean.setRimNumber(850);
-			bean.setRimType((short) 2);
-		}
-		return bean;
-	}
+//	private RowImage getRowImageBean() {
+//		final RowObjectManager man = new RowObjectManager();
+//		final Expense exp = this.fieldGroup.getItemDataSource().getBean();
+//
+//		final RowObject obj = man.getRowObject(exp.getClass().getSimpleName(), exp.getExpId());
+//		RowImage bean = null;
+//
+//		if (obj != null && obj.getObjId() > 0) {
+//			bean = new RowImage();
+//			bean.setRimState(LovState.State.active);
+//			bean.setRowObject(obj);
+//			bean.setRimNumber(850);
+//			bean.setRimType((short) 2);
+//		}
+//		return bean;
+//	}
 
 	@Override
 	public void enter(final ViewChangeListener.ViewChangeEvent event) {
