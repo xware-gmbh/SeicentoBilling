@@ -73,6 +73,7 @@ import ch.xwr.seicentobilling.business.NumberRangeHandler;
 import ch.xwr.seicentobilling.business.RowObjectManager;
 import ch.xwr.seicentobilling.business.Seicento;
 import ch.xwr.seicentobilling.business.crm.VcardHandler;
+import ch.xwr.seicentobilling.business.helper.SeicentoCrud;
 import ch.xwr.seicentobilling.dal.ActivityDAO;
 import ch.xwr.seicentobilling.dal.AddressDAO;
 import ch.xwr.seicentobilling.dal.CityDAO;
@@ -171,7 +172,7 @@ public class CustomerTabView extends XdevView {
 			return true;
 		}
 		final Customer bean = this.fieldGroup.getItemDataSource().getBean();
-		if (bean.getCusId() == null || bean.getCusId() < 1) {
+		if (bean.getCusId() == null || bean.getCusId().longValue() < 1) {
 			return true;
 		}
 		return false;
@@ -346,13 +347,7 @@ public class CustomerTabView extends XdevView {
 							Notification.Type.TRAY_NOTIFICATION);
 
 				} catch (final PersistenceException cx) {
-					String msg = cx.getMessage();
-					if (cx.getCause() != null) {
-						msg = cx.getCause().getMessage();
-						if (cx.getCause().getCause() != null) {
-							msg = cx.getCause().getCause().getMessage();
-						}
-					}
+					final String msg = SeicentoCrud.getPerExceptionError(cx);
 					Notification.show("Fehler beim Löschen", msg, Notification.Type.ERROR_MESSAGE);
 					cx.printStackTrace();
 				}
@@ -477,24 +472,23 @@ public class CustomerTabView extends XdevView {
 			return;
 		}
 
-		try {
+		final boolean isNew = isNew(); // assign before save. is always false after save
+		if (SeicentoCrud.doSave(this.fieldGroup)) {
+			try {
+				this.setROFields();
+				checkCustomerNumber(isNew, true);
 
-			final boolean isNew = isNew(); // assign before save. is always false after save
+				final RowObjectManager man = new RowObjectManager();
+				man.updateObject(this.fieldGroup.getItemDataSource().getBean().getCusId(),
+						this.fieldGroup.getItemDataSource().getBean().getClass().getSimpleName());
 
-			this.fieldGroup.save();
+			} catch (final Exception e) {
+				Notification.show("Fehler beim Speichern", e.getMessage(), Notification.Type.ERROR_MESSAGE);
+				e.printStackTrace();
+			}
 
-			this.setROFields();
-			checkCustomerNumber(isNew, true);
-
-			final RowObjectManager man = new RowObjectManager();
-			man.updateObject(this.fieldGroup.getItemDataSource().getBean().getCusId(),
-					this.fieldGroup.getItemDataSource().getBean().getClass().getSimpleName());
-
-			Notification.show("Save clicked", "Daten wurden gespeichert", Notification.Type.TRAY_NOTIFICATION);
-		} catch (final Exception e) {
-			Notification.show("Fehler beim Speichern", e.getMessage(), Notification.Type.ERROR_MESSAGE);
-			e.printStackTrace();
 		}
+
 
 
 		cmdReload_buttonClick(event);

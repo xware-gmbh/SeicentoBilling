@@ -1,18 +1,14 @@
 package ch.xwr.seicentobilling.ui.desktop;
 
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
 import com.vaadin.data.Property;
-import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CustomComponent;
-import com.vaadin.ui.Field;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Window;
@@ -32,6 +28,7 @@ import com.xdev.util.ConverterBuilder;
 import ch.xwr.seicentobilling.business.LovState;
 import ch.xwr.seicentobilling.business.OrderCalculator;
 import ch.xwr.seicentobilling.business.RowObjectManager;
+import ch.xwr.seicentobilling.business.helper.SeicentoCrud;
 import ch.xwr.seicentobilling.dal.CostAccountDAO;
 import ch.xwr.seicentobilling.dal.ItemDAO;
 import ch.xwr.seicentobilling.dal.OrderDAO;
@@ -141,30 +138,18 @@ public class OrderLinePopup extends XdevView {
 
 		try {
 			if (!this.fieldGroup.isValid()){
-				final Collection<Field<?>> c2 = this.fieldGroup.getFields();
-				for (final Iterator<Field<?>> iterator = c2.iterator(); iterator.hasNext();) {
-					final Field<?> object = iterator.next();
-					final String name = (String) this.fieldGroup.getPropertyId(object);
-					try {
-						object.validate();
-					} catch (final InvalidValueException e) {
-						Notification.show("Ungültiger Wert in Feld " + name, "Message" + e.getMessage(), Notification.Type.ERROR_MESSAGE);
-						e.printStackTrace();
-					} catch (final Exception e) {
-						Notification.show("Fehler beim Speichern " + object.getCaption(), e.getMessage(), Notification.Type.ERROR_MESSAGE);
-					}
-				}
-
+				SeicentoCrud.validateField(this.fieldGroup);
 				return;
 			}
-			this.fieldGroup.save();
 
-			final RowObjectManager man = new RowObjectManager();
-			man.updateObject(this.fieldGroup.getItemDataSource().getBean().getOdlId(),
-					this.fieldGroup.getItemDataSource().getBean().getClass().getSimpleName());
+			if (SeicentoCrud.doSave(this.fieldGroup)) {
+				final RowObjectManager man = new RowObjectManager();
+				man.updateObject(this.fieldGroup.getItemDataSource().getBean().getOdlId(),
+						this.fieldGroup.getItemDataSource().getBean().getClass().getSimpleName());
 
-			((Window) this.getParent()).close();
-			Notification.show("Save clicked", "Daten wurden gespeichert", Notification.Type.TRAY_NOTIFICATION);
+				((Window) this.getParent()).close();
+			}
+
 
 		} catch (final Exception e) {
 			Notification.show("Fehler beim Speichern", e.getMessage(), Notification.Type.ERROR_MESSAGE);

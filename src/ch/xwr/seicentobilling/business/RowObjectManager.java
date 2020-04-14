@@ -50,7 +50,10 @@ public class RowObjectManager {
 
 	private RowObject getRowObject(final String name, final Long id, final Entity ent) {
 		final RowObjectDAO objDao = new RowObjectDAO();
-		RowObject obj = objDao.getObjectBase(name, id);
+		RowObject obj = null;
+		if (id != null) {
+			obj = objDao.getObjectBase(name, id);
+		}
 
 		if (obj == null) {
 			obj = new RowObject();

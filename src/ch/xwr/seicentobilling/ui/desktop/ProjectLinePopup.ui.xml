@@ -25,7 +25,7 @@
 <XdevView xmlns:x="http://xml.xdev-software.com/xdevuiml" x:name="ProjectLinePopup">
     <x:constraints zpos="0" width="100%" height="100%" />
     <XdevVerticalLayout x:name="verticalLayout" margin="">
-        <x:constraints gridHeight="1" zpos="0" gridx="1" gridy="1" weighty="0.0" weightx="0.0" width="100%" alignment="TOP_LEFT" gridWidth="1" height="-1px" />
+        <x:constraints gridHeight="1" gridx="1" zpos="0" gridy="1" weighty="0.0" weightx="0.0" width="100%" alignment="TOP_LEFT" gridWidth="1" height="-1px" />
         <XdevHorizontalLayout x:name="horizontalLayout3" margin="">
             <x:constraints gridHeight="1" gridx="1" gridy="9" weighty="0.0" weightx="0.0" width="100%" alignment="TOP_LEFT" gridWidth="1" height="-1px" />
             <XdevMenuBar x:name="menuBar">

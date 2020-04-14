@@ -59,6 +59,7 @@ import ch.xwr.seicentobilling.business.ResourcePlanerHandler;
 import ch.xwr.seicentobilling.business.RowObjectManager;
 import ch.xwr.seicentobilling.business.Seicento;
 import ch.xwr.seicentobilling.business.helper.RowObjectAddonHandler;
+import ch.xwr.seicentobilling.business.helper.SeicentoCrud;
 import ch.xwr.seicentobilling.dal.AddressDAO;
 import ch.xwr.seicentobilling.dal.CostAccountDAO;
 import ch.xwr.seicentobilling.dal.CustomerDAO;
@@ -247,13 +248,7 @@ public class ProjectTabView extends XdevView {
 					Notification.show("Datensatz löschen", "Datensatz wurde gelöscht!",
 							Notification.Type.TRAY_NOTIFICATION);
 				} catch (final PersistenceException cx) {
-					String msg = cx.getMessage();
-					if (cx.getCause() != null) {
-						msg = cx.getCause().getMessage();
-						if (cx.getCause().getCause() != null) {
-							msg = cx.getCause().getCause().getMessage();
-						}
-					}
+					final String msg = SeicentoCrud.getPerExceptionError(cx);
 					Notification.show("Fehler beim Löschen", msg, Notification.Type.ERROR_MESSAGE);
 					cx.printStackTrace();
 				}
@@ -416,29 +411,14 @@ public class ProjectTabView extends XdevView {
 			return;
 		}
 
-		try {
-			this.fieldGroup.save();
-
-			final RowObjectManager man = new RowObjectManager();
-			man.updateObject(this.fieldGroup.getItemDataSource().getBean().getProId(),
-					this.fieldGroup.getItemDataSource().getBean().getClass().getSimpleName());
-
-			//EntityManagerUtils.getEntityManger().flush();  //gibe es (nicht) mehr??
-
-			Notification.show("Save clicked", "Daten wurden gespeichert", Notification.Type.TRAY_NOTIFICATION);
-		} catch (final PersistenceException cx) {
-			String msg = cx.getMessage();
-			if (cx.getCause() != null) {
-				msg = cx.getCause().getMessage();
-				if (cx.getCause().getCause() != null) {
-					msg = cx.getCause().getCause().getMessage();
-				}
+		if (SeicentoCrud.doSave(this.fieldGroup)) {
+			try {
+				final RowObjectManager man = new RowObjectManager();
+				man.updateObject(this.fieldGroup.getItemDataSource().getBean().getProId(),
+						this.fieldGroup.getItemDataSource().getBean().getClass().getSimpleName());
+			} catch (final Exception e) {
+				LOG.error("could not save ObjRoot", e);
 			}
-			Notification.show("Fehler beim Speichern", msg, Notification.Type.ERROR_MESSAGE);
-			cx.printStackTrace();
-		} catch (final Exception e) {
-			Notification.show("Fehler beim Speichern", e.getMessage(), Notification.Type.ERROR_MESSAGE);
-			e.printStackTrace();
 		}
 
 		setROFields();

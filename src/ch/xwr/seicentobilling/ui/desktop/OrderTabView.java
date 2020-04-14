@@ -6,6 +6,8 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.persistence.PersistenceException;
+
 import org.apache.poi.ss.formula.functions.T;
 
 import com.vaadin.data.Property;
@@ -55,6 +57,7 @@ import ch.xwr.seicentobilling.business.LovState;
 import ch.xwr.seicentobilling.business.OrderCalculator;
 import ch.xwr.seicentobilling.business.RowObjectManager;
 import ch.xwr.seicentobilling.business.Seicento;
+import ch.xwr.seicentobilling.business.helper.SeicentoCrud;
 import ch.xwr.seicentobilling.dal.CustomerDAO;
 import ch.xwr.seicentobilling.dal.OrderDAO;
 import ch.xwr.seicentobilling.dal.OrderLineDAO;
@@ -624,6 +627,10 @@ public class OrderTabView extends XdevView {
 			calculateHeader();
 			saveHeader(true);
 			Notification.show("Save clicked", "Daten wurden gespeichert", Notification.Type.TRAY_NOTIFICATION);
+		} catch (final PersistenceException cx) {
+			final String msg = SeicentoCrud.getPerExceptionError(cx);
+			Notification.show("Fehler beim Speichern", msg, Notification.Type.ERROR_MESSAGE);
+			cx.printStackTrace();
 		} catch (final Exception e) {
 			Notification.show("Fehler beim Speichern", e.getMessage(), Notification.Type.ERROR_MESSAGE);
 			e.printStackTrace();

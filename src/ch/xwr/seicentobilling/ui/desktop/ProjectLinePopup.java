@@ -44,6 +44,7 @@ import com.xdev.util.ConverterBuilder;
 import ch.xwr.seicentobilling.business.LovState;
 import ch.xwr.seicentobilling.business.RowObjectManager;
 import ch.xwr.seicentobilling.business.helper.ProjectLineHelper;
+import ch.xwr.seicentobilling.business.helper.SeicentoCrud;
 import ch.xwr.seicentobilling.dal.PeriodeDAO;
 import ch.xwr.seicentobilling.dal.ProjectDAO;
 import ch.xwr.seicentobilling.dal.ProjectLineDAO;
@@ -142,21 +143,17 @@ public class ProjectLinePopup extends XdevView {
 		}
 
 		UI.getCurrent().getSession().setAttribute(String.class, "cmdSave");
-		try {
-			this.fieldGroup.save();
+		if (SeicentoCrud.doSave(this.fieldGroup)) {
+			try {
+				final RowObjectManager man = new RowObjectManager();
+				man.updateObject(this.fieldGroup.getItemDataSource().getBean().getPrlId(),
+						this.fieldGroup.getItemDataSource().getBean().getClass().getSimpleName());
+				((Window) this.getParent()).close();
+			} catch (final Exception e) {
+				e.printStackTrace();
+			}
 
-			final RowObjectManager man = new RowObjectManager();
-			man.updateObject(this.fieldGroup.getItemDataSource().getBean().getPrlId(),
-					this.fieldGroup.getItemDataSource().getBean().getClass().getSimpleName());
-
-			((Window) this.getParent()).close();
-			Notification.show("Save clicked", "Daten wurden gespeichert", Notification.Type.TRAY_NOTIFICATION);
-
-		} catch (final Exception e) {
-			Notification.show("Fehler beim Speichern", e.getMessage(), Notification.Type.ERROR_MESSAGE);
-			e.printStackTrace();
 		}
-
 	}
 
 	@SuppressWarnings("unchecked")

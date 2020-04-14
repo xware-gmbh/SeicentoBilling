@@ -12,7 +12,6 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.MenuBar;
-import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.CloseEvent;
@@ -36,6 +35,7 @@ import com.xdev.ui.entitycomponent.combobox.XdevComboBox;
 
 import ch.xwr.seicentobilling.business.LovState;
 import ch.xwr.seicentobilling.business.RowObjectManager;
+import ch.xwr.seicentobilling.business.helper.SeicentoCrud;
 import ch.xwr.seicentobilling.dal.ExpenseDAO;
 import ch.xwr.seicentobilling.dal.ExpenseTemplateDAO;
 import ch.xwr.seicentobilling.dal.LovAccountDAO;
@@ -388,18 +388,17 @@ public class ExpensePopup extends XdevView {
 	private void cmdSave_buttonClick(final Button.ClickEvent event) {
 		UI.getCurrent().getSession().setAttribute(String.class, "cmdSave");
 
-		try {
-			preSaveAccountAction();
-			this.fieldGroup.save();
-			final RowObjectManager man = new RowObjectManager();
-			man.updateObject(this.fieldGroup.getItemDataSource().getBean().getExpId(),
-					this.fieldGroup.getItemDataSource().getBean().getClass().getSimpleName());
+		preSaveAccountAction();
+		if (SeicentoCrud.doSave(this.fieldGroup)) {
+			try {
+				final RowObjectManager man = new RowObjectManager();
+				man.updateObject(this.fieldGroup.getItemDataSource().getBean().getExpId(),
+						this.fieldGroup.getItemDataSource().getBean().getClass().getSimpleName());
+				((Window) this.getParent()).close();
+			} catch (final Exception e) {
+				e.printStackTrace();
+			}
 
-			((Window) this.getParent()).close();
-			Notification.show("Save clicked", "Daten wurden gespeichert", Notification.Type.TRAY_NOTIFICATION);
-		} catch (final Exception e) {
-			Notification.show("Fehler beim Speichern", e.getMessage(), Notification.Type.ERROR_MESSAGE);
-			e.printStackTrace();
 		}
 
 	}
