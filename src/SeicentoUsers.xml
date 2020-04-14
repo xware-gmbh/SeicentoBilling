@@ -4,7 +4,7 @@
 		<name>admin</name>
 		<uid>admin</uid>
 		<password>changeme</password>
-		<role>SeicentoBillingAdmin</role>
+		<role>BillingAdmin</role>
 	</user>
 	<user>
 		<name>demo</name>

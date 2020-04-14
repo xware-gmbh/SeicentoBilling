@@ -31,14 +31,15 @@ public class MainView extends XdevView {
 	 */
 	private void this_attach(final ClientConnector.AttachEvent event) {
 		final Subject sub = VaadinSession.getCurrent().getAttribute(Subject.class);
-		this.currentUser = new SeicentoUser();
 
 		if (sub != null && sub instanceof AzureUser)
 		{
+			this.currentUser = new SeicentoUser();
 			this.currentUser.setAzureUser((AzureUser) sub);
 		} else if (sub != null && sub instanceof SeicentoUser){
 			this.currentUser = (SeicentoUser) sub;
 		}
+
 		if (this.currentUser.getAssignedAccount() == null) {
 			this.currentUser.setAssignedAccount(Seicento.getLoggedInCostAccount(this.currentUser.name()));
 		}

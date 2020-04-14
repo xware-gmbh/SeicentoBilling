@@ -1,8 +1,10 @@
 package ch.xwr.seicentobilling.business.auth;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import com.nimbusds.jwt.JWTClaimsSet;
@@ -15,6 +17,7 @@ import ch.xwr.seicentobilling.entities.CostAccount;
 public class SeicentoUser implements Subject, Serializable {
 	private AzureUser aadUser = null;
 	private CostAccount cst = null;
+	private JWTClaimsSet claimSet = null;
 
 	private String name = "";
 	//private final String uid = "";
@@ -27,12 +30,27 @@ public class SeicentoUser implements Subject, Serializable {
 
 	public SeicentoUser(final String username) {
 		this.name = username;
-		initRoles();
+
+		if (getAzureUser() == null) {
+			initLocalUser();
+		}
     }
 
-	private void initRoles() {
-		this.roles = new HashSet<>();
+	private void initLocalUser() {
+		final SeicentoUserXmlHandler xml = new SeicentoUserXmlHandler();
+		final SeicentoUserXml user = xml.getXmlUser(this.name);
 
+		final List<String> ls =  new ArrayList<>();
+		ls.add(user.getRole());
+
+		this.claimSet = new JWTClaimsSet.Builder()
+			     .subject(this.name)
+			     .issueTime(new Date())
+			     .issuer("XWare GmbH")
+			     .claim("roles", ls)
+			     .build();
+
+		this.roles = new HashSet<>();
 		this.roles.add(Role.New("BillingAdmin"));
 	}
 
@@ -57,13 +75,8 @@ public class SeicentoUser implements Subject, Serializable {
 			return getAzureUser().getClaimSet();
 		}
 
-		final JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
-			     .subject(this.name)
-			     .issueTime(new Date())
-			     .issuer("XWare GmbH")
-			     .build();
 
-		return claimsSet;
+		return this.claimSet;
 	}
 
 	public AzureUser getAzureUser() {
