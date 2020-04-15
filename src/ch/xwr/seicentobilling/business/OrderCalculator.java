@@ -63,6 +63,9 @@ public class OrderCalculator {
 			//vat = vat + orderLine.getOdlVatAmount();
 		}
 
+		amt1 = new BigDecimal(amt1).setScale(2,RoundingMode.HALF_UP).doubleValue();
+		amt2 = new BigDecimal(amt2).setScale(2,RoundingMode.HALF_UP).doubleValue();
+
 		if (Double.compare(amt1, bean1.getOrdAmountBrut()) != 0) {
 			return false;
 		}
