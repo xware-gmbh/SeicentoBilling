@@ -41,7 +41,9 @@ public class SeicentoUser implements Subject, Serializable {
 		final SeicentoUserXml user = xml.getXmlUser(this.name);
 
 		final List<String> ls =  new ArrayList<>();
-		ls.add(user.getRole());
+		if (user != null) {
+			ls.add(user.getRole());
+		}
 
 		this.claimSet = new JWTClaimsSet.Builder()
 			     .subject(this.name)
