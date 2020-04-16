@@ -208,7 +208,7 @@
         </XdevPanel>
         <XdevHorizontalLayout x:name="horizontalLayout" margin="rl">
             <x:constraints gridx="1" gridy="7" weighty="0.0" weightx="0.0" width="100%" gridWidth="3" height="0px" />
-            <XdevButton icon="WebContent/WEB-INF/resources/images/save1.png" caption="{$cmdSave.caption}" x:name="cmdSave" x:shortcut="ENTER">
+            <XdevButton icon="FontAwesome.SAVE" caption="{$cmdSave.caption}" x:name="cmdSave" x:shortcut="ENTER">
                 <x:constraints weightx="0.0" width="0px" height="0px" />
                 <x:event>click.buttonClick</x:event>
             </XdevButton>
@@ -228,7 +228,7 @@
                 <x:event>click.buttonClick</x:event>
             </XdevButton>
         </XdevHorizontalLayout>
-        <XdevHorizontalLayout spacing="false" x:name="horizontalLayoutShortcut" margin="">
+        <XdevHorizontalLayout spacing="false" x:name="horizontalLayoutShortcut" margin="tl">
             <x:constraints gridHeight="1" gridx="2" gridy="7" weighty="0.0" weightx="0.0" width="0px" alignment="TOP_LEFT" gridWidth="1" height="100%" />
             <XdevButton caption="B2" styleName="tray tiny" x:name="cmd2" x:shortcut="CTRL+NUM2">
                 <x:constraints weightx="0.0" width="0px" height="0px" />

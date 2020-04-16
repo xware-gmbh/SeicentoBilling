@@ -41,15 +41,15 @@
             </XdevContainerFilterComponent>
             <XdevHorizontalLayout spacing="false" x:name="actionLayout" margin="">
                 <x:constraints top="-5px" left="1856px" weighty="0.0" width="100%" height="0px" />
-                <XdevButton icon="WebContent/WEB-INF/resources/images/new1_16.png" description="{$cmdNew.description}" x:name="cmdNew">
+                <XdevButton icon="FontAwesome.PLUS_CIRCLE" description="{$cmdNew.description}" x:name="cmdNew">
                     <x:constraints weightx="0.0" width="0px" height="0px" />
                     <x:event>click.buttonClick</x:event>
                 </XdevButton>
-                <XdevButton icon="WebContent/WEB-INF/resources/images/delete3_16.png" description="Projekt löschen" x:name="cmdDelete">
+                <XdevButton icon="FontAwesome.MINUS_CIRCLE" description="Projekt löschen" x:name="cmdDelete">
                     <x:constraints weightx="0.0" width="0px" height="0px" />
                     <x:event>click.buttonClick</x:event>
                 </XdevButton>
-                <XdevButton icon="WebContent/WEB-INF/resources/images/reload2.png" description="Liste neu laden" x:name="cmdReload">
+                <XdevButton icon="FontAwesome.REFRESH" description="Liste neu laden" x:name="cmdReload">
                     <x:constraints weightx="0.0" width="0px" height="0px" />
                     <x:event>click.buttonClick</x:event>
                 </XdevButton>
@@ -57,11 +57,11 @@
                     <x:constraints top="93px" left="-1px" weightx="0.0" width="0px" height="0px" />
                     <x:event>click.buttonClick</x:event>
                 </XdevButton>
-                <XdevButton icon="WebContent/WEB-INF/resources/images/Printer_black_18.png" description="Jasper Report starten" x:name="cmdReport">
+                <XdevButton icon="FontAwesome.PRINT" description="Jasper Report starten" x:name="cmdReport">
                     <x:constraints top="46px" left="-1px" weightx="0.0" width="0px" height="0px" />
                     <x:event>click.buttonClick</x:event>
                 </XdevButton>
-                <XdevButton icon="WebContent/WEB-INF/resources/images/info_small.jpg" description="Objektstamm aufrufen" x:name="cmdInfo">
+                <XdevButton icon="FontAwesome.INFO_CIRCLE" description="Objektstamm aufrufen" x:name="cmdInfo">
                     <x:constraints weightx="0.0" width="0px" height="0px" />
                     <x:event>click.buttonClick</x:event>
                 </XdevButton>

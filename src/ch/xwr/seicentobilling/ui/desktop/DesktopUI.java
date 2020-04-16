@@ -18,7 +18,6 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.TabSheet;
-import com.vaadin.ui.Window;
 import com.xdev.res.ApplicationResource;
 import com.xdev.security.authentication.ui.XdevAuthenticationNavigator;
 import com.xdev.server.aa.openid.helper.DiscoveryHelper;
@@ -353,12 +352,14 @@ public class DesktopUI extends XdevUI {
 	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
 	 */
 	private void menuItemUsrInfo_menuSelected(final MenuBar.MenuItem selectedItem) {
-		final Window win = UserInfoPopup.getPopupWindow();
+		loadTab(ApplicationSettingsTabView.class, selectedItem.getText());
 
-		// UI.getCurrent().getSession().setAttribute(String.class,
-		// bean.getClass().getSimpleName());
-		win.setContent(new UserInfoPopup());
-		this.getUI().addWindow(win);
+//		final Window win = UserInfoPopup.getPopupWindow();
+//
+//		// UI.getCurrent().getSession().setAttribute(String.class,
+//		// bean.getClass().getSimpleName());
+//		win.setContent(new UserInfoPopup());
+//		this.getUI().addWindow(win);
 
 	}
 
@@ -394,6 +395,26 @@ public class DesktopUI extends XdevUI {
 	private void mnuOrderGenerate_menuSelected(final MenuBar.MenuItem selectedItem) {
 		//loadTab(OrderTabView.class, selectedItem.getText());
 		loadTab(OrderGenerateTabView.class, selectedItem.getText());
+	}
+
+	/**
+	 * Event handler delegate method for the {@link XdevTabSheet} {@link #tabSheet}.
+	 *
+	 * @see TabSheet.SelectedTabChangeListener#selectedTabChange(TabSheet.SelectedTabChangeEvent)
+	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
+	 */
+	private void tabSheet_selectedTabChange(final TabSheet.SelectedTabChangeEvent event) {
+		System.out.println("selected Tab Sheet");
+		final Class<? extends TabSheet> cl = event.getTabSheet().getClass();
+		System.out.println("selected Tab Sheet " + cl);  //XdevTabSheet
+
+		final Component sl = event.getTabSheet().getSelectedTab();  //XdevView
+		final XdevView viw = (XdevView) sl;
+
+		if (viw.isEnabled() && viw.isVisible()) {
+			viw.markAsDirty();
+			viw.enter(null);
+		}
 	}
 
 	/*
@@ -525,6 +546,7 @@ public class DesktopUI extends XdevUI {
 		this.mnuObject.setCommand(selectedItem -> this.mnuObject_menuSelected(selectedItem));
 		this.menuItemUsrInfo.setCommand(selectedItem -> this.menuItemUsrInfo_menuSelected(selectedItem));
 		this.menuItemLogout.setCommand(selectedItem -> this.menuItemLogout_menuSelected(selectedItem));
+		this.tabSheet.addSelectedTabChangeListener(event -> this.tabSheet_selectedTabChange(event));
 	} // </generated-code>
 
 	// <generated-code name="variables">

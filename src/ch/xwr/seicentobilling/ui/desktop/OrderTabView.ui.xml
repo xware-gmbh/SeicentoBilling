@@ -43,27 +43,27 @@
             </XdevContainerFilterComponent>
             <XdevHorizontalLayout spacing="false" x:name="actionLayout" margin="">
                 <x:constraints top="-5px" left="1871px" weighty="0.0" width="100%" height="0px" />
-                <XdevButton icon="WebContent/WEB-INF/resources/images/new1_16.png" description="{$cmdNew.description}" x:name="cmdNew">
+                <XdevButton icon="FontAwesome.PLUS_CIRCLE" description="{$cmdNew.description}" x:name="cmdNew">
                     <x:constraints weightx="0.0" width="0px" height="0px" />
                     <x:event>click.buttonClick</x:event>
                 </XdevButton>
-                <XdevButton icon="WebContent/WEB-INF/resources/images/delete3_16.png" x:name="cmdDelete">
+                <XdevButton icon="FontAwesome.MINUS_CIRCLE" description="Rechnung löschen" x:name="cmdDelete">
                     <x:constraints weightx="0.0" width="0px" height="0px" />
                     <x:event>click.buttonClick</x:event>
                 </XdevButton>
-                <XdevButton icon="WebContent/WEB-INF/resources/images/reload2.png" x:name="cmdReload">
+                <XdevButton icon="FontAwesome.REFRESH" description="Liste aktualsieren" x:name="cmdReload">
                     <x:constraints weightx="0.0" width="0px" height="0px" />
                     <x:event>click.buttonClick</x:event>
                 </XdevButton>
-                <XdevButton icon="WebContent/WEB-INF/resources/images/info_small.jpg" x:name="cmdInfo">
+                <XdevButton icon="FontAwesome.INFO_CIRCLE" description="Objektinfo" x:name="cmdInfo">
                     <x:constraints weightx="0.0" width="0px" height="0px" />
                     <x:event>click.buttonClick</x:event>
                 </XdevButton>
-                <XdevButton icon="WebContent/WEB-INF/resources/images/copy1.png" description="Rechnung kopieren" x:name="cmdCopy">
+                <XdevButton icon="FontAwesome.COPY" description="Rechnung kopieren" x:name="cmdCopy">
                     <x:constraints top="46px" left="-1px" weightx="0.0" width="0px" height="0px" />
                     <x:event>click.buttonClick</x:event>
                 </XdevButton>
-                <XdevButton icon="WebContent/WEB-INF/resources/images/Printer_black_18.png" description="Jasper Report starten" x:name="cmdReport">
+                <XdevButton icon="FontAwesome.PRINT" description="Jasper Report starten" x:name="cmdReport">
                     <x:constraints top="93px" left="-1px" weightx="0.0" width="0px" height="0px" />
                     <x:event>click.buttonClick</x:event>
                 </XdevButton>
@@ -273,23 +273,23 @@
                     <x:constraints splitPos="SECOND" weighty="0.0" width="100px" alignment="MIDDLE_CENTER" height="100px" />
                     <XdevHorizontalLayout spacing="false" x:name="horizontalLayoutAction" margin="">
                         <x:constraints splitPos="SECOND" weighty="0.0" width="0px" alignment="MIDDLE_LEFT" height="0px" />
-                        <XdevButton icon="WebContent/WEB-INF/resources/images/new1_16.png" description="{$cmdNewLine.description}" x:name="cmdNewLine">
+                        <XdevButton icon="FontAwesome.PLUS_CIRCLE" description="{$cmdNewLine.description}" x:name="cmdNewLine">
                             <x:constraints weightx="0.0" width="0px" height="0px" />
                             <x:event>click.buttonClick</x:event>
                         </XdevButton>
-                        <XdevButton icon="WebContent/WEB-INF/resources/images/delete3_16.png" x:name="cmdDeleteLine">
+                        <XdevButton icon="FontAwesome.MINUS_CIRCLE" x:name="cmdDeleteLine">
                             <x:constraints weightx="0.0" width="0px" height="0px" />
                             <x:event>click.buttonClick</x:event>
                         </XdevButton>
-                        <XdevButton icon="WebContent/WEB-INF/resources/images/reload2.png" x:name="cmdReloadLine">
+                        <XdevButton icon="FontAwesome.REFRESH" x:name="cmdReloadLine">
                             <x:constraints weightx="0.0" width="0px" height="0px" />
                             <x:event>click.buttonClick</x:event>
                         </XdevButton>
-                        <XdevButton icon="WebContent/WEB-INF/resources/images/info_small.jpg" x:name="cmdInfoLine">
+                        <XdevButton icon="FontAwesome.INFO_CIRCLE" x:name="cmdInfoLine">
                             <x:constraints weightx="0.0" width="0px" height="0px" />
                             <x:event>click.buttonClick</x:event>
                         </XdevButton>
-                        <XdevButton icon="WebContent/WEB-INF/resources/images/edit1.png" x:name="cmdEditLine">
+                        <XdevButton icon="FontAwesome.PENCIL" x:name="cmdEditLine">
                             <x:constraints top="46px" left="-1px" weightx="0.0" width="0px" height="0px" />
                             <x:event>click.buttonClick</x:event>
                         </XdevButton>

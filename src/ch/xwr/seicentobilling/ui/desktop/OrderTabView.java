@@ -966,17 +966,17 @@ public class OrderTabView extends XdevView {
 		this.verticalLayoutLeft.setMargin(new MarginInfo(false));
 		this.actionLayout.setSpacing(false);
 		this.actionLayout.setMargin(new MarginInfo(false));
-		this.cmdNew.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/new1_16.png"));
+		this.cmdNew.setIcon(FontAwesome.PLUS_CIRCLE);
 		this.cmdNew.setDescription(StringResourceUtils.optLocalizeString("{$cmdNew.description}", this));
-		this.cmdDelete
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/delete3_16.png"));
-		this.cmdReload.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/reload2.png"));
-		this.cmdInfo
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/info_small.jpg"));
-		this.cmdCopy.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/copy1.png"));
+		this.cmdDelete.setIcon(FontAwesome.MINUS_CIRCLE);
+		this.cmdDelete.setDescription("Rechnung löschen");
+		this.cmdReload.setIcon(FontAwesome.REFRESH);
+		this.cmdReload.setDescription("Liste aktualsieren");
+		this.cmdInfo.setIcon(FontAwesome.INFO_CIRCLE);
+		this.cmdInfo.setDescription("Objektinfo");
+		this.cmdCopy.setIcon(FontAwesome.COPY);
 		this.cmdCopy.setDescription("Rechnung kopieren");
-		this.cmdReport.setIcon(
-				new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/Printer_black_18.png"));
+		this.cmdReport.setIcon(FontAwesome.PRINT);
 		this.cmdReport.setDescription("Jasper Report starten");
 		this.cmdPdfReport
 				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/mail1.png"));
@@ -1080,16 +1080,12 @@ public class OrderTabView extends XdevView {
 		this.verticalLayout.setMargin(new MarginInfo(false));
 		this.horizontalLayoutAction.setSpacing(false);
 		this.horizontalLayoutAction.setMargin(new MarginInfo(false));
-		this.cmdNewLine
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/new1_16.png"));
+		this.cmdNewLine.setIcon(FontAwesome.PLUS_CIRCLE);
 		this.cmdNewLine.setDescription(StringResourceUtils.optLocalizeString("{$cmdNewLine.description}", this));
-		this.cmdDeleteLine
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/delete3_16.png"));
-		this.cmdReloadLine
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/reload2.png"));
-		this.cmdInfoLine
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/info_small.jpg"));
-		this.cmdEditLine.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/edit1.png"));
+		this.cmdDeleteLine.setIcon(FontAwesome.MINUS_CIRCLE);
+		this.cmdReloadLine.setIcon(FontAwesome.REFRESH);
+		this.cmdInfoLine.setIcon(FontAwesome.INFO_CIRCLE);
+		this.cmdEditLine.setIcon(FontAwesome.PENCIL);
 		this.tableLine.setColumnReorderingAllowed(true);
 		this.tableLine.setColumnCollapsingAllowed(true);
 		this.tableLine.setContainerDataSource(OrderLine.class, false);

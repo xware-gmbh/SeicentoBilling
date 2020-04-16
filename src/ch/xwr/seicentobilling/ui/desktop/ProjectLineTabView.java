@@ -26,7 +26,6 @@ import com.vaadin.ui.Window.CloseListener;
 import com.xdev.dal.DAOs;
 import com.xdev.reports.ExportType;
 import com.xdev.reports.tableexport.ui.TableExportPopup;
-import com.xdev.res.ApplicationResource;
 import com.xdev.res.StringResourceUtils;
 import com.xdev.ui.XdevButton;
 import com.xdev.ui.XdevGridLayout;
@@ -741,22 +740,19 @@ public class ProjectLineTabView extends XdevView {
 		this.containerFilterComponent.setImmediate(true);
 		this.actionLayout.setSpacing(false);
 		this.actionLayout.setMargin(new MarginInfo(false));
-		this.cmdNew.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/new1_16.png"));
+		this.cmdNew.setIcon(FontAwesome.PLUS_CIRCLE);
 		this.cmdNew.setDescription(StringResourceUtils.optLocalizeString("{$cmdNew.description}", this));
 		this.cmdNew.setTabIndex(1);
-		this.cmdDelete
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/delete3_16.png"));
+		this.cmdDelete.setIcon(FontAwesome.MINUS_CIRCLE);
 		this.cmdDelete.setTabIndex(2);
-		this.cmdUpdate.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/edit1.png"));
+		this.cmdUpdate.setIcon(FontAwesome.PENCIL);
 		this.cmdUpdate.setDescription("Periode bearbeiten...");
-		this.cmdReload.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/reload2.png"));
+		this.cmdReload.setIcon(FontAwesome.REFRESH);
 		this.cmdReload.setDescription("Tabelle neu laden");
 		this.cmdReload.setTabIndex(3);
-		this.cmdReport.setIcon(
-				new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/Printer_black_18.png"));
+		this.cmdReport.setIcon(FontAwesome.PRINT);
 		this.cmdReport.setDescription("Jasper Report starten");
-		this.cmdInfo
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/info_small.jpg"));
+		this.cmdInfo.setIcon(FontAwesome.INFO_CIRCLE);
 		this.cmdInfo.setDescription("Objektinfo");
 		this.cmdInfo.setTabIndex(4);
 		this.table.setColumnReorderingAllowed(true);
@@ -788,30 +784,25 @@ public class ProjectLineTabView extends XdevView {
 		this.horizontalLayout.setSpacing(false);
 		this.horizontalLayout.setMargin(new MarginInfo(false));
 		this.horizontalLayout.setImmediate(true);
-		this.cmdNewLine
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/new1_16.png"));
+		this.cmdNewLine.setIcon(FontAwesome.PLUS_CIRCLE);
 		this.cmdNewLine.setCaption("Neu");
 		this.cmdNewLine.setDescription("Rapportzeile hinzufügen");
 		this.cmdNewLine.setClickShortcut(ShortcutAction.KeyCode.N, ShortcutAction.ModifierKey.CTRL);
-		this.cmdDeleteLine
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/delete3_16.png"));
+		this.cmdDeleteLine.setIcon(FontAwesome.MINUS_CIRCLE);
 		this.cmdDeleteLine.setCaption("");
 		this.cmdDeleteLine.setDescription("Rapportzeile löschen");
-		this.cmdUpdateLine
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/edit1.png"));
+		this.cmdUpdateLine.setIcon(FontAwesome.PENCIL);
 		this.cmdUpdateLine.setCaption("");
 		this.cmdUpdateLine.setDescription("Rapportzeile bearbeiten");
-		this.cmdExcel.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/import24.png"));
-		this.cmdExcel.setCaption("Import Excel");
+		this.cmdExcel.setIcon(FontAwesome.UPLOAD);
+		this.cmdExcel.setCaption("Import...");
 		this.cmdExcel.setDescription("Rapporte aus Excel importieren");
-		this.cmdCopyLine.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/copy1.png"));
+		this.cmdCopyLine.setIcon(FontAwesome.COPY);
 		this.cmdCopyLine.setDescription("Einzelne Zeile kopieren");
-		this.cmdExport
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/export24.png"));
+		this.cmdExport.setIcon(FontAwesome.EXTERNAL_LINK);
 		this.cmdExport.setCaption("Export");
 		this.cmdExport.setDescription("Excel Export");
-		this.cmdInfoLine
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/info_small.jpg"));
+		this.cmdInfoLine.setIcon(FontAwesome.INFO_CIRCLE);
 		this.cmdInfoLine.setDescription("Objektinfo");
 		this.tableLine.setColumnReorderingAllowed(true);
 		this.tableLine.setColumnCollapsingAllowed(true);

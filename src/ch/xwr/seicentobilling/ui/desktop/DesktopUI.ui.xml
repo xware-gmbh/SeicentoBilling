@@ -114,6 +114,7 @@
             <x:constraints weighty="0.1" width="100%" height="99%" />
             <XdevTabSheet styleName="framed" x:name="tabSheet">
                 <x:constraints weighty="1.0" width="100%" height="100%" />
+                <x:event>selectedTabChange.selectedTabChange</x:event>
             </XdevTabSheet>
         </XdevVerticalLayout>
     </XdevVerticalLayout>

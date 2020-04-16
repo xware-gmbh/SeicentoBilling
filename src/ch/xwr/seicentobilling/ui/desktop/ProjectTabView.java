@@ -582,21 +582,18 @@ public class ProjectTabView extends XdevView {
 		this.verticalLayout.setMargin(new MarginInfo(false));
 		this.actionLayout.setSpacing(false);
 		this.actionLayout.setMargin(new MarginInfo(false));
-		this.cmdNew.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/new1_16.png"));
+		this.cmdNew.setIcon(FontAwesome.PLUS_CIRCLE);
 		this.cmdNew.setDescription(StringResourceUtils.optLocalizeString("{$cmdNew.description}", this));
-		this.cmdDelete
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/delete3_16.png"));
+		this.cmdDelete.setIcon(FontAwesome.MINUS_CIRCLE);
 		this.cmdDelete.setDescription("Projekt löschen");
-		this.cmdReload.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/reload2.png"));
+		this.cmdReload.setIcon(FontAwesome.REFRESH);
 		this.cmdReload.setDescription("Liste neu laden");
 		this.cmdPlan.setIcon(FontAwesome.AREA_CHART);
 		this.cmdPlan.setDescription(StringResourceUtils.optLocalizeString("{$cmdPlan.description}", this));
 		this.cmdPlan.setImmediate(true);
-		this.cmdReport.setIcon(
-				new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/Printer_black_18.png"));
+		this.cmdReport.setIcon(FontAwesome.PRINT);
 		this.cmdReport.setDescription("Jasper Report starten");
-		this.cmdInfo
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/info_small.jpg"));
+		this.cmdInfo.setIcon(FontAwesome.INFO_CIRCLE);
 		this.cmdInfo.setDescription("Objektstamm aufrufen");
 		this.table.setColumnReorderingAllowed(true);
 		this.table.setColumnCollapsingAllowed(true);

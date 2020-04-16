@@ -89,6 +89,22 @@
 				</configuration>
 			</plugin>
 
+			<plugin>
+                <groupId>com.vaadin</groupId>
+                <artifactId>vaadin-maven-plugin</artifactId>
+                <version>7.7.13</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>update-theme</goal>
+                            <goal>update-widgetset</goal>
+                            <goal>compile</goal>
+                            <!-- Comment out compile-theme goal to use on-the-fly theme compilation -->
+                            <goal>compile-theme</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
 		</plugins>
 	</build>
 	<repositories>
@@ -192,6 +208,11 @@
 			<version>42.2.11</version>
 			<scope>runtime</scope>
 		</dependency>
+	    <dependency>
+	        <groupId>com.vaadin</groupId>
+	        <artifactId>vaadin-themes</artifactId>
+	        <version>7.7.13</version>
+	    </dependency>		
 	</dependencies>
 	<properties>
 		<project.build.sourceEncoding>

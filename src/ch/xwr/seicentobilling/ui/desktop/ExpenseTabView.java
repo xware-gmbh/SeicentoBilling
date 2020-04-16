@@ -8,6 +8,7 @@ import com.vaadin.data.Property;
 import com.vaadin.event.FieldEvents;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ShortcutAction;
+import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Page;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.Alignment;
@@ -20,7 +21,6 @@ import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.CloseEvent;
 import com.vaadin.ui.Window.CloseListener;
 import com.xdev.dal.DAOs;
-import com.xdev.res.ApplicationResource;
 import com.xdev.res.StringResourceUtils;
 import com.xdev.ui.XdevButton;
 import com.xdev.ui.XdevHorizontalLayout;
@@ -701,22 +701,19 @@ public class ExpenseTabView extends XdevView {
 		this.verticalLayoutLeft.setMargin(new MarginInfo(false));
 		this.actionLayout.setSpacing(false);
 		this.actionLayout.setMargin(new MarginInfo(false));
-		this.cmdNew.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/new1_16.png"));
+		this.cmdNew.setIcon(FontAwesome.PLUS_CIRCLE);
 		this.cmdNew.setDescription("Neuen Datensatz anlegen");
-		this.cmdDelete
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/delete3_16.png"));
+		this.cmdDelete.setIcon(FontAwesome.MINUS_CIRCLE);
 		this.cmdDelete.setDescription("Datensatz löschen");
-		this.cmdUpdate.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/edit1.png"));
+		this.cmdUpdate.setIcon(FontAwesome.PENCIL);
 		this.cmdUpdate.setDescription("Periode bearbeiten...");
-		this.cmdReload.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/reload2.png"));
-		this.cmdCopyExpenses
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/copy1.png"));
+		this.cmdUpdate.setImmediate(true);
+		this.cmdReload.setIcon(FontAwesome.REFRESH);
+		this.cmdCopyExpenses.setIcon(FontAwesome.COPY);
 		this.cmdCopyExpenses.setDescription("Alle Spesen einer Periode kopieren");
-		this.cmdReport.setIcon(
-				new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/Printer_black_18.png"));
+		this.cmdReport.setIcon(FontAwesome.PRINT);
 		this.cmdReport.setDescription("Jasper Report starten");
-		this.cmdInfo
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/info_small.jpg"));
+		this.cmdInfo.setIcon(FontAwesome.INFO_CIRCLE);
 		this.cmdInfo.setDescription("Objektinfo");
 		this.table.setColumnReorderingAllowed(true);
 		this.table.setColumnCollapsingAllowed(true);
@@ -750,21 +747,16 @@ public class ExpenseTabView extends XdevView {
 		this.horizontalLayout.setSpacing(false);
 		this.horizontalLayout.setMargin(new MarginInfo(false));
 		this.horizontalLayout.setImmediate(true);
-		this.cmdNewExpense
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/new1_16.png"));
+		this.cmdNewExpense.setIcon(FontAwesome.PLUS_CIRCLE);
 		this.cmdNewExpense.setCaption(StringResourceUtils.optLocalizeString("{$cmdNewExpense.caption}", this));
 		this.cmdNewExpense.setClickShortcut(ShortcutAction.KeyCode.N, ShortcutAction.ModifierKey.CTRL);
-		this.cmdDeleteExpense
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/delete3_16.png"));
+		this.cmdDeleteExpense.setIcon(FontAwesome.MINUS_CIRCLE);
 		this.cmdDeleteExpense.setCaption(StringResourceUtils.optLocalizeString("{$cmdDeleteExpense.caption}", this));
-		this.cmdUpdateExpense
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/edit1.png"));
+		this.cmdUpdateExpense.setIcon(FontAwesome.PENCIL);
 		this.cmdUpdateExpense.setCaption(StringResourceUtils.optLocalizeString("{$cmdUpdateExpense.caption}", this));
-		this.cmdCopySingle
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/copy1.png"));
+		this.cmdCopySingle.setIcon(FontAwesome.COPY);
 		this.cmdCopySingle.setDescription("Markierten Datensatz kopieren");
-		this.cmdInfoExpense
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/info_small.jpg"));
+		this.cmdInfoExpense.setIcon(FontAwesome.INFO_CIRCLE);
 		this.cmdToggleEdit.setIcon(null);
 		this.cmdToggleEdit.setStyleName("tiny");
 		this.cmdToggleEdit.setEnabled(false);

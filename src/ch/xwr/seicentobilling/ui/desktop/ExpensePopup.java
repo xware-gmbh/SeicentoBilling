@@ -192,7 +192,7 @@ public class ExpensePopup extends XdevView {
 	public static Window getPopupWindow() {
 		final Window win = new Window();
 		win.setWidth("720");
-		win.setHeight("640");
+		win.setHeight("660");
 		win.center();
 		win.setModal(true);
 		win.setContent(new ExpensePopup());
@@ -740,10 +740,10 @@ public class ExpensePopup extends XdevView {
 		this.fieldGroup.bind(this.txtExpQuantity, Expense_.expQuantity.getName());
 		this.fieldGroup.bind(this.comboBoxState, Expense_.expState.getName());
 		this.horizontalLayout.setMargin(new MarginInfo(false, true, true, true));
-		this.cmdSave.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/save1.png"));
+		this.cmdSave.setIcon(FontAwesome.SAVE);
 		this.cmdSave.setCaption(StringResourceUtils.optLocalizeString("{$cmdSave.caption}", this));
 		this.cmdSave.setClickShortcut(ShortcutAction.KeyCode.ENTER);
-		this.cmdReset.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/cancel1.png"));
+		this.cmdReset.setIcon(FontAwesome.CLOSE);
 		this.cmdReset.setCaption(StringResourceUtils.optLocalizeString("{$cmdReset.caption}", this));
 		this.cmdReset.setClickShortcut(ShortcutAction.KeyCode.ESCAPE);
 		this.label2.setValue("            ");
@@ -751,7 +751,7 @@ public class ExpensePopup extends XdevView {
 		this.cmdDefault1.setCaption("Def 1");
 		this.cmdDefault1.setClickShortcut(ShortcutAction.KeyCode.NUM1, ShortcutAction.ModifierKey.CTRL);
 		this.horizontalLayoutShortcut.setSpacing(false);
-		this.horizontalLayoutShortcut.setMargin(new MarginInfo(false));
+		this.horizontalLayoutShortcut.setMargin(new MarginInfo(true, false, false, true));
 		this.cmd2.setCaption("B2");
 		this.cmd2.setStyleName("tray tiny");
 		this.cmd2.setClickShortcut(ShortcutAction.KeyCode.NUM2, ShortcutAction.ModifierKey.CTRL);
