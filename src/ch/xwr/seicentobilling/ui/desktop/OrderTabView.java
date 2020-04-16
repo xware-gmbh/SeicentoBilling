@@ -978,8 +978,7 @@ public class OrderTabView extends XdevView {
 		this.cmdCopy.setDescription("Rechnung kopieren");
 		this.cmdReport.setIcon(FontAwesome.PRINT);
 		this.cmdReport.setDescription("Jasper Report starten");
-		this.cmdPdfReport
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/mail1.png"));
+		this.cmdPdfReport.setIcon(FontAwesome.ENVELOPE);
 		this.cmdPdfReport.setDescription("Mail mit PDF vorbereiten...");
 		this.cmdAdmin.setIcon(FontAwesome.GEAR);
 		this.cmdAdmin.setDescription("Admin Modus");

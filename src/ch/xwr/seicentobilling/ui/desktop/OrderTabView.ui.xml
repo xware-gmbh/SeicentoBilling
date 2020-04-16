@@ -67,7 +67,7 @@
                     <x:constraints top="93px" left="-1px" weightx="0.0" width="0px" height="0px" />
                     <x:event>click.buttonClick</x:event>
                 </XdevButton>
-                <XdevButton icon="WebContent/WEB-INF/resources/images/mail1.png" description="Mail mit PDF vorbereiten..." x:name="cmdPdfReport">
+                <XdevButton icon="FontAwesome.ENVELOPE" description="Mail mit PDF vorbereiten..." x:name="cmdPdfReport">
                     <x:constraints top="93px" left="-1px" weightx="0.0" width="0px" height="0px" />
                     <x:event>click.buttonClick</x:event>
                 </XdevButton>
