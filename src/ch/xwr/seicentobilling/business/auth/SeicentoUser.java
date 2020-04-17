@@ -12,10 +12,14 @@ import com.xdev.security.authorization.Role;
 import com.xdev.security.authorization.Subject;
 import com.xdev.server.aa.openid.auth.AzureUser;
 
+import ch.xwr.seicentobilling.business.LovState;
+import ch.xwr.seicentobilling.dal.AppUserDAO;
+import ch.xwr.seicentobilling.entities.AppUser;
 import ch.xwr.seicentobilling.entities.CostAccount;
 
 public class SeicentoUser implements Subject, Serializable {
 	private AzureUser aadUser = null;
+	private AppUser dbUser = null;
 	private CostAccount cst = null;
 	private JWTClaimsSet claimSet = null;
 
@@ -31,18 +35,40 @@ public class SeicentoUser implements Subject, Serializable {
 	public SeicentoUser(final String username) {
 		this.name = username;
 
+		lookupDbUser();
 		if (getAzureUser() == null) {
 			initLocalUser();
 		}
+
     }
 
-	private void initLocalUser() {
-		final SeicentoUserXmlHandler xml = new SeicentoUserXmlHandler();
-		final SeicentoUserXml user = xml.getXmlUser(this.name);
+	private void lookupDbUser() {
+		final AppUserDAO dao = new AppUserDAO();
 
+		final List<AppUser> lst = dao.findByName(this.name);
+		if (lst != null && lst.size()>0) {
+			this.dbUser = lst.get(0);
+		} else {
+			if (getAzureUser() != null) {
+				final AppUser bean = new AppUser();
+				bean.setUsername(this.name);
+				bean.setUsrFullName(this.name);
+				bean.setUsrState(LovState.State.active);
+
+				//auto create user if it does not exist
+				new AppUserDAO().save(bean);
+
+			}
+		}
+
+
+	}
+	private void initLocalUser() {
+		String role = "";
 		final List<String> ls =  new ArrayList<>();
-		if (user != null) {
-			ls.add(user.getRole());
+		if (this.dbUser != null) {
+			role = this.dbUser.getUsrRoles();
+			ls.add(role);
 		}
 
 		this.claimSet = new JWTClaimsSet.Builder()
@@ -52,8 +78,9 @@ public class SeicentoUser implements Subject, Serializable {
 			     .claim("roles", ls)
 			     .build();
 
+		//dummy?
 		this.roles = new HashSet<>();
-		this.roles.add(Role.New("BillingAdmin"));
+		this.roles.add(Role.New(role));
 	}
 
 	@Override
@@ -84,6 +111,11 @@ public class SeicentoUser implements Subject, Serializable {
 	public AzureUser getAzureUser() {
 		return this.aadUser;
 	}
+
+	public AppUser getDbUser() {
+		return this.dbUser;
+	}
+
 	public void setAzureUser(final AzureUser currentUser) {
 		this.aadUser = currentUser;
 	}

@@ -18,8 +18,9 @@ import com.xdev.ui.XdevPasswordField;
 import com.xdev.ui.XdevTextField;
 import com.xdev.ui.XdevView;
 
+import ch.xwr.seicentobilling.business.Seicento;
 import ch.xwr.seicentobilling.business.auth.AzureHelper;
-import ch.xwr.seicentobilling.business.auth.MyAuthenticationProvider;
+import ch.xwr.seicentobilling.business.auth.DbAuthenticationProvider;
 import ch.xwr.seicentobilling.business.auth.SeicentoUser;
 
 public class AuthView extends XdevView implements com.xdev.security.authentication.ui.LoginView {
@@ -33,11 +34,7 @@ public class AuthView extends XdevView implements com.xdev.security.authenticati
 		super();
 		this.initUI();
 
-		String lm = "azure";
-		if (System.getenv("SEICENTO_LOGIN_METHOD") != null) {
-			lm = System.getenv("SEICENTO_LOGIN_METHOD");
-		};
-
+		final String lm = Seicento.getLoginMethod();
 		if (lm.equalsIgnoreCase("azure")) {
 			enableOauth();
 		} else {
@@ -85,7 +82,7 @@ public class AuthView extends XdevView implements com.xdev.security.authenticati
 	private void cmdLoginLocal_buttonClick(final Button.ClickEvent event) {
 		try {
 			final CredentialsUsernamePassword credentials = CredentialsUsernamePassword.New(getUsername(), getPassword());
-			final MyAuthenticationProvider authenticatorProvider = MyAuthenticationProvider.getInstance();
+			final DbAuthenticationProvider authenticatorProvider = DbAuthenticationProvider.getInstance();
 			final Object authenticationResult = authenticatorProvider.provideAuthenticator().authenticate(credentials);
 			//Authentication.login(new Subject.Implementation(credentials.username()), authenticationResult);
 

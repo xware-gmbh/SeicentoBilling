@@ -2,8 +2,10 @@ package ch.xwr.seicentobilling.entities;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -70,6 +72,7 @@ public class Customer implements java.io.Serializable {
 	private Boolean cusSinglepdf;
 	private String cusExtRef1;
 	private String cusExtRef2;
+	private List<AppUser> users = new ArrayList<>();
 
 	public Customer() {
 	}
@@ -423,6 +426,27 @@ public class Customer implements java.io.Serializable {
 
 	public void setCusExtRef2(final String noname) {
 		this.cusExtRef2 = noname;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "customer")
+	public List<AppUser> getUsers() {
+		return users;
+	}
+
+	public void setUsers(List<AppUser> users) {
+		this.users = users;
+	}
+
+	public AppUser addUser(AppUser user) {
+		getUsers().add(user);
+		user.setCustomer(this);
+		return user;
+	}
+
+	public AppUser removeUser(AppUser user) {
+		getUsers().remove(user);
+		user.setCustomer(null);
+		return user;
 	}
 
 }

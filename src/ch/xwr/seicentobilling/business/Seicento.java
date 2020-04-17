@@ -38,6 +38,20 @@ public class Seicento {
 		return "unknown";
 	}
 
+	public static SeicentoUser getSeicentoUser() {
+		final Subject sub = VaadinSession.getCurrent().getAttribute(Subject.class);
+
+		if (sub != null && sub instanceof SeicentoUser)
+		{
+			final SeicentoUser usr = (SeicentoUser) sub;
+			return usr;
+		}
+
+
+		return null;
+	}
+
+
 	public static boolean hasRole(final String roleName) {
 		final Subject sub = VaadinSession.getCurrent().getAttribute(Subject.class);
 		if (sub == null) {
@@ -119,5 +133,13 @@ public class Seicento {
 	    return usedMB;
 	}
 
+	public static String getLoginMethod() {
+		String lm = "azure";
+		if (System.getenv("SEICENTO_LOGIN_METHOD") != null) {
+			lm = System.getenv("SEICENTO_LOGIN_METHOD");
+		};
+
+		return lm;
+	}
 
 }

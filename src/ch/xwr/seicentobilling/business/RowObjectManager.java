@@ -63,7 +63,6 @@ public class RowObjectManager {
 			obj.setObjChngcnt((long) 0);
 			obj.setObjState(LovState.State.active);
 			obj.setEntity(ent);
-			obj.setDatabaseVersion(null);
 		}
 		if (obj.getObjChngcnt() == null) {
 			obj.setObjChngcnt((long) 0);

@@ -2,7 +2,9 @@ package ch.xwr.seicentobilling.entities;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -43,6 +45,7 @@ public class CostAccount implements java.io.Serializable {
 	private Set<CostAccount> costAccounts = new HashSet<>(0);
 	private Set<OrderLine> orderLines = new HashSet<>(0);
 	private String csaExtRef;
+	private List<AppUser> users = new ArrayList<>();
 
 	public CostAccount() {
 	}
@@ -159,6 +162,27 @@ public class CostAccount implements java.io.Serializable {
 
 	public void setCsaExtRef(final String noname) {
 		this.csaExtRef = noname;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "costAccount")
+	public List<AppUser> getUsers() {
+		return this.users;
+	}
+
+	public void setUsers(final List<AppUser> users) {
+		this.users = users;
+	}
+
+	public AppUser addUser(final AppUser user) {
+		getUsers().add(user);
+		user.setCostAccount(this);
+		return user;
+	}
+
+	public AppUser removeUser(final AppUser user) {
+		getUsers().remove(user);
+		user.setCostAccount(null);
+		return user;
 	}
 
 

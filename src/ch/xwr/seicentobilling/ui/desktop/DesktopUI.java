@@ -145,6 +145,9 @@ public class DesktopUI extends XdevUI {
 	private void setLocale() {
 		Locale.setDefault(new Locale("de", "CH"));
 		TimeZone.setDefault(TimeZone.getTimeZone("Europe/Zurich"));
+
+		this.getUI().setTheme("Darksb");
+
 	}
 
 	private void loadMyData() {
@@ -353,14 +356,6 @@ public class DesktopUI extends XdevUI {
 	 */
 	private void menuItemUsrInfo_menuSelected(final MenuBar.MenuItem selectedItem) {
 		loadTab(ApplicationSettingsTabView.class, selectedItem.getText());
-
-//		final Window win = UserInfoPopup.getPopupWindow();
-//
-//		// UI.getCurrent().getSession().setAttribute(String.class,
-//		// bean.getClass().getSimpleName());
-//		win.setContent(new UserInfoPopup());
-//		this.getUI().addWindow(win);
-
 	}
 
 	/**
@@ -404,17 +399,17 @@ public class DesktopUI extends XdevUI {
 	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
 	 */
 	private void tabSheet_selectedTabChange(final TabSheet.SelectedTabChangeEvent event) {
-		System.out.println("selected Tab Sheet");
-		final Class<? extends TabSheet> cl = event.getTabSheet().getClass();
-		System.out.println("selected Tab Sheet " + cl);  //XdevTabSheet
-
-		final Component sl = event.getTabSheet().getSelectedTab();  //XdevView
-		final XdevView viw = (XdevView) sl;
-
-		if (viw.isEnabled() && viw.isVisible()) {
-			viw.markAsDirty();
-			viw.enter(null);
-		}
+//		System.out.println("selected Tab Sheet");
+//		final Class<? extends TabSheet> cl = event.getTabSheet().getClass();
+//		System.out.println("selected Tab Sheet " + cl);  //XdevTabSheet
+//
+//		final Component sl = event.getTabSheet().getSelectedTab();  //XdevView
+//		final XdevView viw = (XdevView) sl;
+//
+//		if (viw.isEnabled() && viw.isVisible()) {
+//			viw.markAsDirty();
+//			viw.enter(null);
+//		}
 	}
 
 	/*

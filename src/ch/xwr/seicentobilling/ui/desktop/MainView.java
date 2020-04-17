@@ -8,6 +8,7 @@ import com.xdev.security.authorization.Subject;
 import com.xdev.server.aa.openid.auth.AzureUser;
 import com.xdev.ui.XdevView;
 
+import ch.xwr.seicentobilling.business.LovState;
 import ch.xwr.seicentobilling.business.Seicento;
 import ch.xwr.seicentobilling.business.auth.SeicentoUser;
 
@@ -53,6 +54,28 @@ public class MainView extends XdevView {
 		} else {
 			System.out.println("logged in Preview / DevEnv. DesktopUI not available!");
 			Seicento.removeGelfAppender();
+		}
+
+		applyTheme();
+
+	}
+
+	private void applyTheme() {
+		if (this.currentUser.getDbUser() == null) {
+			return;
+		}
+		final LovState.Theme th = this.currentUser.getDbUser().getUsrThemeDesktop();
+		if (th == null) {
+			return;
+		}
+		if (th.equals(LovState.Theme.dark)) {
+			this.getUI().setTheme("Darksb");
+		}
+		if (th.equals(LovState.Theme.facebook)) {
+			this.getUI().setTheme("Facebook");
+		}
+		if (th.equals(LovState.Theme.light)) {
+			this.getUI().setTheme("SeicentoBilling");
 		}
 
 	}

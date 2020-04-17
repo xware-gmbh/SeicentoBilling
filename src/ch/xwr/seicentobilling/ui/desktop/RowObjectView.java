@@ -35,14 +35,11 @@ import com.xdev.ui.util.NestedProperty;
 
 import ch.xwr.seicentobilling.business.ConfirmDialog;
 import ch.xwr.seicentobilling.business.RowObjectManager;
-import ch.xwr.seicentobilling.dal.DatabaseVersionDAO;
 import ch.xwr.seicentobilling.dal.EntityDAO;
 import ch.xwr.seicentobilling.dal.RowImageDAO;
 import ch.xwr.seicentobilling.dal.RowObjectDAO;
 import ch.xwr.seicentobilling.dal.RowParameterDAO;
 import ch.xwr.seicentobilling.dal.RowTextDAO;
-import ch.xwr.seicentobilling.entities.DatabaseVersion;
-import ch.xwr.seicentobilling.entities.DatabaseVersion_;
 import ch.xwr.seicentobilling.entities.Entity;
 import ch.xwr.seicentobilling.entities.Entity_;
 import ch.xwr.seicentobilling.entities.RowImage;
@@ -493,8 +490,6 @@ public class RowObjectView extends XdevView {
 		this.txtObjRowId = new XdevTextField();
 		this.lblObjChanged = new XdevLabel();
 		this.dateObjChanged = new XdevPopupDateField();
-		this.lblDatabaseVersion = new XdevLabel();
-		this.cmbDatabaseVersion = new XdevComboBox<>();
 		this.lblObjChngcnt = new XdevLabel();
 		this.txtObjChngcnt = new XdevTextField();
 		this.lblObjChangedBy = new XdevLabel();
@@ -545,10 +540,6 @@ public class RowObjectView extends XdevView {
 		this.lblObjChanged.setValue(StringResourceUtils.optLocalizeString("{$lblObjChanged.value}", this));
 		this.dateObjChanged.setTabIndex(7);
 		this.dateObjChanged.setResolution(Resolution.SECOND);
-		this.lblDatabaseVersion.setValue(StringResourceUtils.optLocalizeString("{$lblDatabaseVersion.value}", this));
-		this.cmbDatabaseVersion.setTabIndex(11);
-		this.cmbDatabaseVersion.setContainerDataSource(DatabaseVersion.class, DAOs.get(DatabaseVersionDAO.class).findAll());
-		this.cmbDatabaseVersion.setItemCaptionPropertyId(DatabaseVersion_.dbvMicro.getName());
 		this.lblObjChngcnt.setValue(StringResourceUtils.optLocalizeString("{$lblObjChngcnt.value}", this));
 		this.txtObjChngcnt.setTabIndex(4);
 		this.lblObjChangedBy.setValue(StringResourceUtils.optLocalizeString("{$lblObjChangedBy.value}", this));
@@ -566,7 +557,6 @@ public class RowObjectView extends XdevView {
 		this.fieldGroup.bind(this.txtObjChangedBy, RowObject_.objChangedBy.getName());
 		this.fieldGroup.bind(this.dateObjDeleted, RowObject_.objDeleted.getName());
 		this.fieldGroup.bind(this.txtObjDeletedBy, RowObject_.objDeletedBy.getName());
-		this.fieldGroup.bind(this.cmbDatabaseVersion, RowObject_.databaseVersion.getName());
 		this.fieldGroup.bind(this.txtObjState, RowObject_.objState.getName());
 		this.tabSheet.setStyleName("framed");
 		this.horizontalLayout2.setSpacing(false);
@@ -681,11 +671,6 @@ public class RowObjectView extends XdevView {
 		this.dateObjChanged.setWidth(100, Unit.PERCENTAGE);
 		this.dateObjChanged.setHeight(-1, Unit.PIXELS);
 		this.form.addComponent(this.dateObjChanged, 3, 2);
-		this.lblDatabaseVersion.setSizeUndefined();
-		this.form.addComponent(this.lblDatabaseVersion, 4, 2);
-		this.cmbDatabaseVersion.setWidth(100, Unit.PERCENTAGE);
-		this.cmbDatabaseVersion.setHeight(-1, Unit.PIXELS);
-		this.form.addComponent(this.cmbDatabaseVersion, 5, 2);
 		this.lblObjChngcnt.setSizeUndefined();
 		this.form.addComponent(this.lblObjChngcnt, 0, 3);
 		this.txtObjChngcnt.setSizeUndefined();
@@ -795,10 +780,9 @@ public class RowObjectView extends XdevView {
 	// <generated-code name="variables">
 	private XdevTable<RowParameter> tableRowParam;
 	private XdevLabel lblObjId, lblObjAdded, lblObjDeleted, lblEntity, lblObjAddedBy, lblObjDeletedBy, lblObjRowId,
-			lblObjChanged, lblDatabaseVersion, lblObjChngcnt, lblObjChangedBy, lblObjState;
+			lblObjChanged, lblObjChngcnt, lblObjChangedBy, lblObjState;
 	private XdevButton cmdNewText, cmdDeleteText, cmdUpdateText, cmdNewFile, cmdDeleteFile, cmdUpdateFile, cmdNewParam,
 			cmdDeleteParam, cmdUpdateParam;
-	private XdevComboBox<DatabaseVersion> cmbDatabaseVersion;
 	private XdevTable<RowText> tableText;
 	private XdevTable<RowImage> tableRowImage;
 	private XdevPanel panel;

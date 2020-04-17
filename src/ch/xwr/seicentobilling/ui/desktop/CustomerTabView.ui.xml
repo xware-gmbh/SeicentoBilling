@@ -206,6 +206,7 @@
                             </x:typeArguments>
                             <x:data methodName="findAll" />
                             <x:event>valueChange.valueChange</x:event>
+                            <x:event>itemSetChange.containerItemSetChange</x:event>
                         </XdevComboBox>
                         <XdevLabel x:name="lblCountry" value="CH">
                             <x:constraints weightx="0.1" width="0px" alignment="MIDDLE_LEFT" height="0px" />

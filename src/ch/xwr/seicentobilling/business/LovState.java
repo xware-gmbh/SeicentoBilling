@@ -37,6 +37,10 @@ public class LovState {
 		offen, gebucht
 	}
 
+	public static enum Theme {
+		dark, facebook, light
+	}
+
 	/**
 	 * Monate (sollte eigentlich bei 1 starten)
 	 **/
