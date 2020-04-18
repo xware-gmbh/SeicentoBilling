@@ -11,7 +11,7 @@
 <?import com.xdev.ui.XdevView?>
 <?import com.xdev.ui.entitycomponent.combobox.XdevComboBox?>
 <XdevView xmlns:x="http://xml.xdev-software.com/xdevuiml" x:name="MailDownloadPopup">
-    <x:constraints zpos="0" width="100%" height="100%" />
+    <x:constraints width="540px" zpos="0" height="275px" />
     <XdevGridLayout x:name="gridLayout">
         <x:constraints zpos="0" width="100%" height="100%" />
         <XdevLabel description="Selektionskriterium für die Periode" x:name="lblCstAccount" value="Kostenstelle">

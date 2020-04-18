@@ -122,53 +122,6 @@ public class ApplicationSettingsTabView extends XdevView {
 
 	/**
 	 * Event handler delegate method for the {@link XdevGridLayout}
-	 * {@link #gridLayoutStats}.
-	 *
-	 * @see ClientConnector.AttachListener#attach(ClientConnector.AttachEvent)
-	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
-	 */
-	private void gridLayoutStats_attach(final ClientConnector.AttachEvent event) {
-		this.lblMemory.setValue("" + Seicento.getMemory());
-		this.lblSession.setValue(UI.getCurrent().getSession().getState().name());
-		this.lblJava.setValue(System.getProperty("java.version"));
-
-	}
-
-	/**
-	 * Event handler delegate method for the {@link XdevButton}
-	 * {@link #cmdThemeSeicento}.
-	 *
-	 * @see Button.ClickListener#buttonClick(Button.ClickEvent)
-	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
-	 */
-	private void cmdThemeSeicento_buttonClick(final Button.ClickEvent event) {
-		this.getUI().setTheme("SeicentoBilling");
-	}
-
-	/**
-	 * Event handler delegate method for the {@link XdevButton} {@link #cmdThemeFb}.
-	 *
-	 * @see Button.ClickListener#buttonClick(Button.ClickEvent)
-	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
-	 */
-	private void cmdThemeFb_buttonClick(final Button.ClickEvent event) {
-		this.getUI().setTheme("Facebook");
-
-	}
-
-	/**
-	 * Event handler delegate method for the {@link XdevButton}
-	 * {@link #cmdThemeDark}.
-	 *
-	 * @see Button.ClickListener#buttonClick(Button.ClickEvent)
-	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
-	 */
-	private void cmdThemeDark_buttonClick(final Button.ClickEvent event) {
-		this.getUI().setTheme("Darksb");
-	}
-
-	/**
-	 * Event handler delegate method for the {@link XdevGridLayout}
 	 * {@link #gridLayoutApp}.
 	 *
 	 * @see ClientConnector.AttachListener#attach(ClientConnector.AttachEvent)
@@ -184,6 +137,9 @@ public class ApplicationSettingsTabView extends XdevView {
 
 		this.labelUsername.setValue(Seicento.getUserName());
 
+		this.lblMemory.setValue("" + Seicento.getMemory());
+		this.lblSession.setValue(UI.getCurrent().getSession().getState().name());
+		this.lblJava.setValue(System.getProperty("java.version"));
 	}
 
 	/**
@@ -294,6 +250,10 @@ public class ApplicationSettingsTabView extends XdevView {
 		this.verticalLayout = new XdevVerticalLayout();
 		this.tabSheet = new XdevTabSheet();
 		this.gridLayoutApp = new XdevGridLayout();
+		this.horizontalLayout = new XdevHorizontalLayout();
+		this.label4 = new XdevLabel();
+		this.labelVersion = new XdevLabel();
+		this.labelArtifact = new XdevLabel();
 		this.label5 = new XdevLabel();
 		this.labelUsername = new XdevLabel();
 		this.label = new XdevLabel();
@@ -302,15 +262,6 @@ public class ApplicationSettingsTabView extends XdevView {
 		this.labelLanguage = new XdevLabel();
 		this.label3 = new XdevLabel();
 		this.labelTimeZone = new XdevLabel();
-		this.label4 = new XdevLabel();
-		this.labelVersion = new XdevLabel();
-		this.labelArtifact = new XdevLabel();
-		this.horizontalLayout = new XdevHorizontalLayout();
-		this.cmdThemeDark = new XdevButton();
-		this.cmdThemeFb = new XdevButton();
-		this.cmdThemeSeicento = new XdevButton();
-		this.gridLayoutUsr = new XdevGridLayout();
-		this.gridLayoutStats = new XdevGridLayout();
 		this.label6 = new XdevLabel();
 		this.lblMemory = new XdevLabel();
 		this.label7 = new XdevLabel();
@@ -353,12 +304,20 @@ public class ApplicationSettingsTabView extends XdevView {
 		this.cmdReset2 = new XdevButton();
 		this.label10 = new XdevLabel();
 		this.cmdApplyTheme = new XdevButton();
+		this.gridLayoutUsr = new XdevGridLayout();
 		this.fieldGroup = new XdevFieldGroup<>(AppUser.class);
 
 		this.verticalLayout.setMargin(new MarginInfo(false));
 		this.tabSheet.setStyleName("framed");
 		this.gridLayoutApp.setMargin(new MarginInfo(true, true, false, true));
-		this.label5.setValue("Name");
+		this.horizontalLayout.setIcon(FontAwesome.DASHBOARD);
+		this.horizontalLayout.setCaption("SeicentoBilling");
+		this.horizontalLayout.setStyleName("warning");
+		this.horizontalLayout.setMargin(new MarginInfo(false, false, true, false));
+		this.label4.setValue("Version");
+		this.labelVersion.setValue("0.6");
+		this.labelArtifact.setValue("0.6");
+		this.label5.setValue("Username");
 		this.labelUsername.setValue("unknown");
 		this.label.setValue("Country");
 		this.labelCountry.setValue("CH");
@@ -366,17 +325,6 @@ public class ApplicationSettingsTabView extends XdevView {
 		this.labelLanguage.setValue("German");
 		this.label3.setValue("Time Zone");
 		this.labelTimeZone.setValue("unknown");
-		this.label4.setValue("Version");
-		this.labelVersion.setValue("0.6");
-		this.labelArtifact.setValue("0.6");
-		this.horizontalLayout.setIcon(FontAwesome.DASHBOARD);
-		this.horizontalLayout.setCaption("Theme's");
-		this.horizontalLayout.setStyleName("resize-button-caption");
-		this.horizontalLayout.setMargin(new MarginInfo(false, false, true, false));
-		this.cmdThemeDark.setCaption("Dark");
-		this.cmdThemeFb.setCaption("Facebook");
-		this.cmdThemeSeicento.setCaption("Reset");
-		this.gridLayoutUsr.setMargin(new MarginInfo(true, true, false, true));
 		this.label6.setValue("Memory used MB");
 		this.lblMemory.setValue("Version");
 		this.label7.setValue("Session");
@@ -413,6 +361,7 @@ public class ApplicationSettingsTabView extends XdevView {
 		this.cmdReset2.setCaption("Verwerfen");
 		this.cmdApplyTheme.setIcon(FontAwesome.DASHBOARD);
 		this.cmdApplyTheme.setCaption("Theme anwenden");
+		this.gridLayoutUsr.setMargin(new MarginInfo(true, true, false, true));
 		this.fieldGroup.bind(this.txtUsername, AppUser_.username.getName());
 		this.fieldGroup.bind(this.txtUsrRoles, AppUser_.usrRoles.getName());
 		this.fieldGroup.bind(this.txtUsrFullName, AppUser_.usrFullName.getName());
@@ -427,74 +376,54 @@ public class ApplicationSettingsTabView extends XdevView {
 		this.fieldGroup.bind(this.dateUsrValidTo, AppUser_.usrValidTo.getName());
 		this.fieldGroup.bind(this.comboBoxState, AppUser_.usrState.getName());
 
-		this.cmdThemeDark.setSizeUndefined();
-		this.horizontalLayout.addComponent(this.cmdThemeDark);
-		this.horizontalLayout.setComponentAlignment(this.cmdThemeDark, Alignment.MIDDLE_CENTER);
-		this.cmdThemeFb.setSizeUndefined();
-		this.horizontalLayout.addComponent(this.cmdThemeFb);
-		this.horizontalLayout.setComponentAlignment(this.cmdThemeFb, Alignment.MIDDLE_CENTER);
-		this.cmdThemeSeicento.setSizeUndefined();
-		this.horizontalLayout.addComponent(this.cmdThemeSeicento);
-		this.horizontalLayout.setComponentAlignment(this.cmdThemeSeicento, Alignment.MIDDLE_CENTER);
-		final CustomComponent horizontalLayout_spacer = new CustomComponent();
-		horizontalLayout_spacer.setSizeFull();
-		this.horizontalLayout.addComponent(horizontalLayout_spacer);
-		this.horizontalLayout.setExpandRatio(horizontalLayout_spacer, 1.0F);
-		this.gridLayoutApp.setColumns(2);
-		this.gridLayoutApp.setRows(8);
-		this.label5.setSizeUndefined();
-		this.gridLayoutApp.addComponent(this.label5, 0, 0);
-		this.labelUsername.setSizeUndefined();
-		this.gridLayoutApp.addComponent(this.labelUsername, 1, 0);
-		this.label.setSizeUndefined();
-		this.gridLayoutApp.addComponent(this.label, 0, 1);
-		this.labelCountry.setSizeUndefined();
-		this.gridLayoutApp.addComponent(this.labelCountry, 1, 1);
-		this.label2.setSizeUndefined();
-		this.gridLayoutApp.addComponent(this.label2, 0, 2);
-		this.labelLanguage.setSizeUndefined();
-		this.gridLayoutApp.addComponent(this.labelLanguage, 1, 2);
-		this.label3.setSizeUndefined();
-		this.gridLayoutApp.addComponent(this.label3, 0, 3);
-		this.labelTimeZone.setSizeUndefined();
-		this.gridLayoutApp.addComponent(this.labelTimeZone, 1, 3);
 		this.label4.setSizeUndefined();
-		this.gridLayoutApp.addComponent(this.label4, 0, 4);
-		this.labelVersion.setSizeUndefined();
-		this.gridLayoutApp.addComponent(this.labelVersion, 1, 4);
-		this.labelArtifact.setSizeUndefined();
-		this.gridLayoutApp.addComponent(this.labelArtifact, 1, 5);
+		this.horizontalLayout.addComponent(this.label4);
+		this.labelVersion.setWidth(150, Unit.PIXELS);
+		this.labelVersion.setHeight(-1, Unit.PIXELS);
+		this.horizontalLayout.addComponent(this.labelVersion);
+		this.labelArtifact.setWidth(250, Unit.PIXELS);
+		this.labelArtifact.setHeight(-1, Unit.PIXELS);
+		this.horizontalLayout.addComponent(this.labelArtifact);
+		this.horizontalLayout.setExpandRatio(this.labelArtifact, 20.0F);
+		this.gridLayoutApp.setColumns(2);
+		this.gridLayoutApp.setRows(9);
 		this.horizontalLayout.setWidth(100, Unit.PERCENTAGE);
-		this.horizontalLayout.setHeight(100, Unit.PIXELS);
-		this.gridLayoutApp.addComponent(this.horizontalLayout, 0, 6, 1, 6);
-		this.gridLayoutApp.setColumnExpandRatio(0, 10.0F);
+		this.horizontalLayout.setHeight(50, Unit.PIXELS);
+		this.gridLayoutApp.addComponent(this.horizontalLayout, 0, 0, 1, 0);
+		this.gridLayoutApp.setComponentAlignment(this.horizontalLayout, Alignment.MIDDLE_LEFT);
+		this.label5.setSizeUndefined();
+		this.gridLayoutApp.addComponent(this.label5, 0, 1);
+		this.labelUsername.setSizeUndefined();
+		this.gridLayoutApp.addComponent(this.labelUsername, 1, 1);
+		this.label.setSizeUndefined();
+		this.gridLayoutApp.addComponent(this.label, 0, 2);
+		this.labelCountry.setSizeUndefined();
+		this.gridLayoutApp.addComponent(this.labelCountry, 1, 2);
+		this.label2.setSizeUndefined();
+		this.gridLayoutApp.addComponent(this.label2, 0, 3);
+		this.labelLanguage.setSizeUndefined();
+		this.gridLayoutApp.addComponent(this.labelLanguage, 1, 3);
+		this.label3.setSizeUndefined();
+		this.gridLayoutApp.addComponent(this.label3, 0, 4);
+		this.labelTimeZone.setSizeUndefined();
+		this.gridLayoutApp.addComponent(this.labelTimeZone, 1, 4);
+		this.label6.setSizeUndefined();
+		this.gridLayoutApp.addComponent(this.label6, 0, 5);
+		this.lblMemory.setSizeUndefined();
+		this.gridLayoutApp.addComponent(this.lblMemory, 1, 5);
+		this.label7.setSizeUndefined();
+		this.gridLayoutApp.addComponent(this.label7, 0, 6);
+		this.lblSession.setSizeUndefined();
+		this.gridLayoutApp.addComponent(this.lblSession, 1, 6);
+		this.label8.setSizeUndefined();
+		this.gridLayoutApp.addComponent(this.label8, 0, 7);
+		this.lblJava.setSizeUndefined();
+		this.gridLayoutApp.addComponent(this.lblJava, 1, 7);
 		this.gridLayoutApp.setColumnExpandRatio(1, 40.0F);
 		final CustomComponent gridLayoutApp_vSpacer = new CustomComponent();
 		gridLayoutApp_vSpacer.setSizeFull();
-		this.gridLayoutApp.addComponent(gridLayoutApp_vSpacer, 0, 7, 1, 7);
-		this.gridLayoutApp.setRowExpandRatio(7, 1.0F);
-		this.gridLayoutStats.setColumns(3);
-		this.gridLayoutStats.setRows(4);
-		this.label6.setSizeUndefined();
-		this.gridLayoutStats.addComponent(this.label6, 0, 0);
-		this.lblMemory.setSizeUndefined();
-		this.gridLayoutStats.addComponent(this.lblMemory, 1, 0);
-		this.label7.setSizeUndefined();
-		this.gridLayoutStats.addComponent(this.label7, 0, 1);
-		this.lblSession.setSizeUndefined();
-		this.gridLayoutStats.addComponent(this.lblSession, 1, 1);
-		this.label8.setSizeUndefined();
-		this.gridLayoutStats.addComponent(this.label8, 0, 2);
-		this.lblJava.setSizeUndefined();
-		this.gridLayoutStats.addComponent(this.lblJava, 1, 2);
-		final CustomComponent gridLayoutStats_hSpacer = new CustomComponent();
-		gridLayoutStats_hSpacer.setSizeFull();
-		this.gridLayoutStats.addComponent(gridLayoutStats_hSpacer, 2, 0, 2, 2);
-		this.gridLayoutStats.setColumnExpandRatio(2, 1.0F);
-		final CustomComponent gridLayoutStats_vSpacer = new CustomComponent();
-		gridLayoutStats_vSpacer.setSizeFull();
-		this.gridLayoutStats.addComponent(gridLayoutStats_vSpacer, 0, 3, 1, 3);
-		this.gridLayoutStats.setRowExpandRatio(3, 1.0F);
+		this.gridLayoutApp.addComponent(gridLayoutApp_vSpacer, 0, 8, 1, 8);
+		this.gridLayoutApp.setRowExpandRatio(8, 1.0F);
 		this.form.setColumns(4);
 		this.form.setRows(12);
 		this.lblLoginMode.setSizeUndefined();
@@ -593,13 +522,11 @@ public class ApplicationSettingsTabView extends XdevView {
 		this.gridLayoutProfile.setExpandRatio(gridLayoutProfile_spacer, 1.0F);
 		this.gridLayoutApp.setSizeFull();
 		this.tabSheet.addTab(this.gridLayoutApp, "Application", null);
-		this.gridLayoutUsr.setSizeFull();
-		this.tabSheet.addTab(this.gridLayoutUsr, "UserInfo", null);
-		this.gridLayoutStats.setSizeFull();
-		this.tabSheet.addTab(this.gridLayoutStats, "Statistics", null);
 		this.gridLayoutProfile.setSizeFull();
 		this.tabSheet.addTab(this.gridLayoutProfile, "Profile", null);
-		this.tabSheet.setSelectedTab(this.gridLayoutProfile);
+		this.gridLayoutUsr.setSizeFull();
+		this.tabSheet.addTab(this.gridLayoutUsr, "User Claims", null);
+		this.tabSheet.setSelectedTab(this.gridLayoutApp);
 		this.tabSheet.setSizeFull();
 		this.verticalLayout.addComponent(this.tabSheet);
 		this.verticalLayout.setComponentAlignment(this.tabSheet, Alignment.MIDDLE_CENTER);
@@ -609,16 +536,12 @@ public class ApplicationSettingsTabView extends XdevView {
 		this.setSizeFull();
 
 		this.gridLayoutApp.addAttachListener(event -> this.gridLayoutApp_attach(event));
-		this.cmdThemeDark.addClickListener(event -> this.cmdThemeDark_buttonClick(event));
-		this.cmdThemeFb.addClickListener(event -> this.cmdThemeFb_buttonClick(event));
-		this.cmdThemeSeicento.addClickListener(event -> this.cmdThemeSeicento_buttonClick(event));
-		this.gridLayoutUsr.addAttachListener(event -> this.gridLayoutUsr_attach(event));
-		this.gridLayoutStats.addAttachListener(event -> this.gridLayoutStats_attach(event));
 		this.gridLayoutProfile.addAttachListener(event -> this.gridLayoutProfile_attach(event));
 		this.cmdSetPassword.addClickListener(event -> this.cmdSetPassword_buttonClick(event));
 		this.cmdSave.addClickListener(event -> this.cmdSave_buttonClick(event));
 		this.cmdReset2.addClickListener(event -> this.cmdReset2_buttonClick(event));
 		this.cmdApplyTheme.addClickListener(event -> this.cmdApplyTheme_buttonClick(event));
+		this.gridLayoutUsr.addAttachListener(event -> this.gridLayoutUsr_attach(event));
 	} // </generated-code>
 
 	// <generated-code name="variables">
@@ -626,11 +549,11 @@ public class ApplicationSettingsTabView extends XdevView {
 			labelVersion, labelArtifact, label6, lblMemory, label7, lblSession, label8, lblJava, lblLoginMode, label9,
 			lblUsername, lblUsrRoles, lblUsrFullName, lblUsrThemeDesktop, lblUsrThemeMobile, lblUsrLanguage, lblUsrCountry,
 			lblUsrTimeZone, lblCostAccount, lblCustomer, lblUsrValidFrom, lblUsrValidTo, lblUsrState, label10;
-	private XdevButton cmdThemeDark, cmdThemeFb, cmdThemeSeicento, cmdSetPassword, cmdSave, cmdReset2, cmdApplyTheme;
+	private XdevButton cmdSetPassword, cmdSave, cmdReset2, cmdApplyTheme;
 	private XdevComboBox<CostAccount> cmbCostAccount;
 	private VerticalLayout gridLayoutProfile;
 	private XdevTabSheet tabSheet;
-	private XdevGridLayout gridLayoutApp, gridLayoutUsr, gridLayoutStats, form;
+	private XdevGridLayout gridLayoutApp, form, gridLayoutUsr;
 	private XdevHorizontalLayout horizontalLayout, horizontalLayout2;
 	private XdevPopupDateField dateUsrValidFrom, dateUsrValidTo;
 	private XdevComboBox<?> cmbThemeDesktop, cmbThemeMobile, comboBoxState;

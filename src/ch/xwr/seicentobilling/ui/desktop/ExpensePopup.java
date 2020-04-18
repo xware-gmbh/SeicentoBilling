@@ -34,6 +34,7 @@ import com.xdev.ui.entitycomponent.combobox.XdevComboBox;
 
 import ch.xwr.seicentobilling.business.LovState;
 import ch.xwr.seicentobilling.business.RowObjectManager;
+import ch.xwr.seicentobilling.business.Seicento;
 import ch.xwr.seicentobilling.business.helper.SeicentoCrud;
 import ch.xwr.seicentobilling.dal.ExpenseDAO;
 import ch.xwr.seicentobilling.dal.ExpenseTemplateDAO;
@@ -61,6 +62,9 @@ public class ExpensePopup extends XdevView {
 	public ExpensePopup() {
 		super();
 		this.initUI();
+
+		this.setHeight(Seicento.calculateThemeHeight(this.getHeight(),UI.getCurrent().getTheme()));
+		this.horizontalLayoutShortcut.setWidth("2");  //active but not visible
 
 		// State
 		this.comboBoxState.addItems((Object[]) LovState.State.values());
@@ -190,8 +194,8 @@ public class ExpensePopup extends XdevView {
 
 	public static Window getPopupWindow() {
 		final Window win = new Window();
-		win.setWidth("720");
-		win.setHeight("660");
+		//win.setWidth("720");
+		//win.setHeight("660");
 		win.center();
 		win.setModal(true);
 		win.setContent(new ExpensePopup());
@@ -918,7 +922,8 @@ public class ExpensePopup extends XdevView {
 		this.verticalLayout.setWidth(100, Unit.PERCENTAGE);
 		this.verticalLayout.setHeight(-1, Unit.PIXELS);
 		this.setContent(this.verticalLayout);
-		this.setSizeFull();
+		this.setWidth(740, Unit.PIXELS);
+		this.setHeight(660, Unit.PIXELS);
 
 		this.mnuUpload.setCommand(selectedItem -> this.mnuUpload_menuSelected(selectedItem));
 		this.mnuTemplate1.setCommand(selectedItem -> this.mnuTemplate1_menuSelected(selectedItem));

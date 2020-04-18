@@ -42,6 +42,7 @@ import com.xdev.util.ConverterBuilder;
 
 import ch.xwr.seicentobilling.business.LovState;
 import ch.xwr.seicentobilling.business.RowObjectManager;
+import ch.xwr.seicentobilling.business.Seicento;
 import ch.xwr.seicentobilling.business.helper.ProjectLineHelper;
 import ch.xwr.seicentobilling.business.helper.SeicentoCrud;
 import ch.xwr.seicentobilling.dal.PeriodeDAO;
@@ -66,6 +67,9 @@ public class ProjectLinePopup extends XdevView {
 	public ProjectLinePopup() {
 		super();
 		this.initUI();
+
+		this.setHeight(Seicento.calculateThemeHeight(this.getHeight(),UI.getCurrent().getTheme()));
+		this.horizontalLayoutShortcut.setWidth("2");  //active but not visible
 
 		// State
 		this.comboBoxState.addItems((Object[]) LovState.State.values());
@@ -121,8 +125,8 @@ public class ProjectLinePopup extends XdevView {
 
 	public static Window getPopupWindow() {
 		final Window win = new Window();
-		win.setWidth("820");
-		win.setHeight("500");
+		//win.setWidth("820");
+		//win.setHeight("500");
 		win.center();
 		win.setModal(true);
 		win.setContent(new ProjectLinePopup());
@@ -917,7 +921,7 @@ public class ProjectLinePopup extends XdevView {
 		this.form.addComponent(this.comboBoxWorktype, 1, 5);
 		this.lblPrlState.setSizeUndefined();
 		this.form.addComponent(this.lblPrlState, 2, 5);
-		this.comboBoxState.setWidth(100, Unit.PERCENTAGE);
+		this.comboBoxState.setWidth(200, Unit.PIXELS);
 		this.comboBoxState.setHeight(-1, Unit.PIXELS);
 		this.form.addComponent(this.comboBoxState, 3, 5, 4, 5);
 		this.datePrlReportDateTo.setWidth(100, Unit.PIXELS);
@@ -995,7 +999,8 @@ public class ProjectLinePopup extends XdevView {
 		this.verticalLayout.setWidth(100, Unit.PERCENTAGE);
 		this.verticalLayout.setHeight(-1, Unit.PIXELS);
 		this.setContent(this.verticalLayout);
-		this.setSizeFull();
+		this.setWidth(820, Unit.PIXELS);
+		this.setHeight(500, Unit.PIXELS);
 
 		this.mnuStartStop.setCommand(selectedItem -> this.mnuStartStop_menuSelected(selectedItem));
 		this.mnuTemplate1.setCommand(selectedItem -> this.mnuTemplate1_menuSelected(selectedItem));

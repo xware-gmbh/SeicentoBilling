@@ -45,6 +45,8 @@ public class MailDownloadPopup extends XdevView {
 		super();
 		this.initUI();
 
+		this.setHeight(Seicento.calculateThemeHeight(this.getHeight(),UI.getCurrent().getTheme()));
+
 		// get Parameter
 		this.orderBean = (Order) UI.getCurrent().getSession().getAttribute("orderbean");
 
@@ -135,8 +137,8 @@ public class MailDownloadPopup extends XdevView {
 	public static Window getPopupWindow() {
 		final Window win = new Window();
 
-		win.setWidth("530");
-		win.setHeight("270");
+		//win.setWidth("530");
+		//win.setHeight("270");
 		win.center();
 		win.setModal(true);
 		win.setContent(new MailDownloadPopup());
@@ -319,7 +321,8 @@ public class MailDownloadPopup extends XdevView {
 		this.gridLayout.setRowExpandRatio(5, 1.0F);
 		this.gridLayout.setSizeFull();
 		this.setContent(this.gridLayout);
-		this.setSizeFull();
+		this.setWidth(540, Unit.PIXELS);
+		this.setHeight(275, Unit.PIXELS);
 
 		this.comboBoxCst.addValueChangeListener(event -> this.comboBoxCst_valueChange(event));
 		this.cmdStart.addClickListener(event -> this.cmdStart_buttonClick(event));

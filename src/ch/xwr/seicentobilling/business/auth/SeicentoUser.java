@@ -7,6 +7,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.jfree.util.Log;
+
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.xdev.security.authorization.Role;
 import com.xdev.security.authorization.Subject;
@@ -56,18 +58,39 @@ public class SeicentoUser implements Subject, Serializable {
 		} else {
 			if (getAzureUser() != null) {
 				final AppUser bean = new AppUser();
-				bean.setUsername(this.name);
-				bean.setUsrFullName(this.name);
+				bean.setUsername(this.aadUser.getUniqueName());
+				bean.setUsrFullName(this.aadUser.name());
+				bean.setUsrRoles(getAzureRoles());
 				bean.setUsrState(LovState.State.active);
 
 				//auto create user if it does not exist
 				new AppUserDAO().save(bean);
-
+				Log.debug("New AppUser created based on Azure AD: " + bean.getUsername());
 			}
 		}
-
-
 	}
+
+	private String getAzureRoles() {
+		String roles = "";
+		int icount = 0;
+
+		if (this.aadUser.getClaimSet().getClaims() != null) {
+			@SuppressWarnings("unchecked")
+			final List<String> roleNames = (List<String>) this.aadUser.getClaimSet().getClaim("roles");
+			if (roleNames != null) {
+				for (final String role : roleNames) {
+					if (icount == 0) {
+						roles = role;
+					} else {
+						roles = roles + ", " + role;
+					}
+					icount++;
+				}
+			}
+		}
+		return roles;
+	}
+
 	private void initLocalUser() {
 		String role = "";
 		final List<String> ls =  new ArrayList<>();

@@ -5,6 +5,7 @@ import java.util.List;
 import com.vaadin.data.Property;
 import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.event.ShortcutAction;
+import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -13,7 +14,6 @@ import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Window;
 import com.xdev.dal.DAOs;
-import com.xdev.res.ApplicationResource;
 import com.xdev.res.StringResourceUtils;
 import com.xdev.ui.XdevButton;
 import com.xdev.ui.XdevFieldGroup;
@@ -28,6 +28,7 @@ import com.xdev.util.ConverterBuilder;
 import ch.xwr.seicentobilling.business.LovState;
 import ch.xwr.seicentobilling.business.OrderCalculator;
 import ch.xwr.seicentobilling.business.RowObjectManager;
+import ch.xwr.seicentobilling.business.Seicento;
 import ch.xwr.seicentobilling.business.helper.SeicentoCrud;
 import ch.xwr.seicentobilling.dal.CostAccountDAO;
 import ch.xwr.seicentobilling.dal.ItemDAO;
@@ -54,6 +55,8 @@ public class OrderLinePopup extends XdevView {
 	public OrderLinePopup() {
 		super();
 		this.initUI();
+
+		this.setHeight(Seicento.calculateThemeHeight(this.getHeight(),UI.getCurrent().getTheme()));
 
 		// State
 		this.comboBoxState.addItems((Object[]) LovState.State.values());
@@ -104,8 +107,8 @@ public class OrderLinePopup extends XdevView {
 
 	public static Window getPopupWindow() {
 		final Window win = new Window();
-		win.setWidth("720");
-		win.setHeight("540");
+		//win.setWidth("720");
+		//win.setHeight("540");
 		win.center();
 		win.setModal(true);
 		win.setContent(new OrderLinePopup());
@@ -289,6 +292,8 @@ public class OrderLinePopup extends XdevView {
 		this.cmdReset = new XdevButton();
 		this.fieldGroup = new XdevFieldGroup<>(OrderLine.class);
 
+		this.form.setIcon(FontAwesome.BOOK);
+		this.form.setCaption("Auftragszeile erfassen");
 		this.comboBoxState.setTabIndex(12);
 		this.lblOrder.setValue(StringResourceUtils.optLocalizeString("{$lblOrder.value}", this));
 		this.cmbOrder.setTabIndex(1);
@@ -336,12 +341,12 @@ public class OrderLinePopup extends XdevView {
 		this.txtOdlAmountNet.setConverter(ConverterBuilder.stringToDouble().currency().build());
 		this.txtOdlAmountNet.setTabIndex(10);
 		this.lblOdlState.setValue(StringResourceUtils.optLocalizeString("{$lblOdlState.value}", this));
-		this.horizontalLayout.setMargin(new MarginInfo(false));
-		this.cmdSave.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/save1.png"));
+		this.horizontalLayout.setMargin(new MarginInfo(true, false, false, false));
+		this.cmdSave.setIcon(FontAwesome.SAVE);
 		this.cmdSave.setCaption(StringResourceUtils.optLocalizeString("{$cmdSave.caption}", this));
 		this.cmdSave.setTabIndex(13);
 		this.cmdSave.setClickShortcut(ShortcutAction.KeyCode.ENTER);
-		this.cmdReset.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/cancel1.png"));
+		this.cmdReset.setIcon(FontAwesome.UNDO);
 		this.cmdReset.setCaption(StringResourceUtils.optLocalizeString("{$cmdReset.caption}", this));
 		this.cmdReset.setTabIndex(14);
 		this.cmdReset.setClickShortcut(ShortcutAction.KeyCode.ESCAPE);
@@ -364,6 +369,10 @@ public class OrderLinePopup extends XdevView {
 		this.cmdReset.setSizeUndefined();
 		this.horizontalLayout.addComponent(this.cmdReset);
 		this.horizontalLayout.setComponentAlignment(this.cmdReset, Alignment.MIDDLE_CENTER);
+		final CustomComponent horizontalLayout_spacer = new CustomComponent();
+		horizontalLayout_spacer.setSizeFull();
+		this.horizontalLayout.addComponent(horizontalLayout_spacer);
+		this.horizontalLayout.setExpandRatio(horizontalLayout_spacer, 1.0F);
 		this.form.setColumns(4);
 		this.form.setRows(11);
 		this.comboBoxState.setSizeUndefined();
@@ -419,8 +428,9 @@ public class OrderLinePopup extends XdevView {
 		this.form.addComponent(this.txtOdlAmountNet, 1, 7);
 		this.lblOdlState.setSizeUndefined();
 		this.form.addComponent(this.lblOdlState, 0, 8);
-		this.horizontalLayout.setSizeUndefined();
-		this.form.addComponent(this.horizontalLayout, 0, 9, 1, 9);
+		this.horizontalLayout.setWidth(100, Unit.PERCENTAGE);
+		this.horizontalLayout.setHeight(-1, Unit.PIXELS);
+		this.form.addComponent(this.horizontalLayout, 0, 9, 2, 9);
 		this.form.setComponentAlignment(this.horizontalLayout, Alignment.MIDDLE_CENTER);
 		this.form.setColumnExpandRatio(1, 100.0F);
 		this.form.setColumnExpandRatio(3, 100.0F);
@@ -430,7 +440,8 @@ public class OrderLinePopup extends XdevView {
 		this.form.setRowExpandRatio(10, 1.0F);
 		this.form.setSizeFull();
 		this.setContent(this.form);
-		this.setSizeFull();
+		this.setWidth(860, Unit.PIXELS);
+		this.setHeight(600, Unit.PIXELS);
 
 		this.cmbItem.addValueChangeListener(event -> this.cmbItem_valueChange(event));
 		this.cmbVat.addValueChangeListener(event -> this.cmbVat_valueChange(event));

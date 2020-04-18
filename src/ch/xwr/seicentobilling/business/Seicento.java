@@ -142,4 +142,28 @@ public class Seicento {
 		return lm;
 	}
 
+	public static String calculateThemeHeight(float height, String theme) {
+		theme = theme.toLowerCase();
+
+		int x = 0;
+
+		switch (theme) {
+		case "facebook":
+			x = Math.round(height / 5);
+			height = height - x;
+			break;
+
+		case "darksb":
+			x = Math.round(height / 20);
+			height = height + x;
+
+			break;
+
+		default:
+			break;
+		}
+
+		return "" + height;
+	}
+
 }

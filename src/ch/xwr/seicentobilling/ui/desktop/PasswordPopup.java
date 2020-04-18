@@ -22,6 +22,7 @@ import com.xdev.ui.XdevTextArea;
 import com.xdev.ui.XdevVerticalLayout;
 import com.xdev.ui.XdevView;
 
+import ch.xwr.seicentobilling.business.Seicento;
 import ch.xwr.seicentobilling.dal.AppUserDAO;
 import ch.xwr.seicentobilling.entities.AppUser;
 
@@ -41,6 +42,7 @@ public class PasswordPopup extends XdevView {
 		// get Parameter
 		this.user = (AppUser) UI.getCurrent().getSession().getAttribute("appuserbean");
 
+		this.setHeight(Seicento.calculateThemeHeight(this.getHeight(),UI.getCurrent().getTheme()));
 	}
 
 	public static Window getPopupWindow() {
@@ -53,11 +55,6 @@ public class PasswordPopup extends XdevView {
 		win.center();
 		win.setModal(true);
 		win.setContent(new PasswordPopup());
-
-		final String th = UI.getCurrent().getTheme();
-		if (th.equals("Facebook")) {
-			win.setHeight("260");
-		}
 
 		return win;
 	}
@@ -207,7 +204,7 @@ public class PasswordPopup extends XdevView {
 		this.panel.setHeight(-1, Unit.PIXELS);
 		this.setContent(this.panel);
 		this.setWidth(760, Unit.PIXELS);
-		this.setHeight(340, Unit.PIXELS);
+		this.setHeight(320, Unit.PIXELS);
 
 		this.cmdSave.addClickListener(event -> this.cmdSave_buttonClick(event));
 		this.cmdCancel.addClickListener(event -> this.cmdCancel_buttonClick(event));

@@ -23,7 +23,7 @@
 <?import com.xdev.ui.entitycomponent.combobox.XdevComboBox?>
 <?import java.lang.String?>
 <XdevView xmlns:x="http://xml.xdev-software.com/xdevuiml" x:name="ProjectLinePopup">
-    <x:constraints zpos="0" width="100%" height="100%" />
+    <x:constraints width="820px" zpos="0" height="500px" />
     <XdevVerticalLayout x:name="verticalLayout" margin="">
         <x:constraints gridHeight="1" gridx="1" zpos="0" gridy="1" weighty="0.0" weightx="0.0" width="100%" alignment="TOP_LEFT" gridWidth="1" height="-1px" />
         <XdevHorizontalLayout x:name="horizontalLayout3" margin="">
@@ -178,7 +178,7 @@
                     <x:constraints gridx="3" gridy="6" weighty="0.0" weightx="0.0" width="0px" height="-1px" />
                 </XdevLabel>
                 <XdevComboBox x:name="comboBoxState">
-                    <x:constraints gridx="4" gridy="6" weighty="0.0" weightx="0.0" width="100%" gridWidth="2" height="-1px" />
+                    <x:constraints gridx="4" gridy="6" weighty="0.0" weightx="0.0" width="200px" gridWidth="2" height="-1px" />
                     <x:typeArguments>
                         <typeArgument type="?" />
                     </x:typeArguments>
