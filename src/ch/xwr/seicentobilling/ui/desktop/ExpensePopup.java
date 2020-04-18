@@ -360,12 +360,12 @@ public class ExpensePopup extends XdevView {
 
 	/**
 	 * Event handler delegate method for the {@link XdevMenuBar.XdevMenuItem}
-	 * {@link #mnuResetItem}.
+	 * {@link #mnuCancel}.
 	 *
 	 * @see MenuBar.Command#menuSelected(MenuBar.MenuItem)
 	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
 	 */
-	private void mnuResetItem_menuSelected(final MenuBar.MenuItem selectedItem) {
+	private void mnuCancel_menuSelected(final MenuBar.MenuItem selectedItem) {
 		this.fieldGroup.discard();
 		((Window) this.getParent()).close();
 
@@ -636,8 +636,7 @@ public class ExpensePopup extends XdevView {
 		this.mnuTemplate10 = this.mnuDefaults.addItem("Rapporte", null);
 		this.menuText = this.menuOption.addItem("Text...", null);
 		this.mnuSeperator = this.menuOption.addSeparator();
-		this.mnuResetItem = this.menuOption.addItem(StringResourceUtils.optLocalizeString("{$cmdReset.caption}", this),
-				null);
+		this.mnuCancel = this.menuOption.addItem(StringResourceUtils.optLocalizeString("{$cmdReset.caption}", this), null);
 		this.mnuSaveItem = this.menuOption.addItem("Speichern", null);
 		this.label = new XdevLabel();
 		this.label3 = new XdevLabel();
@@ -691,8 +690,8 @@ public class ExpensePopup extends XdevView {
 		this.mnuUpload.setIcon(FontAwesome.UPLOAD);
 		this.mnuDefaults.setIcon(FontAwesome.BOOKMARK);
 		this.menuText.setIcon(FontAwesome.LIST_ALT);
-		this.mnuResetItem.setIcon(null);
-		this.mnuResetItem.setCheckable(true);
+		this.mnuCancel.setIcon(FontAwesome.CLOSE);
+		this.mnuCancel.setCheckable(true);
 		this.mnuSaveItem.setIcon(FontAwesome.SAVE);
 		this.mnuSaveItem.setCheckable(true);
 		this.label.setValue("Spesen erfassen");
@@ -745,7 +744,7 @@ public class ExpensePopup extends XdevView {
 		this.cmdSave.setIcon(FontAwesome.SAVE);
 		this.cmdSave.setCaption(StringResourceUtils.optLocalizeString("{$cmdSave.caption}", this));
 		this.cmdSave.setClickShortcut(ShortcutAction.KeyCode.ENTER);
-		this.cmdReset.setIcon(FontAwesome.UNDO);
+		this.cmdReset.setIcon(FontAwesome.CLOSE);
 		this.cmdReset.setCaption(StringResourceUtils.optLocalizeString("{$cmdReset.caption}", this));
 		this.cmdReset.setClickShortcut(ShortcutAction.KeyCode.ESCAPE);
 		this.label2.setValue("            ");
@@ -937,7 +936,7 @@ public class ExpensePopup extends XdevView {
 		this.mnuTemplate9.setCommand(selectedItem -> this.mnuTemplate9_menuSelected(selectedItem));
 		this.mnuTemplate10.setCommand(selectedItem -> this.mnuTemplate10_menuSelected(selectedItem));
 		this.menuText.setCommand(selectedItem -> this.menuText_menuSelected(selectedItem));
-		this.mnuResetItem.setCommand(selectedItem -> this.mnuResetItem_menuSelected(selectedItem));
+		this.mnuCancel.setCommand(selectedItem -> this.mnuCancel_menuSelected(selectedItem));
 		this.mnuSaveItem.setCommand(selectedItem -> this.mnuSaveItem_menuSelected(selectedItem));
 		this.cmdSave.addClickListener(event -> this.cmdSave_buttonClick(event));
 		this.cmdReset.addClickListener(event -> this.cmdReset_buttonClick(event));
@@ -960,7 +959,7 @@ public class ExpensePopup extends XdevView {
 	private XdevMenuBar menuBar;
 	private XdevMenuItem menuOption, mnuUpload, mnuDefaults, mnuTemplate1, mnuTemplate2, mnuTemplate3, mnuTemplate4,
 			mnuTemplate5, mnuTemplate6, mnuTemplate7, mnuTemplate8, mnuTemplate9, mnuTemplate10, menuText, mnuSeperator,
-			mnuResetItem, mnuSaveItem;
+			mnuCancel, mnuSaveItem;
 	private XdevFieldGroup<Expense> fieldGroup;
 	private XdevGridLayout form;
 	private XdevComboBox<Project> cmbProject;

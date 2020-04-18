@@ -118,12 +118,12 @@ public class OrderLinePopup extends XdevView {
 
 	/**
 	 * Event handler delegate method for the {@link XdevButton}
-	 * {@link #cmdReset}.
+	 * {@link #cmdCancel}.
 	 *
 	 * @see Button.ClickListener#buttonClick(Button.ClickEvent)
 	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
 	 */
-	private void cmdReset_buttonClick(final Button.ClickEvent event) {
+	private void cmdCancel_buttonClick(final Button.ClickEvent event) {
 		UI.getCurrent().getSession().setAttribute(String.class, "cmdCancel");
 		this.fieldGroup.discard();
 		((Window) this.getParent()).close();
@@ -289,7 +289,7 @@ public class OrderLinePopup extends XdevView {
 		this.lblOdlState = new XdevLabel();
 		this.horizontalLayout = new XdevHorizontalLayout();
 		this.cmdSave = new XdevButton();
-		this.cmdReset = new XdevButton();
+		this.cmdCancel = new XdevButton();
 		this.fieldGroup = new XdevFieldGroup<>(OrderLine.class);
 
 		this.form.setIcon(FontAwesome.BOOK);
@@ -346,10 +346,10 @@ public class OrderLinePopup extends XdevView {
 		this.cmdSave.setCaption(StringResourceUtils.optLocalizeString("{$cmdSave.caption}", this));
 		this.cmdSave.setTabIndex(13);
 		this.cmdSave.setClickShortcut(ShortcutAction.KeyCode.ENTER);
-		this.cmdReset.setIcon(FontAwesome.UNDO);
-		this.cmdReset.setCaption(StringResourceUtils.optLocalizeString("{$cmdReset.caption}", this));
-		this.cmdReset.setTabIndex(14);
-		this.cmdReset.setClickShortcut(ShortcutAction.KeyCode.ESCAPE);
+		this.cmdCancel.setIcon(FontAwesome.CLOSE);
+		this.cmdCancel.setCaption(StringResourceUtils.optLocalizeString("{$cmdReset.caption}", this));
+		this.cmdCancel.setTabIndex(14);
+		this.cmdCancel.setClickShortcut(ShortcutAction.KeyCode.ESCAPE);
 		this.fieldGroup.bind(this.cmbOrder, OrderLine_.orderhdr.getName());
 		this.fieldGroup.bind(this.txtOdlNumber, OrderLine_.odlNumber.getName());
 		this.fieldGroup.bind(this.cmbItem, OrderLine_.item.getName());
@@ -366,9 +366,9 @@ public class OrderLinePopup extends XdevView {
 		this.cmdSave.setSizeUndefined();
 		this.horizontalLayout.addComponent(this.cmdSave);
 		this.horizontalLayout.setComponentAlignment(this.cmdSave, Alignment.MIDDLE_CENTER);
-		this.cmdReset.setSizeUndefined();
-		this.horizontalLayout.addComponent(this.cmdReset);
-		this.horizontalLayout.setComponentAlignment(this.cmdReset, Alignment.MIDDLE_CENTER);
+		this.cmdCancel.setSizeUndefined();
+		this.horizontalLayout.addComponent(this.cmdCancel);
+		this.horizontalLayout.setComponentAlignment(this.cmdCancel, Alignment.MIDDLE_CENTER);
 		final CustomComponent horizontalLayout_spacer = new CustomComponent();
 		horizontalLayout_spacer.setSizeFull();
 		this.horizontalLayout.addComponent(horizontalLayout_spacer);
@@ -448,14 +448,14 @@ public class OrderLinePopup extends XdevView {
 		this.txtOdlQuantity.addValueChangeListener(event -> this.txtOdlQuantity_valueChange(event));
 		this.txtOdlPrice.addValueChangeListener(event -> this.txtOdlPrice_valueChange(event));
 		this.cmdSave.addClickListener(event -> this.cmdSave_buttonClick(event));
-		this.cmdReset.addClickListener(event -> this.cmdReset_buttonClick(event));
+		this.cmdCancel.addClickListener(event -> this.cmdCancel_buttonClick(event));
 	} // </generated-code>
 
 	// <generated-code name="variables">
 	private XdevComboBox<Item> cmbItem;
 	private XdevLabel lblOrder, lblOdlNumber, lblItem, lblVat, lblOdlQuantity, lblOdlPrice, lblOdlText, lblCostAccount,
 			lblOdlAmountBrut, lblOdlVatAmount, lblOdlAmountNet, lblOdlState;
-	private XdevButton cmdSave, cmdReset;
+	private XdevButton cmdSave, cmdCancel;
 	private XdevComboBox<CostAccount> cmbCostAccount;
 	private XdevComboBox<Vat> cmbVat;
 	private XdevHorizontalLayout horizontalLayout;

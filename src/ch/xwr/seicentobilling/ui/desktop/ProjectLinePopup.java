@@ -478,12 +478,12 @@ public class ProjectLinePopup extends XdevView {
 
 	/**
 	 * Event handler delegate method for the {@link XdevMenuBar.XdevMenuItem}
-	 * {@link #mnuResetItem}.
+	 * {@link #mnuCancel}.
 	 *
 	 * @see MenuBar.Command#menuSelected(MenuBar.MenuItem)
 	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
 	 */
-	private void mnuResetItem_menuSelected(final MenuBar.MenuItem selectedItem) {
+	private void mnuCancel_menuSelected(final MenuBar.MenuItem selectedItem) {
 		this.fieldGroup.discard();
 		((Window) this.getParent()).close();
 	}
@@ -720,7 +720,7 @@ public class ProjectLinePopup extends XdevView {
 		this.mnuTemplate10 = this.mnuDefaults.addItem("Rapporte", null);
 		this.menuText = this.menuOption.addItem("Text...", null);
 		this.mnuSeperator = this.menuOption.addSeparator();
-		this.mnuResetItem = this.menuOption.addItem("Abbrechen", null);
+		this.mnuCancel = this.menuOption.addItem("Abbrechen", null);
 		this.mnuSaveItem = this.menuOption.addItem("Speichern", null);
 		this.label = new XdevLabel();
 		this.label3 = new XdevLabel();
@@ -770,8 +770,8 @@ public class ProjectLinePopup extends XdevView {
 		this.mnuStartStop.setIcon(FontAwesome.CLOCK_O);
 		this.mnuDefaults.setIcon(FontAwesome.BOOKMARK);
 		this.menuText.setIcon(FontAwesome.LIST_ALT);
-		this.mnuResetItem.setIcon(FontAwesome.UNDO);
-		this.mnuResetItem.setCheckable(true);
+		this.mnuCancel.setIcon(FontAwesome.CLOSE);
+		this.mnuCancel.setCheckable(true);
 		this.mnuSaveItem.setIcon(FontAwesome.SAVE);
 		this.mnuSaveItem.setCheckable(true);
 		this.label.setValue("Rapporte erfassen");
@@ -824,7 +824,7 @@ public class ProjectLinePopup extends XdevView {
 		this.cmdSave.setIcon(FontAwesome.SAVE);
 		this.cmdSave.setCaption(StringResourceUtils.optLocalizeString("{$cmdSave.caption}", this));
 		this.cmdSave.setClickShortcut(ShortcutAction.KeyCode.ENTER);
-		this.cmdCancel.setIcon(FontAwesome.UNDO);
+		this.cmdCancel.setIcon(FontAwesome.CLOSE);
 		this.cmdCancel.setCaption(StringResourceUtils.optLocalizeString("{$cmdCancel.caption}", this));
 		this.cmdCancel.setClickShortcut(ShortcutAction.KeyCode.ESCAPE);
 		this.label2.setValue("            ");
@@ -1014,7 +1014,7 @@ public class ProjectLinePopup extends XdevView {
 		this.mnuTemplate9.setCommand(selectedItem -> this.mnuTemplate9_menuSelected(selectedItem));
 		this.mnuTemplate10.setCommand(selectedItem -> this.mnuTemplate10_menuSelected(selectedItem));
 		this.menuText.setCommand(selectedItem -> this.menuText_menuSelected(selectedItem));
-		this.mnuResetItem.setCommand(selectedItem -> this.mnuResetItem_menuSelected(selectedItem));
+		this.mnuCancel.setCommand(selectedItem -> this.mnuCancel_menuSelected(selectedItem));
 		this.mnuSaveItem.setCommand(selectedItem -> this.mnuSaveItem_menuSelected(selectedItem));
 		this.datePrlReportDateFrom.addValueChangeListener(event -> this.datePrlReportDateFrom_valueChange(event));
 		this.btnSearch.addClickListener(event -> this.btnSearch_buttonClick(event));
@@ -1042,7 +1042,7 @@ public class ProjectLinePopup extends XdevView {
 	private XdevMenuBar menuBar;
 	private XdevMenuItem menuOption, mnuStartStop, mnuSeperator2, mnuDefaults, mnuTemplate1, mnuTemplate2, mnuTemplate3,
 			mnuTemplate4, mnuTemplate5, mnuTemplate6, mnuTemplate7, mnuTemplate8, mnuTemplate9, mnuTemplate10, menuText,
-			mnuSeperator, mnuResetItem, mnuSaveItem;
+			mnuSeperator, mnuCancel, mnuSaveItem;
 	private XdevPanel panel;
 	private XdevGridLayout form;
 	private XdevComboBox<Project> cmbProject;
