@@ -7,8 +7,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.jfree.util.Log;
-
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.xdev.security.authorization.Role;
 import com.xdev.security.authorization.Subject;
@@ -20,6 +18,9 @@ import ch.xwr.seicentobilling.entities.AppUser;
 import ch.xwr.seicentobilling.entities.CostAccount;
 
 public class SeicentoUser implements Subject, Serializable {
+	/** Logger initialized */
+	private static final org.apache.log4j.Logger LOG = org.apache.log4j.Logger.getLogger(SeicentoUser.class);
+
 	private AzureUser aadUser = null;
 	private AppUser dbUser = null;
 	private CostAccount cst = null;
@@ -36,23 +37,24 @@ public class SeicentoUser implements Subject, Serializable {
 
 	public SeicentoUser(final AzureUser aad) {
 		this.aadUser = aad;
-		lookupDbUser();
+		this.name = aad.name();
+		lookupDbUser(aad.getUniqueName());
     }
 
 	public SeicentoUser(final String username) {
 		this.name = username;
 
-		lookupDbUser();
+		lookupDbUser(username);
 		if (getAzureUser() == null) {
 			initLocalUser();
 		}
 
     }
 
-	private void lookupDbUser() {
+	private void lookupDbUser(final String uniquename) {
 		final AppUserDAO dao = new AppUserDAO();
 
-		final List<AppUser> lst = dao.findByName(this.name);
+		final List<AppUser> lst = dao.findByName(uniquename);
 		if (lst != null && lst.size()>0) {
 			this.dbUser = lst.get(0);
 		} else {
@@ -65,7 +67,8 @@ public class SeicentoUser implements Subject, Serializable {
 
 				//auto create user if it does not exist
 				new AppUserDAO().save(bean);
-				Log.debug("New AppUser created based on Azure AD: " + bean.getUsername());
+				this.dbUser = bean;
+				LOG.debug("New AppUser created based on Azure AD: " + bean.getUsername());
 			}
 		}
 	}
