@@ -35,8 +35,9 @@ public class MainView extends XdevView {
 
 		if (sub != null && sub instanceof AzureUser)
 		{
-			this.currentUser = new SeicentoUser();
-			this.currentUser.setAzureUser((AzureUser) sub);
+			//login via azure provides AzureUser first
+			final AzureUser aad = (AzureUser) sub;
+			this.currentUser = new SeicentoUser(aad);
 		} else if (sub != null && sub instanceof SeicentoUser){
 			this.currentUser = (SeicentoUser) sub;
 		}

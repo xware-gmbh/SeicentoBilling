@@ -17,7 +17,6 @@ import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.CloseEvent;
 import com.vaadin.ui.Window.CloseListener;
 import com.xdev.dal.DAOs;
-import com.xdev.res.ApplicationResource;
 import com.xdev.res.StringResourceUtils;
 import com.xdev.ui.XdevButton;
 import com.xdev.ui.XdevCheckBox;
@@ -688,10 +687,9 @@ public class ExpensePopup extends XdevView {
 		this.mnuUpload.setIcon(FontAwesome.UPLOAD);
 		this.mnuDefaults.setIcon(FontAwesome.BOOKMARK);
 		this.menuText.setIcon(FontAwesome.LIST_ALT);
-		this.mnuResetItem
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/cancel1.png"));
+		this.mnuResetItem.setIcon(null);
 		this.mnuResetItem.setCheckable(true);
-		this.mnuSaveItem.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/save1.png"));
+		this.mnuSaveItem.setIcon(FontAwesome.SAVE);
 		this.mnuSaveItem.setCheckable(true);
 		this.label.setValue("Spesen erfassen");
 		this.lblPeriode.setValue(StringResourceUtils.optLocalizeString("{$lblPeriode.value}", this));
@@ -743,7 +741,7 @@ public class ExpensePopup extends XdevView {
 		this.cmdSave.setIcon(FontAwesome.SAVE);
 		this.cmdSave.setCaption(StringResourceUtils.optLocalizeString("{$cmdSave.caption}", this));
 		this.cmdSave.setClickShortcut(ShortcutAction.KeyCode.ENTER);
-		this.cmdReset.setIcon(FontAwesome.CLOSE);
+		this.cmdReset.setIcon(FontAwesome.UNDO);
 		this.cmdReset.setCaption(StringResourceUtils.optLocalizeString("{$cmdReset.caption}", this));
 		this.cmdReset.setClickShortcut(ShortcutAction.KeyCode.ESCAPE);
 		this.label2.setValue("            ");

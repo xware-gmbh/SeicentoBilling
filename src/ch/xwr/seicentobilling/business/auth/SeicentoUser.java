@@ -32,6 +32,11 @@ public class SeicentoUser implements Subject, Serializable {
 		this("unknown");
     }
 
+	public SeicentoUser(final AzureUser aad) {
+		this.aadUser = aad;
+		lookupDbUser();
+    }
+
 	public SeicentoUser(final String username) {
 		this.name = username;
 

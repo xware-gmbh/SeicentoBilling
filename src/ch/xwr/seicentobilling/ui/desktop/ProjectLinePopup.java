@@ -24,7 +24,6 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.CloseEvent;
 import com.vaadin.ui.Window.CloseListener;
-import com.xdev.res.ApplicationResource;
 import com.xdev.res.StringResourceUtils;
 import com.xdev.ui.XdevButton;
 import com.xdev.ui.XdevFieldGroup;
@@ -767,10 +766,9 @@ public class ProjectLinePopup extends XdevView {
 		this.mnuStartStop.setIcon(FontAwesome.CLOCK_O);
 		this.mnuDefaults.setIcon(FontAwesome.BOOKMARK);
 		this.menuText.setIcon(FontAwesome.LIST_ALT);
-		this.mnuResetItem
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/cancel1.png"));
+		this.mnuResetItem.setIcon(FontAwesome.UNDO);
 		this.mnuResetItem.setCheckable(true);
-		this.mnuSaveItem.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/save1.png"));
+		this.mnuSaveItem.setIcon(FontAwesome.SAVE);
 		this.mnuSaveItem.setCheckable(true);
 		this.label.setValue("Rapporte erfassen");
 		this.panel.setTabIndex(0);
@@ -822,7 +820,7 @@ public class ProjectLinePopup extends XdevView {
 		this.cmdSave.setIcon(FontAwesome.SAVE);
 		this.cmdSave.setCaption(StringResourceUtils.optLocalizeString("{$cmdSave.caption}", this));
 		this.cmdSave.setClickShortcut(ShortcutAction.KeyCode.ENTER);
-		this.cmdCancel.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/cancel1.png"));
+		this.cmdCancel.setIcon(FontAwesome.UNDO);
 		this.cmdCancel.setCaption(StringResourceUtils.optLocalizeString("{$cmdCancel.caption}", this));
 		this.cmdCancel.setClickShortcut(ShortcutAction.KeyCode.ESCAPE);
 		this.label2.setValue("            ");

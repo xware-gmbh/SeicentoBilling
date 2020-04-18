@@ -10,7 +10,6 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.CloseEvent;
 import com.vaadin.ui.Window.CloseListener;
-import com.xdev.res.ApplicationResource;
 import com.xdev.res.StringResourceUtils;
 import com.xdev.ui.XdevButton;
 import com.xdev.ui.XdevFieldGroup;
@@ -249,13 +248,11 @@ public class CityTabView extends XdevView {
 		this.verticalLayout.setMargin(new MarginInfo(false));
 		this.horizontalLayout.setSpacing(false);
 		this.horizontalLayout.setMargin(new MarginInfo(false));
-		this.cmdNew.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/new1_16.png"));
+		this.cmdNew.setIcon(FontAwesome.PLUS_CIRCLE);
 		this.cmdNew.setDescription(StringResourceUtils.optLocalizeString("{$cmdNew.description}", this));
-		this.cmdDelete
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/delete3_16.png"));
-		this.cmdReload.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/reload2.png"));
-		this.cmdInfo
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/info_small.jpg"));
+		this.cmdDelete.setIcon(FontAwesome.MINUS_CIRCLE);
+		this.cmdReload.setIcon(FontAwesome.REFRESH);
+		this.cmdInfo.setIcon(FontAwesome.INFO_CIRCLE);
 		this.cmdImport.setIcon(FontAwesome.FILE_EXCEL_O);
 		this.cmdImport.setDescription("Import PLZ csv");
 		this.cmdImport.setEnabled(false);
@@ -288,10 +285,10 @@ public class CityTabView extends XdevView {
 		this.txtCtyZip.setRequired(true);
 		this.lblCtyState.setValue(StringResourceUtils.optLocalizeString("{$lblCtyState.value}", this));
 		this.horizontalLayout2.setMargin(new MarginInfo(false));
-		this.cmdSave.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/save1.png"));
+		this.cmdSave.setIcon(FontAwesome.SAVE);
 		this.cmdSave.setCaption(StringResourceUtils.optLocalizeString("{$cmdSave.caption}", this));
 		this.cmdSave.setTabIndex(9);
-		this.cmdReset.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/cancel1.png"));
+		this.cmdReset.setIcon(FontAwesome.UNDO);
 		this.cmdReset.setCaption(StringResourceUtils.optLocalizeString("{$cmdReset.caption}", this));
 		this.cmdReset.setTabIndex(8);
 		this.fieldGroup.bind(this.txtCtyName, City_.ctyName.getName());

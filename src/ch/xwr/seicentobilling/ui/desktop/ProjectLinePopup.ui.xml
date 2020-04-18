@@ -83,10 +83,10 @@
                     <XdevMenuItem x:name="mnuSeperator" text="Seperator" x:separator="true">
                         <x:constraints top="29px" left="-1px" />
                     </XdevMenuItem>
-                    <XdevMenuItem icon="WebContent/WEB-INF/resources/images/cancel1.png" x:name="mnuResetItem" text="Abbrechen" checkable="true">
+                    <XdevMenuItem icon="FontAwesome.UNDO" x:name="mnuResetItem" text="Abbrechen" checkable="true">
                         <x:event>menuSelected.menuSelected</x:event>
                     </XdevMenuItem>
-                    <XdevMenuItem icon="WebContent/WEB-INF/resources/images/save1.png" x:name="mnuSaveItem" text="Speichern" checkable="true">
+                    <XdevMenuItem icon="FontAwesome.SAVE" x:name="mnuSaveItem" text="Speichern" checkable="true">
                         <x:constraints top="9px" left="-1px" />
                         <x:event>menuSelected.menuSelected</x:event>
                     </XdevMenuItem>
@@ -212,7 +212,7 @@
                 <x:constraints weightx="0.0" width="0px" height="0px" />
                 <x:event>click.buttonClick</x:event>
             </XdevButton>
-            <XdevButton icon="WebContent/WEB-INF/resources/images/cancel1.png" caption="{$cmdCancel.caption}" x:name="cmdCancel" x:shortcut="ESCAPE">
+            <XdevButton icon="FontAwesome.UNDO" caption="{$cmdCancel.caption}" x:name="cmdCancel" x:shortcut="ESCAPE">
                 <x:constraints weightx="0.0" width="0px" height="0px" />
                 <x:event>click.buttonClick</x:event>
             </XdevButton>
