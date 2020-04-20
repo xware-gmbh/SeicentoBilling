@@ -125,18 +125,15 @@
 			</snapshots>
 		</repository>
 		<repository>
-			<id>xwr-visualstudio.com-maven</id>
-			<url>
-				https://xwr.pkgs.visualstudio.com/_packaging/Maven/maven/v1
-			</url>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
-
+		  <id>xwr-visualstudio-com-xwr-maven</id>
+		  <url>https://xwr.pkgs.visualstudio.com/_packaging/Maven/maven/v1</url>
+		  <releases>
+		    <enabled>true</enabled>
+		  </releases>
+		  <snapshots>
+		    <enabled>true</enabled>
+		  </snapshots>
+		</repository>				
 	</repositories>
 	<dependencies>
 		<dependency>
