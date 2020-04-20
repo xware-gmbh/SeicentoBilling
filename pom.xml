@@ -125,7 +125,7 @@
 			</snapshots>
 		</repository>
 		<repository>
-		  <id>xwr-visualstudio-com-xwr-maven</id>
+		  <id>Maven</id>
 		  <url>https://xwr.pkgs.visualstudio.com/_packaging/Maven/maven/v1</url>
 		  <releases>
 		    <enabled>true</enabled>
@@ -133,7 +133,7 @@
 		  <snapshots>
 		    <enabled>true</enabled>
 		  </snapshots>
-		</repository>				
+		</repository>		
 	</repositories>
 	<dependencies>
 		<dependency>
@@ -171,7 +171,7 @@
 		<dependency>
 			<groupId>com.xdev</groupId>
 			<artifactId>xdev-server-aa-openid</artifactId>
-			<version>1.0.3</version>
+			<version>4.0.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.poi</groupId>
