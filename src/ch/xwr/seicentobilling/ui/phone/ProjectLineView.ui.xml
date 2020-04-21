@@ -84,7 +84,7 @@
                     <XdevMenuItem icon="FontAwesome.UNDO" x:name="mnuResetItem" text="Zurücksetzen" checkable="true">
                         <x:event>menuSelected.menuSelected</x:event>
                     </XdevMenuItem>
-                    <XdevMenuItem icon="WebContent/WEB-INF/resources/images/delete3_16.png" x:name="mnuDeleteItem" text="Löschen" checkable="true">
+                    <XdevMenuItem icon="FontAwesome.REMOVE" x:name="mnuDeleteItem" text="Löschen" checkable="true">
                         <x:constraints top="9px" left="-1px" />
                         <x:event>menuSelected.menuSelected</x:event>
                     </XdevMenuItem>
@@ -177,7 +177,7 @@
                 </XdevFieldGroup>
                 <XdevHorizontalLayout x:name="horizontalLayoutAction" margin="t">
                     <x:constraints gridx="1" gridy="9" weighty="0.0" weightx="0.0" width="0px" alignment="TOP_CENTER" gridWidth="2" height="0px" />
-                    <XdevButton icon="WebContent/WEB-INF/resources/images/save1.png" caption="{$cmdSave.caption}" x:name="cmdSave">
+                    <XdevButton icon="FontAwesome.SAVE" caption="{$cmdSave.caption}" x:name="cmdSave">
                         <x:constraints weightx="0.0" width="0px" alignment="MIDDLE_LEFT" height="0px" />
                         <x:event>click.buttonClick</x:event>
                     </XdevButton>

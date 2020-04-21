@@ -15,6 +15,7 @@ import com.xdev.ui.XdevGridLayout;
 import com.xdev.ui.XdevView;
 import com.xdev.ui.navigation.Navigation;
 
+import ch.xwr.seicentobilling.business.LovState;
 import ch.xwr.seicentobilling.business.Seicento;
 import ch.xwr.seicentobilling.business.auth.SeicentoUser;
 
@@ -45,14 +46,16 @@ public class MainView extends XdevView {
 	 */
 	private void gridLayout_attach(final ClientConnector.AttachEvent event) {
 		final Subject sub = VaadinSession.getCurrent().getAttribute(Subject.class);
-		this.currentUser = new SeicentoUser();
 
 		if (sub != null && sub instanceof AzureUser)
 		{
-			this.currentUser.setAzureUser((AzureUser) sub);
+			//login via azure provides AzureUser first
+			final AzureUser aad = (AzureUser) sub;
+			this.currentUser = new SeicentoUser(aad);
 		} else if (sub != null && sub instanceof SeicentoUser){
 			this.currentUser = (SeicentoUser) sub;
 		}
+
 		if (this.currentUser.getAssignedAccount() == null) {
 			this.currentUser.setAssignedAccount(Seicento.getLoggedInCostAccount(this.currentUser.name()));
 		}
@@ -66,6 +69,29 @@ public class MainView extends XdevView {
 			System.out.println("logged in Preview / DevEnv. PhoneUI not available!");
 			Seicento.removeGelfAppender();
 		}
+
+		applyTheme();
+
+	}
+
+	private void applyTheme() {
+		if (this.currentUser.getDbUser() == null) {
+			return;
+		}
+		final LovState.Theme th = this.currentUser.getDbUser().getUsrThemeMobile();
+		if (th == null) {
+			return;
+		}
+		if (th.equals(LovState.Theme.dark)) {
+			this.getUI().setTheme("Darksb");
+		}
+		if (th.equals(LovState.Theme.facebook)) {
+			this.getUI().setTheme("Facebook");
+		}
+		if (th.equals(LovState.Theme.light)) {
+			this.getUI().setTheme("SeicentoBilling");
+		}
+
 	}
 
 	/**

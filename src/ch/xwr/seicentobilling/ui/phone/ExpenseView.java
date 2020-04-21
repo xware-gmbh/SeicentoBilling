@@ -584,8 +584,7 @@ public class ExpenseView extends XdevView {
 		this.menuText.setIcon(FontAwesome.LIST_ALT);
 		this.mnuResetItem.setIcon(FontAwesome.UNDO);
 		this.mnuResetItem.setCheckable(true);
-		this.mnuDeleteItem
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/delete3_16.png"));
+		this.mnuDeleteItem.setIcon(FontAwesome.MINUS_CIRCLE);
 		this.mnuDeleteItem.setCheckable(true);
 		this.label.setStyleName("colored bold");
 		this.label.setValue("Spesen erfassen");
@@ -622,10 +621,10 @@ public class ExpenseView extends XdevView {
 		this.lblExpQuantity.setValue(StringResourceUtils.optLocalizeString("{$lblExpQuantity.value}", this));
 		this.txtExpQuantity.setTabIndex(12);
 		this.horizontalLayout.setMargin(new MarginInfo(false));
-		this.cmdSave.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/save1.png"));
+		this.cmdSave.setIcon(FontAwesome.SAVE);
 		this.cmdSave.setCaption(StringResourceUtils.optLocalizeString("{$cmdSave.caption}", this));
 		this.cmdSave.setTabIndex(14);
-		this.cmdReset.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/cancel1.png"));
+		this.cmdReset.setIcon(FontAwesome.REMOVE);
 		this.cmdReset.setCaption(StringResourceUtils.optLocalizeString("{$cmdReset.caption}", this));
 		this.cmdReset.setTabIndex(13);
 		this.cmdDefault1.setIcon(FontAwesome.BOOKMARK);
