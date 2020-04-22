@@ -85,11 +85,11 @@
             </XdevLabel>
             <XdevHorizontalLayout x:name="horizontalLayout" margin="">
                 <x:constraints gridx="2" gridy="6" weighty="0.0" weightx="0.1" width="100%" alignment="TOP_RIGHT" height="100%" />
-                <XdevButton icon="WebContent/WEB-INF/resources/images/save1.png" caption="{$cmdSave.caption}" x:name="cmdSave">
+                <XdevButton icon="FontAwesome.SAVE" caption="{$cmdSave.caption}" x:name="cmdSave">
                     <x:constraints gridHeight="1" gridx="2" gridy="6" weighty="0.0" weightx="0.0" width="0px" alignment="MIDDLE_LEFT" gridWidth="1" height="0px" />
                     <x:event>click.buttonClick</x:event>
                 </XdevButton>
-                <XdevButton icon="WebContent/WEB-INF/resources/images/cancel1.png" caption="{$cmdCancel.caption}" x:name="cmdCancel">
+                <XdevButton icon="FontAwesome.CLOSE" caption="{$cmdCancel.caption}" x:name="cmdCancel">
                     <x:constraints gridHeight="1" gridx="3" gridy="6" weighty="0.0" weightx="0.0" width="0px" alignment="MIDDLE_LEFT" gridWidth="1" height="0px" />
                     <x:event>click.buttonClick</x:event>
                 </XdevButton>

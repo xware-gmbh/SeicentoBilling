@@ -2,6 +2,7 @@ package ch.xwr.seicentobilling.ui.desktop;
 
 import java.util.List;
 
+import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -9,7 +10,6 @@ import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Window;
 import com.xdev.dal.DAOs;
-import com.xdev.res.ApplicationResource;
 import com.xdev.res.StringResourceUtils;
 import com.xdev.ui.XdevButton;
 import com.xdev.ui.XdevFieldGroup;
@@ -152,9 +152,9 @@ public class RowTextPopup extends XdevView {
 		this.comboBox2.setItemCaptionPropertyId(Language_.lngName.getName());
 		this.label5.setValue(StringResourceUtils.optLocalizeString("{$label5.value}", this));
 		this.horizontalLayout.setMargin(new MarginInfo(false));
-		this.cmdSave.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/save1.png"));
+		this.cmdSave.setIcon(FontAwesome.SAVE);
 		this.cmdSave.setCaption(StringResourceUtils.optLocalizeString("{$cmdSave.caption}", this));
-		this.cmdCancel.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/cancel1.png"));
+		this.cmdCancel.setIcon(FontAwesome.CLOSE);
 		this.cmdCancel.setCaption(StringResourceUtils.optLocalizeString("{$cmdCancel.caption}", this));
 		this.fieldGroup.bind(this.comboBoxObject, RowText_.rowObject.getName());
 		this.fieldGroup.bind(this.textField, RowText_.txtNumber.getName());

@@ -4,6 +4,7 @@ import com.vaadin.data.Property;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.filter.Compare;
 import com.vaadin.event.ItemClickEvent;
+import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.Alignment;
@@ -15,7 +16,6 @@ import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.CloseEvent;
 import com.vaadin.ui.Window.CloseListener;
 import com.xdev.dal.DAOs;
-import com.xdev.res.ApplicationResource;
 import com.xdev.res.StringResourceUtils;
 import com.xdev.ui.XdevButton;
 import com.xdev.ui.XdevFieldGroup;
@@ -561,14 +561,11 @@ public class RowObjectView extends XdevView {
 		this.tabSheet.setStyleName("framed");
 		this.horizontalLayout2.setSpacing(false);
 		this.horizontalLayout2.setMargin(new MarginInfo(false, true, false, false));
-		this.cmdNewText
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/new1_16.png"));
+		this.cmdNewText.setIcon(FontAwesome.PLUS_CIRCLE);
 		this.cmdNewText.setCaption("New");
-		this.cmdDeleteText
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/delete3_16.png"));
+		this.cmdDeleteText.setIcon(FontAwesome.MINUS_CIRCLE);
 		this.cmdDeleteText.setCaption(StringResourceUtils.optLocalizeString("{$cmdDeleteText.caption}", this));
-		this.cmdUpdateText
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/edit1.png"));
+		this.cmdUpdateText.setIcon(FontAwesome.PENCIL);
 		this.cmdUpdateText.setCaption(StringResourceUtils.optLocalizeString("{$cmdUpdateText.caption}", this));
 		this.tableText.setContainerDataSource(RowText.class);
 		this.tableText.setVisibleColumns(RowText_.txtNumber.getName(), RowText_.txtFreetext.getName(),
@@ -580,14 +577,11 @@ public class RowObjectView extends XdevView {
 		this.tableText.setColumnHeader("txtState", "Status");
 		this.actionLayout.setSpacing(false);
 		this.actionLayout.setMargin(new MarginInfo(false, true, false, false));
-		this.cmdNewFile
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/new1_16.png"));
+		this.cmdNewFile.setIcon(FontAwesome.PLUS_CIRCLE);
 		this.cmdNewFile.setCaption(StringResourceUtils.optLocalizeString("{$cmdNewFile.caption}", this));
-		this.cmdDeleteFile
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/delete3_16.png"));
+		this.cmdDeleteFile.setIcon(FontAwesome.MINUS_CIRCLE);
 		this.cmdDeleteFile.setCaption(StringResourceUtils.optLocalizeString("{$cmdDeleteFile.caption}", this));
-		this.cmdUpdateFile
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/edit1.png"));
+		this.cmdUpdateFile.setIcon(FontAwesome.PENCIL);
 		this.cmdUpdateFile.setCaption(StringResourceUtils.optLocalizeString("{$cmdUpdateFile.caption}", this));
 		this.tableRowImage.setContainerDataSource(RowImage.class);
 		this.tableRowImage.addGeneratedColumn("generated", new FunctionUpDownloadRowFile.Generator());
@@ -604,14 +598,11 @@ public class RowObjectView extends XdevView {
 		this.tableRowImage.setColumnHeader("generated", "...");
 		this.actionLayoutParam.setSpacing(false);
 		this.actionLayoutParam.setMargin(new MarginInfo(false, true, false, false));
-		this.cmdNewParam
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/new1_16.png"));
+		this.cmdNewParam.setIcon(FontAwesome.PLUS_CIRCLE);
 		this.cmdNewParam.setCaption(StringResourceUtils.optLocalizeString("{$cmdNewFile.caption}", this));
-		this.cmdDeleteParam
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/delete3_16.png"));
+		this.cmdDeleteParam.setIcon(FontAwesome.MINUS_CIRCLE);
 		this.cmdDeleteParam.setCaption(StringResourceUtils.optLocalizeString("{$cmdDeleteFile.caption}", this));
-		this.cmdUpdateParam
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/edit1.png"));
+		this.cmdUpdateParam.setIcon(FontAwesome.PENCIL);
 		this.cmdUpdateParam.setCaption(StringResourceUtils.optLocalizeString("{$cmdUpdateFile.caption}", this));
 		this.tableRowParam.setColumnReorderingAllowed(true);
 		this.tableRowParam.setColumnCollapsingAllowed(true);

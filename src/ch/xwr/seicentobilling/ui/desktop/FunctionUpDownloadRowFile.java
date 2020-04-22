@@ -7,6 +7,7 @@ import java.io.InputStream;
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.server.FileDownloader;
+import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Resource;
 import com.vaadin.server.StreamResource;
 import com.vaadin.shared.ui.MarginInfo;
@@ -16,7 +17,6 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Table.ColumnGenerator;
-import com.xdev.res.ApplicationResource;
 import com.xdev.ui.XdevButton;
 import com.xdev.ui.XdevHorizontalLayout;
 import com.xdev.ui.entitycomponent.table.XdevTable;
@@ -173,8 +173,7 @@ public class FunctionUpDownloadRowFile extends XdevHorizontalLayout {
 
 		this.setSpacing(false);
 		this.setMargin(new MarginInfo(false));
-		this.btnDownload
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/Download1.png"));
+		this.btnDownload.setIcon(FontAwesome.DOWNLOAD);
 		this.btnDownload.setCaption("Download");
 
 		this.btnDownload.setSizeUndefined();
