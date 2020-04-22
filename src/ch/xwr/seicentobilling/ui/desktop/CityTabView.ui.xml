@@ -67,6 +67,7 @@
                 <x:typeArguments>
                     <typeArgument type="City" />
                 </x:typeArguments>
+                <x:event>valueChange.valueChange</x:event>
             </XdevTable>
         </XdevVerticalLayout>
         <XdevGridLayout x:name="form">

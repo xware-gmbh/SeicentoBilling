@@ -206,7 +206,6 @@
                             </x:typeArguments>
                             <x:data methodName="findAll" />
                             <x:event>valueChange.valueChange</x:event>
-                            <x:event>itemSetChange.containerItemSetChange</x:event>
                         </XdevComboBox>
                         <XdevLabel x:name="lblCountry" value="CH">
                             <x:constraints weightx="0.1" width="0px" alignment="MIDDLE_LEFT" height="0px" />
@@ -528,7 +527,7 @@
                     </XdevVerticalSplitPanel>
                 </XdevGridLayout>
             </XdevTabSheet>
-            <XdevHorizontalLayout x:name="horizontalLayout" margin="">
+            <XdevHorizontalLayout x:name="horizontalLayoutBtn" margin="">
                 <x:constraints gridx="1" gridy="2" weighty="0.0" weightx="0.0" width="0px" alignment="MIDDLE_CENTER" height="0px" />
                 <XdevButton icon="FontAwesome.SAVE" caption="{$cmdSave.caption}" x:name="cmdSave">
                     <x:constraints weightx="0.0" width="0px" alignment="MIDDLE_LEFT" height="0px" />
@@ -541,7 +540,7 @@
                 <XdevLabel x:name="label">
                     <x:constraints weightx="0.0" width="38px" height="0px" />
                 </XdevLabel>
-                <XdevButton icon="FontAwesome.DOWNLOAD" caption="Vcard" x:name="cmdVcard">
+                <XdevButton caption="Vcard erstellen" x:name="cmdVcard">
                     <x:constraints weightx="0.0" width="0px" height="0px" />
                     <x:event>click.buttonClick</x:event>
                 </XdevButton>
