@@ -1,5 +1,7 @@
 package ch.xwr.seicentobilling.ui.desktop;
 
+import javax.persistence.PersistenceException;
+
 import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.Alignment;
@@ -30,6 +32,7 @@ import ch.xwr.seicentobilling.business.ConfirmDialog;
 import ch.xwr.seicentobilling.business.LovState;
 import ch.xwr.seicentobilling.business.RowObjectManager;
 import ch.xwr.seicentobilling.business.Seicento;
+import ch.xwr.seicentobilling.business.helper.SeicentoCrud;
 import ch.xwr.seicentobilling.business.model.generic.FileUploadDto;
 import ch.xwr.seicentobilling.dal.CityDAO;
 import ch.xwr.seicentobilling.entities.City;
@@ -164,22 +167,29 @@ public class CityTabView extends XdevView {
 			}
 
 			private void doDelete() {
-				final City bean = CityTabView.this.table.getSelectedItem().getBean();
-				// Delete Record
-				final RowObjectManager man = new RowObjectManager();
-				man.deleteObject(bean.getCtyId(), bean.getClass().getSimpleName());
-
-				final CityDAO dao = new CityDAO();
-				dao.remove(bean);
-				CityTabView.this.table.getBeanContainerDataSource().refresh();
-
 				try {
-					CityTabView.this.table.select(CityTabView.this.table.getCurrentPageFirstItemId());
-				} catch (final Exception e) {
-					//ignore
-					CityTabView.this.fieldGroup.setItemDataSource(new City());
+					final City bean = CityTabView.this.table.getSelectedItem().getBean();
+					// Delete Record
+					final RowObjectManager man = new RowObjectManager();
+					man.deleteObject(bean.getCtyId(), bean.getClass().getSimpleName());
+
+					final CityDAO dao = new CityDAO();
+					dao.remove(bean);
+					CityTabView.this.table.getBeanContainerDataSource().refresh();
+
+					try {
+						CityTabView.this.table.select(CityTabView.this.table.getCurrentPageFirstItemId());
+					} catch (final Exception e) {
+						//ignore
+						CityTabView.this.fieldGroup.setItemDataSource(new City());
+					}
+					Notification.show("Datensatz löschen", "Datensatz wurde gelöscht!", Notification.Type.TRAY_NOTIFICATION);
+
+				} catch (final PersistenceException cx) {
+					final String msg = SeicentoCrud.getPerExceptionError(cx);
+					Notification.show("Fehler beim Löschen", msg, Notification.Type.ERROR_MESSAGE);
+					cx.printStackTrace();
 				}
-				Notification.show("Datensatz löschen", "Datensatz wurde gelöscht!", Notification.Type.TRAY_NOTIFICATION);
 			}
 
 		});

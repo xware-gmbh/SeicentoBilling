@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+
+<?xdevuiml version="1.0"?>
+<?template BROWSER_XGA?>
+<?import ch.xwr.seicentobilling.business.LovState.AccountType?>
+<?import ch.xwr.seicentobilling.business.LovState.State?>
+<?import ch.xwr.seicentobilling.entities.Customer?>
+<?import com.xdev.ui.XdevButton?>
+<?import com.xdev.ui.XdevHorizontalLayout?>
+<?import com.xdev.ui.XdevPanel?>
+<?import com.xdev.ui.XdevVerticalLayout?>
+<?import com.xdev.ui.XdevView?>
+<?import com.xdev.ui.entitycomponent.table.XdevTable?>
+<?import com.xdev.ui.filter.XdevContainerFilterComponent?>
+<?import java.lang.Integer?>
+<?import java.lang.String?>
+<XdevView xmlns:x="http://xml.xdev-software.com/xdevuiml" x:name="CustomerLookupPopup">
+    <x:constraints width="920px" zpos="0" height="560px" />
+    <XdevPanel icon="FontAwesome.SEARCH" caption="Kontakte suchen" tabIndex="0" x:name="panel">
+        <x:constraints gridHeight="1" gridx="3" zpos="0" gridy="1" weighty="0.0" weightx="0.0" width="100%" alignment="TOP_LEFT" gridWidth="1" height="100%" />
+        <XdevVerticalLayout x:name="verticalLayout">
+            <x:constraints zpos="0" width="100%" height="100%" />
+            <XdevContainerFilterComponent x:searchableProperties="cusCompany,cusName" x:name="containerFilterComponent" x:filterableProperties="cusState,cusAccountManager,cusAccountType,addresses.adrName,city.ctyZip,city.ctyCountry,city.ctyName" x:container="table">
+                <x:constraints weighty="0.0" width="100%" alignment="MIDDLE_LEFT" height="0%" />
+            </XdevContainerFilterComponent>
+            <XdevTable columnReorderingAllowed="true" x:name="table" pageLength="10" columnCollapsingAllowed="true" x:entity="Customer" x:autoQuery="false">
+                <x:entityProperties>
+                    <entry type="String" property="shortname" caption="Name" />
+                    <entry type="String" property="cusAddress" caption="Adresse" />
+                    <entry type="Integer" property="city.ctyZip" caption="PLZ" />
+                    <entry type="String" property="city.ctyName" caption="Ort" />
+                    <entry type="String" property="city.ctyCountry" caption="Land" />
+                    <entry type="int" property="cusNumber" caption="Nummer" />
+                    <entry type="State" property="cusState" caption="Status" collapsed="true" />
+                    <entry type="AccountType" property="cusAccountType" collapsed="true" />
+                </x:entityProperties>
+                <x:constraints weighty="0.1" width="100%" alignment="MIDDLE_LEFT" height="100%" />
+                <x:typeArguments>
+                    <typeArgument type="Customer" />
+                </x:typeArguments>
+                <x:data methodName="findAll" />
+                <x:event>itemClick.itemClick</x:event>
+            </XdevTable>
+            <XdevHorizontalLayout x:name="horizontalLayout" margin="rl">
+                <x:constraints weighty="0.0" width="-1px" height="-1px" />
+                <XdevButton caption="Übernehmen" x:name="btnSelect" x:shortcut="ENTER">
+                    <x:constraints weightx="0.0" width="0px" height="100%" />
+                    <x:event>click.buttonClick</x:event>
+                </XdevButton>
+                <XdevButton caption="Schliessen" x:name="btnCancel" x:shortcut="ESCAPE">
+                    <x:constraints weightx="0.1" width="0px" height="100%" />
+                    <x:event>click.buttonClick</x:event>
+                </XdevButton>
+            </XdevHorizontalLayout>
+        </XdevVerticalLayout>
+    </XdevPanel>
+</XdevView>
+

@@ -101,8 +101,15 @@
             <XdevMenuBar enabled="false" x:name="menuBarRight" visible="false">
                 <x:constraints weightx="0.2" width="100%" alignment="MIDDLE_RIGHT" height="0%" />
                 <XdevMenuItem icon="WebContent/WEB-INF/resources/images/User_black_18.png" x:name="menuItemUser" text="Benutzer">
+                    <XdevMenuItem x:name="menuItemProfile" text="Profil">
+                        <x:constraints top="9px" left="-1px" />
+                        <x:event>menuSelected.menuSelected</x:event>
+                    </XdevMenuItem>
                     <XdevMenuItem x:name="menuItemUsrInfo" text="Info">
                         <x:event>menuSelected.menuSelected</x:event>
+                    </XdevMenuItem>
+                    <XdevMenuItem x:name="mnuSeperator2" text="Seperator" x:separator="true">
+                        <x:constraints top="19px" left="-1px" />
                     </XdevMenuItem>
                     <XdevMenuItem x:name="menuItemLogout" text="Logout">
                         <x:event>menuSelected.menuSelected</x:event>

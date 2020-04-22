@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+
+<?xdevuiml version="1.0"?>
+<?template BROWSER_XGA?>
+<?import ??>
+<?import ch.xwr.seicentobilling.entities.AppUser?>
+<?import ch.xwr.seicentobilling.entities.CostAccount?>
+<?import ch.xwr.seicentobilling.entities.Customer?>
+<?import com.vaadin.ui.VerticalLayout?>
+<?import com.xdev.ui.XdevButton?>
+<?import com.xdev.ui.XdevFieldGroup?>
+<?import com.xdev.ui.XdevGridLayout?>
+<?import com.xdev.ui.XdevHorizontalLayout?>
+<?import com.xdev.ui.XdevLabel?>
+<?import com.xdev.ui.XdevPopupDateField?>
+<?import com.xdev.ui.XdevTabSheet?>
+<?import com.xdev.ui.XdevTextField?>
+<?import com.xdev.ui.XdevVerticalLayout?>
+<?import com.xdev.ui.XdevView?>
+<?import com.xdev.ui.entitycomponent.combobox.XdevComboBox?>
+<?import java.lang.String?>
+<XdevView xmlns:x="http://xml.xdev-software.com/xdevuiml" x:name="ProfileTabView">
+    <x:constraints zpos="0" width="100%" height="100%" />
+    <XdevVerticalLayout x:name="verticalLayout" margin="">
+        <x:constraints width="100%" zpos="0" height="100%" />
+        <XdevTabSheet styleName="framed" x:name="tabSheet" x:selectedTabIndex="0">
+            <x:constraints top="-9px" left="1037px" weighty="0.1" width="100%" height="100%" />
+            <VerticalLayout caption="Benutzer" x:name="gridLayoutProfile">
+                <x:constraints width="100%" height="100%" />
+                <x:event>attach.attach</x:event>
+                <XdevGridLayout x:name="form">
+                    <x:constraints gridHeight="1" gridx="1" gridy="1" weighty="0.0" weightx="0.0" width="0px" alignment="TOP_LEFT" gridWidth="1" height="0px" />
+                    <XdevLabel x:name="lblLoginMode" value="Label">
+                        <x:constraints gridx="1" gridy="1" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+                    </XdevLabel>
+                    <XdevLabel icon="FontAwesome.INFO_CIRCLE" description="Damit Änderungen wirksam werden muss man sich neu Anmelden!" x:name="label9">
+                        <x:constraints gridx="3" gridy="1" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+                    </XdevLabel>
+                    <XdevLabel x:name="lblUsername" value="Login Name">
+                        <x:constraints gridx="1" gridy="2" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+                    </XdevLabel>
+                    <XdevTextField columns="5" x:name="txtUsername">
+                        <x:constraints gridx="2" gridy="2" weighty="0.0" weightx="1.0" width="100%" height="0px" />
+                    </XdevTextField>
+                    <XdevButton icon="FontAwesome.USER_SECRET" caption="Passwort..." description="Passwort für lokalen Benutzer" x:name="cmdSetPassword">
+                        <x:constraints gridx="3" gridy="2" weighty="0.0" weightx="0.0" width="0px" alignment="MIDDLE_CENTER" height="0px" />
+                        <x:event>click.buttonClick</x:event>
+                    </XdevButton>
+                    <XdevLabel x:name="lblUsrRoles" value="Roles">
+                        <x:constraints gridx="1" gridy="3" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+                    </XdevLabel>
+                    <XdevTextField columns="5" x:name="txtUsrRoles">
+                        <x:constraints gridx="2" gridy="3" weighty="0.0" weightx="1.0" width="-1px" height="0px" />
+                    </XdevTextField>
+                    <XdevLabel x:name="lblUsrFullName" value="Name">
+                        <x:constraints gridx="1" gridy="4" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+                    </XdevLabel>
+                    <XdevTextField columns="5" x:name="txtUsrFullName">
+                        <x:constraints gridx="2" gridy="4" weighty="0.0" weightx="1.0" width="100%" height="0px" />
+                    </XdevTextField>
+                    <XdevLabel x:name="lblUsrThemeDesktop" value="Theme Desktop">
+                        <x:constraints gridx="1" gridy="5" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+                    </XdevLabel>
+                    <XdevComboBox x:name="cmbThemeDesktop">
+                        <x:constraints gridx="2" gridy="5" weighty="0.0" weightx="1.0" width="0px" height="0px" />
+                        <x:typeArguments>
+                            <typeArgument type="?" />
+                        </x:typeArguments>
+                    </XdevComboBox>
+                    <XdevLabel x:name="lblUsrThemeMobile" value="Theme Mobile">
+                        <x:constraints gridx="3" gridy="5" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+                    </XdevLabel>
+                    <XdevComboBox x:name="cmbThemeMobile">
+                        <x:constraints gridx="4" gridy="5" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+                        <x:typeArguments>
+                            <typeArgument type="?" />
+                        </x:typeArguments>
+                    </XdevComboBox>
+                    <XdevLabel x:name="lblUsrLanguage" value="Language">
+                        <x:constraints gridx="1" gridy="6" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+                    </XdevLabel>
+                    <XdevTextField columns="5" x:name="txtUsrLanguage">
+                        <x:constraints gridx="2" gridy="6" weighty="0.0" weightx="1.0" width="100%" height="0px" />
+                    </XdevTextField>
+                    <XdevLabel x:name="lblUsrCountry" value="Country">
+                        <x:constraints gridx="3" gridy="6" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+                    </XdevLabel>
+                    <XdevTextField columns="5" x:name="txtUsrCountry">
+                        <x:constraints gridx="4" gridy="6" weighty="0.0" weightx="1.0" width="100%" height="0px" />
+                    </XdevTextField>
+                    <XdevLabel x:name="lblUsrTimeZone" value="TimeZone">
+                        <x:constraints gridx="1" gridy="7" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+                    </XdevLabel>
+                    <XdevTextField columns="5" x:name="txtUsrTimeZone">
+                        <x:constraints gridx="2" gridy="7" weighty="0.0" weightx="1.0" width="100%" height="0px" />
+                    </XdevTextField>
+                    <XdevLabel x:name="lblCostAccount" value="CostAccount">
+                        <x:constraints gridx="1" gridy="8" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+                    </XdevLabel>
+                    <XdevComboBox x:name="cmbCostAccount" x:entity="CostAccount">
+                        <x:constraints gridx="2" gridy="8" weighty="0.0" weightx="1.0" width="100%" height="0px" />
+                        <x:entityProperty>
+                            <entry type="String" property="csaCode" />
+                        </x:entityProperty>
+                        <x:typeArguments>
+                            <typeArgument type="CostAccount" />
+                        </x:typeArguments>
+                        <x:data methodName="findAll" />
+                    </XdevComboBox>
+                    <XdevLabel x:name="lblCustomer" value="Contact">
+                        <x:constraints gridx="1" gridy="9" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+                    </XdevLabel>
+                    <XdevComboBox x:name="cmbCustomer" x:entity="Customer">
+                        <x:constraints gridx="2" gridy="9" weighty="0.0" weightx="1.0" width="100%" height="0px" />
+                        <x:entityProperty>
+                            <entry type="String" property="cusName" />
+                        </x:entityProperty>
+                        <x:typeArguments>
+                            <typeArgument type="Customer" />
+                        </x:typeArguments>
+                        <x:data methodName="findAll" />
+                    </XdevComboBox>
+                    <XdevLabel x:name="lblUsrValidFrom" value="Valid From">
+                        <x:constraints gridx="1" gridy="10" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+                    </XdevLabel>
+                    <XdevPopupDateField x:name="dateUsrValidFrom">
+                        <x:constraints gridx="2" gridy="10" weighty="0.0" weightx="1.0" width="100%" height="0px" />
+                    </XdevPopupDateField>
+                    <XdevLabel x:name="lblUsrValidTo" value="Valid To">
+                        <x:constraints gridx="3" gridy="10" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+                    </XdevLabel>
+                    <XdevPopupDateField x:name="dateUsrValidTo">
+                        <x:constraints gridx="4" gridy="10" weighty="0.0" weightx="1.0" width="100%" height="0px" />
+                    </XdevPopupDateField>
+                    <XdevLabel x:name="lblUsrState" value="Status">
+                        <x:constraints gridx="1" gridy="11" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+                    </XdevLabel>
+                    <XdevComboBox x:name="comboBoxState">
+                        <x:constraints gridx="2" gridy="11" weighty="0.0" weightx="1.0" width="0px" height="0px" />
+                        <x:typeArguments>
+                            <typeArgument type="?" />
+                        </x:typeArguments>
+                    </XdevComboBox>
+                </XdevGridLayout>
+                <XdevHorizontalLayout x:name="horizontalLayout2" margin="l">
+                    <x:constraints gridHeight="1" gridx="1" gridy="12" weighty="0.0" weightx="0.0" width="0px" alignment="TOP_LEFT" gridWidth="1" height="0px" />
+                    <XdevButton icon="FontAwesome.SAVE" caption="Speichern" x:name="cmdSave">
+                        <x:constraints weightx="0.0" width="0px" alignment="MIDDLE_LEFT" height="0px" />
+                        <x:event>click.buttonClick</x:event>
+                    </XdevButton>
+                    <XdevButton icon="FontAwesome.UNDO" caption="Verwerfen" x:name="cmdReset2">
+                        <x:constraints weightx="0.0" width="0px" alignment="MIDDLE_LEFT" height="0px" />
+                        <x:event>click.buttonClick</x:event>
+                    </XdevButton>
+                    <XdevLabel x:name="label10">
+                        <x:constraints weightx="0.0" width="78px" height="0px" />
+                    </XdevLabel>
+                    <XdevButton icon="FontAwesome.DASHBOARD" caption="Theme anwenden" x:name="cmdApplyTheme">
+                        <x:constraints weightx="0.0" width="0px" height="0px" />
+                        <x:event>click.buttonClick</x:event>
+                    </XdevButton>
+                </XdevHorizontalLayout>
+            </VerticalLayout>
+        </XdevTabSheet>
+    </XdevVerticalLayout>
+    <XdevFieldGroup x:name="fieldGroup" x:entityType="AppUser">
+        <x:typeArguments>
+            <typeArgument type="AppUser" />
+        </x:typeArguments>
+        <x:fields>
+            <entry name="txtUsername" property="username" />
+            <entry name="txtUsrRoles" property="usrRoles" />
+            <entry name="txtUsrFullName" property="usrFullName" />
+            <entry name="cmbThemeDesktop" property="usrThemeDesktop" />
+            <entry name="cmbThemeMobile" property="usrThemeMobile" />
+            <entry name="txtUsrLanguage" property="usrLanguage" />
+            <entry name="txtUsrCountry" property="usrCountry" />
+            <entry name="txtUsrTimeZone" property="usrTimeZone" />
+            <entry name="cmbCostAccount" property="costAccount" />
+            <entry name="cmbCustomer" property="customer" />
+            <entry name="dateUsrValidFrom" property="usrValidFrom" />
+            <entry name="dateUsrValidTo" property="usrValidTo" />
+            <entry name="comboBoxState" property="usrState" />
+        </x:fields>
+    </XdevFieldGroup>
+</XdevView>
+
