@@ -10,6 +10,7 @@ import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +23,7 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 
 import ch.xwr.seicentobilling.dal.CompanyDAO;
 import ch.xwr.seicentobilling.dal.EntityDAO;
+import ch.xwr.seicentobilling.dal.PeriodeDAO;
 import ch.xwr.seicentobilling.dal.RowObjectDAO;
 import ch.xwr.seicentobilling.dal.RowParameterDAO;
 import ch.xwr.seicentobilling.entities.Company;
@@ -120,7 +122,7 @@ public class JasperManager {
 		resetParams();
 		if (oBean.getProject() != null && generateSummary) {
 			addParameter("Param_Project", "" + oBean.getProject().getProId());
-			addParameter("BILL_Print", "1");
+			addParameter("BILL_Print", "true");
 		}
 		final String urlProject = getRestPdfUri(ProjectSummary1);
 
@@ -130,7 +132,7 @@ public class JasperManager {
 		if (oBean.getProject() != null && generateWorkReport) {
 			addParameter("Param_Periode", "" + perId); // Periode
 			addParameter("Param_ProjectId", "" + oBean.getProject().getProId());
-			addParameter("REKAP_Print", "0");
+			addParameter("REKAP_Print", "false");
 		}
 		final String urlReport = getRestPdfUri(ProjectReport1);
 
@@ -354,7 +356,7 @@ public class JasperManager {
 		}
 
 		final String fname = tempDir + "/" + prefix + fileExt;
-		return fname;
+		return Paths.get(fname).toFile().toString();
 	}
 
     private boolean getBillReportOutputOptions(final Order obean, final String key)
@@ -406,7 +408,10 @@ public class JasperManager {
     }
 
 	private boolean hasNoReports() {
-		if (getSelectedPeriod().getProjectLines().size() > 0) {
+		final PeriodeDAO dao = new PeriodeDAO();
+		final Periode per = dao.find(getSelectedPeriod().getPerId());
+
+		if (per.getProjectLines().size() > 0) {
 			return true;
 		}
 		// No Reportlines to print
