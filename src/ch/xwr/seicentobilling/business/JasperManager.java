@@ -120,7 +120,7 @@ public class JasperManager {
 		resetParams();
 		if (oBean.getProject() != null && generateSummary) {
 			addParameter("Param_Project", "" + oBean.getProject().getProId());
-			addParameter("BILL_Print", "1");
+			addParameter("BILL_Print", "true");
 		}
 		final String urlProject = getRestPdfUri(ProjectSummary1);
 
@@ -130,7 +130,7 @@ public class JasperManager {
 		if (oBean.getProject() != null && generateWorkReport) {
 			addParameter("Param_Periode", "" + perId); // Periode
 			addParameter("Param_ProjectId", "" + oBean.getProject().getProId());
-			addParameter("REKAP_Print", "0");
+			addParameter("REKAP_Print", "false");
 		}
 		final String urlReport = getRestPdfUri(ProjectReport1);
 
