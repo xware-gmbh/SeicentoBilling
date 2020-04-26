@@ -143,16 +143,22 @@ public class JasperManager {
 			//Workreport
 			if (oBean.getProject() != null && perId > 0 && generateWorkReport) {
 				fileReport = getTempFileName4Zip(oBean, 3);
-				lst.add(new File(fileReport));
 				httpcode = streamToFile(urlReport, fileReport);
-				_logger.debug("PDF Arbeitsrapport erstellt..." + httpcode);
+				_logger.debug("PDF Arbeitsrapport erstellt... Code: " + httpcode);
+
+				if (httpcode == 200) { //ok
+					lst.add(new File(fileReport));
+				}
 			}
 			//ProjectSummary
 			if (oBean.getProject() != null && generateSummary) {
 				fileProject = getTempFileName4Zip(oBean, 1);
-				lst.add(new File(fileProject));
 				httpcode = streamToFile(urlProject, fileProject); // ProjectSummary
-				_logger.debug("PDF Projektsummary erstellt..." + httpcode);
+				_logger.debug("PDF Projektsummary erstellt... Code: " + httpcode);
+
+				if (httpcode == 200) {
+					lst.add(new File(fileProject));
+				}
 			}
 
 			final String mergePdf = mergeOnePdf(lst, oBean);
