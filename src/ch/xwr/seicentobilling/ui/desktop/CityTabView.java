@@ -221,7 +221,7 @@ public class CityTabView extends XdevView {
 			@Override
 			public void windowClose(final CloseEvent e) {
 				final FileUploadDto result = (FileUploadDto) UI.getCurrent().getSession().getAttribute("uploaddto");
-				if (result.isSuccess()) {
+				if (result != null && result.isSuccess()) {
 					CityTabView.this.cmdReload_buttonClick(null);
 				}
 			}
