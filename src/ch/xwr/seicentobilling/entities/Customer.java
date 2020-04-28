@@ -90,7 +90,7 @@ public class Customer implements java.io.Serializable {
 		this.cusId = cusId;
 	}
 
-	@Caption("City")
+	@Caption("Ort")
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "cusctyId", columnDefinition = "bigint")
 	public City getCity() {
@@ -101,7 +101,7 @@ public class Customer implements java.io.Serializable {
 		this.city = city;
 	}
 
-	@Caption("PaymentCondition")
+	@Caption("Zahlungskondition")
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "cuspacId", nullable = false, columnDefinition = "bigint")
 	public PaymentCondition getPaymentCondition() {
@@ -152,7 +152,7 @@ public class Customer implements java.io.Serializable {
 		this.cusCompany = cusCompany;
 	}
 
-	@Caption("CusAddress")
+	@Caption("Adresse")
 	@Column(name = "cusAddress", columnDefinition = "nvarchar")
 	public String getCusAddress() {
 		return this.cusAddress;
@@ -279,7 +279,7 @@ public class Customer implements java.io.Serializable {
 		this.shortname = noname;
 	}
 
-	@Caption("AccountManager")
+	@Caption("Account Manager")
 	@Column(name = "cusAccountManager")
 	public String getCusAccountManager() {
 		return this.cusAccountManager;
@@ -289,7 +289,7 @@ public class Customer implements java.io.Serializable {
 		this.cusAccountManager = noname;
 	}
 
-	@Caption("AccountType")
+	@Caption("Kontakt Typ")
 	@Column(name = "cusAccountType", columnDefinition = "smallint")
 	public LovState.AccountType getCusAccountType() {
 		return this.cusAccountType;

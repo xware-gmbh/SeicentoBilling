@@ -134,7 +134,7 @@ public class Address implements java.io.Serializable {
 		this.adrLine1 = adrLine1;
 	}
 
-	@Caption("Zip")
+	@Caption("PLZ Zusatz")
 	@Column(name = "adrZip", columnDefinition = "nvarchar", length = 50)
 	public String getAdrZip() {
 		return this.adrZip;
@@ -144,7 +144,7 @@ public class Address implements java.io.Serializable {
 		this.adrZip = adrZip;
 	}
 
-	@Caption("City")
+	@Caption("Ort Zusatz")
 	@Column(name = "adrCity", columnDefinition = "nvarchar", length = 50)
 	public String getAdrCity() {
 		return this.adrCity;
@@ -154,7 +154,7 @@ public class Address implements java.io.Serializable {
 		this.adrCity = adrCity;
 	}
 
-	@Caption("Counry")
+	@Caption("Land Zusatz")
 	@Column(name = "adrCountry", columnDefinition = "nvarchar", length = 50)
 	public String getAdrCountry() {
 		return this.adrCountry;
