@@ -162,7 +162,7 @@ public class Customer implements java.io.Serializable {
 		this.cusAddress = cusAddress;
 	}
 
-	@Caption("CusInfo")
+	@Caption("Info")
 	@Lob
 	@Column(name = "cusInfo", columnDefinition = "ntext")
 	public String getCusInfo() {
@@ -173,7 +173,7 @@ public class Customer implements java.io.Serializable {
 		this.cusInfo = cusInfo;
 	}
 
-	@Caption("State")
+	@Caption("Status")
 	@Column(name = "cusState", columnDefinition = "smallint")
 	public LovState.State getCusState() {
 		return this.cusState;
@@ -254,6 +254,7 @@ public class Customer implements java.io.Serializable {
 		this.customerlinks = customerlinks;
 	}
 
+	@Caption("Kurzname")
 	@Column(name = "shortname", insertable = false, updatable = false)
 	@Transient
 	public String getShortname() {
@@ -430,20 +431,20 @@ public class Customer implements java.io.Serializable {
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "customer")
 	public List<AppUser> getUsers() {
-		return users;
+		return this.users;
 	}
 
-	public void setUsers(List<AppUser> users) {
+	public void setUsers(final List<AppUser> users) {
 		this.users = users;
 	}
 
-	public AppUser addUser(AppUser user) {
+	public AppUser addUser(final AppUser user) {
 		getUsers().add(user);
 		user.setCustomer(this);
 		return user;
 	}
 
-	public AppUser removeUser(AppUser user) {
+	public AppUser removeUser(final AppUser user) {
 		getUsers().remove(user);
 		user.setCustomer(null);
 		return user;

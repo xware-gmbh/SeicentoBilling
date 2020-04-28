@@ -184,7 +184,7 @@ public class Address implements java.io.Serializable {
 		this.adrRemark = adrRemark;
 	}
 
-	@Caption("State")
+	@Caption("Status")
 	@Column(name = "adrState", columnDefinition = "smallint")
 	public LovState.State getAdrState() {
 		return this.adrState;
@@ -215,6 +215,7 @@ public class Address implements java.io.Serializable {
 		return project;
 	}
 
+	@Caption("KurzName Zusatz")
 	@Column(name = "SHORTNAME", insertable = false, updatable = false)
 	@Transient
 	public String getShortname() {
@@ -245,6 +246,7 @@ public class Address implements java.io.Serializable {
 		this.shortname = noname;
 	}
 
+	@Caption("Name Zusatz")
 	@Column(name = "adrName", length = 50, columnDefinition = "nvarchar")
 	public String getAdrName() {
 		return this.adrName;

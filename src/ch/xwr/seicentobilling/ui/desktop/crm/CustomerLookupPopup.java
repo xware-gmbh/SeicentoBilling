@@ -149,13 +149,16 @@ public class CustomerLookupPopup extends XdevView {
 		this.table.setColumnCollapsed("cusState", true);
 		this.table.setColumnCollapsed("cusAccountType", true);
 		this.horizontalLayout.setMargin(new MarginInfo(false, true, false, true));
+		this.btnSelect.setIcon(FontAwesome.CHECK);
 		this.btnSelect.setCaption("Übernehmen");
 		this.btnSelect.setClickShortcut(ShortcutAction.KeyCode.ENTER);
+		this.btnCancel.setIcon(FontAwesome.CLOSE);
 		this.btnCancel.setCaption("Schliessen");
 		this.btnCancel.setClickShortcut(ShortcutAction.KeyCode.ESCAPE);
 
 		this.containerFilterComponent.setContainer(this.table.getBeanContainerDataSource(), "cusState", "cusAccountManager",
-				"cusAccountType", "addresses.adrName", "city.ctyZip", "city.ctyCountry", "city.ctyName");
+				"cusAccountType", "addresses.adrName", "city.ctyZip", "city.ctyCountry", "city.ctyName", "shortname",
+				"addresses.adrCity");
 		this.containerFilterComponent.setSearchableProperties("cusCompany", "cusName");
 
 		this.btnSelect.setWidth(-1, Unit.PIXELS);

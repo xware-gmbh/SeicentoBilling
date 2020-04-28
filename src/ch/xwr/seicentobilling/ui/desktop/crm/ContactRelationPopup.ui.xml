@@ -78,11 +78,11 @@
             </XdevFieldGroup>
             <XdevHorizontalLayout x:name="horizontalLayout" margin="tb">
                 <x:constraints gridx="2" gridy="5" weighty="0.0" weightx="0.0" width="0px" height="0px" />
-                <XdevButton icon="WebContent/WEB-INF/resources/images/save1.png" caption="Speichern" x:name="cmdSave" x:shortcut="ENTER">
+                <XdevButton icon="FontAwesome.SAVE" caption="Speichern" x:name="cmdSave" x:shortcut="ENTER">
                     <x:constraints weightx="0.0" width="0px" alignment="MIDDLE_LEFT" height="0px" />
                     <x:event>click.buttonClick</x:event>
                 </XdevButton>
-                <XdevButton icon="WebContent/WEB-INF/resources/images/cancel1.png" caption="Abbrechen" x:name="cmdReset" x:shortcut="ESCAPE">
+                <XdevButton icon="FontAwesome.CLOSE" caption="Abbrechen" x:name="cmdReset" x:shortcut="ESCAPE">
                     <x:constraints weightx="0.0" width="0px" alignment="MIDDLE_LEFT" height="0px" />
                     <x:event>click.buttonClick</x:event>
                 </XdevButton>

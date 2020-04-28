@@ -1,6 +1,7 @@
 package ch.xwr.seicentobilling.ui.desktop.crm;
 
 import com.vaadin.event.ShortcutAction;
+import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -9,7 +10,6 @@ import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Window;
 import com.xdev.dal.DAOs;
-import com.xdev.res.ApplicationResource;
 import com.xdev.ui.XdevButton;
 import com.xdev.ui.XdevFieldGroup;
 import com.xdev.ui.XdevGridLayout;
@@ -162,10 +162,10 @@ public class ContactRelationPopup extends XdevView {
 		this.cmbCustomerTwo.setItemCaptionPropertyId("shortname");
 		this.lblCorTypeTwo.setValue("RelationTwo");
 		this.horizontalLayout.setMargin(new MarginInfo(true, false, true, false));
-		this.cmdSave.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/save1.png"));
+		this.cmdSave.setIcon(FontAwesome.SAVE);
 		this.cmdSave.setCaption("Speichern");
 		this.cmdSave.setClickShortcut(ShortcutAction.KeyCode.ENTER);
-		this.cmdReset.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/cancel1.png"));
+		this.cmdReset.setIcon(FontAwesome.CLOSE);
 		this.cmdReset.setCaption("Abbrechen");
 		this.cmdReset.setClickShortcut(ShortcutAction.KeyCode.ESCAPE);
 		this.fieldGroup.bind(this.cbxRelationOne, ContactRelation_.corTypeOne.getName());
