@@ -622,7 +622,7 @@ public class ExpensePopup extends XdevView {
 		this.horizontalLayout3 = new XdevHorizontalLayout();
 		this.menuBar = new XdevMenuBar();
 		this.menuOption = this.menuBar.addItem("Optionen", null);
-		this.mnuUpload = this.menuOption.addItem("Dokument hochladen...", null);
+		this.mnuUpload = this.menuOption.addItem("Beleg hochladen...", null);
 		this.mnuDefaults = this.menuOption.addItem("Vorlage", null);
 		this.mnuTemplate1 = this.mnuDefaults.addItem("Spesen", null);
 		this.mnuTemplate2 = this.mnuDefaults.addItem("Rapporte", null);
