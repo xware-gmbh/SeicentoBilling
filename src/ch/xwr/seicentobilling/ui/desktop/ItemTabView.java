@@ -319,6 +319,7 @@ public class ItemTabView extends XdevView {
 		this.horizontalSplitPanel.setStyleName("large");
 		this.horizontalSplitPanel.setSplitPosition(50.0F, Unit.PERCENTAGE);
 		this.verticalLayout.setMargin(new MarginInfo(false));
+		this.containerFilterComponent.setPrefixMatchOnly(false);
 		this.actionLayout.setSpacing(false);
 		this.actionLayout.setMargin(new MarginInfo(false));
 		this.cmdNew.setIcon(FontAwesome.PLUS_CIRCLE);

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+
+<?xdevuiml version="1.0"?>
+<?template BROWSER_XGA?>
+<?import com.xdev.ui.XdevButton?>
+<?import com.xdev.ui.XdevGridLayout?>
+<?import com.xdev.ui.XdevHorizontalLayout?>
+<?import com.xdev.ui.XdevLabel?>
+<?import com.xdev.ui.XdevPanel?>
+<?import com.xdev.ui.XdevTextArea?>
+<?import com.xdev.ui.XdevVerticalLayout?>
+<?import com.xdev.ui.XdevView?>
+<XdevView xmlns:x="http://xml.xdev-software.com/xdevuiml" x:name="VcardPopup">
+    <x:constraints width="580px" zpos="0" height="260px" />
+    <XdevPanel icon="FontAwesome.FILE_TEXT_O" caption="Vcard erstellen" tabIndex="0" x:name="panel">
+        <x:constraints zpos="0" weightx="0.0" width="100%" alignment="MIDDLE_CENTER" height="-1px" />
+        <XdevVerticalLayout x:name="verticalLayout" margin="rbl">
+            <x:constraints gridHeight="1" gridx="1" zpos="0" gridy="1" weighty="0.0" weightx="0.1" width="100%" alignment="TOP_LEFT" gridWidth="1" height="-1px" />
+            <XdevHorizontalLayout caption="" x:name="horizontalLayout2" margin="">
+                <x:constraints gridHeight="1" gridx="1" gridy="1" weighty="0.0" weightx="0.0" width="100%" alignment="TOP_LEFT" gridWidth="1" height="-1px" />
+                <XdevTextArea columns="4" x:name="textArea" value="Die Funktion ermöglicht das Erstellen einer elektronischen Visitenkarte (vcard) des aktuellen Kontakts. Die erstellte Datei kann in verschiedenen Programmen (Mobile, Outlook etc.) importiert werden." readOnly="true" rows="3">
+                    <x:constraints weightx="0.9" width="100%" height="0px" />
+                </XdevTextArea>
+            </XdevHorizontalLayout>
+            <XdevHorizontalLayout x:name="horizontalLayoutUpload" margin="">
+                <x:constraints gridHeight="1" gridx="1" gridy="1" weighty="0.2" weightx="0.0" width="100%" alignment="TOP_LEFT" gridWidth="1" height="-1px" />
+                <XdevGridLayout x:name="gridLayout" margin="">
+                    <x:constraints weightx="0.1" width="100%" height="100%" />
+                    <XdevLabel x:name="label3" value="Datei">
+                        <x:constraints gridx="1" gridy="1" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+                    </XdevLabel>
+                    <XdevLabel x:name="lblFileName" value="Label">
+                        <x:constraints gridx="2" gridy="1" weighty="0.0" weightx="0.1" width="0px" height="0px" />
+                    </XdevLabel>
+                </XdevGridLayout>
+            </XdevHorizontalLayout>
+            <XdevHorizontalLayout x:name="horizontalLayout" margin="">
+                <x:constraints weighty="0.1" width="100%" height="-1px" />
+                <XdevButton icon="FontAwesome.FILE_TEXT_O" caption="Vcard erstellen" x:name="cmdCreate" disableOnClick="true">
+                    <x:constraints gridHeight="1" gridx="3" gridy="1" weighty="0.0" weightx="0.0" width="0px" alignment="TOP_LEFT" gridWidth="1" height="0px" />
+                    <x:event>click.buttonClick</x:event>
+                </XdevButton>
+                <XdevButton icon="FontAwesome.DOWNLOAD" caption="Download" enabled="false" x:name="cmdDownload" disableOnClick="true">
+                    <x:constraints gridHeight="1" gridx="3" gridy="2" weighty="0.0" weightx="0.0" width="0px" alignment="TOP_LEFT" gridWidth="1" height="0px" />
+                </XdevButton>
+                <XdevLabel x:name="label2">
+                    <x:constraints weightx="0.0" width="78px" height="0px" />
+                </XdevLabel>
+                <XdevButton icon="FontAwesome.CLOSE" caption="Schliessen" x:name="cmdCancel" x:shortcut="ESCAPE">
+                    <x:constraints weightx="0.0" width="0px" height="0px" />
+                    <x:event>click.buttonClick</x:event>
+                </XdevButton>
+            </XdevHorizontalLayout>
+        </XdevVerticalLayout>
+    </XdevPanel>
+</XdevView>
+

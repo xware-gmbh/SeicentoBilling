@@ -62,7 +62,7 @@ public class CustomerLookupPopup extends XdevView {
 
 		final String[] val1 = new String[] { bean.getCsaCode() };
 		final FilterData[] fd = new FilterData[] {
-				new FilterData("cusAccountManager", new FilterOperator.Contains(), val1) };
+				new FilterData("cusAccountManager", new FilterOperator.Contains(), val1)};
 
 		this.containerFilterComponent.setFilterData(fd);
 
@@ -129,6 +129,7 @@ public class CustomerLookupPopup extends XdevView {
 		this.panel.setIcon(FontAwesome.SEARCH);
 		this.panel.setCaption("Kontakte suchen");
 		this.panel.setTabIndex(0);
+		this.containerFilterComponent.setPrefixMatchOnly(false);
 		this.table.setColumnReorderingAllowed(true);
 		this.table.setPageLength(10);
 		this.table.setColumnCollapsingAllowed(true);
@@ -156,10 +157,10 @@ public class CustomerLookupPopup extends XdevView {
 		this.btnCancel.setCaption("Schliessen");
 		this.btnCancel.setClickShortcut(ShortcutAction.KeyCode.ESCAPE);
 
-		this.containerFilterComponent.setContainer(this.table.getBeanContainerDataSource(), "cusState", "cusAccountManager",
-				"cusAccountType", "addresses.adrName", "city.ctyZip", "city.ctyCountry", "city.ctyName", "shortname",
-				"addresses.adrCity");
-		this.containerFilterComponent.setSearchableProperties("cusCompany", "cusName");
+		this.containerFilterComponent.setContainer(this.table.getBeanContainerDataSource(), "shortname",
+				"cusAccountManager", "cusAccountType", "city.ctyZip", "city.ctyCountry", "city.ctyName",
+				"addresses.adrName", "addresses.adrCity", "cusState");
+		this.containerFilterComponent.setSearchableProperties("cusCompany", "cusName", "city.ctyName");
 
 		this.btnSelect.setWidth(-1, Unit.PIXELS);
 		this.btnSelect.setHeight(100, Unit.PERCENTAGE);

@@ -14,6 +14,8 @@
 <?import com.xdev.ui.XdevHorizontalLayout?>
 <?import com.xdev.ui.XdevLabel?>
 <?import com.xdev.ui.XdevLink?>
+<?import com.xdev.ui.XdevMenuBar?>
+<?import com.xdev.ui.XdevMenuBar.XdevMenuItem?>
 <?import com.xdev.ui.XdevPanel?>
 <?import com.xdev.ui.XdevTextField?>
 <?import com.xdev.ui.XdevVerticalLayout?>
@@ -28,10 +30,14 @@
         <x:constraints gridHeight="1" gridx="1" zpos="0" gridy="1" weighty="0.0" weightx="0.0" width="100%" alignment="TOP_LEFT" gridWidth="1" height="-1px" />
         <XdevHorizontalLayout styleName="dark" x:name="horizontalLayoutTitle" margin="">
             <x:constraints weighty="0.0" width="100%" alignment="TOP_LEFT" height="0px" />
-            <XdevButton icon="FontAwesome.FILE_TEXT" caption="Vcard" x:name="cmdVcard">
-                <x:constraints weightx="0.0" width="0px" alignment="MIDDLE_LEFT" height="0px" />
-                <x:event>click.buttonClick</x:event>
-            </XdevButton>
+            <XdevMenuBar styleName="large large-icons" x:name="menuBarLeftTop">
+                <x:constraints weightx="0.1" width="100%" alignment="MIDDLE_LEFT" height="0%" />
+                <XdevMenuItem icon="FontAwesome.NAVICON" styleName="large-icons" x:name="mnuOption" text="Optionen">
+                    <XdevMenuItem icon="FontAwesome.FILE_TEXT_O" x:name="mnuVcard" text="Vcard...">
+                        <x:event>menuSelected.menuSelected</x:event>
+                    </XdevMenuItem>
+                </XdevMenuItem>
+            </XdevMenuBar>
             <XdevLabel styleName="colored bold" x:name="label" value="Kontakte">
                 <x:constraints weightx="0.1" width="0px" height="0px" />
             </XdevLabel>

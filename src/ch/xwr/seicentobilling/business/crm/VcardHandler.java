@@ -1,7 +1,9 @@
 package ch.xwr.seicentobilling.business.crm;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
@@ -49,6 +51,18 @@ public class VcardHandler {
 
 	public File getFile() {
 		return this.file;
+	}
+
+	public InputStream getInputStream() {
+		InputStream targetStream;
+		try {
+			targetStream = new FileInputStream(getFile());
+			return targetStream;
+		} catch (final FileNotFoundException e) {
+			LOG.error("Cano not create Stream", e);
+		}
+
+		return null;
 	}
 
 	private String getTempFileName(final Customer cus) {
