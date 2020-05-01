@@ -4,6 +4,7 @@ package ch.xwr.seicentobilling.dal;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -73,5 +74,14 @@ public class ProjectLineDAO extends JPADAO<ProjectLine, Long> {
 		final TypedQuery<ProjectLine> query = entityManager.createQuery(criteriaQuery);
 		query.setParameter(daoParameter, dao);
 		return query.getResultList();
+	}
+
+	public int disableTrigger(final boolean disable) {
+		final String template = "ALTER TABLE %s %s TRIGGER %s";
+		final String sql = String.format(template, ProjectLine.class.getSimpleName(), disable?"DISABLE":"ENABLE", "tr_seicento_postSavePLine");
+
+	    final Query nativeQuery = em().createNativeQuery(sql);
+	    final int ires = nativeQuery.executeUpdate();
+	    return ires;
 	}
 }

@@ -651,7 +651,8 @@ public class ProjectTabView extends XdevView {
 		this.table.setVisibleColumns(Project_.proName.getName(), "customer.shortname", Project_.proStartDate.getName(),
 				Project_.proEndDate.getName(), Project_.proExtReference.getName(),
 				NestedProperty.path(Project_.costAccount, CostAccount_.csaName), Project_.costAccount.getName(),
-				Project_.proRate.getName(), Project_.proProjectState.getName(), Project_.proState.getName());
+				Project_.proRate.getName(), Project_.proProjectState.getName(), Project_.proState.getName(),
+				Project_.proHoursEffective.getName(), Project_.proHours.getName());
 		this.table.setColumnHeader("proName", "Name");
 		this.table.setColumnHeader("customer.shortname", "Kunde");
 		this.table.setColumnHeader("proStartDate", "Start");
@@ -670,6 +671,15 @@ public class ProjectTabView extends XdevView {
 		this.table.setColumnHeader("proProjectState", "Projektstatus");
 		this.table.setColumnCollapsed("proProjectState", true);
 		this.table.setColumnHeader("proState", "Status");
+		this.table.setColumnHeader("proHoursEffective", "Stunden Ist");
+		this.table.setColumnAlignment("proHoursEffective", Table.Align.RIGHT);
+		this.table.setConverter("proHoursEffective",
+				ConverterBuilder.stringToDouble().minimumFractionDigits(1).maximumFractionDigits(1).build());
+		this.table.setColumnCollapsed("proHoursEffective", true);
+		this.table.setColumnHeader("proHours", "Stunden Soll");
+		this.table.setColumnAlignment("proHours", Table.Align.RIGHT);
+		this.table.setConverter("proHours", ConverterBuilder.stringToDouble().build());
+		this.table.setColumnCollapsed("proHours", true);
 		this.gridLayoutData.setMargin(new MarginInfo(false));
 		this.tabSheet.setStyleName("framed");
 		this.lblCustomer.setValue(StringResourceUtils.optLocalizeString("{$lblCustomer.value}", this));
@@ -775,8 +785,8 @@ public class ProjectTabView extends XdevView {
 		this.fieldGroup.bind(this.cmbBillingAddress, Project_.address.getName());
 		this.fieldGroup.bind(this.cbxInternal, Project_.internal.getName());
 
-		this.containerFilterComponent.setContainer(this.table.getBeanContainerDataSource(), "proStartDate", "proEndDate",
-				"vat", "customer", "costAccount", "proModel", "proState", "proProjectState");
+		this.containerFilterComponent.setContainer(this.table.getBeanContainerDataSource(), "proName", "costAccount",
+				"customer", "proStartDate", "proEndDate", "vat", "proProjectState", "proModel", "proState");
 		this.containerFilterComponent.setSearchableProperties("proName", "proExtReference", "customer.cusName",
 				"customer.cusCompany", "costAccount.csaCode");
 

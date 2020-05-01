@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -17,6 +18,7 @@ import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.jfree.util.Log;
 
 import ch.xwr.seicentobilling.dal.ProjectDAO;
 import ch.xwr.seicentobilling.dal.ProjectLineDAO;
@@ -24,6 +26,9 @@ import ch.xwr.seicentobilling.entities.Periode;
 import ch.xwr.seicentobilling.entities.Project;
 import ch.xwr.seicentobilling.entities.ProjectLine;
 
+/**
+ * handels (import) Excel with reporting lines
+ */
 public class ExcelHandler {
 	/** Logger initialized */
 	private static final org.apache.log4j.Logger LOG = org.apache.log4j.Logger.getLogger(ExcelHandler.class);
@@ -32,6 +37,7 @@ public class ExcelHandler {
 	protected XSSFWorkbook hssfworkbook = null;
 
 	private List<ProjectLine> PRList = null;
+    private HashMap<Long, ProjectLine> projects = null;
 
 	private int iTotRead = 0;
 	private int iTotSaved = 0;
@@ -74,6 +80,7 @@ public class ExcelHandler {
 			}
 
 		    persistList(periode);
+		    recalcProjects();
 
 		} catch (final FileNotFoundException e) {
 			LOG.error("Excel " + e);
@@ -87,6 +94,19 @@ public class ExcelHandler {
 
 	}
 
+	private void recalcProjects() {
+		LOG.debug("start recalculating hours on relevant projects");
+		if (this.projects == null || this.projects.isEmpty()) {
+			return;
+		}
+
+		final ProjectDAO dao = new ProjectDAO();
+		for (final Long proId : this.projects.keySet()) {
+			dao.calculateEffectiveHours(proId);
+		}
+
+	}
+
 	private void closeFile(final InputStream fs1) {
 
 		try {
@@ -95,7 +115,6 @@ public class ExcelHandler {
 		} catch (final IOException e) {
 			//ignore
 		}
-
 	}
 
 	private void persistList(final Periode periode) throws Exception {
@@ -104,10 +123,14 @@ public class ExcelHandler {
 			return;
 		}
 		LOG.info("Try to save: " + this.PRList.size() + " valid entries from excel!");
+		// Creating HashMap
+        this.projects = new HashMap<>();
+		final ProjectLineDAO dao = new ProjectLineDAO();
+		final RowObjectManager man = new RowObjectManager();
 
 		try {
-			final ProjectLineDAO dao = new ProjectLineDAO();
-			final RowObjectManager man = new RowObjectManager();
+			dao.disableTrigger(true);
+			Log.debug("disabled Trigger on ProjectLine");
 
 			for (final Iterator<ProjectLine> iterator = this.PRList.iterator(); iterator.hasNext();) {
 				final ProjectLine bean = iterator.next();
@@ -120,8 +143,11 @@ public class ExcelHandler {
 				this.iTotSaved++;
 
 				man.updateObject(bean.getPrlId(), bean.getClass().getSimpleName());
-				Thread.sleep(100);  //give DB trigger some time
-				reread(bean);
+				if (!this.projects.containsKey(bean.getProject().getProId())) {
+					this.projects.put(bean.getProject().getProId(), bean);
+				}
+				//Thread.sleep(100);  //give DB trigger some time
+				//reread(bean);
 			}
 			dao.flush();
 		} catch (final PersistenceException cx) {
@@ -133,17 +159,20 @@ public class ExcelHandler {
 				}
 			}
 			LOG.error(msg);
+		} finally {
+			dao.disableTrigger(false);
+			Log.debug("enabled Trigger on ProjectLine");
 		}
 
 	}
 
-	private void reread(final ProjectLine bean) {
-		final ProjectLineDAO dao = new ProjectLineDAO();
-		final ProjectLine rbean = dao.find(bean.getPrlId());
-		if (rbean.getPrlId() != bean.getPrlId()) {
-			LOG.warn("id's are not the same in reread");
-		}
-	}
+//	private void reread(final ProjectLine bean) {
+//		final ProjectLineDAO dao = new ProjectLineDAO();
+//		final ProjectLine rbean = dao.find(bean.getPrlId());
+//		if (rbean.getPrlId() != bean.getPrlId()) {
+//			LOG.warn("id's are not the same in reread");
+//		}
+//	}
 
 	private void checkValidDate(final ProjectLine bean, final Periode periode) throws Exception {
 		// Rapportdatum muss zu Periode passen
@@ -237,7 +266,7 @@ public class ExcelHandler {
 			final Project bean = dao.findEqNameIgnoreCase(project).get(0);
 			return bean;
 		} catch (final Exception e) {
-			throw new Exception ("Projekt nicht gefunden " + project + "!");
+			throw new Exception ("Projekt nicht gefunden '" + project + "'");
 		}
 	}
 

@@ -79,7 +79,7 @@ public class Project implements java.io.Serializable {
 		this.proId = proId;
 	}
 
-	@Caption("CostAccount")
+	@Caption("Kostenstelle")
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "procsaId", columnDefinition = "bigint")
 	public CostAccount getCostAccount() {
@@ -90,7 +90,7 @@ public class Project implements java.io.Serializable {
 		this.costAccount = costAccount;
 	}
 
-	@Caption("Customer")
+	@Caption("Kunde")
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "procusId", nullable = false, columnDefinition = "bigint")
 	public Customer getCustomer() {
@@ -112,7 +112,7 @@ public class Project implements java.io.Serializable {
 		this.project = project;
 	}
 
-	@Caption("Vat")
+	@Caption("Mwst")
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "provatId", columnDefinition = "bigint")
 	public Vat getVat() {
@@ -123,7 +123,7 @@ public class Project implements java.io.Serializable {
 		this.vat = vat;
 	}
 
-	@Caption("ProName")
+	@Caption("Projektname")
 	@Column(name = "proName", unique = true, nullable = false, columnDefinition = "nvarchar")
 	public String getProName() {
 		return this.proName;
@@ -143,7 +143,7 @@ public class Project implements java.io.Serializable {
 		this.proExtReference = proExtReference;
 	}
 
-	@Caption("ProStartDate")
+	@Caption("Projektstart")
 	@Temporal(TemporalType.DATE)
 	@Column(name = "proStartDate", nullable = false, columnDefinition = "date", length = 10)
 	public Date getProStartDate() {
@@ -154,7 +154,7 @@ public class Project implements java.io.Serializable {
 		this.proStartDate = proStartDate;
 	}
 
-	@Caption("ProEndDate")
+	@Caption("Projektende")
 	@Temporal(TemporalType.DATE)
 	@Column(name = "proEndDate", columnDefinition = "date", length = 10)
 	public Date getProEndDate() {
@@ -165,7 +165,7 @@ public class Project implements java.io.Serializable {
 		this.proEndDate = proEndDate;
 	}
 
-	@Caption("ProHours")
+	@Caption("Stundensoll")
 	@Column(name = "proHours", columnDefinition = "int")
 	public Integer getProHours() {
 		if (this.proHours == null) {
@@ -199,7 +199,7 @@ public class Project implements java.io.Serializable {
 		this.proLastBill = proLastBill;
 	}
 
-	@Caption("ProRate")
+	@Caption("Ansatz")
 	@Column(name = "proRate", nullable = false, columnDefinition = "decimal", precision = 6)
 	public double getProRate() {
 		return this.proRate;
@@ -209,7 +209,7 @@ public class Project implements java.io.Serializable {
 		this.proRate = proRate;
 	}
 
-	@Caption("ProModel")
+	@Caption("Modell")
 	@Column(name = "proModel", columnDefinition = "smallint")
 	public LovState.ProModel getProModel() {
 		return this.proModel;
@@ -219,7 +219,7 @@ public class Project implements java.io.Serializable {
 		this.proModel = proModel;
 	}
 
-	@Caption("ProState")
+	@Caption("Status")
 	@Column(name = "proState", columnDefinition = "smallint")
 	public LovState.State getProState() {
 		return this.proState;
@@ -251,7 +251,7 @@ public class Project implements java.io.Serializable {
 		this.proRemark = proRemark;
 	}
 
-	@Caption("ProProjectState")
+	@Caption("Projektampel")
 	@Column(name = "proProjectState", columnDefinition = "smallint")
 	public LovState.ProState getProProjectState() {
 		return this.proProjectState;
@@ -261,7 +261,7 @@ public class Project implements java.io.Serializable {
 		this.proProjectState = proProjectState;
 	}
 
-	@Caption("HoursEffective")
+	@Caption("Stundenist")
 	@Column(name = "proHoursEffective", columnDefinition = "decimal", precision = 18, updatable=false, insertable=false, nullable=false)
 	public Double getProHoursEffective() {
 		if (this.proHoursEffective == null) {
@@ -324,7 +324,7 @@ public class Project implements java.io.Serializable {
 		this.expenses = expenses;
 	}
 
-	@Caption("ContactName")
+	@Caption("Ansprechpartner")
 	@Column(name = "proContact", length = 40, columnDefinition = "nvarchar")
 	public String getProContact() {
 		return this.proContact;
@@ -345,7 +345,7 @@ public class Project implements java.io.Serializable {
 		this.address = address;
 	}
 
-	@Caption("InternalProject")
+	@Caption("Intern")
 	@Column(name = "proInternal", columnDefinition = "bit")
 	public Boolean getInternal() {
 		if (this.internal == null) {
