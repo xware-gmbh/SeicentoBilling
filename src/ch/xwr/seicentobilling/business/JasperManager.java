@@ -14,12 +14,14 @@ import java.nio.file.Paths;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import org.apache.pdfbox.io.MemoryUsageSetting;
 import org.apache.pdfbox.multipdf.PDFMergerUtility;
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.jfree.util.Log;
 
 import ch.xwr.seicentobilling.dal.CompanyDAO;
 import ch.xwr.seicentobilling.dal.EntityDAO;
@@ -28,8 +30,10 @@ import ch.xwr.seicentobilling.dal.RowObjectDAO;
 import ch.xwr.seicentobilling.dal.RowParameterDAO;
 import ch.xwr.seicentobilling.entities.Company;
 import ch.xwr.seicentobilling.entities.Customer;
+import ch.xwr.seicentobilling.entities.Expense;
 import ch.xwr.seicentobilling.entities.Order;
 import ch.xwr.seicentobilling.entities.Periode;
+import ch.xwr.seicentobilling.entities.RowImage;
 import ch.xwr.seicentobilling.entities.RowObject;
 import ch.xwr.seicentobilling.entities.RowParameter;
 
@@ -40,6 +44,7 @@ public class JasperManager {
 	private Periode selectedPeriod = null;
 	private final List<String> keys = new ArrayList<>();
 	private final List<String> values = new ArrayList<>();
+	private List<File> fileList = new ArrayList<>();
 
 	public static String CustomerReport1 = "Seicento_Kunden_Journal";
 	public static String ProjectSummary1 = "Seicento_ProjectSummary";
@@ -101,6 +106,82 @@ public class JasperManager {
 		}
 		return "";
 	}
+
+	public String getExpenseZip(final Periode per) {
+		String zipFile = "";
+		String fileExp = "";
+		final String expname = "Spesen_" + per.getPerName();
+		int httpcode = 0;
+		this.fileList = new ArrayList<>();
+
+		// compute URL for Expense
+		resetParams();
+		addParameter("Param_Periode", "" + per.getPerId());
+		final String resturl = getRestPdfUri(ExpenseReport1);
+
+		try {
+			//Spesen
+			fileExp = getTempFileName4Zip(expname, ".pdf");
+			httpcode = streamToFile(resturl, fileExp);
+			if (httpcode == 200) {
+				this.fileList.add(new File(fileExp));
+			}
+			_logger.debug("PDF erstellt..." + httpcode);
+
+			loopAttachments(per);
+
+			zipFile = getTempFileName4Zip(expname, ".zip");
+			zip(this.fileList, zipFile);
+			return zipFile;
+
+		} catch (final Exception e) {
+			_logger.error("Fehler beim Erstellen von PDF Reports");
+			e.printStackTrace();
+		}
+
+		return "Es ist ein Fehler aufgetreten!";
+	}
+
+	private void loopAttachments(final Periode per) {
+		//get all Attachments of a specific expense Periode and write it to local file system
+		final Periode bean = new PeriodeDAO().find(per.getPerId());
+
+		final Set<Expense> lst = bean.getExpenses();
+		for (final Expense expense : lst) {
+			lookupAttachments(expense);
+		}
+	}
+
+	private void lookupAttachments(final Expense expense) {
+		final RowObjectDAO row = new RowObjectDAO();
+		final RowObject bean = row.getObjectBase(Expense.class.getSimpleName(), expense.getExpId());
+		if (bean != null) {
+			final Set<RowImage> flst = bean.getRowImages();
+			for (final RowImage rowImage : flst) {
+				writeAttachment(rowImage);
+			}
+		}
+	}
+
+	private void writeAttachment(final RowImage rowImage) {
+		final String tempDir = System.getProperty("java.io.tmpdir");
+		final String fname = tempDir + "/Att" + rowImage.getRimId() + "-" + rowImage.getRimName();
+		final File fn = Paths.get(fname).toFile();
+
+		FileOutputStream fos = null;
+		try {
+		    fos = new FileOutputStream(fn);
+		    fos.write(rowImage.getRimImage());
+		    fos.close();
+
+		    this.fileList.add(fn);
+		    Log.debug("Attachment added to list " + fn.getName());
+
+		} catch(final IOException ioe) {
+			_logger.error("Can not write attachment", ioe);
+		}
+	}
+
 
 	public String getBillingZip(final Order oBean) {
 		String fileBill = "";
@@ -337,7 +418,6 @@ public class JasperManager {
 	}
 
 	private String getTempFileName4Zip(final Order bean, final int iflag) {
-		final String tempDir = System.getProperty("java.io.tmpdir");
 		String fileExt = ".pdf";
 
 		String prefix = "Rechnung_" + bean.getOrdNumber();
@@ -354,6 +434,12 @@ public class JasperManager {
 		if (iflag == 4) {
 			prefix = "RechnungLang_" + bean.getProject().getProId();
 		}
+
+		return getTempFileName4Zip(prefix, fileExt);
+	}
+
+	private String getTempFileName4Zip(final String prefix, final String fileExt) {
+		final String tempDir = System.getProperty("java.io.tmpdir");
 
 		final String fname = tempDir + "/" + prefix + fileExt;
 		return Paths.get(fname).toFile().toString();

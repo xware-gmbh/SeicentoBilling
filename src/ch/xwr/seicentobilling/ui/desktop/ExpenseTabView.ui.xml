@@ -59,8 +59,12 @@
                     <x:constraints top="93px" left="-1px" weightx="0.0" width="0px" height="0px" />
                     <x:event>click.buttonClick</x:event>
                 </XdevButton>
+                <XdevButton icon="FontAwesome.FILE_ZIP_O" description="Spesen als ZIP Report" x:name="cmdZipReport">
+                    <x:constraints top="140px" left="-1px" weightx="0.0" width="0px" height="0px" />
+                    <x:event>click.buttonClick</x:event>
+                </XdevButton>
                 <XdevButton icon="FontAwesome.INFO_CIRCLE" description="Objektinfo" x:name="cmdInfo">
-                    <x:constraints weightx="0.0" width="0px" height="0px" />
+                    <x:constraints weighty="0.0" weightx="0.0" width="0px" height="0px" />
                     <x:event>click.buttonClick</x:event>
                 </XdevButton>
             </XdevHorizontalLayout>
