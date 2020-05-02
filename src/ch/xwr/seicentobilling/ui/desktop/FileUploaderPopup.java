@@ -171,7 +171,7 @@ public class FileUploaderPopup extends XdevView  implements Upload.SucceededList
 			final String[] fa = f2.split(",");
 
 			for (int i = 0; i < fa.length; i++) {
-				final String ext = fa[i].toLowerCase();
+				final String ext = fa[i].toLowerCase().trim();
 				if (filename.toLowerCase().endsWith(ext)) {
 					return;
 				}

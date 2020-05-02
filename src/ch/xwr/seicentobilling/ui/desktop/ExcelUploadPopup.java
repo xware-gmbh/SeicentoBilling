@@ -128,7 +128,7 @@ public class ExcelUploadPopup extends XdevView {
 	 */
 	private void cmdUpload_buttonClick(final Button.ClickEvent event) {
 		final FileUploadDto p1 = new FileUploadDto();
-		p1.setFilter("*.xlsx");
+		p1.setFilter("*.xlsx, *.xlsm");
 		p1.setSubject("Import Rapporte Excel Datei");
 		UI.getCurrent().getSession().setAttribute("uploaddto", p1);
 
