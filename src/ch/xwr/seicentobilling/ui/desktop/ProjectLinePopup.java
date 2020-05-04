@@ -193,6 +193,11 @@ public class ProjectLinePopup extends XdevView {
 			return; // not found
 		}
 
+		final Date dar = this.datePrlReportDate.getValue();
+		if (dar != null) {
+			line.setPrlReportDate(dar);
+		}
+
 		line.setPrlHours(tpl.getPrtHours());
 		line.setPrlRate(tpl.getPrtRate());
 		line.setPrlText(tpl.getprtText());
