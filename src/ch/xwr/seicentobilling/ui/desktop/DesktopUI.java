@@ -122,16 +122,17 @@ public class DesktopUI extends XdevUI {
 	}
 
 	public void loggedIn(final boolean lgin, final SeicentoUser user) {
-		this.currentUser = user;
 
 		if (lgin) {
+			this.currentUser = user;
 			LOG.info("User logged in " + this.currentUser.name());
 			this.menuItemUser.setCaption(this.currentUser.name());
 			setLocale();
 		} else {
 			//getSession().close();   //leads to Session expired
-			LOG.info("User logged out");
+			LOG.info("User logged out " + this.currentUser.name());
 			this.menuItemUser.setCaption("");
+			this.currentUser = null;
 		}
 
 		enableMenu(lgin);
