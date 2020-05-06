@@ -365,12 +365,11 @@ public class AttachmentPopup extends XdevView {
 		this.horizontalLayout.setWidth(100, Unit.PERCENTAGE);
 		this.horizontalLayout.setHeight(-1, Unit.PIXELS);
 		this.verticalLayout.addComponent(this.horizontalLayout);
-		this.verticalLayout.setComponentAlignment(this.horizontalLayout, Alignment.BOTTOM_LEFT);
 		this.verticalLayout.setExpandRatio(this.horizontalLayout, 10.0F);
 		this.verticalLayout.setSizeFull();
 		this.setContent(this.verticalLayout);
 		this.setWidth(700, Unit.PIXELS);
-		this.setHeight(600, Unit.PIXELS);
+		this.setHeight(590, Unit.PIXELS);
 
 		this.table.addItemClickListener(event -> this.table_itemClick(event));
 		this.cmdCloseImage.addClickListener(event -> this.cmdCloseImage_buttonClick(event));

@@ -32,7 +32,7 @@
             <XdevMenuBar styleName="large large-icons" x:name="menuBarLeftTop">
                 <x:constraints weightx="0.1" width="100%" alignment="MIDDLE_LEFT" height="0%" />
                 <XdevMenuItem icon="FontAwesome.NAVICON" styleName="large-icons" x:name="mnuOption" text="Optionen">
-                    <XdevMenuItem icon="FontAwesome.UPLOAD" x:name="mnuUpload" text="Dokument hochladen...">
+                    <XdevMenuItem icon="FontAwesome.UPLOAD" x:name="mnuUpload" text="Belege verwalten...">
                         <x:event>menuSelected.menuSelected</x:event>
                     </XdevMenuItem>
                     <XdevMenuItem x:name="mnuSeperator2" text="Seperator" x:separator="true">

@@ -526,7 +526,7 @@ public class ExpenseView extends XdevView {
 		this.horizontalLayoutTitle = new XdevHorizontalLayout();
 		this.menuBarLeftTop = new XdevMenuBar();
 		this.mnuOption = this.menuBarLeftTop.addItem("Optionen", null);
-		this.mnuUpload = this.mnuOption.addItem("Dokument hochladen...", null);
+		this.mnuUpload = this.mnuOption.addItem("Belege verwalten...", null);
 		this.mnuSeperator2 = this.mnuOption.addSeparator();
 		this.mnuDefaults = this.mnuOption.addItem("Vorlage", null);
 		this.mnuTemplate1 = this.mnuDefaults.addItem("Spesen", null);

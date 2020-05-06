@@ -15,7 +15,7 @@
 <?import com.xdev.ui.entitycomponent.table.XdevTable?>
 <?import java.lang.String?>
 <XdevView xmlns:x="http://xml.xdev-software.com/xdevuiml" x:name="AttachmentPopup">
-    <x:constraints width="700px" zpos="0" height="600px" />
+    <x:constraints width="700px" zpos="0" height="590px" />
     <XdevVerticalLayout x:name="verticalLayout" margin="">
         <x:constraints zpos="0" width="100%" height="100%" />
         <XdevTable caption="Attachments" x:name="table" x:entity="RowImage" icon="FontAwesome.FILE_PICTURE_O" x:autoQuery="false">
@@ -58,7 +58,7 @@
             </XdevVerticalLayout>
         </XdevHorizontalLayout>
         <XdevHorizontalLayout x:name="horizontalLayout">
-            <x:constraints weighty="0.1" width="100%" alignment="BOTTOM_LEFT" height="-1px" />
+            <x:constraints weighty="0.1" width="100%" alignment="TOP_LEFT" height="-1px" />
             <XdevButton icon="FontAwesome.CHECK" caption="Schliessen" x:name="cmdClose" x:shortcut="ESCAPE">
                 <x:constraints weightx="0.0" width="0px" height="0px" />
                 <x:event>click.buttonClick</x:event>
