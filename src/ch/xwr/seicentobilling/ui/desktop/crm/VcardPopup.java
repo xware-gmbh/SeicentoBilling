@@ -83,7 +83,7 @@ public class VcardPopup extends XdevView {
 	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
 	 */
 	private void cmdCreate_buttonClick(final Button.ClickEvent event) {
-		this.vcard  = new VcardHandler(this.bean);
+		this.vcard  = new VcardHandler(this.bean, ".vcf");
 		this.vcard.generateVcard();
 		final Resource res = getInputStream(this.vcard.getFile());
 
@@ -155,14 +155,14 @@ public class VcardPopup extends XdevView {
 		this.textArea.setValue(
 				"Die Funktion ermöglicht das Erstellen einer elektronischen Visitenkarte (vcard) des aktuellen Kontakts. Die erstellte Datei kann in verschiedenen Programmen (Mobile, Outlook etc.) importiert werden.");
 		this.textArea.setReadOnly(true);
-		this.textArea.setRows(3);
+		this.textArea.setRows(4);
 		this.horizontalLayoutUpload.setMargin(new MarginInfo(false));
 		this.gridLayout.setMargin(new MarginInfo(false));
 		this.label3.setValue("Datei");
 		this.lblFileName.setValue("Label");
 		this.horizontalLayout.setMargin(new MarginInfo(false));
 		this.cmdCreate.setIcon(FontAwesome.FILE_TEXT_O);
-		this.cmdCreate.setCaption("Vcard erstellen");
+		this.cmdCreate.setCaption("Erstellen");
 		this.cmdCreate.setDisableOnClick(true);
 		this.cmdDownload.setIcon(FontAwesome.DOWNLOAD);
 		this.cmdDownload.setCaption("Download");
@@ -196,7 +196,7 @@ public class VcardPopup extends XdevView {
 		this.horizontalLayout.addComponent(this.cmdCreate);
 		this.cmdDownload.setSizeUndefined();
 		this.horizontalLayout.addComponent(this.cmdDownload);
-		this.label2.setWidth(78, Unit.PIXELS);
+		this.label2.setWidth(20, Unit.PIXELS);
 		this.label2.setHeight(-1, Unit.PIXELS);
 		this.horizontalLayout.addComponent(this.label2);
 		this.horizontalLayout.setComponentAlignment(this.label2, Alignment.MIDDLE_CENTER);
@@ -225,8 +225,8 @@ public class VcardPopup extends XdevView {
 		this.panel.setWidth(100, Unit.PERCENTAGE);
 		this.panel.setHeight(-1, Unit.PIXELS);
 		this.setContent(this.panel);
-		this.setWidth(580, Unit.PIXELS);
-		this.setHeight(260, Unit.PIXELS);
+		this.setWidth(480, Unit.PIXELS);
+		this.setHeight(280, Unit.PIXELS);
 
 		this.cmdCreate.addClickListener(event -> this.cmdCreate_buttonClick(event));
 		this.cmdCancel.addClickListener(event -> this.cmdCancel_buttonClick(event));

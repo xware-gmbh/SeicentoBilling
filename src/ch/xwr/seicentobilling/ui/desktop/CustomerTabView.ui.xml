@@ -244,7 +244,7 @@
                     <XdevLabel x:name="lblPaymentCondition" value="{$lblPaymentCondition.value}">
                         <x:constraints gridx="1" gridy="3" weighty="0.0" weightx="0.0" width="0px" height="0px" />
                     </XdevLabel>
-                    <XdevComboBox required="true" itemCaptionFromAnnotation="false" x:name="cmbPaymentCondition" x:entity="PaymentCondition">
+                    <XdevComboBox required="true" itemCaptionFromAnnotation="false" x:name="cmbPaymentCondition" x:entity="PaymentCondition" x:autoQuery="false">
                         <x:constraints gridx="2" gridy="3" weighty="0.0" weightx="1.0" width="100%" height="0px" />
                         <x:entityProperty>
                             <entry type="String" property="pacName" />
@@ -252,7 +252,7 @@
                         <x:typeArguments>
                             <typeArgument type="PaymentCondition" />
                         </x:typeArguments>
-                        <x:data methodName="findAll" />
+                        <x:data methodName="findAllActive" />
                     </XdevComboBox>
                     <XdevLabel x:name="lblBillingTarget" value="Rechnungstyp">
                         <x:constraints gridx="1" gridy="4" top="42px" left="-1px" weighty="0.0" weightx="0.0" width="0px" height="0px" />

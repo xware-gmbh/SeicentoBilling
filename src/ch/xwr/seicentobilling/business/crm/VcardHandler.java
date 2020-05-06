@@ -21,8 +21,12 @@ public class VcardHandler {
 	private PrintWriter vcard = null;
 	private Customer cus = null;
 	private File file = null;
+	private String fextension = ".vcard";
 
-	public VcardHandler(final Customer cus) {
+	public VcardHandler(final Customer cus, final String extension) {
+		if (extension != null) {
+			this.fextension = extension;
+		}
 		this.cus = cus;
 		this.file = new File(getTempFileName(cus));
 	}
@@ -67,11 +71,10 @@ public class VcardHandler {
 
 	private String getTempFileName(final Customer cus) {
 		final String tempDir = System.getProperty("java.io.tmpdir");
-		final String fileExt = ".vcard";
 
 		final String prefix = cus.getShortname() + "_" + cus.getCusId();
 
-		final String fname = tempDir + "/" + prefix + fileExt;
+		final String fname = tempDir + "/" + prefix + this.fextension;
 		return fname;
 	}
 

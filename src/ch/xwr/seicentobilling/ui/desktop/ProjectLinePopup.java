@@ -835,7 +835,6 @@ public class ProjectLinePopup extends XdevView {
 		this.label2.setValue("            ");
 		this.cmdStartStop.setIcon(FontAwesome.CLOCK_O);
 		this.cmdStartStop.setCaption("Start/Stop");
-		this.cmdStartStop.setClickShortcut(ShortcutAction.KeyCode.ESCAPE);
 		this.cmdDefault1.setIcon(FontAwesome.BOOKMARK);
 		this.cmdDefault1.setCaption("Def 1");
 		this.cmdDefault1.setClickShortcut(ShortcutAction.KeyCode.NUM1, ShortcutAction.ModifierKey.CTRL);

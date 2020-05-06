@@ -1046,7 +1046,7 @@ public class OrderTabView extends XdevView {
 		this.cmbPaymentCondition.setRequired(true);
 		this.cmbPaymentCondition.setItemCaptionFromAnnotation(false);
 		this.cmbPaymentCondition.setContainerDataSource(PaymentCondition.class,
-				DAOs.get(PaymentConditionDAO.class).findAll());
+				DAOs.get(PaymentConditionDAO.class).findAllActive());
 		this.cmbPaymentCondition.setItemCaptionPropertyId(PaymentCondition_.pacName.getName());
 		this.lblOrdAmountBrut.setValue(StringResourceUtils.optLocalizeString("{$lblOrdAmountBrut.value}", this));
 		this.txtOrdAmountBrut.setConverter(ConverterBuilder.stringToDouble().currency().build());

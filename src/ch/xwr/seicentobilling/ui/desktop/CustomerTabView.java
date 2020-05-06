@@ -1464,7 +1464,7 @@ public class CustomerTabView extends XdevView {
 		this.cmbPaymentCondition.setRequired(true);
 		this.cmbPaymentCondition.setItemCaptionFromAnnotation(false);
 		this.cmbPaymentCondition.setContainerDataSource(PaymentCondition.class,
-				DAOs.get(PaymentConditionDAO.class).findAll());
+				DAOs.get(PaymentConditionDAO.class).findAllActive());
 		this.cmbPaymentCondition.setItemCaptionPropertyId(PaymentCondition_.pacName.getName());
 		this.lblBillingTarget.setValue("Rechnungstyp");
 		this.cbxAccountBillingType.setItemCaptionFromAnnotation(false);

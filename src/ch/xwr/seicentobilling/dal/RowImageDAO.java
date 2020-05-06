@@ -48,4 +48,9 @@ public class RowImageDAO extends JPADAO<RowImage, Long> {
 		query.setParameter(objParameter, obj);
 		return query.getResultList();
 	}
+
+	public EntityManager getEntityManager() {
+		return em();
+	}
+
 }

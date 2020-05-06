@@ -51,7 +51,7 @@
                 <x:constraints weightx="0.0" width="0px" height="0px" />
                 <x:event>click.buttonClick</x:event>
             </XdevButton>
-            <XdevUpload x:name="upload" immediate="true">
+            <XdevUpload buttonCaption="Neu..." x:name="upload" immediate="true">
                 <x:constraints weightx="0.0" width="0px" height="0px" />
             </XdevUpload>
         </XdevHorizontalLayout>

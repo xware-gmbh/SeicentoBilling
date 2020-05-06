@@ -1,11 +1,16 @@
 package ch.xwr.seicentobilling.ui.phone;
 
+import java.util.List;
+
+import javax.persistence.EntityManager;
+
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CustomComponent;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Upload;
 import com.vaadin.ui.Upload.SucceededEvent;
@@ -29,8 +34,12 @@ import ch.xwr.seicentobilling.entities.RowImage_;
 import ch.xwr.seicentobilling.entities.RowObject;
 
 public class AttachmentPopup extends XdevView {
+	/** Logger initialized */
+	private static final org.apache.log4j.Logger _logger = org.apache.log4j.Logger.getLogger(AttachmentPopup.class);
+
 	@NavigationParameter
 	private final RowObject rowobj;
+	private RowImageDAO dao = null;
 
 	/**
 	 *
@@ -39,6 +48,7 @@ public class AttachmentPopup extends XdevView {
 		super();
 		this.initUI();
 
+		this.dao = new RowImageDAO();
 		this.rowobj = (RowObject) UI.getCurrent().getSession().getAttribute("RowObject");
 		loadTableRowImage();
 
@@ -70,13 +80,33 @@ public class AttachmentPopup extends XdevView {
 		RowImage bean = null;
 
 		if (this.rowobj != null && this.rowobj.getObjId() > 0) {
+			final int nextNbr = getNextRimNumber();
+
 			bean = new RowImage();
 			bean.setRimState(LovState.State.active);
 			bean.setRowObject(this.rowobj);
-			bean.setRimNumber(850);
+			bean.setRimNumber(nextNbr);
 			bean.setRimType((short) 2);
 		}
 		return bean;
+	}
+
+	private int getNextRimNumber() {
+	    final List<RowImage> lst = this.dao.findByObject(this.rowobj);
+	    if (lst == null || lst.isEmpty()) {
+	    	return 850;
+	    }
+
+	    int inbr = 0;
+	    for (final RowImage rowImage : lst) {
+			if (rowImage.getRimNumber() > inbr) {
+				inbr = rowImage.getRimNumber();
+			}
+		}
+	    if (inbr < 850) {
+	    	return 850;
+	    }
+		return inbr + 10;
 	}
 
 	private void setupUploader(final RowImage bean) {
@@ -95,9 +125,17 @@ public class AttachmentPopup extends XdevView {
 
 	        	    rec.uploadSucceeded(event);
 
-	        	    final RowImage bean = rec.getBean();
-	        	    final RowImageDAO dao = new RowImageDAO();
-	        	    dao.save(bean);
+	        		_logger.debug("Session State: " + getSession().getState().name());
+	        		final EntityManager em = AttachmentPopup.this.dao.getEntityManager();
+	        		if (em.isOpen()) {
+		        	    final RowImage bean = rec.getBean();
+		        	    AttachmentPopup.this.dao.save(bean);
+	        		} else {
+	        			_logger.error("DB Session (EntityManager) is closed!");
+	    				Notification.show("Fehler beim speichern", "DB Session closed", Notification.Type.ERROR_MESSAGE);
+
+	        		}
+
 
 	        	    //setBeanGui(rec.getBean());
 	        		loadTableRowImage();
@@ -126,12 +164,19 @@ public class AttachmentPopup extends XdevView {
 			this.image.setSource(ResourceUtils.toResource(img.getRimImage(), img.getRimName()));
 		}
 
+		//TODO: what if extension is pdf, xls.....
+		if (img.getRimMimetype().toLowerCase().startsWith("image")) {
+			//all images
+		} else {
+			//application...
+		}
 		//final RowImage img = this.table.getSelectedItem().getBean();
 
 		this.horizontalLayoutImage.setVisible(true);
 		this.horizontalLayoutImage.setHeight(100, UNITS_PERCENTAGE);
 
 		this.table.setVisible(false);
+		this.horizontalLayout.setVisible(false);
 	}
 
 	/**
@@ -177,6 +222,7 @@ public class AttachmentPopup extends XdevView {
 	private void closeImage() {
 		this.horizontalLayoutImage.setVisible(false);
 		this.table.setVisible(true);
+		this.horizontalLayout.setVisible(true);
 	}
 
 	/*
@@ -211,6 +257,7 @@ public class AttachmentPopup extends XdevView {
 		this.cmdDelete.setCaption("Löschen");
 		this.cmdClose.setIcon(FontAwesome.CHECK);
 		this.cmdClose.setCaption("Schliessen");
+		this.upload.setButtonCaption("Neu...");
 		this.upload.setImmediate(true);
 
 		this.cmdCloseImage.setSizeUndefined();
