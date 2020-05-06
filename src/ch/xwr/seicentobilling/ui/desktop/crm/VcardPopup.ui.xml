@@ -45,10 +45,10 @@
                     <x:constraints gridHeight="1" gridx="3" gridy="2" weighty="0.0" weightx="0.0" width="0px" alignment="TOP_LEFT" gridWidth="1" height="0px" />
                 </XdevButton>
                 <XdevLabel x:name="label2">
-                    <x:constraints weightx="0.0" width="20px" height="0px" />
+                    <x:constraints weightx="0.0" width="10px" height="0px" />
                 </XdevLabel>
                 <XdevButton icon="FontAwesome.CLOSE" caption="Schliessen" x:name="cmdCancel" x:shortcut="ESCAPE">
-                    <x:constraints weightx="0.0" width="0px" height="0px" />
+                    <x:constraints weightx="0.0" width="0px" alignment="MIDDLE_LEFT" height="0px" />
                     <x:event>click.buttonClick</x:event>
                 </XdevButton>
             </XdevHorizontalLayout>

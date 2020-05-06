@@ -92,8 +92,7 @@ public class VcardPopup extends XdevView {
 		fd.extend(cmdDown);
 
 		this.horizontalLayout.replaceComponent(this.cmdDownload, cmdDown);
-
-		this.lblFileName.setValue(this.vcard.getFile().getName());
+		this.lblFileName.setValue(this.vcard.getFile().getAbsoluteFile().getName());
 	}
 
 	private Resource getInputStream(final File fiv) {
@@ -196,13 +195,13 @@ public class VcardPopup extends XdevView {
 		this.horizontalLayout.addComponent(this.cmdCreate);
 		this.cmdDownload.setSizeUndefined();
 		this.horizontalLayout.addComponent(this.cmdDownload);
-		this.label2.setWidth(20, Unit.PIXELS);
+		this.label2.setWidth(10, Unit.PIXELS);
 		this.label2.setHeight(-1, Unit.PIXELS);
 		this.horizontalLayout.addComponent(this.label2);
 		this.horizontalLayout.setComponentAlignment(this.label2, Alignment.MIDDLE_CENTER);
 		this.cmdCancel.setSizeUndefined();
 		this.horizontalLayout.addComponent(this.cmdCancel);
-		this.horizontalLayout.setComponentAlignment(this.cmdCancel, Alignment.MIDDLE_CENTER);
+		this.horizontalLayout.setComponentAlignment(this.cmdCancel, Alignment.MIDDLE_LEFT);
 		final CustomComponent horizontalLayout_spacer = new CustomComponent();
 		horizontalLayout_spacer.setSizeFull();
 		this.horizontalLayout.addComponent(horizontalLayout_spacer);
