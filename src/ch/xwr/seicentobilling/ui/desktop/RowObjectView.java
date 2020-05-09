@@ -31,6 +31,7 @@ import com.xdev.ui.XdevVerticalSplitPanel;
 import com.xdev.ui.XdevView;
 import com.xdev.ui.entitycomponent.combobox.XdevComboBox;
 import com.xdev.ui.entitycomponent.table.XdevTable;
+import com.xdev.ui.filter.XdevContainerFilterComponent;
 import com.xdev.ui.util.NestedProperty;
 
 import ch.xwr.seicentobilling.business.ConfirmDialog;
@@ -515,6 +516,7 @@ public class RowObjectView extends XdevView {
 		this.cmdNewParam = new XdevButton();
 		this.cmdDeleteParam = new XdevButton();
 		this.cmdUpdateParam = new XdevButton();
+		this.containerFilterComponent = new XdevContainerFilterComponent();
 		this.tableRowParam = new XdevTable<>();
 
 		this.setCaption(StringResourceUtils.optLocalizeString("{$RowObjectView.caption}", this));
@@ -604,6 +606,8 @@ public class RowObjectView extends XdevView {
 		this.cmdDeleteParam.setCaption(StringResourceUtils.optLocalizeString("{$cmdDeleteFile.caption}", this));
 		this.cmdUpdateParam.setIcon(FontAwesome.PENCIL);
 		this.cmdUpdateParam.setCaption(StringResourceUtils.optLocalizeString("{$cmdUpdateFile.caption}", this));
+		this.containerFilterComponent.setFilterEnabled(false);
+		this.containerFilterComponent.setPrefixMatchOnly(false);
 		this.tableRowParam.setColumnReorderingAllowed(true);
 		this.tableRowParam.setColumnCollapsingAllowed(true);
 		this.tableRowParam.setContainerDataSource(RowParameter.class,
@@ -622,6 +626,9 @@ public class RowObjectView extends XdevView {
 		this.tableRowParam.setColumnCollapsed("prmState", true);
 		this.tableRowParam.setColumnHeader("rowObject.entity.entName", "Tabelle");
 		this.tableRowParam.setColumnCollapsed("rowObject.entity.entName", true);
+
+		this.containerFilterComponent.setContainer(this.tableRowParam.getBeanContainerDataSource());
+		this.containerFilterComponent.setSearchableProperties("prmValue", "prmGroup", "prmSubGroup", "prmKey");
 
 		this.form.setColumns(6);
 		this.form.setRows(5);
@@ -732,7 +739,13 @@ public class RowObjectView extends XdevView {
 		this.cmdUpdateParam.setSizeUndefined();
 		this.actionLayoutParam.addComponent(this.cmdUpdateParam);
 		this.actionLayoutParam.setComponentAlignment(this.cmdUpdateParam, Alignment.MIDDLE_CENTER);
-		this.actionLayoutParam.setSizeUndefined();
+		this.containerFilterComponent.setWidth(300, Unit.PIXELS);
+		this.containerFilterComponent.setHeight(-1, Unit.PIXELS);
+		this.actionLayoutParam.addComponent(this.containerFilterComponent);
+		this.actionLayoutParam.setComponentAlignment(this.containerFilterComponent, Alignment.MIDDLE_RIGHT);
+		this.actionLayoutParam.setExpandRatio(this.containerFilterComponent, 100.0F);
+		this.actionLayoutParam.setWidth(100, Unit.PERCENTAGE);
+		this.actionLayoutParam.setHeight(-1, Unit.PIXELS);
 		this.verticalLayoutParam.addComponent(this.actionLayoutParam);
 		this.verticalLayoutParam.setComponentAlignment(this.actionLayoutParam, Alignment.MIDDLE_LEFT);
 		this.tableRowParam.setSizeFull();
@@ -779,6 +792,7 @@ public class RowObjectView extends XdevView {
 	private XdevPanel panel;
 	private XdevTabSheet tabSheet;
 	private XdevGridLayout form;
+	private XdevContainerFilterComponent containerFilterComponent;
 	private XdevFieldGroup<RowObject> fieldGroup;
 	private XdevVerticalSplitPanel verticalSplitPanel;
 	private XdevHorizontalLayout horizontalLayout2, actionLayout, actionLayoutParam;
