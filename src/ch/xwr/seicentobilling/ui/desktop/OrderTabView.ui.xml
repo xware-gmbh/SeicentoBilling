@@ -132,17 +132,24 @@
                             <XdevLabel x:name="lblCustomer" value="{$lblCustomer.value}">
                                 <x:constraints gridx="1" gridy="2" weighty="0.0" weightx="0.0" width="0px" height="0px" />
                             </XdevLabel>
-                            <XdevComboBox required="true" itemCaptionFromAnnotation="false" x:name="cmbCustomer" x:entity="Customer" x:autoQuery="false">
-                                <x:constraints gridx="2" gridy="2" weighty="0.0" weightx="0.1" width="100%" gridWidth="2" height="0px" />
-                                <x:entityProperty>
-                                    <entry type="String" property="fullname" />
-                                </x:entityProperty>
-                                <x:typeArguments>
-                                    <typeArgument type="Customer" />
-                                </x:typeArguments>
-                                <x:data methodName="findAll" />
-                                <x:event>valueChange.valueChange</x:event>
-                            </XdevComboBox>
+                            <XdevHorizontalLayout x:name="horizontalLayoutCus" margin="">
+                                <x:constraints gridx="2" gridy="2" weighty="0.0" weightx="0.0" width="100%" gridWidth="3" height="0px" />
+                                <XdevComboBox required="true" itemCaptionFromAnnotation="false" x:name="cmbCustomer" filteringMode="com.vaadin.shared.ui.combobox.FilteringMode.CONTAINS" x:entity="Customer" enabled="false" x:autoQuery="false">
+                                    <x:constraints gridHeight="1" gridx="3" gridy="1" weighty="0.0" weightx="0.6" width="100%" alignment="TOP_LEFT" gridWidth="3" height="0px" />
+                                    <x:entityProperty>
+                                        <entry type="String" property="fullname" />
+                                    </x:entityProperty>
+                                    <x:typeArguments>
+                                        <typeArgument type="Customer" />
+                                    </x:typeArguments>
+                                    <x:data methodName="findAll" />
+                                    <x:event>valueChange.valueChange</x:event>
+                                </XdevComboBox>
+                                <XdevButton icon="FontAwesome.SEARCH" caption="" description="Suchen..." x:name="btnSearch">
+                                    <x:constraints gridHeight="1" gridx="4" gridy="3" weighty="0.0" weightx="0.2" width="0px" alignment="TOP_LEFT" gridWidth="1" height="0px" />
+                                    <x:event>click.buttonClick</x:event>
+                                </XdevButton>
+                            </XdevHorizontalLayout>
                             <XdevLabel x:name="lblOrdBillDate" value="{$lblOrdBillDate.value}">
                                 <x:constraints gridx="1" gridy="3" weighty="0.0" weightx="0.0" width="0px" height="0px" />
                             </XdevLabel>

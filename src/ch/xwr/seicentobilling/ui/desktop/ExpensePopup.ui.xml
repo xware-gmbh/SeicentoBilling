@@ -136,10 +136,10 @@
                 <x:constraints gridx="2" gridy="4" weighty="0.0" weightx="0.7" width="0px" height="0px" />
             </XdevTextField>
             <XdevLabel x:name="lblVat" value="MwSt Incl">
-                <x:constraints gridx="1" gridy="5" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+                <x:constraints gridx="3" gridy="4" weighty="0.0" weightx="0.0" width="0px" height="0px" />
             </XdevLabel>
             <XdevComboBox textInputAllowed="false" required="true" itemCaptionFromAnnotation="false" x:name="cmbVat" x:entity="Vat" description="Mwst Sätze Inklusive" x:autoQuery="false">
-                <x:constraints gridx="2" gridy="5" weighty="0.0" weightx="0.7" width="100%" height="0px" />
+                <x:constraints gridx="4" gridy="4" weighty="0.0" weightx="0.7" width="100%" height="0px" />
                 <x:entityProperty>
                     <entry type="String" property="fullName" />
                 </x:entityProperty>
@@ -148,6 +148,25 @@
                 </x:typeArguments>
                 <x:data methodName="findAllInclusive" />
             </XdevComboBox>
+            <XdevLabel x:name="lblProject" value="{$lblProject.value}">
+                <x:constraints gridx="1" gridy="5" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+            </XdevLabel>
+            <XdevHorizontalLayout spacing="false" x:name="horizontalLayoutProject" margin="">
+                <x:constraints gridx="2" gridy="5" weighty="0.0" weightx="1.0" width="100%" gridWidth="3" height="-1px" />
+                <XdevComboBox required="true" x:name="cmbProject" x:entity="Project" enabled="false" x:autoQuery="false">
+                    <x:constraints gridHeight="1" gridx="2" gridy="5" weighty="0.0" weightx="0.55" width="100%" alignment="TOP_LEFT" gridWidth="1" height="0px" />
+                    <x:entityProperty>
+                        <entry type="String" property="proName" />
+                    </x:entityProperty>
+                    <x:typeArguments>
+                        <typeArgument type="Project" />
+                    </x:typeArguments>
+                </XdevComboBox>
+                <XdevButton icon="FontAwesome.SEARCH" caption="" description="Suchen..." x:name="btnSearch">
+                    <x:constraints gridHeight="1" gridx="4" gridy="3" weighty="0.0" weightx="0.2" width="0px" alignment="TOP_LEFT" gridWidth="1" height="0px" />
+                    <x:event>click.buttonClick</x:event>
+                </XdevButton>
+            </XdevHorizontalLayout>
             <XdevLabel x:name="lblExpAccount" value="{$lblExpAccount.value}">
                 <x:constraints gridx="1" gridy="6" weighty="0.0" weightx="0.0" width="0px" height="0px" />
             </XdevLabel>
@@ -160,18 +179,6 @@
                     <typeArgument type="LovAccount" />
                 </x:typeArguments>
                 <x:data methodName="findAllMine" />
-            </XdevComboBox>
-            <XdevLabel x:name="lblProject" value="{$lblProject.value}">
-                <x:constraints gridx="3" gridy="6" weighty="0.0" weightx="0.0" width="0px" height="0px" />
-            </XdevLabel>
-            <XdevComboBox required="true" x:name="cmbProject" x:entity="Project">
-                <x:constraints gridx="4" gridy="6" weighty="0.0" weightx="0.7" width="100%" height="0px" />
-                <x:entityProperty>
-                    <entry type="String" property="proName" />
-                </x:entityProperty>
-                <x:typeArguments>
-                    <typeArgument type="Project" />
-                </x:typeArguments>
             </XdevComboBox>
             <XdevLabel x:name="lblExpFlagGeneric" value="{$lblExpFlagGeneric.value}">
                 <x:constraints gridx="1" gridy="7" weighty="0.0" weightx="0.0" width="0px" height="0px" />
