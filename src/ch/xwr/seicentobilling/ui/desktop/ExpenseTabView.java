@@ -393,6 +393,9 @@ public class ExpenseTabView extends XdevView {
 		if (LovState.BookingType.gebucht.equals(bean.getPerBookedExpense())) {
 			return true;
 		}
+		if (bean.getPerSignOffExpense() != null && bean.getPerSignOffExpense()) {
+			return true;
+		}
 		// if (bean != null && bean.getPerBookedExpense() != null) {
 		// if (bean.getPerBookedExpense() == LovState.BookingType.gebucht) {
 		// return true;
