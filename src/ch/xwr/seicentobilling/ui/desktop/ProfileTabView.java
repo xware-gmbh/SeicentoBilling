@@ -184,7 +184,7 @@ public class ProfileTabView extends XdevView {
 		this.gridLayoutProfile = new VerticalLayout();
 		this.form = new XdevGridLayout();
 		this.lblLoginMode = new XdevLabel();
-		this.label9 = new XdevLabel();
+		this.labelInfo = new XdevLabel();
 		this.lblUsername = new XdevLabel();
 		this.txtUsername = new XdevTextField();
 		this.cmdSetPassword = new XdevButton();
@@ -222,8 +222,8 @@ public class ProfileTabView extends XdevView {
 		this.verticalLayout.setMargin(new MarginInfo(false));
 		this.tabSheet.setStyleName("framed");
 		this.lblLoginMode.setValue("Label");
-		this.label9.setIcon(FontAwesome.INFO_CIRCLE);
-		this.label9.setDescription("Damit Änderungen wirksam werden muss man sich neu Anmelden!");
+		this.labelInfo.setIcon(FontAwesome.INFO_CIRCLE);
+		this.labelInfo.setDescription("Damit Änderungen wirksam werden muss man sich neu anmelden!");
 		this.lblUsername.setValue("Login Name");
 		this.cmdSetPassword.setIcon(FontAwesome.USER_SECRET);
 		this.cmdSetPassword.setCaption("Passwort...");
@@ -269,8 +269,8 @@ public class ProfileTabView extends XdevView {
 		this.form.setRows(12);
 		this.lblLoginMode.setSizeUndefined();
 		this.form.addComponent(this.lblLoginMode, 0, 0);
-		this.label9.setSizeUndefined();
-		this.form.addComponent(this.label9, 2, 0);
+		this.labelInfo.setSizeUndefined();
+		this.form.addComponent(this.labelInfo, 2, 0);
 		this.lblUsername.setSizeUndefined();
 		this.form.addComponent(this.lblUsername, 0, 1);
 		this.txtUsername.setWidth(100, Unit.PERCENTAGE);
@@ -380,7 +380,7 @@ public class ProfileTabView extends XdevView {
 	} // </generated-code>
 
 	// <generated-code name="variables">
-	private XdevLabel lblLoginMode, label9, lblUsername, lblUsrRoles, lblUsrFullName, lblUsrThemeDesktop, lblUsrThemeMobile,
+	private XdevLabel lblLoginMode, labelInfo, lblUsername, lblUsrRoles, lblUsrFullName, lblUsrThemeDesktop, lblUsrThemeMobile,
 			lblUsrLanguage, lblUsrCountry, lblUsrTimeZone, lblCostAccount, lblCustomer, lblUsrValidFrom, lblUsrValidTo,
 			lblUsrState, label10;
 	private XdevButton cmdSetPassword, cmdSave, cmdReset2, cmdApplyTheme;
