@@ -873,6 +873,7 @@ public class OrderTabView extends XdevView {
 		setROFields();
 
 		if (this.isAdmin) {
+			this.dateOrdPayDate.setEnabled(true);
 			this.cmdAdmin.setIcon(FontAwesome.GEARS);
 		} else {
 			this.cmdAdmin.setIcon(FontAwesome.GEAR);

@@ -383,6 +383,14 @@ public class ExpenseTabView extends XdevView {
 		this.cmdCopySingle.setEnabled(!roFlag);
 		this.cmdUpdate.setEnabled(!roFlag);
 		this.cmdDelete.setEnabled(!roFlag);
+
+		if (this.currentPeriode != null && this.currentPeriode.getPerSignOffExpense() != null && this.currentPeriode.getPerSignOffExpense()) {
+			this.cmdNewExpense.setEnabled(false);
+			this.cmdUpdateExpense.setEnabled(false);
+			this.cmdDeleteExpense.setEnabled(false);
+			this.cmdCopySingle.setEnabled(false);
+		}
+
 	}
 
 	private boolean isBooked() {
@@ -393,9 +401,7 @@ public class ExpenseTabView extends XdevView {
 		if (LovState.BookingType.gebucht.equals(bean.getPerBookedExpense())) {
 			return true;
 		}
-		if (bean.getPerSignOffExpense() != null && bean.getPerSignOffExpense()) {
-			return true;
-		}
+
 		// if (bean != null && bean.getPerBookedExpense() != null) {
 		// if (bean.getPerBookedExpense() == LovState.BookingType.gebucht) {
 		// return true;
@@ -660,13 +666,14 @@ public class ExpenseTabView extends XdevView {
 	 */
 	private void table_itemClick(final ItemClickEvent event) {
 		if (event.isDoubleClick() && !isBooked()) {
-			final Long beanId = this.table.getSelectedItem().getBean().getPerId();
-			UI.getCurrent().getSession().setAttribute("beanId",  beanId);
-			UI.getCurrent().getSession().setAttribute("reason",  "update");
+			if (this.table.getSelectedItem() != null) {
+				final Long beanId = this.table.getSelectedItem().getBean().getPerId();
+				UI.getCurrent().getSession().setAttribute("beanId",  beanId);
+				UI.getCurrent().getSession().setAttribute("reason",  "update");
 
-			popupPeriode();
+				popupPeriode();
+			}
 		}
-
 	}
 
 	/**
