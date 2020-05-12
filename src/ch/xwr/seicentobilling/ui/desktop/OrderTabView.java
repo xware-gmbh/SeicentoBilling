@@ -189,7 +189,7 @@ public class OrderTabView extends XdevView {
 		this.table.select(bean2);
 		reloadTableLineList();
 
-		prepareCustomerCombo(this.table.getSelectedItem().getBean().getCustomer());
+		prepareCustomerCombo(bean2.getCustomer());
 
 		setROFields();
 	}
@@ -927,8 +927,10 @@ public class OrderTabView extends XdevView {
 	}
 
 	private void prepareCustomerCombo(final Customer bean) {
-		OrderTabView.this.cmbCustomer.addItem(bean);
-		OrderTabView.this.cmbCustomer.setValue(bean);
+		if (bean != null) {
+			OrderTabView.this.cmbCustomer.addItem(bean);
+			OrderTabView.this.cmbCustomer.setValue(bean);
+		}
 	}
 
 	/**

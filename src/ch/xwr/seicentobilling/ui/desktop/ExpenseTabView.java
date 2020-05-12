@@ -574,6 +574,7 @@ public class ExpenseTabView extends XdevView {
 		final Long beanId = this.table.getSelectedItem().getBean().getPerId();
 		UI.getCurrent().getSession().setAttribute("beanId",  beanId);
 		UI.getCurrent().getSession().setAttribute("reason",  "update");
+		UI.getCurrent().getSession().setAttribute("source",  "expense");
 
 		popupPeriode();
 
@@ -597,10 +598,9 @@ public class ExpenseTabView extends XdevView {
 
 					if ("new".equals(reason)) {
 						ExpenseTabView.this.table.addItem(bean);
-						reloadMainTable();
-					} else {
-						ExpenseTabView.this.table.getSelectedItem().setBean(bean);
 					}
+					reloadMainTable();
+					ExpenseTabView.this.table.select(bean);
 				}
 
 			}
@@ -667,11 +667,7 @@ public class ExpenseTabView extends XdevView {
 	private void table_itemClick(final ItemClickEvent event) {
 		if (event.isDoubleClick() && !isBooked()) {
 			if (this.table.getSelectedItem() != null) {
-				final Long beanId = this.table.getSelectedItem().getBean().getPerId();
-				UI.getCurrent().getSession().setAttribute("beanId",  beanId);
-				UI.getCurrent().getSession().setAttribute("reason",  "update");
-
-				popupPeriode();
+				this.cmdUpdate.click();
 			}
 		}
 	}

@@ -1,9 +1,11 @@
 
 package ch.xwr.seicentobilling.dal;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -74,4 +76,15 @@ public class ExpenseDAO extends JPADAO<Expense, Long> {
 		query.setParameter(daoParameter, dao);
 		return query.getResultList();
 	}
+
+	public double sumAmount(final Periode dao) {
+		final String sql = "select sum(" + Expense_.expAmount.getName() + ") as total from Expense where expperid = :perid";
+
+	    final Query qry = em().createNativeQuery(sql);
+	    qry.setParameter("perid", dao.getPerId());
+
+	    final BigDecimal value = (BigDecimal) qry.getSingleResult();
+	    return value.doubleValue();
+	}
+
 }

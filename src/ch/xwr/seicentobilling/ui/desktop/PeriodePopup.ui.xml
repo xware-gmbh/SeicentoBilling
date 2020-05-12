@@ -18,7 +18,7 @@
 <?import com.xdev.ui.entitycomponent.combobox.XdevComboBox?>
 <?import java.lang.String?>
 <XdevView xmlns:x="http://xml.xdev-software.com/xdevuiml" icon="" x:name="PeriodePopup">
-    <x:constraints width="760px" zpos="0" height="490px" />
+    <x:constraints zpos="0" width="760px" height="490px" />
     <XdevPanel icon="FontAwesome.CLOCK_O" caption="Periode bearbeiten" tabIndex="0" x:name="panel">
         <x:constraints gridHeight="1" gridx="1" zpos="0" gridy="1" weighty="0.0" weightx="0.0" width="100%" alignment="TOP_LEFT" gridWidth="1" height="100%" />
         <XdevGridLayout icon="" x:name="form">
@@ -60,7 +60,11 @@
             </XdevTextField>
             <XdevCheckBox caption="Freigabe Buchhalter" description="Das Feld kann durch den Buchhalter gesetzt werden für die Freigabe an die Buchhaltung" x:name="cboSignOffExpense">
                 <x:constraints gridx="2" gridy="4" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+                <x:event>valueChange.valueChange</x:event>
             </XdevCheckBox>
+            <XdevLabel x:name="lblAmtExpense" value="Betrag">
+                <x:constraints gridx="3" gridy="4" top="33px" left="-1px" weighty="0.0" weightx="0.0" width="100%" gridWidth="2" height="0px" />
+            </XdevLabel>
             <XdevLabel x:name="lblPerBookedExpense" value="{$lblPerBookedExpense.value}">
                 <x:constraints gridx="1" gridy="5" weighty="0.0" weightx="0.1" width="0px" height="0px" />
             </XdevLabel>
