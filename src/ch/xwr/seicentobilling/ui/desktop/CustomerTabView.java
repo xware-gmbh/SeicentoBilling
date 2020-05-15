@@ -1363,6 +1363,7 @@ public class CustomerTabView extends XdevView {
 		this.cmdEditActivity = new XdevButton();
 		this.cmdReloadActivity = new XdevButton();
 		this.cmdInfoActivity = new XdevButton();
+		this.containerFilterComponent2 = new XdevContainerFilterComponent();
 		this.tableActivity = new XdevTable<>();
 		this.gridLayoutRelation = new XdevGridLayout();
 		this.verticalLayout5 = new XdevVerticalLayout();
@@ -1544,6 +1545,8 @@ public class CustomerTabView extends XdevView {
 		this.cmdReloadActivity.setIcon(FontAwesome.REFRESH);
 		this.cmdReloadActivity.setImmediate(true);
 		this.cmdInfoActivity.setIcon(FontAwesome.INFO_CIRCLE);
+		this.containerFilterComponent2.setFilterEnabled(false);
+		this.containerFilterComponent2.setPrefixMatchOnly(false);
 		this.tableActivity.setCaption("Aktivititäten");
 		this.tableActivity.setIcon(FontAwesome.ARROWS_ALT);
 		this.tableActivity.setSortAscending(false);
@@ -1643,6 +1646,9 @@ public class CustomerTabView extends XdevView {
 				"cusAccountManager", "cusNumber", "city.ctyName", "city.ctyZip", "cusName", "cusCompany", "cusFirstName",
 				"cusAccountType", "cusState", "labelDefinitions.cldId");
 		this.containerFilterComponent.setSearchableProperties("cusCompany", "cusName", "city.ctyName", "cusFirstName");
+		this.containerFilterComponent2.setContainer(this.tableActivity.getBeanContainerDataSource(), "actDate", "actType",
+				"actText", "costAccount", "actFollowingUpDate");
+		this.containerFilterComponent2.setSearchableProperties("actText");
 
 		this.cmdNew.setSizeUndefined();
 		this.actionLayout.addComponent(this.cmdNew);
@@ -1879,10 +1885,11 @@ public class CustomerTabView extends XdevView {
 		this.cmdInfoActivity.setSizeUndefined();
 		this.horizontalLayout3.addComponent(this.cmdInfoActivity);
 		this.horizontalLayout3.setComponentAlignment(this.cmdInfoActivity, Alignment.MIDDLE_CENTER);
-		final CustomComponent horizontalLayout3_spacer = new CustomComponent();
-		horizontalLayout3_spacer.setSizeFull();
-		this.horizontalLayout3.addComponent(horizontalLayout3_spacer);
-		this.horizontalLayout3.setExpandRatio(horizontalLayout3_spacer, 1.0F);
+		this.containerFilterComponent2.setWidth(200, Unit.PIXELS);
+		this.containerFilterComponent2.setHeight(-1, Unit.PIXELS);
+		this.horizontalLayout3.addComponent(this.containerFilterComponent2);
+		this.horizontalLayout3.setComponentAlignment(this.containerFilterComponent2, Alignment.MIDDLE_RIGHT);
+		this.horizontalLayout3.setExpandRatio(this.containerFilterComponent2, 100.0F);
 		this.horizontalLayout3.setWidth(100, Unit.PERCENTAGE);
 		this.horizontalLayout3.setHeight(-1, Unit.PIXELS);
 		this.verticalLayout3.addComponent(this.horizontalLayout3);
@@ -2023,7 +2030,7 @@ public class CustomerTabView extends XdevView {
 			cmdVcard;
 	private XdevGridLayout form, gridLayoutContact, gridLayoutFlags, gridLayoutAddress, gridLayoutListActivity,
 			gridLayoutRelation, gridLayoutListRef;
-	private XdevContainerFilterComponent containerFilterComponent;
+	private XdevContainerFilterComponent containerFilterComponent, containerFilterComponent2;
 	private XdevTable<CustomerLink> tableLink;
 	private XdevFieldGroup<Customer> fieldGroup;
 	private XdevHorizontalLayout actionLayout, horizontalLayoutCity, horizontalLayoutAddress, horizontalLayoutLink,

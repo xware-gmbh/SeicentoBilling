@@ -429,6 +429,9 @@
                                 <x:constraints weightx="0.0" width="0px" height="0px" />
                                 <x:event>click.buttonClick</x:event>
                             </XdevButton>
+                            <XdevContainerFilterComponent x:searchableProperties="actText" filterEnabled="false" x:name="containerFilterComponent2" x:filterableProperties="actDate,actType,actText,costAccount,actFollowingUpDate" x:container="tableActivity" prefixMatchOnly="false">
+                                <x:constraints weightx="1.0" width="200px" alignment="MIDDLE_RIGHT" height="0%" />
+                            </XdevContainerFilterComponent>
                         </XdevHorizontalLayout>
                         <XdevTable x:connectedForm="fieldGroupActivity" caption="Aktivititäten" x:name="tableActivity" x:entity="Activity" icon="FontAwesome.ARROWS_ALT" x:autoQuery="false" sortAscending="false">
                             <x:entityProperties>
