@@ -6,7 +6,7 @@
 	<artifactId>seicentobilling</artifactId>
 	<packaging>war</packaging>
 	<name>SeicentoBilling</name>
-	<version>20.1.1</version>
+	<version>20.2.0</version>
 	<description>
 		Einfache Leistungserfassungs und Rechnungssstellungs
 		Web-Applikation.
@@ -89,6 +89,22 @@
 				</configuration>
 			</plugin>
 
+			<plugin>
+                <groupId>com.vaadin</groupId>
+                <artifactId>vaadin-maven-plugin</artifactId>
+                <version>7.7.13</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>update-theme</goal>
+                            <goal>update-widgetset</goal>
+                            <goal>compile</goal>
+                            <!-- Comment out compile-theme goal to use on-the-fly theme compilation -->
+                            <goal>compile-theme</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
 		</plugins>
 	</build>
 	<repositories>
@@ -109,18 +125,15 @@
 			</snapshots>
 		</repository>
 		<repository>
-			<id>xwr-visualstudio.com-maven</id>
-			<url>
-				https://xwr.pkgs.visualstudio.com/_packaging/Maven/maven/v1
-			</url>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
-
+		  <id>Maven</id>
+		  <url>https://xwr.pkgs.visualstudio.com/_packaging/Maven/maven/v1</url>
+		  <releases>
+		    <enabled>true</enabled>
+		  </releases>
+		  <snapshots>
+		    <enabled>true</enabled>
+		  </snapshots>
+		</repository>		
 	</repositories>
 	<dependencies>
 		<dependency>
@@ -158,7 +171,7 @@
 		<dependency>
 			<groupId>com.xdev</groupId>
 			<artifactId>xdev-server-aa-openid</artifactId>
-			<version>1.0.3</version>
+			<version>4.0.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.poi</groupId>
@@ -192,6 +205,11 @@
 			<version>42.2.11</version>
 			<scope>runtime</scope>
 		</dependency>
+	    <dependency>
+	        <groupId>com.vaadin</groupId>
+	        <artifactId>vaadin-themes</artifactId>
+	        <version>7.7.13</version>
+	    </dependency>		
 	</dependencies>
 	<properties>
 		<project.build.sourceEncoding>

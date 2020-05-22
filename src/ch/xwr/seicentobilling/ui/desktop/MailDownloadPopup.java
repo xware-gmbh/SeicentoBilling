@@ -9,6 +9,7 @@ import java.util.List;
 
 import com.vaadin.data.Property;
 import com.vaadin.server.FileDownloader;
+import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Page;
 import com.vaadin.server.Resource;
 import com.vaadin.server.StreamResource;
@@ -20,6 +21,7 @@ import com.xdev.res.ApplicationResource;
 import com.xdev.ui.XdevButton;
 import com.xdev.ui.XdevGridLayout;
 import com.xdev.ui.XdevLabel;
+import com.xdev.ui.XdevPanel;
 import com.xdev.ui.XdevView;
 import com.xdev.ui.entitycomponent.XdevBeanItemContainer;
 import com.xdev.ui.entitycomponent.combobox.XdevComboBox;
@@ -44,6 +46,8 @@ public class MailDownloadPopup extends XdevView {
 	public MailDownloadPopup() {
 		super();
 		this.initUI();
+
+		this.setHeight(Seicento.calculateThemeHeight(this.getHeight(),UI.getCurrent().getTheme()));
 
 		// get Parameter
 		this.orderBean = (Order) UI.getCurrent().getSession().getAttribute("orderbean");
@@ -135,8 +139,8 @@ public class MailDownloadPopup extends XdevView {
 	public static Window getPopupWindow() {
 		final Window win = new Window();
 
-		win.setWidth("530");
-		win.setHeight("270");
+		//win.setWidth("530");
+		//win.setHeight("270");
 		win.center();
 		win.setModal(true);
 		win.setContent(new MailDownloadPopup());
@@ -255,6 +259,7 @@ public class MailDownloadPopup extends XdevView {
 	 */
 	// <generated-code name="initUI">
 	private void initUI() {
+		this.panel = new XdevPanel();
 		this.gridLayout = new XdevGridLayout();
 		this.lblCstAccount = new XdevLabel();
 		this.comboBoxCst = new XdevComboBox<>();
@@ -266,6 +271,9 @@ public class MailDownloadPopup extends XdevView {
 		this.label = new XdevLabel();
 		this.labelInfo = new XdevLabel();
 
+		this.panel.setIcon(FontAwesome.FILE_PDF_O);
+		this.panel.setCaption("Rechnung als PDF download");
+		this.panel.setTabIndex(0);
 		this.lblCstAccount.setDescription("Selektionskriterium für die Periode");
 		this.lblCstAccount.setValue("Kostenstelle");
 		this.comboBoxCst.setContainerDataSource(CostAccount.class, false);
@@ -318,8 +326,11 @@ public class MailDownloadPopup extends XdevView {
 		this.gridLayout.addComponent(gridLayout_vSpacer, 0, 5, 2, 5);
 		this.gridLayout.setRowExpandRatio(5, 1.0F);
 		this.gridLayout.setSizeFull();
-		this.setContent(this.gridLayout);
-		this.setSizeFull();
+		this.panel.setContent(this.gridLayout);
+		this.panel.setSizeFull();
+		this.setContent(this.panel);
+		this.setWidth(550, Unit.PIXELS);
+		this.setHeight(315, Unit.PIXELS);
 
 		this.comboBoxCst.addValueChangeListener(event -> this.comboBoxCst_valueChange(event));
 		this.cmdStart.addClickListener(event -> this.cmdStart_buttonClick(event));
@@ -331,6 +342,7 @@ public class MailDownloadPopup extends XdevView {
 	private XdevLabel lblCstAccount, lblPeriode, label, labelInfo;
 	private XdevButton cmdStart, cmdDownload, cmdMail;
 	private XdevComboBox<CostAccount> comboBoxCst;
+	private XdevPanel panel;
 	private XdevGridLayout gridLayout;
 	private XdevComboBox<Periode> comboBoxPeriode;
 	// </generated-code>

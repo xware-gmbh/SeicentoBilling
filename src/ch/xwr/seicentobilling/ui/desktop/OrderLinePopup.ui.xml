@@ -20,8 +20,8 @@
 <?import com.xdev.ui.entitycomponent.combobox.XdevComboBox?>
 <?import java.lang.String?>
 <XdevView xmlns:x="http://xml.xdev-software.com/xdevuiml" x:name="OrderLinePopup">
-    <x:constraints zpos="0" width="100%" height="100%" />
-    <XdevGridLayout x:name="form">
+    <x:constraints zpos="0" width="860px" height="600px" />
+    <XdevGridLayout icon="FontAwesome.BOOK" caption="Auftragszeile erfassen" x:name="form">
         <x:constraints zpos="0" width="100%" height="100%" />
         <XdevComboBox tabIndex="12" x:name="comboBoxState">
             <x:constraints gridx="2" gridy="9" weighty="0.0" weightx="1.0" width="0px" height="0px" />
@@ -155,13 +155,13 @@
         <XdevLabel x:name="lblOdlState" value="{$lblOdlState.value}">
             <x:constraints gridx="1" gridy="9" weighty="0.0" weightx="0.0" width="0px" height="0px" />
         </XdevLabel>
-        <XdevHorizontalLayout x:name="horizontalLayout" margin="">
-            <x:constraints gridx="1" gridy="10" weighty="0.0" weightx="0.0" width="0px" alignment="MIDDLE_CENTER" gridWidth="2" height="0px" />
-            <XdevButton icon="WebContent/WEB-INF/resources/images/save1.png" caption="{$cmdSave.caption}" tabIndex="13" x:name="cmdSave" x:shortcut="ENTER">
+        <XdevHorizontalLayout x:name="horizontalLayout" margin="t">
+            <x:constraints gridx="1" gridy="10" weighty="0.0" weightx="0.0" width="100%" alignment="MIDDLE_CENTER" gridWidth="3" height="0px" />
+            <XdevButton icon="FontAwesome.SAVE" caption="{$cmdSave.caption}" tabIndex="13" x:name="cmdSave" x:shortcut="ENTER">
                 <x:constraints weightx="0.0" width="0px" height="0px" />
                 <x:event>click.buttonClick</x:event>
             </XdevButton>
-            <XdevButton icon="WebContent/WEB-INF/resources/images/cancel1.png" caption="{$cmdReset.caption}" tabIndex="14" x:name="cmdReset" x:shortcut="ESCAPE">
+            <XdevButton icon="FontAwesome.CLOSE" caption="{$cmdReset.caption}" tabIndex="14" x:name="cmdCancel" x:shortcut="ESCAPE">
                 <x:constraints weightx="0.0" width="0px" height="0px" />
                 <x:event>click.buttonClick</x:event>
             </XdevButton>

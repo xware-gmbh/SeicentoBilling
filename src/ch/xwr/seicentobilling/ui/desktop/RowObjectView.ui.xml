@@ -6,7 +6,6 @@
 <?import?>
 <?import ch.xwr.seicentobilling.business.LovState.State?>
 <?import ch.xwr.seicentobilling.business.LovState.ValueType?>
-<?import ch.xwr.seicentobilling.entities.DatabaseVersion?>
 <?import ch.xwr.seicentobilling.entities.Entity?>
 <?import ch.xwr.seicentobilling.entities.Language?>
 <?import ch.xwr.seicentobilling.entities.RowImage?>
@@ -27,6 +26,7 @@
 <?import com.xdev.ui.XdevView?>
 <?import com.xdev.ui.entitycomponent.combobox.XdevComboBox?>
 <?import com.xdev.ui.entitycomponent.table.XdevTable?>
+<?import com.xdev.ui.filter.XdevContainerFilterComponent?>
 <?import java.lang.Integer?>
 <?import java.lang.String?>
 <XdevView xmlns:x="http://xml.xdev-software.com/xdevuiml" caption="{$RowObjectView.caption}" x:name="RowObjectView">
@@ -52,7 +52,6 @@
                         <entry name="txtObjChangedBy" property="objChangedBy" />
                         <entry name="dateObjDeleted" property="objDeleted" />
                         <entry name="txtObjDeletedBy" property="objDeletedBy" />
-                        <entry name="cmbDatabaseVersion" property="databaseVersion" />
                         <entry name="txtObjState" property="objState" />
                     </x:fields>
                 </XdevFieldGroup>
@@ -111,19 +110,6 @@
                 <XdevPopupDateField tabIndex="7" resolution="com.vaadin.shared.ui.datefield.Resolution.SECOND" x:name="dateObjChanged">
                     <x:constraints gridx="4" gridy="3" weighty="0.0" weightx="0.9" width="100%" height="0px" />
                 </XdevPopupDateField>
-                <XdevLabel x:name="lblDatabaseVersion" value="{$lblDatabaseVersion.value}">
-                    <x:constraints gridx="5" gridy="3" weighty="0.0" weightx="0.0" width="0px" height="0px" />
-                </XdevLabel>
-                <XdevComboBox tabIndex="11" x:name="cmbDatabaseVersion" x:entity="DatabaseVersion">
-                    <x:constraints gridx="6" gridy="3" weighty="0.0" weightx="0.8" width="100%" height="0px" />
-                    <x:entityProperty>
-                        <entry type="String" property="dbvMicro" />
-                    </x:entityProperty>
-                    <x:typeArguments>
-                        <typeArgument type="DatabaseVersion" />
-                    </x:typeArguments>
-                    <x:data methodName="findAll" />
-                </XdevComboBox>
                 <XdevLabel x:name="lblObjChngcnt" value="{$lblObjChngcnt.value}">
                     <x:constraints gridx="1" gridy="4" weighty="0.0" weightx="0.0" width="0px" height="0px" />
                 </XdevLabel>
@@ -150,15 +136,15 @@
                 <x:constraints width="100%" height="100%" />
                 <XdevHorizontalLayout spacing="false" x:name="horizontalLayout2" margin="r">
                     <x:constraints weighty="0.0" width="100%" height="0px" />
-                    <XdevButton icon="WebContent/WEB-INF/resources/images/new1_16.png" caption="New" x:name="cmdNewText">
+                    <XdevButton icon="FontAwesome.PLUS_CIRCLE" caption="New" x:name="cmdNewText">
                         <x:constraints weightx="0.0" width="0px" height="0px" />
                         <x:event>click.buttonClick</x:event>
                     </XdevButton>
-                    <XdevButton icon="WebContent/WEB-INF/resources/images/delete3_16.png" caption="{$cmdDeleteText.caption}" x:name="cmdDeleteText">
+                    <XdevButton icon="FontAwesome.MINUS_CIRCLE" caption="{$cmdDeleteText.caption}" x:name="cmdDeleteText">
                         <x:constraints weightx="0.0" width="0px" height="0px" />
                         <x:event>click.buttonClick</x:event>
                     </XdevButton>
-                    <XdevButton icon="WebContent/WEB-INF/resources/images/edit1.png" caption="{$cmdUpdateText.caption}" x:name="cmdUpdateText">
+                    <XdevButton icon="FontAwesome.PENCIL" caption="{$cmdUpdateText.caption}" x:name="cmdUpdateText">
                         <x:constraints weightx="0.0" width="0px" height="0px" />
                         <x:event>click.buttonClick</x:event>
                     </XdevButton>
@@ -181,15 +167,15 @@
                 <x:constraints width="100%" height="100%" />
                 <XdevHorizontalLayout spacing="false" x:name="actionLayout" margin="r">
                     <x:constraints weighty="0.0" width="0px" alignment="MIDDLE_LEFT" height="0px" />
-                    <XdevButton icon="WebContent/WEB-INF/resources/images/new1_16.png" caption="{$cmdNewFile.caption}" x:name="cmdNewFile">
+                    <XdevButton icon="FontAwesome.PLUS_CIRCLE" caption="{$cmdNewFile.caption}" x:name="cmdNewFile">
                         <x:constraints weightx="0.0" width="0px" alignment="MIDDLE_LEFT" height="0px" />
                         <x:event>click.buttonClick</x:event>
                     </XdevButton>
-                    <XdevButton icon="WebContent/WEB-INF/resources/images/delete3_16.png" caption="{$cmdDeleteFile.caption}" x:name="cmdDeleteFile">
+                    <XdevButton icon="FontAwesome.MINUS_CIRCLE" caption="{$cmdDeleteFile.caption}" x:name="cmdDeleteFile">
                         <x:constraints weightx="0.0" width="0px" height="0px" />
                         <x:event>click.buttonClick</x:event>
                     </XdevButton>
-                    <XdevButton icon="WebContent/WEB-INF/resources/images/edit1.png" caption="{$cmdUpdateFile.caption}" x:name="cmdUpdateFile">
+                    <XdevButton icon="FontAwesome.PENCIL" caption="{$cmdUpdateFile.caption}" x:name="cmdUpdateFile">
                         <x:constraints weightx="0.0" width="0px" height="0px" />
                         <x:event>click.buttonClick</x:event>
                     </XdevButton>
@@ -214,19 +200,22 @@
             <XdevVerticalLayout caption="Parameter" x:name="verticalLayoutParam">
                 <x:constraints width="100%" height="100%" />
                 <XdevHorizontalLayout spacing="false" x:name="actionLayoutParam" margin="r">
-                    <x:constraints top="-148px" left="971px" weighty="0.0" width="0px" alignment="MIDDLE_LEFT" height="0px" />
-                    <XdevButton icon="WebContent/WEB-INF/resources/images/new1_16.png" caption="{$cmdNewFile.caption}" x:name="cmdNewParam">
+                    <x:constraints top="-148px" left="971px" weighty="0.0" width="100%" alignment="MIDDLE_LEFT" height="0px" />
+                    <XdevButton icon="FontAwesome.PLUS_CIRCLE" caption="{$cmdNewFile.caption}" x:name="cmdNewParam">
                         <x:constraints weightx="0.0" width="0px" alignment="MIDDLE_LEFT" height="0px" />
                         <x:event>click.buttonClick</x:event>
                     </XdevButton>
-                    <XdevButton icon="WebContent/WEB-INF/resources/images/delete3_16.png" caption="{$cmdDeleteFile.caption}" x:name="cmdDeleteParam">
+                    <XdevButton icon="FontAwesome.MINUS_CIRCLE" caption="{$cmdDeleteFile.caption}" x:name="cmdDeleteParam">
                         <x:constraints weightx="0.0" width="0px" height="0px" />
                         <x:event>click.buttonClick</x:event>
                     </XdevButton>
-                    <XdevButton icon="WebContent/WEB-INF/resources/images/edit1.png" caption="{$cmdUpdateFile.caption}" x:name="cmdUpdateParam">
+                    <XdevButton icon="FontAwesome.PENCIL" caption="{$cmdUpdateFile.caption}" x:name="cmdUpdateParam">
                         <x:constraints weightx="0.0" width="0px" height="0px" />
                         <x:event>click.buttonClick</x:event>
                     </XdevButton>
+                    <XdevContainerFilterComponent x:searchableProperties="prmValue,prmGroup,prmSubGroup,prmKey" filterEnabled="false" x:name="containerFilterComponent" x:container="tableRowParam" prefixMatchOnly="false">
+                        <x:constraints weightx="1.0" width="300px" alignment="MIDDLE_RIGHT" height="0%" />
+                    </XdevContainerFilterComponent>
                 </XdevHorizontalLayout>
                 <XdevTable columnReorderingAllowed="true" x:name="tableRowParam" columnCollapsingAllowed="true" x:entity="RowParameter">
                     <x:entityProperties>

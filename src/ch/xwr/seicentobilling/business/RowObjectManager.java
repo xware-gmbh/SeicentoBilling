@@ -15,8 +15,7 @@ public class RowObjectManager {
 	private String username = null;
 
 	public void updateObject(final Long id, final String name) {
-		final EntityDAO entDao = new EntityDAO();
-		final Entity ent = entDao.findEntity(name);
+		final Entity ent = getEntityBean(name);
 		if (ent.getEntHasrowobject() == false)
 		 {
 			return; //no Objectroot
@@ -33,9 +32,28 @@ public class RowObjectManager {
 		em.persist(obj);
 	}
 
+	private Entity getEntityBean(final String name) {
+		final EntityDAO entDao = new EntityDAO();
+		final Entity ent = entDao.findEntity(name);
+		return ent;
+	}
+
+	public RowObject getRowObject(final String entName, final Long id) {
+		if (id == null || id.longValue() < 1) {
+			return null;
+		}
+
+		final Entity ent = getEntityBean(entName);
+		final RowObject obj = getRowObject(entName, id, ent);
+		return obj;
+	}
+
 	private RowObject getRowObject(final String name, final Long id, final Entity ent) {
 		final RowObjectDAO objDao = new RowObjectDAO();
-		RowObject obj = objDao.getObjectBase(name, id);
+		RowObject obj = null;
+		if (id != null) {
+			obj = objDao.getObjectBase(name, id);
+		}
 
 		if (obj == null) {
 			obj = new RowObject();
@@ -45,7 +63,6 @@ public class RowObjectManager {
 			obj.setObjChngcnt((long) 0);
 			obj.setObjState(LovState.State.active);
 			obj.setEntity(ent);
-			obj.setDatabaseVersion(null);
 		}
 		if (obj.getObjChngcnt() == null) {
 			obj.setObjChngcnt((long) 0);

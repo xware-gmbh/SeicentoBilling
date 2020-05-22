@@ -1,5 +1,11 @@
 package ch.xwr.seicentobilling.ui.desktop;
 
+import javax.persistence.PersistenceException;
+
+import org.apache.log4j.LogManager;
+
+import com.vaadin.data.Property;
+import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -9,7 +15,6 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.CloseEvent;
 import com.vaadin.ui.Window.CloseListener;
-import com.xdev.res.ApplicationResource;
 import com.xdev.res.StringResourceUtils;
 import com.xdev.ui.XdevButton;
 import com.xdev.ui.XdevFieldGroup;
@@ -29,11 +34,17 @@ import com.xdev.util.ConverterBuilder;
 import ch.xwr.seicentobilling.business.ConfirmDialog;
 import ch.xwr.seicentobilling.business.LovState;
 import ch.xwr.seicentobilling.business.RowObjectManager;
+import ch.xwr.seicentobilling.business.Seicento;
+import ch.xwr.seicentobilling.business.helper.SeicentoCrud;
+import ch.xwr.seicentobilling.business.model.generic.FileUploadDto;
 import ch.xwr.seicentobilling.dal.CityDAO;
 import ch.xwr.seicentobilling.entities.City;
 import ch.xwr.seicentobilling.entities.City_;
+import ch.xwr.seicentobilling.ui.desktop.crm.ImportZipPopup;
 
 public class CityTabView extends XdevView {
+	/** Logger initialized */
+	private static final org.apache.log4j.Logger LOG = LogManager.getLogger(CityTabView.class);
 
 	/**
 	 *
@@ -44,6 +55,11 @@ public class CityTabView extends XdevView {
 
 		//State
 		this.comboBoxState.addItems((Object[])LovState.State.values());
+
+		if (Seicento.hasRole("BillingAdmin")) {
+			this.cmdImport.setEnabled(true);
+			this.cmdImport.setVisible(true);
+		}
 
 	}
 
@@ -66,9 +82,19 @@ public class CityTabView extends XdevView {
 	private void cmdSave_buttonClick(final Button.ClickEvent event) {
 		final boolean isNew = isNew();
 
-		this.fieldGroup.save();
-		Notification.show("Save clicked", "Daten wurden gespeichert", Notification.Type.TRAY_NOTIFICATION);
+		if (SeicentoCrud.doSave(this.fieldGroup)) {
+			try {
+				final RowObjectManager man = new RowObjectManager();
+				man.updateObject(this.fieldGroup.getItemDataSource().getBean().getCtyId(),
+						this.fieldGroup.getItemDataSource().getBean().getClass().getSimpleName());
+			} catch (final Exception e) {
+				LOG.error("could not save ObjRoot", e);
+			}
+		}
 
+		if (isNew) {
+			cmdReload_buttonClick(null);
+		}
 
 	}
 
@@ -151,26 +177,70 @@ public class CityTabView extends XdevView {
 			}
 
 			private void doDelete() {
-				final City bean = CityTabView.this.table.getSelectedItem().getBean();
-				// Delete Record
-				final RowObjectManager man = new RowObjectManager();
-				man.deleteObject(bean.getCtyId(), bean.getClass().getSimpleName());
-
-				final CityDAO dao = new CityDAO();
-				dao.remove(bean);
-				CityTabView.this.table.getBeanContainerDataSource().refresh();
-
 				try {
-					CityTabView.this.table.select(CityTabView.this.table.getCurrentPageFirstItemId());
-				} catch (final Exception e) {
-					//ignore
+					final City bean = CityTabView.this.table.getSelectedItem().getBean();
+
+					// Delete Record
+					final RowObjectManager man = new RowObjectManager();
+					man.deleteObject(bean.getCtyId(), bean.getClass().getSimpleName());
+
+					final CityDAO dao = new CityDAO();
+					dao.remove(bean);
+					dao.flush();
+
 					CityTabView.this.fieldGroup.setItemDataSource(new City());
+					CityTabView.this.table.markAsDirty();
+					CityTabView.this.table.refreshRowCache();
+
+					Notification.show("Datensatz löschen", "Datensatz wurde gelöscht!", Notification.Type.TRAY_NOTIFICATION);
+
+				} catch (final PersistenceException cx) {
+					final String msg = SeicentoCrud.getPerExceptionError(cx);
+					Notification.show("Fehler beim Löschen", msg, Notification.Type.ERROR_MESSAGE);
+					cx.printStackTrace();
+				} catch (final Exception e) {
+					LOG.error("Error on delete", e);
 				}
-				Notification.show("Datensatz löschen", "Datensatz wurde gelöscht!", Notification.Type.TRAY_NOTIFICATION);
+
 			}
 
 		});
 
+
+	}
+
+	/**
+	 * Event handler delegate method for the {@link XdevButton} {@link #cmdImport}.
+	 *
+	 * @see Button.ClickListener#buttonClick(Button.ClickEvent)
+	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
+	 */
+	private void cmdImport_buttonClick(final Button.ClickEvent event) {
+		final Window win = ImportZipPopup.getPopupWindow();
+		win.addCloseListener(new CloseListener() {
+			@Override
+			public void windowClose(final CloseEvent e) {
+				final FileUploadDto result = (FileUploadDto) UI.getCurrent().getSession().getAttribute("uploaddto");
+				if (result != null && result.isSuccess()) {
+					CityTabView.this.cmdReload_buttonClick(null);
+				}
+			}
+		});
+		this.getUI().addWindow(win);
+
+	}
+
+
+	/**
+	 * Event handler delegate method for the {@link XdevTable} {@link #table}.
+	 *
+	 * @see Property.ValueChangeListener#valueChange(Property.ValueChangeEvent)
+	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
+	 */
+	private void table_valueChange(final Property.ValueChangeEvent event) {
+		if (this.table.getSelectedItem() != null) {
+			//this.fieldGroup.setItemDataSource(this.table.getSelectedItem().getBean());
+		}
 
 	}
 
@@ -188,6 +258,7 @@ public class CityTabView extends XdevView {
 		this.cmdDelete = new XdevButton();
 		this.cmdReload = new XdevButton();
 		this.cmdInfo = new XdevButton();
+		this.cmdImport = new XdevButton();
 		this.table = new XdevTable<>();
 		this.form = new XdevGridLayout();
 		this.comboBoxState = new XdevComboBox<>();
@@ -210,15 +281,18 @@ public class CityTabView extends XdevView {
 		this.horizontalSplitPanel.setStyleName("large");
 		this.horizontalSplitPanel.setSplitPosition(50.0F, Unit.PERCENTAGE);
 		this.verticalLayout.setMargin(new MarginInfo(false));
+		this.containerFilterComponent.setPrefixMatchOnly(false);
 		this.horizontalLayout.setSpacing(false);
 		this.horizontalLayout.setMargin(new MarginInfo(false));
-		this.cmdNew.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/new1_16.png"));
+		this.cmdNew.setIcon(FontAwesome.PLUS_CIRCLE);
 		this.cmdNew.setDescription(StringResourceUtils.optLocalizeString("{$cmdNew.description}", this));
-		this.cmdDelete
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/delete3_16.png"));
-		this.cmdReload.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/reload2.png"));
-		this.cmdInfo
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/info_small.jpg"));
+		this.cmdDelete.setIcon(FontAwesome.MINUS_CIRCLE);
+		this.cmdReload.setIcon(FontAwesome.REFRESH);
+		this.cmdInfo.setIcon(FontAwesome.INFO_CIRCLE);
+		this.cmdImport.setIcon(FontAwesome.FILE_EXCEL_O);
+		this.cmdImport.setDescription("Import PLZ csv");
+		this.cmdImport.setEnabled(false);
+		this.cmdImport.setVisible(false);
 		this.table.setColumnReorderingAllowed(true);
 		this.table.setColumnCollapsingAllowed(true);
 		this.table.setContainerDataSource(City.class);
@@ -247,10 +321,10 @@ public class CityTabView extends XdevView {
 		this.txtCtyZip.setRequired(true);
 		this.lblCtyState.setValue(StringResourceUtils.optLocalizeString("{$lblCtyState.value}", this));
 		this.horizontalLayout2.setMargin(new MarginInfo(false));
-		this.cmdSave.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/save1.png"));
+		this.cmdSave.setIcon(FontAwesome.SAVE);
 		this.cmdSave.setCaption(StringResourceUtils.optLocalizeString("{$cmdSave.caption}", this));
 		this.cmdSave.setTabIndex(9);
-		this.cmdReset.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/cancel1.png"));
+		this.cmdReset.setIcon(FontAwesome.UNDO);
 		this.cmdReset.setCaption(StringResourceUtils.optLocalizeString("{$cmdReset.caption}", this));
 		this.cmdReset.setTabIndex(8);
 		this.fieldGroup.bind(this.txtCtyName, City_.ctyName.getName());
@@ -278,6 +352,9 @@ public class CityTabView extends XdevView {
 		this.cmdInfo.setSizeUndefined();
 		this.horizontalLayout.addComponent(this.cmdInfo);
 		this.horizontalLayout.setComponentAlignment(this.cmdInfo, Alignment.MIDDLE_CENTER);
+		this.cmdImport.setSizeUndefined();
+		this.horizontalLayout.addComponent(this.cmdImport);
+		this.horizontalLayout.setComponentAlignment(this.cmdImport, Alignment.MIDDLE_RIGHT);
 		final CustomComponent horizontalLayout_spacer = new CustomComponent();
 		horizontalLayout_spacer.setSizeFull();
 		this.horizontalLayout.addComponent(horizontalLayout_spacer);
@@ -286,7 +363,7 @@ public class CityTabView extends XdevView {
 		this.containerFilterComponent.setHeight(-1, Unit.PIXELS);
 		this.verticalLayout.addComponent(this.containerFilterComponent);
 		this.verticalLayout.setComponentAlignment(this.containerFilterComponent, Alignment.MIDDLE_CENTER);
-		this.horizontalLayout.setWidth(100, Unit.PIXELS);
+		this.horizontalLayout.setWidth(100, Unit.PERCENTAGE);
 		this.horizontalLayout.setHeight(-1, Unit.PIXELS);
 		this.verticalLayout.addComponent(this.horizontalLayout);
 		this.verticalLayout.setComponentAlignment(this.horizontalLayout, Alignment.MIDDLE_LEFT);
@@ -351,12 +428,14 @@ public class CityTabView extends XdevView {
 		this.cmdDelete.addClickListener(event -> this.cmdDelete_buttonClick(event));
 		this.cmdReload.addClickListener(event -> this.cmdReload_buttonClick(event));
 		this.cmdInfo.addClickListener(event -> this.cmdInfo_buttonClick(event));
+		this.cmdImport.addClickListener(event -> this.cmdImport_buttonClick(event));
+		this.table.addValueChangeListener(event -> this.table_valueChange(event));
 		this.cmdSave.addClickListener(event -> this.cmdSave_buttonClick(event));
 		this.cmdReset.addClickListener(event -> this.cmdReset_buttonClick(event));
 	} // </generated-code>
 
 	// <generated-code name="variables">
-	private XdevButton cmdNew, cmdDelete, cmdReload, cmdInfo, cmdSave, cmdReset;
+	private XdevButton cmdNew, cmdDelete, cmdReload, cmdInfo, cmdImport, cmdSave, cmdReset;
 	private XdevLabel lblCtyName, lblCtyCountry, lblCtyRegion, lblCtyGeoCoordinates, lblCtyZip, lblCtyState;
 	private XdevHorizontalLayout horizontalLayout, horizontalLayout2;
 	private XdevComboBox<?> comboBoxState;

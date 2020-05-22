@@ -67,7 +67,7 @@ public class RowParameter implements java.io.Serializable {
 		this.rowObject = rowObject;
 	}
 
-	@Caption("PrmGroup")
+	@Caption("Gruppe")
 	@Column(name = "prmGroup", columnDefinition = "nvarchar")
 	public String getPrmGroup() {
 		return this.prmGroup;
@@ -77,7 +77,7 @@ public class RowParameter implements java.io.Serializable {
 		this.prmGroup = prmGroup;
 	}
 
-	@Caption("PrmSubGroup")
+	@Caption("Untergruppe")
 	@Column(name = "prmSubGroup", columnDefinition = "nvarchar")
 	public String getPrmSubGroup() {
 		return this.prmSubGroup;
@@ -87,7 +87,7 @@ public class RowParameter implements java.io.Serializable {
 		this.prmSubGroup = prmSubGroup;
 	}
 
-	@Caption("PrmKey")
+	@Caption("Key")
 	@Column(name = "prmKey", columnDefinition = "nvarchar")
 	public String getPrmKey() {
 		return this.prmKey;
@@ -97,7 +97,7 @@ public class RowParameter implements java.io.Serializable {
 		this.prmKey = prmKey;
 	}
 
-	@Caption("PrmValue")
+	@Caption("Wert")
 	@Column(name = "prmValue", columnDefinition = "nvarchar")
 	public String getPrmValue() {
 		return this.prmValue;
@@ -117,7 +117,7 @@ public class RowParameter implements java.io.Serializable {
 		this.prmValueType = prmValueType;
 	}
 
-	@Caption("PrmState")
+	@Caption("Status")
 	@Column(name = "prmState", columnDefinition = "smallint")
 	public LovState.State getPrmState() {
 		return this.prmState;

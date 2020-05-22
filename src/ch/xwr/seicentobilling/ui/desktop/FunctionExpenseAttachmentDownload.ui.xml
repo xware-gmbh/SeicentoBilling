@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+
+<?xdevuiml version="1.0"?>
+<?template BROWSER_XGA?>
+<?import com.xdev.ui.XdevButton?>
+<?import com.xdev.ui.XdevView?>
+<XdevView xmlns:x="http://xml.xdev-software.com/xdevuiml" x:name="FunctionExpenseAttachmentDownload">
+    <x:constraints zpos="0" width="100%" height="100%" />
+    <XdevButton icon="FontAwesome.DOWNLOAD" description="Download attachment" styleName="tiny" x:name="cmdDownload">
+        <x:constraints zpos="0" width="-1px" height="-1px" />
+        <x:event>click.buttonClick</x:event>
+    </XdevButton>
+</XdevView>
+

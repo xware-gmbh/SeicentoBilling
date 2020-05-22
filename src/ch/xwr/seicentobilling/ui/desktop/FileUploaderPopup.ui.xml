@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+
+<?xdevuiml version="1.0"?>
+<?template BROWSER_XGA?>
+<?import com.xdev.ui.XdevButton?>
+<?import com.xdev.ui.XdevHorizontalLayout?>
+<?import com.xdev.ui.XdevLabel?>
+<?import com.xdev.ui.XdevPanel?>
+<?import com.xdev.ui.XdevProgressBar?>
+<?import com.xdev.ui.XdevUpload?>
+<?import com.xdev.ui.XdevVerticalLayout?>
+<?import com.xdev.ui.XdevView?>
+<XdevView xmlns:x="http://xml.xdev-software.com/xdevuiml" x:name="FileUploaderPopup">
+    <x:constraints zpos="0" width="100%" height="100%" />
+    <XdevPanel icon="FontAwesome.UPLOAD" caption="Lokale Datei hochladen" tabIndex="0" x:name="panel">
+        <x:constraints zpos="0" weighty="0.0" width="100%" alignment="MIDDLE_CENTER" height="100%" />
+        <XdevVerticalLayout icon="FontAwesome.UPLOAD" caption="Datei hochladen" x:name="verticalLayout" margin="rbl">
+            <x:constraints gridHeight="1" gridx="1" zpos="0" gridy="1" weighty="0.0" weightx="0.1" width="100%" alignment="TOP_LEFT" gridWidth="1" height="-1px" />
+            <XdevHorizontalLayout x:name="horizontalLayoutLabel" margin="r">
+                <x:constraints gridHeight="1" gridx="1" gridy="1" weighty="0.0" weightx="0.0" width="100%" alignment="TOP_LEFT" gridWidth="1" height="-1px" />
+                <XdevLabel x:name="lblSubject" value="Plz Verzeichnis">
+                    <x:constraints gridHeight="1" gridx="1" gridy="1" weighty="0.0" weightx="0.2" width="0px" alignment="TOP_LEFT" gridWidth="1" height="0px" />
+                </XdevLabel>
+                <XdevLabel description="Die Zahl entspricht dem Monat (z.B. 9 = September)" x:name="lblFileType" value="Filter">
+                    <x:constraints gridHeight="1" gridx="1" gridy="1" top="33px" left="-1px" weighty="0.0" weightx="0.1" width="0px" alignment="TOP_LEFT" gridWidth="1" height="0px" />
+                </XdevLabel>
+                <XdevLabel x:name="lblMaxSize" value="Max. Grösse">
+                    <x:constraints gridHeight="1" gridx="1" gridy="1" top="67px" left="-1px" weighty="0.0" weightx="0.1" width="0px" alignment="TOP_LEFT" gridWidth="1" height="0px" />
+                </XdevLabel>
+            </XdevHorizontalLayout>
+            <XdevHorizontalLayout x:name="horizontalLayoutUpload" margin="r">
+                <x:constraints gridHeight="1" gridx="1" gridy="1" weighty="0.1" weightx="0.0" width="100%" alignment="TOP_LEFT" gridWidth="1" height="-1px" />
+                <XdevUpload buttonCaption="Start Upload" x:name="upload">
+                    <x:constraints gridHeight="1" gridx="1" gridy="1" weighty="0.1" weightx="0.2" width="100%" alignment="TOP_LEFT" gridWidth="1" height="0px" />
+                </XdevUpload>
+                <XdevButton icon="FontAwesome.CLOSE" caption="Abbrechen" x:name="cmdClose" x:shortcut="ESCAPE">
+                    <x:constraints gridHeight="1" gridx="2" gridy="1" weighty="0.0" weightx="0.1" width="0px" alignment="TOP_CENTER" gridWidth="1" height="0px" />
+                    <x:event>click.buttonClick</x:event>
+                </XdevButton>
+            </XdevHorizontalLayout>
+            <XdevHorizontalLayout x:name="horizontalLayoutProgress" margin="r" visible="false">
+                <x:constraints weighty="0.1" width="100%" height="-1px" />
+                <XdevProgressBar x:name="progressBar">
+                    <x:constraints weightx="0.2" width="50%" alignment="TOP_CENTER" height="-1px" />
+                </XdevProgressBar>
+            </XdevHorizontalLayout>
+        </XdevVerticalLayout>
+    </XdevPanel>
+</XdevView>
+

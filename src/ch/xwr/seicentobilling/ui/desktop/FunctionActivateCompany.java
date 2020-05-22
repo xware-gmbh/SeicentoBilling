@@ -82,15 +82,23 @@ public class FunctionActivateCompany extends XdevHorizontalLayout {
 		final CompanyDAO cmpDao = new CompanyDAO();
 		final List<Company> slrs = cmpDao.findAll();
 
+		boolean activated = false;
 		for (final Iterator<Company> iterator = slrs.iterator(); iterator.hasNext();) {
 			final Company cmp = iterator.next();
 			cmp.setCmpState(LovState.State.inactive);
 			if (cmp.getCmpId() == this.selectedObj.getCmpId()) {
 				cmp.setCmpState(LovState.State.active);
+				activated = true;
 			}
 			cmpDao.save(cmp);
 		}
 
+		if (!activated) {
+			//should not happen
+			final Company fallback = slrs.get(0);
+			fallback.setCmpState(LovState.State.active);
+			cmpDao.save(fallback);
+		}
 		reloadTable();
 	}
 

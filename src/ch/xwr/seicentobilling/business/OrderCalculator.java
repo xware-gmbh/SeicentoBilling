@@ -62,6 +62,8 @@ public class OrderCalculator {
 			amt2 = amt2 + orderLine.getOdlAmountNet();
 			//vat = vat + orderLine.getOdlVatAmount();
 		}
+		amt1 = new BigDecimal(amt1).setScale(2,RoundingMode.HALF_UP).doubleValue();
+		amt2 = new BigDecimal(amt2).setScale(2,RoundingMode.HALF_UP).doubleValue();
 
 		amt1 = new BigDecimal(amt1).setScale(2,RoundingMode.HALF_UP).doubleValue();
 		amt2 = new BigDecimal(amt2).setScale(2,RoundingMode.HALF_UP).doubleValue();

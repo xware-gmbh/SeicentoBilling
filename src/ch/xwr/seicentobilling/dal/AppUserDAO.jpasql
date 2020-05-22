@@ -1,0 +1,7 @@
+import ch.xwr.seicentobilling.entities.AppUser
+
+findByName(String name)
+{
+	//select * from Company where cmpState = :state
+	select * from AppUser where username = :name
+}

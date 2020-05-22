@@ -12,105 +12,113 @@
 <?import com.xdev.ui.XdevGridLayout?>
 <?import com.xdev.ui.XdevHorizontalLayout?>
 <?import com.xdev.ui.XdevLabel?>
+<?import com.xdev.ui.XdevPanel?>
 <?import com.xdev.ui.XdevTextField?>
 <?import com.xdev.ui.XdevView?>
 <?import com.xdev.ui.entitycomponent.combobox.XdevComboBox?>
 <?import java.lang.String?>
-<XdevView xmlns:x="http://xml.xdev-software.com/xdevuiml" caption="" x:name="PeriodePopup">
-    <x:constraints zpos="0" width="100%" height="100%" />
-    <XdevGridLayout x:name="form">
-        <x:constraints zpos="0" width="100%" height="100%" />
-        <XdevLabel x:name="lblCostAccount" value="{$lblCostAccount.value}">
-            <x:constraints gridx="1" gridy="1" weighty="0.0" weightx="0.1" width="0px" height="0px" />
-        </XdevLabel>
-        <XdevComboBox required="true" x:name="cmbCostAccount" x:entity="CostAccount">
-            <x:constraints gridx="2" gridy="1" weighty="0.0" weightx="1.0" width="100%" height="0px" />
-            <x:entityProperty>
-                <entry type="String" property="csaCode" />
-            </x:entityProperty>
-            <x:typeArguments>
-                <typeArgument type="CostAccount" />
-            </x:typeArguments>
-            <x:data methodName="findAll" />
-        </XdevComboBox>
-        <XdevLabel x:name="lblPerName" value="{$lblPerName.value}">
-            <x:constraints gridx="1" gridy="2" weighty="0.0" weightx="0.1" width="0px" height="0px" />
-        </XdevLabel>
-        <XdevTextField columns="5" x:name="txtPerName">
-            <x:constraints gridx="2" gridy="2" weighty="0.0" weightx="1.0" width="100%" gridWidth="2" height="0px" />
-        </XdevTextField>
-        <XdevLabel x:name="lblPerMonth" value="{$lblPerMonth.value}">
-            <x:constraints gridx="1" gridy="3" weighty="0.0" weightx="0.1" width="0px" height="0px" />
-        </XdevLabel>
-        <XdevComboBox required="true" x:name="comboBoxMonth">
-            <x:constraints gridx="2" gridy="3" weighty="0.0" weightx="1.0" width="0px" height="0px" />
-            <x:typeArguments>
-                <typeArgument type="?" />
-            </x:typeArguments>
-        </XdevComboBox>
-        <XdevLabel x:name="lblPerYear" value="Jahr">
-            <x:constraints gridx="1" gridy="4" top="33px" left="-1px" weighty="0.0" weightx="0.0" width="0px" height="0px" />
-        </XdevLabel>
-        <XdevTextField columns="5" required="true" x:name="textFieldYear" maxLength="4">
-            <converter numberType="Integer" numberFormatType="number" currency="default" groupingUsed="false" converterType="STRING_TO_NUMBER" locale="default" minimumIntegerDigits="4" maximumIntegerDigits="4" />
-            <x:constraints gridx="2" gridy="4" weighty="0.0" weightx="1.0" width="0px" height="0px" />
-        </XdevTextField>
-        <XdevLabel x:name="lblPerBookedExpense" value="{$lblPerBookedExpense.value}">
-            <x:constraints gridx="1" gridy="5" weighty="0.0" weightx="0.1" width="0px" height="0px" />
-        </XdevLabel>
-        <XdevComboBox x:name="comboBoxBookedExp">
-            <x:constraints gridx="2" gridy="5" weighty="0.0" weightx="1.0" width="0px" height="0px" />
-            <x:typeArguments>
-                <typeArgument type="?" />
-            </x:typeArguments>
-        </XdevComboBox>
-        <XdevCheckBox caption="Freigabe Buchhalter" description="Das Feld kann durch den Buchhalter gesetzt werden für die Freigabe an die Buchhaltung" x:name="cboSignOffExpense">
-            <x:constraints gridx="3" gridy="5" weighty="0.0" weightx="0.0" width="0px" height="0px" />
-        </XdevCheckBox>
-        <XdevLabel x:name="lblPerBookedProject" value="{$lblPerBookedProject.value}">
-            <x:constraints gridx="1" gridy="6" weighty="0.0" weightx="0.1" width="0px" height="0px" />
-        </XdevLabel>
-        <XdevComboBox x:name="comboBoxBookedPro">
-            <x:constraints gridx="2" gridy="6" weighty="0.0" weightx="1.0" width="0px" height="0px" />
-            <x:typeArguments>
-                <typeArgument type="?" />
-            </x:typeArguments>
-        </XdevComboBox>
-        <XdevLabel x:name="lblPerState" value="{$lblPerState.value}">
-            <x:constraints gridx="1" gridy="7" weighty="0.0" weightx="0.1" width="0px" height="0px" />
-        </XdevLabel>
-        <XdevComboBox x:name="comboBoxState">
-            <x:constraints gridx="2" gridy="7" weighty="0.0" weightx="1.0" width="0px" height="0px" />
-            <x:typeArguments>
-                <typeArgument type="?" />
-            </x:typeArguments>
-        </XdevComboBox>
-        <XdevFieldGroup x:name="fieldGroup" x:entityType="Periode">
-            <x:typeArguments>
-                <typeArgument type="Periode" />
-            </x:typeArguments>
-            <x:fields>
-                <entry name="cmbCostAccount" property="costAccount" />
-                <entry name="txtPerName" property="perName" />
-                <entry name="comboBoxMonth" property="perMonth" />
-                <entry name="comboBoxBookedExp" property="perBookedExpense" />
-                <entry name="cboSignOffExpense" property="perSignOffExpense" />
-                <entry name="comboBoxBookedPro" property="perBookedProject" />
-                <entry name="comboBoxState" property="perState" />
-                <entry name="textFieldYear" property="perYear" />
-            </x:fields>
-        </XdevFieldGroup>
-        <XdevHorizontalLayout x:name="horizontalLayout" margin="">
-            <x:constraints gridx="1" gridy="8" weighty="0.0" weightx="0.1" width="0px" alignment="TOP_CENTER" gridWidth="2" height="0px" />
-            <XdevButton icon="WebContent/WEB-INF/resources/images/save1.png" caption="{$cmdSave.caption}" x:name="cmdSave">
-                <x:constraints weightx="0.0" width="0px" alignment="MIDDLE_LEFT" height="0px" />
-                <x:event>click.buttonClick</x:event>
-            </XdevButton>
-            <XdevButton icon="WebContent/WEB-INF/resources/images/cancel1.png" caption="{$cmdCancel.caption}" x:name="cmdCancel">
-                <x:constraints weightx="0.0" width="0px" alignment="MIDDLE_LEFT" height="0px" />
-                <x:event>click.buttonClick</x:event>
-            </XdevButton>
-        </XdevHorizontalLayout>
-    </XdevGridLayout>
+<XdevView xmlns:x="http://xml.xdev-software.com/xdevuiml" icon="" x:name="PeriodePopup">
+    <x:constraints zpos="0" width="760px" height="490px" />
+    <XdevPanel icon="FontAwesome.CLOCK_O" caption="Periode bearbeiten" tabIndex="0" x:name="panel">
+        <x:constraints gridHeight="1" gridx="1" zpos="0" gridy="1" weighty="0.0" weightx="0.0" width="100%" alignment="TOP_LEFT" gridWidth="1" height="100%" />
+        <XdevGridLayout icon="" x:name="form">
+            <x:constraints zpos="1" width="100%" height="100%" />
+            <XdevLabel x:name="lblCostAccount" value="{$lblCostAccount.value}">
+                <x:constraints gridx="1" gridy="1" weighty="0.0" weightx="0.1" width="0px" height="0px" />
+            </XdevLabel>
+            <XdevComboBox required="true" x:name="cmbCostAccount" x:entity="CostAccount">
+                <x:constraints gridx="2" gridy="1" weighty="0.0" weightx="1.0" width="100%" height="0px" />
+                <x:entityProperty>
+                    <entry type="String" property="csaCode" />
+                </x:entityProperty>
+                <x:typeArguments>
+                    <typeArgument type="CostAccount" />
+                </x:typeArguments>
+                <x:data methodName="findAll" />
+            </XdevComboBox>
+            <XdevLabel x:name="lblPerName" value="{$lblPerName.value}">
+                <x:constraints gridx="1" gridy="2" weighty="0.0" weightx="0.1" width="0px" height="0px" />
+            </XdevLabel>
+            <XdevTextField columns="5" x:name="txtPerName">
+                <x:constraints gridx="2" gridy="2" weighty="0.0" weightx="1.0" width="100%" gridWidth="2" height="0px" />
+            </XdevTextField>
+            <XdevLabel x:name="lblPerMonth" value="{$lblPerMonth.value}">
+                <x:constraints gridx="1" gridy="3" weighty="0.0" weightx="0.1" width="0px" height="0px" />
+            </XdevLabel>
+            <XdevComboBox required="true" x:name="comboBoxMonth">
+                <x:constraints gridx="2" gridy="3" weighty="0.0" weightx="1.0" width="0px" height="0px" />
+                <x:typeArguments>
+                    <typeArgument type="?" />
+                </x:typeArguments>
+            </XdevComboBox>
+            <XdevLabel x:name="lblPerYear" value="Jahr">
+                <x:constraints gridx="3" gridy="3" top="33px" left="-1px" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+            </XdevLabel>
+            <XdevTextField columns="5" required="true" x:name="textFieldYear" maxLength="4">
+                <converter numberType="Integer" numberFormatType="number" currency="default" groupingUsed="false" converterType="STRING_TO_NUMBER" locale="default" minimumIntegerDigits="4" maximumIntegerDigits="4" />
+                <x:constraints gridx="4" gridy="3" weighty="0.0" weightx="1.0" width="0px" height="0px" />
+            </XdevTextField>
+            <XdevCheckBox caption="Freigabe Buchhalter" description="Das Feld kann durch den Buchhalter gesetzt werden für die Freigabe an die Buchhaltung" x:name="cboSignOffExpense">
+                <x:constraints gridx="2" gridy="4" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+                <x:event>valueChange.valueChange</x:event>
+            </XdevCheckBox>
+            <XdevLabel x:name="lblAmtExpense" value="Betrag">
+                <x:constraints gridx="3" gridy="4" top="33px" left="-1px" weighty="0.0" weightx="0.0" width="100%" gridWidth="2" height="0px" />
+            </XdevLabel>
+            <XdevLabel x:name="lblPerBookedExpense" value="{$lblPerBookedExpense.value}">
+                <x:constraints gridx="1" gridy="5" weighty="0.0" weightx="0.1" width="0px" height="0px" />
+            </XdevLabel>
+            <XdevComboBox x:name="comboBoxBookedExp">
+                <x:constraints gridx="2" gridy="5" weighty="0.0" weightx="1.0" width="0px" height="0px" />
+                <x:typeArguments>
+                    <typeArgument type="?" />
+                </x:typeArguments>
+            </XdevComboBox>
+            <XdevLabel x:name="lblPerBookedProject" value="{$lblPerBookedProject.value}">
+                <x:constraints gridx="3" gridy="5" weighty="0.0" weightx="0.1" width="0px" height="0px" />
+            </XdevLabel>
+            <XdevComboBox x:name="comboBoxBookedPro">
+                <x:constraints gridx="4" gridy="5" weighty="0.0" weightx="1.0" width="0px" height="0px" />
+                <x:typeArguments>
+                    <typeArgument type="?" />
+                </x:typeArguments>
+            </XdevComboBox>
+            <XdevLabel x:name="lblPerState" value="{$lblPerState.value}">
+                <x:constraints gridx="1" gridy="6" weighty="0.0" weightx="0.1" width="0px" height="0px" />
+            </XdevLabel>
+            <XdevComboBox x:name="comboBoxState">
+                <x:constraints gridx="2" gridy="6" weighty="0.0" weightx="1.0" width="0px" height="0px" />
+                <x:typeArguments>
+                    <typeArgument type="?" />
+                </x:typeArguments>
+            </XdevComboBox>
+            <XdevFieldGroup x:name="fieldGroup" x:entityType="Periode">
+                <x:typeArguments>
+                    <typeArgument type="Periode" />
+                </x:typeArguments>
+                <x:fields>
+                    <entry name="cmbCostAccount" property="costAccount" />
+                    <entry name="txtPerName" property="perName" />
+                    <entry name="comboBoxMonth" property="perMonth" />
+                    <entry name="comboBoxBookedExp" property="perBookedExpense" />
+                    <entry name="cboSignOffExpense" property="perSignOffExpense" />
+                    <entry name="comboBoxBookedPro" property="perBookedProject" />
+                    <entry name="comboBoxState" property="perState" />
+                    <entry name="textFieldYear" property="perYear" />
+                </x:fields>
+            </XdevFieldGroup>
+            <XdevHorizontalLayout x:name="horizontalLayout" margin="t">
+                <x:constraints gridx="1" gridy="7" weighty="0.0" weightx="0.1" width="100%" alignment="MIDDLE_LEFT" gridWidth="3" height="0px" />
+                <XdevButton icon="FontAwesome.SAVE" caption="{$cmdSave.caption}" x:name="cmdSave">
+                    <x:constraints weightx="0.0" width="0px" height="0px" />
+                    <x:event>click.buttonClick</x:event>
+                </XdevButton>
+                <XdevButton icon="FontAwesome.CLOSE" caption="{$cmdCancel.caption}" x:name="cmdCancel">
+                    <x:constraints weightx="0.0" width="0px" alignment="MIDDLE_LEFT" height="0px" />
+                    <x:event>click.buttonClick</x:event>
+                </XdevButton>
+            </XdevHorizontalLayout>
+        </XdevGridLayout>
+    </XdevPanel>
 </XdevView>
 

@@ -1,7 +1,11 @@
 package ch.xwr.seicentobilling.business;
 
+import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
+
+import org.apache.log4j.Appender;
+import org.apache.log4j.LogManager;
 
 import com.vaadin.server.VaadinSession;
 import com.xdev.security.authorization.Subject;
@@ -33,6 +37,20 @@ public class Seicento {
 
 		return "unknown";
 	}
+
+	public static SeicentoUser getSeicentoUser() {
+		final Subject sub = VaadinSession.getCurrent().getAttribute(Subject.class);
+
+		if (sub != null && sub instanceof SeicentoUser)
+		{
+			final SeicentoUser usr = (SeicentoUser) sub;
+			return usr;
+		}
+
+
+		return null;
+	}
+
 
 	public static boolean hasRole(final String roleName) {
 		final Subject sub = VaadinSession.getCurrent().getAttribute(Subject.class);
@@ -94,4 +112,58 @@ public class Seicento {
 	public static CostAccount getLoggedInCostAccount() {
 		return Seicento.getLoggedInCostAccount(getUserName());
 	}
+
+	public static void removeGelfAppender() {
+		Appender ap = null;
+		final org.apache.log4j.Logger root = LogManager.getRootLogger();
+		final Enumeration<?> lsa = root.getAllAppenders();
+		while (lsa.hasMoreElements()) {
+			ap = (Appender) lsa.nextElement();
+			if (ap.getName().equalsIgnoreCase("gelf")) {
+				root.removeAppender(ap);
+			}
+		}
+	}
+
+	public static long getMemory() {
+		System.gc();
+	    final Runtime rt = Runtime.getRuntime();
+	    final long usedMB = (rt.totalMemory() - rt.freeMemory()) / 1024 / 1024;
+	    LOG.debug("memory usage MB: " + usedMB);
+	    return usedMB;
+	}
+
+	public static String getLoginMethod() {
+		String lm = "azure";
+		if (System.getenv("SEICENTO_LOGIN_METHOD") != null) {
+			lm = System.getenv("SEICENTO_LOGIN_METHOD");
+		};
+
+		return lm;
+	}
+
+	public static String calculateThemeHeight(float height, String theme) {
+		theme = theme.toLowerCase();
+
+		int x = 0;
+
+		switch (theme) {
+		case "facebook":
+			x = Math.round(height / 5);
+			height = height - x;
+			break;
+
+		case "darksb":
+			x = Math.round(height / 20);
+			height = height + x;
+
+			break;
+
+		default:
+			break;
+		}
+
+		return "" + height;
+	}
+
 }

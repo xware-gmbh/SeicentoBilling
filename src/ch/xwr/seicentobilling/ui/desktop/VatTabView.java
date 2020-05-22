@@ -13,7 +13,6 @@ import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.CloseEvent;
 import com.vaadin.ui.Window.CloseListener;
 import com.xdev.dal.DAOs;
-import com.xdev.res.ApplicationResource;
 import com.xdev.ui.XdevButton;
 import com.xdev.ui.XdevCheckBox;
 import com.xdev.ui.XdevFieldGroup;
@@ -418,13 +417,11 @@ public class VatTabView extends XdevView {
 		this.verticalLayout.setMargin(new MarginInfo(false));
 		this.horizontalLayout.setSpacing(false);
 		this.horizontalLayout.setMargin(new MarginInfo(false));
-		this.cmdNew.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/new1_16.png"));
+		this.cmdNew.setIcon(FontAwesome.PLUS_CIRCLE);
 		this.cmdNew.setDescription("Neuen Datensatz anlegen");
-		this.cmdDelete
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/delete3_16.png"));
-		this.cmdReload.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/reload2.png"));
-		this.cmdInfo
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/info_small.jpg"));
+		this.cmdDelete.setIcon(FontAwesome.MINUS_CIRCLE);
+		this.cmdReload.setIcon(FontAwesome.REFRESH);
+		this.cmdInfo.setIcon(FontAwesome.INFO_CIRCLE);
 		this.table.setContainerDataSource(Vat.class, DAOs.get(VatDAO.class).findAll());
 		this.table.setVisibleColumns(Vat_.vatName.getName(), Vat_.vatSign.getName(), Vat_.vatInclude.getName(),
 				Vat_.vatState.getName());
@@ -466,9 +463,9 @@ public class VatTabView extends XdevView {
 		this.tableVatLine.setColumnHeader("vanRemark", "Bemerkung");
 		this.tableVatLine.setColumnHeader("vanState", "Status");
 		this.horizontalLayoutButtons.setMargin(new MarginInfo(false));
-		this.cmdSave.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/save1.png"));
+		this.cmdSave.setIcon(FontAwesome.SAVE);
 		this.cmdSave.setCaption("Speichern");
-		this.cmdReset.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/cancel1.png"));
+		this.cmdReset.setIcon(FontAwesome.UNDO);
 		this.cmdReset.setCaption("Verwerfen");
 		this.fieldGroup.bind(this.txtVatName, Vat_.vatName.getName());
 		this.fieldGroup.bind(this.txtVatSign, Vat_.vatSign.getName());

@@ -18,7 +18,6 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.TabSheet;
-import com.vaadin.ui.Window;
 import com.xdev.res.ApplicationResource;
 import com.xdev.security.authentication.ui.XdevAuthenticationNavigator;
 import com.xdev.server.aa.openid.helper.DiscoveryHelper;
@@ -32,6 +31,7 @@ import com.xdev.ui.XdevUI;
 import com.xdev.ui.XdevVerticalLayout;
 import com.xdev.ui.XdevView;
 
+import ch.xwr.seicentobilling.business.Seicento;
 import ch.xwr.seicentobilling.business.auth.AzureHelper;
 import ch.xwr.seicentobilling.business.auth.SeicentoUser;
 import ch.xwr.seicentobilling.dal.CompanyDAO;
@@ -74,10 +74,11 @@ public class DesktopUI extends XdevUI {
 	//only for local testing with preview
 	private void checkLocalDevEnv() {
 		if (isLocalDevEnv()) {
-			LOG.info("Local DEV Environment.... enable Menues");
+			LOG.info("Local DEV Environment.... enable Menues, disable Gelf");
 
 			//Eclipse Preview (does not have Path in Jetty)
 			enableMenu(true);
+			Seicento.removeGelfAppender();
 
 			//this.currentUser = new AzureUser(null);
 
@@ -121,16 +122,17 @@ public class DesktopUI extends XdevUI {
 	}
 
 	public void loggedIn(final boolean lgin, final SeicentoUser user) {
-		this.currentUser = user;
 
 		if (lgin) {
+			this.currentUser = user;
 			LOG.info("User logged in " + this.currentUser.name());
 			this.menuItemUser.setCaption(this.currentUser.name());
 			setLocale();
 		} else {
 			//getSession().close();   //leads to Session expired
-			LOG.info("User logged out");
+			LOG.info("User logged out " + this.currentUser.name());
 			this.menuItemUser.setCaption("");
+			this.currentUser = null;
 		}
 
 		enableMenu(lgin);
@@ -144,6 +146,9 @@ public class DesktopUI extends XdevUI {
 	private void setLocale() {
 		Locale.setDefault(new Locale("de", "CH"));
 		TimeZone.setDefault(TimeZone.getTimeZone("Europe/Zurich"));
+
+		this.getUI().setTheme("Darksb");
+
 	}
 
 	private void loadMyData() {
@@ -351,13 +356,7 @@ public class DesktopUI extends XdevUI {
 	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
 	 */
 	private void menuItemUsrInfo_menuSelected(final MenuBar.MenuItem selectedItem) {
-		final Window win = UserInfoPopup.getPopupWindow();
-
-		// UI.getCurrent().getSession().setAttribute(String.class,
-		// bean.getClass().getSimpleName());
-		win.setContent(new UserInfoPopup());
-		this.getUI().addWindow(win);
-
+		loadTab(ApplicationSettingsTabView.class, selectedItem.getText());
 	}
 
 	/**
@@ -392,6 +391,37 @@ public class DesktopUI extends XdevUI {
 	private void mnuOrderGenerate_menuSelected(final MenuBar.MenuItem selectedItem) {
 		//loadTab(OrderTabView.class, selectedItem.getText());
 		loadTab(OrderGenerateTabView.class, selectedItem.getText());
+	}
+
+	/**
+	 * Event handler delegate method for the {@link XdevTabSheet} {@link #tabSheet}.
+	 *
+	 * @see TabSheet.SelectedTabChangeListener#selectedTabChange(TabSheet.SelectedTabChangeEvent)
+	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
+	 */
+	private void tabSheet_selectedTabChange(final TabSheet.SelectedTabChangeEvent event) {
+//		System.out.println("selected Tab Sheet");
+//		final Class<? extends TabSheet> cl = event.getTabSheet().getClass();
+//		System.out.println("selected Tab Sheet " + cl);  //XdevTabSheet
+//
+//		final Component sl = event.getTabSheet().getSelectedTab();  //XdevView
+//		final XdevView viw = (XdevView) sl;
+//
+//		if (viw.isEnabled() && viw.isVisible()) {
+//			viw.markAsDirty();
+//			viw.enter(null);
+//		}
+	}
+
+	/**
+	 * Event handler delegate method for the {@link XdevMenuBar.XdevMenuItem}
+	 * {@link #menuItemProfile}.
+	 *
+	 * @see MenuBar.Command#menuSelected(MenuBar.MenuItem)
+	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
+	 */
+	private void menuItemProfile_menuSelected(final MenuBar.MenuItem selectedItem) {
+		loadTab(ProfileTabView.class, selectedItem.getText());
 	}
 
 	/*
@@ -431,7 +461,9 @@ public class DesktopUI extends XdevUI {
 		this.mnuObject = this.mnuOption.addItem("Objektstamm", null);
 		this.menuBarRight = new XdevMenuBar();
 		this.menuItemUser = this.menuBarRight.addItem("Benutzer", null);
+		this.menuItemProfile = this.menuItemUser.addItem("Profil", null);
 		this.menuItemUsrInfo = this.menuItemUser.addItem("Info", null);
+		this.mnuSeperator2 = this.menuItemUser.addSeparator();
 		this.menuItemLogout = this.menuItemUser.addItem("Logout", null);
 		this.layoutsTab = new XdevVerticalLayout();
 		this.tabSheet = new XdevTabSheet();
@@ -521,8 +553,10 @@ public class DesktopUI extends XdevUI {
 		this.menuCity.setCommand(selectedItem -> this.menuCity_menuSelected(selectedItem));
 		this.mnuCompany.setCommand(selectedItem -> this.mnuCompany_menuSelected(selectedItem));
 		this.mnuObject.setCommand(selectedItem -> this.mnuObject_menuSelected(selectedItem));
+		this.menuItemProfile.setCommand(selectedItem -> this.menuItemProfile_menuSelected(selectedItem));
 		this.menuItemUsrInfo.setCommand(selectedItem -> this.menuItemUsrInfo_menuSelected(selectedItem));
 		this.menuItemLogout.setCommand(selectedItem -> this.menuItemLogout_menuSelected(selectedItem));
+		this.tabSheet.addSelectedTabChangeListener(event -> this.tabSheet_selectedTabChange(event));
 	} // </generated-code>
 
 	// <generated-code name="variables">
@@ -532,8 +566,8 @@ public class DesktopUI extends XdevUI {
 	private XdevImage image;
 	private XdevMenuItem mnuOperation, mnuOrder, mnuItem, mnuCustomer, mnuSeperator, mnuOrderGenerate, mnuExpense,
 			mnuExpense2, mnuReport, mnuSeperator1, mnuReportTemplate, mnuExpenseTemplate, mnuProject, mnuProject2, mnuAddon,
-			menuCostAccount, menuVat, menuCity, mnuOption, mnuCompany, mnuObject, menuItemUser, menuItemUsrInfo,
-			menuItemLogout;
+			menuCostAccount, menuVat, menuCity, mnuOption, mnuCompany, mnuObject, menuItemUser, menuItemProfile,
+			menuItemUsrInfo, mnuSeperator2, menuItemLogout;
 	private XdevTabSheet tabSheet;
 	private XdevVerticalLayout verticalLayout, verticalLayout3, layoutsTab;
 	private XdevAuthenticationNavigator navigator;

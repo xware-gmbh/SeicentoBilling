@@ -33,19 +33,19 @@
             </XdevContainerFilterComponent>
             <XdevHorizontalLayout spacing="false" x:name="horizontalLayout" margin="">
                 <x:constraints weighty="0.0" width="100%" alignment="MIDDLE_LEFT" height="0px" />
-                <XdevButton icon="WebContent/WEB-INF/resources/images/new1_16.png" description="{$cmdNew.description}" x:name="cmdNew">
+                <XdevButton icon="FontAwesome.PLUS_CIRCLE" description="{$cmdNew.description}" x:name="cmdNew">
                     <x:constraints weightx="0.0" width="0px" height="0px" />
                     <x:event>click.buttonClick</x:event>
                 </XdevButton>
-                <XdevButton icon="WebContent/WEB-INF/resources/images/delete3_16.png" x:name="cmdDelete">
+                <XdevButton icon="FontAwesome.MINUS_CIRCLE" x:name="cmdDelete">
                     <x:constraints weightx="0.0" width="0px" height="0px" />
                     <x:event>click.buttonClick</x:event>
                 </XdevButton>
-                <XdevButton icon="WebContent/WEB-INF/resources/images/reload2.png" x:name="cmdReload">
+                <XdevButton icon="FontAwesome.REFRESH" x:name="cmdReload">
                     <x:constraints weightx="0.0" width="0px" height="0px" />
                     <x:event>click.buttonClick</x:event>
                 </XdevButton>
-                <XdevButton icon="WebContent/WEB-INF/resources/images/info_small.jpg" x:name="cmdInfo">
+                <XdevButton icon="FontAwesome.INFO_CIRCLE" x:name="cmdInfo">
                     <x:constraints weightx="0.0" width="0px" height="0px" />
                     <x:event>click.buttonClick</x:event>
                 </XdevButton>
@@ -153,11 +153,11 @@
             </XdevLabel>
             <XdevHorizontalLayout x:name="horizontalLayout2" margin="">
                 <x:constraints gridx="1" gridy="9" weighty="0.0" weightx="0.0" width="0px" alignment="TOP_CENTER" gridWidth="2" height="0px" />
-                <XdevButton icon="WebContent/WEB-INF/resources/images/save1.png" caption="Speichern" tabIndex="8" x:name="cmdSave" x:shortcut="ENTER">
+                <XdevButton icon="FontAwesome.SAVE" caption="Speichern" tabIndex="8" x:name="cmdSave" x:shortcut="ENTER">
                     <x:constraints weightx="0.0" width="0px" alignment="MIDDLE_LEFT" height="0px" />
                     <x:event>click.buttonClick</x:event>
                 </XdevButton>
-                <XdevButton icon="WebContent/WEB-INF/resources/images/cancel1.png" caption="Abbrechen" tabIndex="9" x:name="cmdReset" x:shortcut="ESCAPE">
+                <XdevButton icon="FontAwesome.UNDO" caption="Abbrechen" tabIndex="9" x:name="cmdReset" x:shortcut="ESCAPE">
                     <x:constraints weightx="0.0" width="0px" alignment="MIDDLE_LEFT" height="0px" />
                     <x:event>click.buttonClick</x:event>
                 </XdevButton>

@@ -16,7 +16,7 @@
 <?import com.xdev.ui.XdevView?>
 <?import com.xdev.ui.entitycomponent.combobox.XdevComboBox?>
 <XdevView xmlns:x="http://xml.xdev-software.com/xdevuiml" x:name="ActivityPopup">
-    <x:constraints zpos="0" width="100%" height="100%" />
+    <x:constraints width="920px" zpos="0" height="615px" />
     <XdevPanel caption="Adressen" tabIndex="0" x:name="panel">
         <x:constraints gridHeight="1" gridx="2" zpos="0" gridy="1" weighty="0.0" weightx="1.0" width="100%" alignment="TOP_LEFT" gridWidth="1" height="100%" />
         <XdevGridLayout x:name="form">
@@ -107,6 +107,7 @@
             </XdevLabel>
             <XdevTextField columns="5" x:name="txtAdrZip" maxLength="50">
                 <x:constraints gridx="2" gridy="6" weighty="0.0" weightx="1.0" width="-1px" height="0px" />
+                <x:event>valueChange.valueChange</x:event>
             </XdevTextField>
             <XdevLabel x:name="lblAdrCity" value="City">
                 <x:constraints gridx="3" gridy="6" weighty="0.0" weightx="0.0" width="0px" height="0px" />
@@ -137,11 +138,11 @@
             </XdevLabel>
             <XdevHorizontalLayout x:name="horizontalLayout" margin="tb">
                 <x:constraints gridx="2" gridy="10" weighty="0.0" weightx="0.0" width="0px" height="0px" />
-                <XdevButton icon="WebContent/WEB-INF/resources/images/save1.png" caption="Speichern" x:name="cmdSave" x:shortcut="ENTER">
+                <XdevButton icon="FontAwesome.SAVE" caption="Speichern" x:name="cmdSave" x:shortcut="ENTER">
                     <x:constraints weightx="0.0" width="0px" alignment="MIDDLE_LEFT" height="0px" />
                     <x:event>click.buttonClick</x:event>
                 </XdevButton>
-                <XdevButton icon="WebContent/WEB-INF/resources/images/cancel1.png" caption="Abbrechen" x:name="cmdReset" x:shortcut="ESCAPE">
+                <XdevButton icon="FontAwesome.CLOSE" caption="Abbrechen" x:name="cmdReset" x:shortcut="ESCAPE">
                     <x:constraints weightx="0.0" width="0px" alignment="MIDDLE_LEFT" height="0px" />
                     <x:event>click.buttonClick</x:event>
                 </XdevButton>

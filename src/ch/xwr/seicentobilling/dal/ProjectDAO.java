@@ -4,6 +4,7 @@ package ch.xwr.seicentobilling.dal;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -87,4 +88,12 @@ public class ProjectDAO extends JPADAO<Project, Long> {
 		query.setParameter(nameParameter, name);
 		return query.getResultList();
 	}
+
+	public int calculateEffectiveHours(final Long proId) {
+		final String sql = "EXECUTE seicento_Calculate_ProjectHours :ProjectId";
+	    final Query nativeQuery = em().createNativeQuery(sql).setParameter("ProjectId", proId);
+	    final int ires = nativeQuery.executeUpdate();
+	    return ires;
+	}
+
 }

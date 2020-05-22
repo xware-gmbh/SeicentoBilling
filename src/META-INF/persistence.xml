@@ -17,7 +17,6 @@
 		<class>ch.xwr.seicentobilling.entities.RowText</class>
 		<class>ch.xwr.seicentobilling.entities.RowObject</class>
 		<class>ch.xwr.seicentobilling.entities.Communication</class>
-		<class>ch.xwr.seicentobilling.entities.DatabaseVersion</class>
 		<class>ch.xwr.seicentobilling.entities.Expense</class>
 		<class>ch.xwr.seicentobilling.entities.RowLabel</class>
 		<class>ch.xwr.seicentobilling.entities.Vat</class>
@@ -44,6 +43,7 @@
 		<class>ch.xwr.seicentobilling.entities.CustomerLink</class>
 		<class>ch.xwr.seicentobilling.entities.ContactRelation</class>
 		<class>ch.xwr.seicentobilling.entities.Conversion</class>
+		<class>ch.xwr.seicentobilling.entities.AppUser</class>
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
 		<properties>
 			<property name="hibernate.hbm2ddl.auto" value="" />

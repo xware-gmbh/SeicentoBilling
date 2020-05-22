@@ -36,7 +36,6 @@ import ch.xwr.seicentobilling.dal.RowObjectDAO;
 public class RowObject implements java.io.Serializable {
 
 	private Long objId;
-	private DatabaseVersion databaseVersion;
 	private ch.xwr.seicentobilling.entities.Entity entity;
 	private long objRowId;
 	private Long objChngcnt;
@@ -68,17 +67,6 @@ public class RowObject implements java.io.Serializable {
 
 	public void setObjId(final Long objId) {
 		this.objId = objId;
-	}
-
-	@Caption("DatabaseVersion")
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "objdbvId", columnDefinition = "bigint")
-	public DatabaseVersion getDatabaseVersion() {
-		return this.databaseVersion;
-	}
-
-	public void setDatabaseVersion(final DatabaseVersion databaseVersion) {
-		this.databaseVersion = databaseVersion;
 	}
 
 	@Caption("Entity")

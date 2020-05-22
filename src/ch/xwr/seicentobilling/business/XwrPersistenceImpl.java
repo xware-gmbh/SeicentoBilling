@@ -45,9 +45,9 @@ public class XwrPersistenceImpl implements Factory {
 			{
 			    final Map<String, String> properties = new HashMap<>();
 				String stage = System.getenv("APP_STAGE");
+			    setupLog4j(stage);
 				if (stage != null) {
 					stage = stage.toUpperCase();
-					System.setProperty("APP_STAGE", stage);  //for log4J
 					final String dburl = System.getenv("DB_URL_" + stage);
 					if (dburl != null && dburl.length()>3) {
 						System.out.println("Read DB Connection from Environment: " + stage);
@@ -69,6 +69,21 @@ public class XwrPersistenceImpl implements Factory {
 				}
 
 				return Persistence.createEntityManagerFactory(persistenceUnit, properties);
+			}
+
+
+			private void setupLog4j(String stage) {
+				if (stage == null || stage.isEmpty()) {
+					stage = "DEV";
+				}
+				System.setProperty("APP_STAGE", stage);  //for log4J
+
+				final String gelf = System.getenv("GELF_URL");
+				if (gelf == null || gelf.isEmpty()) {
+					Seicento.removeGelfAppender();
+				} else {
+					System.setProperty("GELF_URL", gelf);  //for log4J
+				}
 			}
 
 

@@ -2,8 +2,10 @@ package ch.xwr.seicentobilling.entities;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -70,6 +72,7 @@ public class Customer implements java.io.Serializable {
 	private Boolean cusSinglepdf;
 	private String cusExtRef1;
 	private String cusExtRef2;
+	private List<AppUser> users = new ArrayList<>();
 
 	public Customer() {
 	}
@@ -87,7 +90,7 @@ public class Customer implements java.io.Serializable {
 		this.cusId = cusId;
 	}
 
-	@Caption("City")
+	@Caption("Ort")
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "cusctyId", columnDefinition = "bigint")
 	public City getCity() {
@@ -98,7 +101,7 @@ public class Customer implements java.io.Serializable {
 		this.city = city;
 	}
 
-	@Caption("PaymentCondition")
+	@Caption("Zahlungskondition")
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "cuspacId", nullable = false, columnDefinition = "bigint")
 	public PaymentCondition getPaymentCondition() {
@@ -149,7 +152,7 @@ public class Customer implements java.io.Serializable {
 		this.cusCompany = cusCompany;
 	}
 
-	@Caption("CusAddress")
+	@Caption("Adresse")
 	@Column(name = "cusAddress", columnDefinition = "nvarchar")
 	public String getCusAddress() {
 		return this.cusAddress;
@@ -159,7 +162,7 @@ public class Customer implements java.io.Serializable {
 		this.cusAddress = cusAddress;
 	}
 
-	@Caption("CusInfo")
+	@Caption("Info")
 	@Lob
 	@Column(name = "cusInfo", columnDefinition = "ntext")
 	public String getCusInfo() {
@@ -170,7 +173,7 @@ public class Customer implements java.io.Serializable {
 		this.cusInfo = cusInfo;
 	}
 
-	@Caption("State")
+	@Caption("Status")
 	@Column(name = "cusState", columnDefinition = "smallint")
 	public LovState.State getCusState() {
 		return this.cusState;
@@ -251,6 +254,7 @@ public class Customer implements java.io.Serializable {
 		this.customerlinks = customerlinks;
 	}
 
+	@Caption("Kurzname")
 	@Column(name = "shortname", insertable = false, updatable = false)
 	@Transient
 	public String getShortname() {
@@ -275,7 +279,7 @@ public class Customer implements java.io.Serializable {
 		this.shortname = noname;
 	}
 
-	@Caption("AccountManager")
+	@Caption("Account Manager")
 	@Column(name = "cusAccountManager")
 	public String getCusAccountManager() {
 		return this.cusAccountManager;
@@ -285,7 +289,7 @@ public class Customer implements java.io.Serializable {
 		this.cusAccountManager = noname;
 	}
 
-	@Caption("AccountType")
+	@Caption("Kontakt Typ")
 	@Column(name = "cusAccountType", columnDefinition = "smallint")
 	public LovState.AccountType getCusAccountType() {
 		return this.cusAccountType;
@@ -423,6 +427,27 @@ public class Customer implements java.io.Serializable {
 
 	public void setCusExtRef2(final String noname) {
 		this.cusExtRef2 = noname;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "customer")
+	public List<AppUser> getUsers() {
+		return this.users;
+	}
+
+	public void setUsers(final List<AppUser> users) {
+		this.users = users;
+	}
+
+	public AppUser addUser(final AppUser user) {
+		getUsers().add(user);
+		user.setCustomer(this);
+		return user;
+	}
+
+	public AppUser removeUser(final AppUser user) {
+		getUsers().remove(user);
+		user.setCustomer(null);
+		return user;
 	}
 
 }

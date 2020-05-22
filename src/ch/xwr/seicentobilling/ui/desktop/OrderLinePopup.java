@@ -1,23 +1,19 @@
 package ch.xwr.seicentobilling.ui.desktop;
 
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
 import com.vaadin.data.Property;
-import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.event.ShortcutAction;
+import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CustomComponent;
-import com.vaadin.ui.Field;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Window;
 import com.xdev.dal.DAOs;
-import com.xdev.res.ApplicationResource;
 import com.xdev.res.StringResourceUtils;
 import com.xdev.ui.XdevButton;
 import com.xdev.ui.XdevFieldGroup;
@@ -32,6 +28,8 @@ import com.xdev.util.ConverterBuilder;
 import ch.xwr.seicentobilling.business.LovState;
 import ch.xwr.seicentobilling.business.OrderCalculator;
 import ch.xwr.seicentobilling.business.RowObjectManager;
+import ch.xwr.seicentobilling.business.Seicento;
+import ch.xwr.seicentobilling.business.helper.SeicentoCrud;
 import ch.xwr.seicentobilling.dal.CostAccountDAO;
 import ch.xwr.seicentobilling.dal.ItemDAO;
 import ch.xwr.seicentobilling.dal.OrderDAO;
@@ -57,6 +55,8 @@ public class OrderLinePopup extends XdevView {
 	public OrderLinePopup() {
 		super();
 		this.initUI();
+
+		this.setHeight(Seicento.calculateThemeHeight(this.getHeight(),UI.getCurrent().getTheme()));
 
 		// State
 		this.comboBoxState.addItems((Object[]) LovState.State.values());
@@ -107,8 +107,8 @@ public class OrderLinePopup extends XdevView {
 
 	public static Window getPopupWindow() {
 		final Window win = new Window();
-		win.setWidth("720");
-		win.setHeight("540");
+		//win.setWidth("720");
+		//win.setHeight("540");
 		win.center();
 		win.setModal(true);
 		win.setContent(new OrderLinePopup());
@@ -118,12 +118,12 @@ public class OrderLinePopup extends XdevView {
 
 	/**
 	 * Event handler delegate method for the {@link XdevButton}
-	 * {@link #cmdReset}.
+	 * {@link #cmdCancel}.
 	 *
 	 * @see Button.ClickListener#buttonClick(Button.ClickEvent)
 	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
 	 */
-	private void cmdReset_buttonClick(final Button.ClickEvent event) {
+	private void cmdCancel_buttonClick(final Button.ClickEvent event) {
 		UI.getCurrent().getSession().setAttribute(String.class, "cmdCancel");
 		this.fieldGroup.discard();
 		((Window) this.getParent()).close();
@@ -141,30 +141,18 @@ public class OrderLinePopup extends XdevView {
 
 		try {
 			if (!this.fieldGroup.isValid()){
-				final Collection<Field<?>> c2 = this.fieldGroup.getFields();
-				for (final Iterator<Field<?>> iterator = c2.iterator(); iterator.hasNext();) {
-					final Field<?> object = iterator.next();
-					final String name = (String) this.fieldGroup.getPropertyId(object);
-					try {
-						object.validate();
-					} catch (final InvalidValueException e) {
-						Notification.show("Ungültiger Wert in Feld " + name, "Message" + e.getMessage(), Notification.Type.ERROR_MESSAGE);
-						e.printStackTrace();
-					} catch (final Exception e) {
-						Notification.show("Fehler beim Speichern " + object.getCaption(), e.getMessage(), Notification.Type.ERROR_MESSAGE);
-					}
-				}
-
+				SeicentoCrud.validateField(this.fieldGroup);
 				return;
 			}
-			this.fieldGroup.save();
 
-			final RowObjectManager man = new RowObjectManager();
-			man.updateObject(this.fieldGroup.getItemDataSource().getBean().getOdlId(),
-					this.fieldGroup.getItemDataSource().getBean().getClass().getSimpleName());
+			if (SeicentoCrud.doSave(this.fieldGroup)) {
+				final RowObjectManager man = new RowObjectManager();
+				man.updateObject(this.fieldGroup.getItemDataSource().getBean().getOdlId(),
+						this.fieldGroup.getItemDataSource().getBean().getClass().getSimpleName());
 
-			((Window) this.getParent()).close();
-			Notification.show("Save clicked", "Daten wurden gespeichert", Notification.Type.TRAY_NOTIFICATION);
+				((Window) this.getParent()).close();
+			}
+
 
 		} catch (final Exception e) {
 			Notification.show("Fehler beim Speichern", e.getMessage(), Notification.Type.ERROR_MESSAGE);
@@ -301,9 +289,11 @@ public class OrderLinePopup extends XdevView {
 		this.lblOdlState = new XdevLabel();
 		this.horizontalLayout = new XdevHorizontalLayout();
 		this.cmdSave = new XdevButton();
-		this.cmdReset = new XdevButton();
+		this.cmdCancel = new XdevButton();
 		this.fieldGroup = new XdevFieldGroup<>(OrderLine.class);
 
+		this.form.setIcon(FontAwesome.BOOK);
+		this.form.setCaption("Auftragszeile erfassen");
 		this.comboBoxState.setTabIndex(12);
 		this.lblOrder.setValue(StringResourceUtils.optLocalizeString("{$lblOrder.value}", this));
 		this.cmbOrder.setTabIndex(1);
@@ -351,15 +341,15 @@ public class OrderLinePopup extends XdevView {
 		this.txtOdlAmountNet.setConverter(ConverterBuilder.stringToDouble().currency().build());
 		this.txtOdlAmountNet.setTabIndex(10);
 		this.lblOdlState.setValue(StringResourceUtils.optLocalizeString("{$lblOdlState.value}", this));
-		this.horizontalLayout.setMargin(new MarginInfo(false));
-		this.cmdSave.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/save1.png"));
+		this.horizontalLayout.setMargin(new MarginInfo(true, false, false, false));
+		this.cmdSave.setIcon(FontAwesome.SAVE);
 		this.cmdSave.setCaption(StringResourceUtils.optLocalizeString("{$cmdSave.caption}", this));
 		this.cmdSave.setTabIndex(13);
 		this.cmdSave.setClickShortcut(ShortcutAction.KeyCode.ENTER);
-		this.cmdReset.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/cancel1.png"));
-		this.cmdReset.setCaption(StringResourceUtils.optLocalizeString("{$cmdReset.caption}", this));
-		this.cmdReset.setTabIndex(14);
-		this.cmdReset.setClickShortcut(ShortcutAction.KeyCode.ESCAPE);
+		this.cmdCancel.setIcon(FontAwesome.CLOSE);
+		this.cmdCancel.setCaption(StringResourceUtils.optLocalizeString("{$cmdReset.caption}", this));
+		this.cmdCancel.setTabIndex(14);
+		this.cmdCancel.setClickShortcut(ShortcutAction.KeyCode.ESCAPE);
 		this.fieldGroup.bind(this.cmbOrder, OrderLine_.orderhdr.getName());
 		this.fieldGroup.bind(this.txtOdlNumber, OrderLine_.odlNumber.getName());
 		this.fieldGroup.bind(this.cmbItem, OrderLine_.item.getName());
@@ -376,9 +366,13 @@ public class OrderLinePopup extends XdevView {
 		this.cmdSave.setSizeUndefined();
 		this.horizontalLayout.addComponent(this.cmdSave);
 		this.horizontalLayout.setComponentAlignment(this.cmdSave, Alignment.MIDDLE_CENTER);
-		this.cmdReset.setSizeUndefined();
-		this.horizontalLayout.addComponent(this.cmdReset);
-		this.horizontalLayout.setComponentAlignment(this.cmdReset, Alignment.MIDDLE_CENTER);
+		this.cmdCancel.setSizeUndefined();
+		this.horizontalLayout.addComponent(this.cmdCancel);
+		this.horizontalLayout.setComponentAlignment(this.cmdCancel, Alignment.MIDDLE_CENTER);
+		final CustomComponent horizontalLayout_spacer = new CustomComponent();
+		horizontalLayout_spacer.setSizeFull();
+		this.horizontalLayout.addComponent(horizontalLayout_spacer);
+		this.horizontalLayout.setExpandRatio(horizontalLayout_spacer, 1.0F);
 		this.form.setColumns(4);
 		this.form.setRows(11);
 		this.comboBoxState.setSizeUndefined();
@@ -434,8 +428,9 @@ public class OrderLinePopup extends XdevView {
 		this.form.addComponent(this.txtOdlAmountNet, 1, 7);
 		this.lblOdlState.setSizeUndefined();
 		this.form.addComponent(this.lblOdlState, 0, 8);
-		this.horizontalLayout.setSizeUndefined();
-		this.form.addComponent(this.horizontalLayout, 0, 9, 1, 9);
+		this.horizontalLayout.setWidth(100, Unit.PERCENTAGE);
+		this.horizontalLayout.setHeight(-1, Unit.PIXELS);
+		this.form.addComponent(this.horizontalLayout, 0, 9, 2, 9);
 		this.form.setComponentAlignment(this.horizontalLayout, Alignment.MIDDLE_CENTER);
 		this.form.setColumnExpandRatio(1, 100.0F);
 		this.form.setColumnExpandRatio(3, 100.0F);
@@ -445,21 +440,22 @@ public class OrderLinePopup extends XdevView {
 		this.form.setRowExpandRatio(10, 1.0F);
 		this.form.setSizeFull();
 		this.setContent(this.form);
-		this.setSizeFull();
+		this.setWidth(860, Unit.PIXELS);
+		this.setHeight(600, Unit.PIXELS);
 
 		this.cmbItem.addValueChangeListener(event -> this.cmbItem_valueChange(event));
 		this.cmbVat.addValueChangeListener(event -> this.cmbVat_valueChange(event));
 		this.txtOdlQuantity.addValueChangeListener(event -> this.txtOdlQuantity_valueChange(event));
 		this.txtOdlPrice.addValueChangeListener(event -> this.txtOdlPrice_valueChange(event));
 		this.cmdSave.addClickListener(event -> this.cmdSave_buttonClick(event));
-		this.cmdReset.addClickListener(event -> this.cmdReset_buttonClick(event));
+		this.cmdCancel.addClickListener(event -> this.cmdCancel_buttonClick(event));
 	} // </generated-code>
 
 	// <generated-code name="variables">
 	private XdevComboBox<Item> cmbItem;
 	private XdevLabel lblOrder, lblOdlNumber, lblItem, lblVat, lblOdlQuantity, lblOdlPrice, lblOdlText, lblCostAccount,
 			lblOdlAmountBrut, lblOdlVatAmount, lblOdlAmountNet, lblOdlState;
-	private XdevButton cmdSave, cmdReset;
+	private XdevButton cmdSave, cmdCancel;
 	private XdevComboBox<CostAccount> cmbCostAccount;
 	private XdevComboBox<Vat> cmbVat;
 	private XdevHorizontalLayout horizontalLayout;

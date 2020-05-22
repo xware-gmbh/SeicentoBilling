@@ -291,10 +291,10 @@ public class ImportContactsPopup extends XdevView {
 		this.cmdSelect.setIcon(FontAwesome.CHECK_SQUARE);
 		this.cmdSelect.setCaption("Select/Unselect");
 		this.cmdSelect.setClickShortcut(ShortcutAction.KeyCode.ESCAPE);
-		this.cmdSave.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/save1.png"));
+		this.cmdSave.setIcon(FontAwesome.SAVE);
 		this.cmdSave.setCaption("Speichern");
 		this.cmdSave.setClickShortcut(ShortcutAction.KeyCode.ENTER);
-		this.cmdReset.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/cancel1.png"));
+		this.cmdReset.setIcon(FontAwesome.CLOSE);
 		this.cmdReset.setCaption("Schliessen");
 		this.cmdReset.setClickShortcut(ShortcutAction.KeyCode.ESCAPE);
 		this.labelResult.setValue("Label");

@@ -8,6 +8,7 @@ import com.vaadin.data.Property;
 import com.vaadin.event.FieldEvents;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ShortcutAction;
+import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Page;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.Alignment;
@@ -20,7 +21,6 @@ import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.CloseEvent;
 import com.vaadin.ui.Window.CloseListener;
 import com.xdev.dal.DAOs;
-import com.xdev.res.ApplicationResource;
 import com.xdev.res.StringResourceUtils;
 import com.xdev.ui.XdevButton;
 import com.xdev.ui.XdevHorizontalLayout;
@@ -383,6 +383,14 @@ public class ExpenseTabView extends XdevView {
 		this.cmdCopySingle.setEnabled(!roFlag);
 		this.cmdUpdate.setEnabled(!roFlag);
 		this.cmdDelete.setEnabled(!roFlag);
+
+		if (this.currentPeriode != null && this.currentPeriode.getPerSignOffExpense() != null && this.currentPeriode.getPerSignOffExpense()) {
+			this.cmdNewExpense.setEnabled(false);
+			this.cmdUpdateExpense.setEnabled(false);
+			this.cmdDeleteExpense.setEnabled(false);
+			this.cmdCopySingle.setEnabled(false);
+		}
+
 	}
 
 	private boolean isBooked() {
@@ -393,6 +401,7 @@ public class ExpenseTabView extends XdevView {
 		if (LovState.BookingType.gebucht.equals(bean.getPerBookedExpense())) {
 			return true;
 		}
+
 		// if (bean != null && bean.getPerBookedExpense() != null) {
 		// if (bean.getPerBookedExpense() == LovState.BookingType.gebucht) {
 		// return true;
@@ -565,6 +574,7 @@ public class ExpenseTabView extends XdevView {
 		final Long beanId = this.table.getSelectedItem().getBean().getPerId();
 		UI.getCurrent().getSession().setAttribute("beanId",  beanId);
 		UI.getCurrent().getSession().setAttribute("reason",  "update");
+		UI.getCurrent().getSession().setAttribute("source",  "expense");
 
 		popupPeriode();
 
@@ -588,10 +598,9 @@ public class ExpenseTabView extends XdevView {
 
 					if ("new".equals(reason)) {
 						ExpenseTabView.this.table.addItem(bean);
-						reloadMainTable();
-					} else {
-						ExpenseTabView.this.table.getSelectedItem().setBean(bean);
 					}
+					reloadMainTable();
+					ExpenseTabView.this.table.select(bean);
 				}
 
 			}
@@ -657,13 +666,33 @@ public class ExpenseTabView extends XdevView {
 	 */
 	private void table_itemClick(final ItemClickEvent event) {
 		if (event.isDoubleClick() && !isBooked()) {
-			final Long beanId = this.table.getSelectedItem().getBean().getPerId();
-			UI.getCurrent().getSession().setAttribute("beanId",  beanId);
-			UI.getCurrent().getSession().setAttribute("reason",  "update");
-
-			popupPeriode();
+			if (this.table.getSelectedItem() != null) {
+				this.cmdUpdate.click();
+			}
 		}
+	}
 
+	/**
+	 * Event handler delegate method for the {@link XdevButton}
+	 * {@link #cmdZipReport}.
+	 *
+	 * @see Button.ClickListener#buttonClick(Button.ClickEvent)
+	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
+	 */
+	private void cmdZipReport_buttonClick(final Button.ClickEvent event) {
+		if (this.table.getSelectedItem() == null) {
+			Notification.show("Report starten", "Es wurde keine Zeile selektiert in der Tabelle", Notification.Type.WARNING_MESSAGE);
+			return;
+		}
+		final Periode bean = this.table.getSelectedItem().getBean();
+		UI.getCurrent().getSession().setAttribute("perBeanId", bean.getPerId());
+
+		popupExpenseReportPopup();
+	}
+
+	private void popupExpenseReportPopup() {
+		final Window win = ExpenseReportPopup.getPopupWindow();
+		this.getUI().addWindow(win);
 	}
 
 	/*
@@ -682,6 +711,7 @@ public class ExpenseTabView extends XdevView {
 		this.cmdReload = new XdevButton();
 		this.cmdCopyExpenses = new XdevButton();
 		this.cmdReport = new XdevButton();
+		this.cmdZipReport = new XdevButton();
 		this.cmdInfo = new XdevButton();
 		this.table = new XdevTable<>();
 		this.verticalLayoutRight = new XdevVerticalLayout();
@@ -701,22 +731,21 @@ public class ExpenseTabView extends XdevView {
 		this.verticalLayoutLeft.setMargin(new MarginInfo(false));
 		this.actionLayout.setSpacing(false);
 		this.actionLayout.setMargin(new MarginInfo(false));
-		this.cmdNew.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/new1_16.png"));
+		this.cmdNew.setIcon(FontAwesome.PLUS_CIRCLE);
 		this.cmdNew.setDescription("Neuen Datensatz anlegen");
-		this.cmdDelete
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/delete3_16.png"));
+		this.cmdDelete.setIcon(FontAwesome.MINUS_CIRCLE);
 		this.cmdDelete.setDescription("Datensatz löschen");
-		this.cmdUpdate.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/edit1.png"));
+		this.cmdUpdate.setIcon(FontAwesome.PENCIL);
 		this.cmdUpdate.setDescription("Periode bearbeiten...");
-		this.cmdReload.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/reload2.png"));
-		this.cmdCopyExpenses
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/copy1.png"));
+		this.cmdUpdate.setImmediate(true);
+		this.cmdReload.setIcon(FontAwesome.REFRESH);
+		this.cmdCopyExpenses.setIcon(FontAwesome.COPY);
 		this.cmdCopyExpenses.setDescription("Alle Spesen einer Periode kopieren");
-		this.cmdReport.setIcon(
-				new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/Printer_black_18.png"));
+		this.cmdReport.setIcon(FontAwesome.PRINT);
 		this.cmdReport.setDescription("Jasper Report starten");
-		this.cmdInfo
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/info_small.jpg"));
+		this.cmdZipReport.setIcon(FontAwesome.FILE_ZIP_O);
+		this.cmdZipReport.setDescription("Spesen als ZIP Report");
+		this.cmdInfo.setIcon(FontAwesome.INFO_CIRCLE);
 		this.cmdInfo.setDescription("Objektinfo");
 		this.table.setColumnReorderingAllowed(true);
 		this.table.setColumnCollapsingAllowed(true);
@@ -750,21 +779,16 @@ public class ExpenseTabView extends XdevView {
 		this.horizontalLayout.setSpacing(false);
 		this.horizontalLayout.setMargin(new MarginInfo(false));
 		this.horizontalLayout.setImmediate(true);
-		this.cmdNewExpense
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/new1_16.png"));
+		this.cmdNewExpense.setIcon(FontAwesome.PLUS_CIRCLE);
 		this.cmdNewExpense.setCaption(StringResourceUtils.optLocalizeString("{$cmdNewExpense.caption}", this));
 		this.cmdNewExpense.setClickShortcut(ShortcutAction.KeyCode.N, ShortcutAction.ModifierKey.CTRL);
-		this.cmdDeleteExpense
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/delete3_16.png"));
+		this.cmdDeleteExpense.setIcon(FontAwesome.MINUS_CIRCLE);
 		this.cmdDeleteExpense.setCaption(StringResourceUtils.optLocalizeString("{$cmdDeleteExpense.caption}", this));
-		this.cmdUpdateExpense
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/edit1.png"));
+		this.cmdUpdateExpense.setIcon(FontAwesome.PENCIL);
 		this.cmdUpdateExpense.setCaption(StringResourceUtils.optLocalizeString("{$cmdUpdateExpense.caption}", this));
-		this.cmdCopySingle
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/copy1.png"));
+		this.cmdCopySingle.setIcon(FontAwesome.COPY);
 		this.cmdCopySingle.setDescription("Markierten Datensatz kopieren");
-		this.cmdInfoExpense
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/info_small.jpg"));
+		this.cmdInfoExpense.setIcon(FontAwesome.INFO_CIRCLE);
 		this.cmdToggleEdit.setIcon(null);
 		this.cmdToggleEdit.setStyleName("tiny");
 		this.cmdToggleEdit.setEnabled(false);
@@ -773,12 +797,13 @@ public class ExpenseTabView extends XdevView {
 		this.tableLine.setColumnCollapsingAllowed(true);
 		this.tableLine.setContainerDataSource(Expense.class, false, NestedProperty.of(Expense_.vat, Vat_.vatSign),
 				NestedProperty.of(Expense_.vat, Vat_.vatName), NestedProperty.of(Expense_.project, Project_.proName));
+		this.tableLine.addGeneratedColumn("generated", new FunctionExpenseAttachmentDownload.Generator());
 		this.tableLine.setVisibleColumns(Expense_.expDate.getName(), Expense_.expAccount.getName(),
 				Expense_.expFlagCostAccount.getName(), Expense_.expFlagGeneric.getName(), Expense_.expAmount.getName(),
 				NestedProperty.path(Expense_.vat, Vat_.vatSign), NestedProperty.path(Expense_.vat, Vat_.vatName),
 				Expense_.expText.getName(), NestedProperty.path(Expense_.project, Project_.proName),
 				Expense_.expState.getName(), Expense_.expUnit.getName(), Expense_.expQuantity.getName(),
-				Expense_.expBooked.getName());
+				Expense_.expBooked.getName(), "generated");
 		this.tableLine.setColumnHeader("expDate", "Datum");
 		this.tableLine.setConverter("expDate", ConverterBuilder.stringToDate().dateOnly().build());
 		this.tableLine.setColumnHeader("expAccount", "Konto");
@@ -803,6 +828,7 @@ public class ExpenseTabView extends XdevView {
 		this.tableLine.setColumnCollapsed("expQuantity", true);
 		this.tableLine.setColumnHeader("expBooked", "Gebucht");
 		this.tableLine.setColumnCollapsed("expBooked", true);
+		this.tableLine.setColumnHeader("generated", "Beleg");
 
 		this.containerFilterComponent.setContainer(this.table.getBeanContainerDataSource(), "perYear", "perMonth",
 				"costAccount", "perBookedExpense", "perBookedProject", "perState", "costAccount.csaCode",
@@ -827,6 +853,9 @@ public class ExpenseTabView extends XdevView {
 		this.cmdReport.setSizeUndefined();
 		this.actionLayout.addComponent(this.cmdReport);
 		this.actionLayout.setComponentAlignment(this.cmdReport, Alignment.MIDDLE_CENTER);
+		this.cmdZipReport.setSizeUndefined();
+		this.actionLayout.addComponent(this.cmdZipReport);
+		this.actionLayout.setComponentAlignment(this.cmdZipReport, Alignment.MIDDLE_CENTER);
 		this.cmdInfo.setSizeUndefined();
 		this.actionLayout.addComponent(this.cmdInfo);
 		this.actionLayout.setComponentAlignment(this.cmdInfo, Alignment.MIDDLE_CENTER);
@@ -888,6 +917,7 @@ public class ExpenseTabView extends XdevView {
 		this.cmdReload.addClickListener(event -> this.cmdReload_buttonClick(event));
 		this.cmdCopyExpenses.addClickListener(event -> this.cmdCopyExpenses_buttonClick(event));
 		this.cmdReport.addClickListener(event -> this.cmdReport_buttonClick(event));
+		this.cmdZipReport.addClickListener(event -> this.cmdZipReport_buttonClick(event));
 		this.cmdInfo.addClickListener(event -> this.cmdInfo_buttonClick(event));
 		this.table.addValueChangeListener(event -> this.table_valueChange(event));
 		this.table.addItemClickListener(event -> this.table_itemClick(event));
@@ -901,8 +931,8 @@ public class ExpenseTabView extends XdevView {
 	} // </generated-code>
 
 	// <generated-code name="variables">
-	private XdevButton cmdNew, cmdDelete, cmdUpdate, cmdReload, cmdCopyExpenses, cmdReport, cmdInfo, cmdNewExpense,
-			cmdDeleteExpense, cmdUpdateExpense, cmdCopySingle, cmdInfoExpense, cmdToggleEdit;
+	private XdevButton cmdNew, cmdDelete, cmdUpdate, cmdReload, cmdCopyExpenses, cmdReport, cmdZipReport, cmdInfo,
+			cmdNewExpense, cmdDeleteExpense, cmdUpdateExpense, cmdCopySingle, cmdInfoExpense, cmdToggleEdit;
 	private XdevHorizontalLayout actionLayout, horizontalLayout;
 	private XdevTable<Expense> tableLine;
 	private XdevTabSheet tabSheet;

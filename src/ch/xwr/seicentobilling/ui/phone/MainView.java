@@ -6,6 +6,7 @@ import com.vaadin.server.ClientConnector;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.UI;
 import com.xdev.res.ApplicationResource;
 import com.xdev.security.authorization.Subject;
 import com.xdev.server.aa.openid.auth.AzureUser;
@@ -14,9 +15,13 @@ import com.xdev.ui.XdevGridLayout;
 import com.xdev.ui.XdevView;
 import com.xdev.ui.navigation.Navigation;
 
+import ch.xwr.seicentobilling.business.LovState;
+import ch.xwr.seicentobilling.business.Seicento;
+import ch.xwr.seicentobilling.business.auth.SeicentoUser;
+
 
 public class MainView extends XdevView {
-	private AzureUser currentUser;
+	private SeicentoUser currentUser;
 
 	/**
 	 *
@@ -44,13 +49,48 @@ public class MainView extends XdevView {
 
 		if (sub != null && sub instanceof AzureUser)
 		{
-			this.currentUser = (AzureUser) sub;
-
-			//this.label.setValue("Hallo " + this.currentUser.name() + "!");
-			final PhoneUI main = (PhoneUI) this.getUI(); //.getParent().getUI();
-			main.loggedIn(true, this.currentUser);
+			//login via azure provides AzureUser first
+			final AzureUser aad = (AzureUser) sub;
+			this.currentUser = new SeicentoUser(aad);
+		} else if (sub != null && sub instanceof SeicentoUser){
+			this.currentUser = (SeicentoUser) sub;
 		}
 
+		if (this.currentUser.getAssignedAccount() == null) {
+			this.currentUser.setAssignedAccount(Seicento.getLoggedInCostAccount(this.currentUser.name()));
+		}
+		VaadinSession.getCurrent().setAttribute(Subject.class, this.currentUser);
+
+		final UI ux = this.getUI();
+		if (ux instanceof PhoneUI) {
+			final PhoneUI main = (PhoneUI) this.getUI(); //.getParent().getUI();
+			main.loggedIn(true, this.currentUser);
+		} else {
+			System.out.println("logged in Preview / DevEnv. PhoneUI not available!");
+			Seicento.removeGelfAppender();
+		}
+
+		applyTheme();
+
+	}
+
+	private void applyTheme() {
+		if (this.currentUser.getDbUser() == null) {
+			return;
+		}
+		final LovState.Theme th = this.currentUser.getDbUser().getUsrThemeMobile();
+		if (th == null) {
+			return;
+		}
+		if (th.equals(LovState.Theme.dark)) {
+			this.getUI().setTheme("Darksb");
+		}
+		if (th.equals(LovState.Theme.facebook)) {
+			this.getUI().setTheme("Facebook");
+		}
+		if (th.equals(LovState.Theme.light)) {
+			this.getUI().setTheme("SeicentoBilling");
+		}
 
 	}
 

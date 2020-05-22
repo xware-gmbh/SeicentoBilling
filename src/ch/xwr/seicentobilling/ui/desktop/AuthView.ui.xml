@@ -16,7 +16,7 @@
         <XdevPanel caption="Login" tabIndex="0" x:name="panelMain" visible="false">
             <x:constraints gridx="1" gridy="1" top="171px" left="-1px" weighty="0.1" weightx="0.1" width="0px" alignment="MIDDLE_CENTER" height="0px" />
             <XdevGridLayout x:name="gridLayout4">
-                <x:constraints gridHeight="1" zpos="0" gridx="1" gridy="2" weighty="0.1" weightx="0.1" width="100%" alignment="MIDDLE_CENTER" gridWidth="1" height="100%" />
+                <x:constraints gridHeight="1" gridx="1" zpos="0" gridy="2" weighty="0.1" weightx="0.1" width="100%" alignment="MIDDLE_CENTER" gridWidth="1" height="100%" />
             </XdevGridLayout>
         </XdevPanel>
         <XdevPanel caption="Login" tabIndex="0" x:name="panelOauth" visible="false">
@@ -31,7 +31,7 @@
         <XdevPanel caption="Login" tabIndex="0" x:name="panelLocal" visible="false">
             <x:constraints gridx="2" gridy="2" weighty="0.0" weightx="0.0" width="0px" alignment="MIDDLE_CENTER" height="0px" />
             <XdevGridLayout x:name="gridLayout3">
-                <x:constraints gridHeight="1" zpos="0" gridx="1" gridy="2" weighty="0.1" weightx="0.1" width="100%" alignment="MIDDLE_CENTER" gridWidth="1" height="100%" />
+                <x:constraints gridHeight="1" gridx="1" zpos="0" gridy="2" weighty="0.1" weightx="0.1" width="100%" alignment="MIDDLE_CENTER" gridWidth="1" height="100%" />
                 <XdevTextField columns="20" caption="Username" x:name="txtUsername">
                     <x:constraints gridx="1" gridy="1" weighty="0.0" weightx="0.1" width="0px" height="0px" />
                 </XdevTextField>

@@ -21,13 +21,13 @@
         <XdevGridLayout x:name="form">
             <x:constraints zpos="0" width="100%" height="100%" />
             <XdevComboBox tabIndex="24" x:name="cbxValueType">
-                <x:constraints gridx="2" gridy="5" weighty="0.0" weightx="1.0" />
+                <x:constraints gridx="2" gridy="5" weighty="0.0" weightx="1.0" width="0px" height="0px" />
                 <x:typeArguments>
                     <typeArgument type="?" />
                 </x:typeArguments>
             </XdevComboBox>
             <XdevComboBox tabIndex="25" x:name="comboBoxState">
-                <x:constraints gridx="2" gridy="6" weighty="0.0" weightx="1.0" />
+                <x:constraints gridx="2" gridy="6" weighty="0.0" weightx="1.0" width="0px" height="0px" />
                 <x:typeArguments>
                     <typeArgument type="?" />
                 </x:typeArguments>
@@ -50,43 +50,43 @@
                 </x:fields>
             </XdevFieldGroup>
             <XdevLabel x:name="lblPrmGroup" value="{$lblPrmGroup.value}">
-                <x:constraints gridx="1" gridy="1" weighty="0.0" weightx="0.0" />
+                <x:constraints gridx="1" gridy="1" weighty="0.0" weightx="0.0" width="0px" height="0px" />
             </XdevLabel>
             <XdevTextField columns="5" tabIndex="20" x:name="txtPrmGroup">
-                <x:constraints gridx="2" gridy="1" weighty="0.0" weightx="1.0" width="100%" />
+                <x:constraints gridx="2" gridy="1" weighty="0.0" weightx="1.0" width="100%" height="0px" />
             </XdevTextField>
             <XdevLabel x:name="lblPrmSubGroup" value="{$lblPrmSubGroup.value}">
-                <x:constraints gridx="1" gridy="2" weighty="0.0" weightx="0.0" />
+                <x:constraints gridx="1" gridy="2" weighty="0.0" weightx="0.0" width="0px" height="0px" />
             </XdevLabel>
             <XdevTextField columns="5" tabIndex="21" x:name="txtPrmSubGroup">
-                <x:constraints gridx="2" gridy="2" weighty="0.0" weightx="1.0" width="100%" />
+                <x:constraints gridx="2" gridy="2" weighty="0.0" weightx="1.0" width="100%" height="0px" />
             </XdevTextField>
             <XdevLabel x:name="lblPrmKey" value="{$lblPrmKey.value}">
-                <x:constraints gridx="1" gridy="3" weighty="0.0" weightx="0.0" />
+                <x:constraints gridx="1" gridy="3" weighty="0.0" weightx="0.0" width="0px" height="0px" />
             </XdevLabel>
             <XdevTextField columns="5" tabIndex="22" x:name="txtPrmKey">
-                <x:constraints gridx="2" gridy="3" weighty="0.0" weightx="1.0" width="100%" />
+                <x:constraints gridx="2" gridy="3" weighty="0.0" weightx="1.0" width="100%" height="0px" />
             </XdevTextField>
             <XdevLabel x:name="lblPrmValue" value="{$lblPrmValue.value}">
-                <x:constraints gridx="1" gridy="4" weighty="0.0" weightx="0.0" />
+                <x:constraints gridx="1" gridy="4" weighty="0.0" weightx="0.0" width="0px" height="0px" />
             </XdevLabel>
             <XdevTextField columns="5" tabIndex="23" x:name="txtPrmValue">
-                <x:constraints gridx="2" gridy="4" weighty="0.0" weightx="1.0" width="100%" />
+                <x:constraints gridx="2" gridy="4" weighty="0.0" weightx="1.0" width="100%" height="0px" />
             </XdevTextField>
             <XdevLabel x:name="lblPrmValueType" value="{$lblPrmValueType.value}">
-                <x:constraints gridx="1" gridy="5" weighty="0.0" weightx="0.0" />
+                <x:constraints gridx="1" gridy="5" weighty="0.0" weightx="0.0" width="0px" height="0px" />
             </XdevLabel>
             <XdevLabel x:name="lblPrmState" value="{$lblPrmState.value}">
-                <x:constraints gridx="1" gridy="6" weighty="0.0" weightx="0.0" />
+                <x:constraints gridx="1" gridy="6" weighty="0.0" weightx="0.0" width="0px" height="0px" />
             </XdevLabel>
             <XdevHorizontalLayout x:name="horizontalLayout" margin="">
-                <x:constraints gridx="1" gridy="7" weighty="0.0" weightx="0.0" alignment="MIDDLE_CENTER" gridWidth="2" />
-                <XdevButton icon="WebContent/WEB-INF/resources/images/save1.png" caption="{$cmdSave.caption}" tabIndex="12" x:name="cmdSave">
-                    <x:constraints weightx="0.0" />
+                <x:constraints gridx="1" gridy="7" weighty="0.0" weightx="0.0" width="0px" alignment="MIDDLE_CENTER" gridWidth="2" height="0px" />
+                <XdevButton icon="FontAwesome.SAVE" caption="{$cmdSave.caption}" tabIndex="12" x:name="cmdSave">
+                    <x:constraints weightx="0.0" width="0px" height="0px" />
                     <x:event>click.buttonClick</x:event>
                 </XdevButton>
-                <XdevButton icon="WebContent/WEB-INF/resources/images/cancel1.png" caption="{$cmdReset.caption}" tabIndex="11" x:name="cmdReset">
-                    <x:constraints weightx="0.0" alignment="MIDDLE_RIGHT" />
+                <XdevButton icon="FontAwesome.CLOSE" caption="{$cmdReset.caption}" tabIndex="11" x:name="cmdReset">
+                    <x:constraints weightx="0.0" width="0px" alignment="MIDDLE_RIGHT" height="0px" />
                     <x:event>click.buttonClick</x:event>
                 </XdevButton>
             </XdevHorizontalLayout>

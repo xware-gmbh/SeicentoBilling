@@ -8,8 +8,8 @@
 <XdevHorizontalLayout xmlns:x="http://xml.xdev-software.com/xdevuiml" spacing="false" x:name="FunctionUpDownloadRowFile" margin="">
     <x:constraints zpos="0" width="-1px" height="-1px" />
     <x:event>layoutClick.layoutClick</x:event>
-    <XdevButton icon="WebContent/WEB-INF/resources/images/Download1.png" caption="Download" x:name="btnDownload">
-        <x:constraints weightx="0.0" />
+    <XdevButton icon="FontAwesome.DOWNLOAD" caption="Download" x:name="btnDownload">
+        <x:constraints weightx="0.0" width="0px" height="0px" />
         <x:event>click.buttonClick</x:event>
     </XdevButton>
 </XdevHorizontalLayout>

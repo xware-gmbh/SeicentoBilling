@@ -1,8 +1,11 @@
 package ch.xwr.seicentobilling.ui.desktop.crm;
 
 import java.util.Date;
+import java.util.List;
 
+import com.vaadin.data.Property;
 import com.vaadin.event.ShortcutAction;
+import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -10,7 +13,6 @@ import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Window;
-import com.xdev.res.ApplicationResource;
 import com.xdev.ui.XdevButton;
 import com.xdev.ui.XdevFieldGroup;
 import com.xdev.ui.XdevGridLayout;
@@ -27,10 +29,12 @@ import ch.xwr.seicentobilling.business.LovState;
 import ch.xwr.seicentobilling.business.RowObjectManager;
 import ch.xwr.seicentobilling.business.Seicento;
 import ch.xwr.seicentobilling.dal.AddressDAO;
+import ch.xwr.seicentobilling.dal.CityDAO;
 import ch.xwr.seicentobilling.dal.CostAccountDAO;
 import ch.xwr.seicentobilling.dal.CustomerDAO;
 import ch.xwr.seicentobilling.entities.Address;
 import ch.xwr.seicentobilling.entities.Address_;
+import ch.xwr.seicentobilling.entities.City;
 import ch.xwr.seicentobilling.entities.CostAccount;
 import ch.xwr.seicentobilling.entities.Customer;
 
@@ -42,6 +46,8 @@ public class AddressPopup extends XdevView {
 	public AddressPopup() {
 		super();
 		this.initUI();
+
+		this.setHeight(Seicento.calculateThemeHeight(this.getHeight(),UI.getCurrent().getTheme()));
 
 		// State
 		this.comboBoxState.addItems((Object[]) LovState.State.values());
@@ -103,8 +109,8 @@ public class AddressPopup extends XdevView {
 
 	public static Window getPopupWindow() {
 		final Window win = new Window();
-		win.setWidth("920");
-		win.setHeight("610");
+		//win.setWidth("920");
+		//win.setHeight("610");
 		win.center();
 		win.setModal(true);
 		win.setContent(new AddressPopup());
@@ -147,6 +153,36 @@ public class AddressPopup extends XdevView {
 	private void cmdReset_buttonClick(final Button.ClickEvent event) {
 		this.fieldGroup.discard();
 		((Window) this.getParent()).close();
+	}
+
+	/**
+	 * Event handler delegate method for the {@link XdevTextField}
+	 * {@link #txtAdrZip}.
+	 *
+	 * @see Property.ValueChangeListener#valueChange(Property.ValueChangeEvent)
+	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
+	 */
+	private void txtAdrZip_valueChange(final Property.ValueChangeEvent event) {
+		//System.out.println("value change");
+		final String val  = (String) event.getProperty().getValue();
+		if (val != null && val.length() > 3) {
+			String ctyname = null;
+			if (this.txtAdrCity.getValue() != null) {
+				ctyname = this.txtAdrCity.getValue();
+			}
+			if (ctyname == null || ctyname.length() < 1) {
+				final CityDAO dao = new CityDAO();
+				final List<City> ls = dao.findByZip(Integer.parseInt(val));
+				if (ls != null && ls.size() > 0) {
+					final City b2 = ls.get(0);
+					this.txtAdrCity.setValue(b2.getCtyName());
+					this.txtAdrCountry.setValue(b2.getCtyCountry());
+					this.txtAdrRegion.setValue(b2.getCtyRegion());
+				}
+			}
+
+		}
+
 	}
 
 	/*
@@ -217,10 +253,10 @@ public class AddressPopup extends XdevView {
 		this.txtAdrRemark.setMaxLength(50);
 		this.lblAdrState.setValue("State");
 		this.horizontalLayout.setMargin(new MarginInfo(true, false, true, false));
-		this.cmdSave.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/save1.png"));
+		this.cmdSave.setIcon(FontAwesome.SAVE);
 		this.cmdSave.setCaption("Speichern");
 		this.cmdSave.setClickShortcut(ShortcutAction.KeyCode.ENTER);
-		this.cmdReset.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/cancel1.png"));
+		this.cmdReset.setIcon(FontAwesome.CLOSE);
 		this.cmdReset.setCaption("Abbrechen");
 		this.cmdReset.setClickShortcut(ShortcutAction.KeyCode.ESCAPE);
 		this.fieldGroup.bind(this.dateAdrValidFrom, Address_.adrValidFrom.getName());
@@ -320,8 +356,10 @@ public class AddressPopup extends XdevView {
 		this.panel.setContent(this.form);
 		this.panel.setSizeFull();
 		this.setContent(this.panel);
-		this.setSizeFull();
+		this.setWidth(920, Unit.PIXELS);
+		this.setHeight(615, Unit.PIXELS);
 
+		this.txtAdrZip.addValueChangeListener(event -> this.txtAdrZip_valueChange(event));
 		this.cmdSave.addClickListener(event -> this.cmdSave_buttonClick(event));
 		this.cmdReset.addClickListener(event -> this.cmdReset_buttonClick(event));
 	} // </generated-code>

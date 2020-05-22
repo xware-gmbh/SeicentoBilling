@@ -3,6 +3,7 @@
 
 <?xdevuiml version="1.0"?>
 <?template BROWSER_XGA?>
+<?import?>
 <?import ch.xwr.seicentobilling.business.LovState.ExpType?>
 <?import ch.xwr.seicentobilling.business.LovState.ExpUnit?>
 <?import ch.xwr.seicentobilling.business.LovState.State?>
@@ -33,33 +34,37 @@
             </XdevContainerFilterComponent>
             <XdevHorizontalLayout spacing="false" x:name="actionLayout" margin="">
                 <x:constraints top="-12px" left="1874px" weighty="0.0" width="0px" alignment="MIDDLE_LEFT" height="0px" />
-                <XdevButton icon="WebContent/WEB-INF/resources/images/new1_16.png" description="Neuen Datensatz anlegen" x:name="cmdNew">
+                <XdevButton icon="FontAwesome.PLUS_CIRCLE" description="Neuen Datensatz anlegen" x:name="cmdNew">
                     <x:constraints weightx="0.0" width="0px" height="0px" />
                     <x:event>click.buttonClick</x:event>
                     <x:event>focus.focus</x:event>
                 </XdevButton>
-                <XdevButton icon="WebContent/WEB-INF/resources/images/delete3_16.png" description="Datensatz löschen" x:name="cmdDelete">
+                <XdevButton icon="FontAwesome.MINUS_CIRCLE" description="Datensatz löschen" x:name="cmdDelete">
                     <x:constraints weightx="0.0" width="0px" height="0px" />
                     <x:event>click.buttonClick</x:event>
                 </XdevButton>
-                <XdevButton icon="WebContent/WEB-INF/resources/images/edit1.png" description="Periode bearbeiten..." x:name="cmdUpdate">
+                <XdevButton icon="FontAwesome.PENCIL" description="Periode bearbeiten..." x:name="cmdUpdate" immediate="true">
                     <x:constraints top="-150px" left="462px" weightx="0.0" width="0px" height="0px" />
                     <x:event>click.buttonClick</x:event>
                 </XdevButton>
-                <XdevButton icon="WebContent/WEB-INF/resources/images/reload2.png" x:name="cmdReload">
+                <XdevButton icon="FontAwesome.REFRESH" x:name="cmdReload">
                     <x:constraints weightx="0.0" width="0px" height="0px" />
                     <x:event>click.buttonClick</x:event>
                 </XdevButton>
-                <XdevButton icon="WebContent/WEB-INF/resources/images/copy1.png" description="Alle Spesen einer Periode kopieren" x:name="cmdCopyExpenses">
+                <XdevButton icon="FontAwesome.COPY" description="Alle Spesen einer Periode kopieren" x:name="cmdCopyExpenses">
                     <x:constraints top="46px" left="-1px" weightx="0.0" width="0px" height="0px" />
                     <x:event>click.buttonClick</x:event>
                 </XdevButton>
-                <XdevButton icon="WebContent/WEB-INF/resources/images/Printer_black_18.png" description="Jasper Report starten" x:name="cmdReport">
+                <XdevButton icon="FontAwesome.PRINT" description="Jasper Report starten" x:name="cmdReport">
                     <x:constraints top="93px" left="-1px" weightx="0.0" width="0px" height="0px" />
                     <x:event>click.buttonClick</x:event>
                 </XdevButton>
-                <XdevButton icon="WebContent/WEB-INF/resources/images/info_small.jpg" description="Objektinfo" x:name="cmdInfo">
-                    <x:constraints weightx="0.0" width="0px" height="0px" />
+                <XdevButton icon="FontAwesome.FILE_ZIP_O" description="Spesen als ZIP Report" x:name="cmdZipReport">
+                    <x:constraints top="140px" left="-1px" weightx="0.0" width="0px" height="0px" />
+                    <x:event>click.buttonClick</x:event>
+                </XdevButton>
+                <XdevButton icon="FontAwesome.INFO_CIRCLE" description="Objektinfo" x:name="cmdInfo">
+                    <x:constraints weighty="0.0" weightx="0.0" width="0px" height="0px" />
                     <x:event>click.buttonClick</x:event>
                 </XdevButton>
             </XdevHorizontalLayout>
@@ -95,23 +100,23 @@
                     <x:constraints splitPos="SECOND" weighty="0.0" alignment="MIDDLE_CENTER" />
                     <XdevHorizontalLayout spacing="false" x:name="horizontalLayout" margin="" immediate="true">
                         <x:constraints weighty="0.0" width="0px" alignment="MIDDLE_LEFT" height="0px" />
-                        <XdevButton icon="WebContent/WEB-INF/resources/images/new1_16.png" caption="{$cmdNewExpense.caption}" x:name="cmdNewExpense" x:shortcut="CTRL+N">
+                        <XdevButton icon="FontAwesome.PLUS_CIRCLE" caption="{$cmdNewExpense.caption}" x:name="cmdNewExpense" x:shortcut="CTRL+N">
                             <x:constraints top="-150px" left="462px" weightx="0.0" width="0px" height="0px" />
                             <x:event>click.buttonClick</x:event>
                         </XdevButton>
-                        <XdevButton icon="WebContent/WEB-INF/resources/images/delete3_16.png" caption="{$cmdDeleteExpense.caption}" x:name="cmdDeleteExpense">
+                        <XdevButton icon="FontAwesome.MINUS_CIRCLE" caption="{$cmdDeleteExpense.caption}" x:name="cmdDeleteExpense">
                             <x:constraints top="-150px" left="462px" weightx="0.0" width="0px" height="0px" />
                             <x:event>click.buttonClick</x:event>
                         </XdevButton>
-                        <XdevButton icon="WebContent/WEB-INF/resources/images/edit1.png" caption="{$cmdUpdateExpense.caption}" x:name="cmdUpdateExpense">
+                        <XdevButton icon="FontAwesome.PENCIL" caption="{$cmdUpdateExpense.caption}" x:name="cmdUpdateExpense">
                             <x:constraints top="-150px" left="462px" weightx="0.0" width="0px" height="0px" />
                             <x:event>click.buttonClick</x:event>
                         </XdevButton>
-                        <XdevButton icon="WebContent/WEB-INF/resources/images/copy1.png" description="Markierten Datensatz kopieren" x:name="cmdCopySingle">
+                        <XdevButton icon="FontAwesome.COPY" description="Markierten Datensatz kopieren" x:name="cmdCopySingle">
                             <x:constraints top="76px" left="705px" weightx="0.0" width="0px" height="0px" />
                             <x:event>click.buttonClick</x:event>
                         </XdevButton>
-                        <XdevButton icon="WebContent/WEB-INF/resources/images/info_small.jpg" x:name="cmdInfoExpense">
+                        <XdevButton icon="FontAwesome.INFO_CIRCLE" x:name="cmdInfoExpense">
                             <x:constraints top="29px" left="705px" weightx="0.0" width="0px" height="0px" />
                             <x:event>click.buttonClick</x:event>
                         </XdevButton>
@@ -141,6 +146,7 @@
                             <entry type="ExpUnit" property="expUnit" caption="Einheit" collapsed="true" />
                             <entry type="Double" property="expQuantity" caption="Menge" collapsed="true" />
                             <entry type="Date" property="expBooked" caption="Gebucht" collapsed="true" />
+                            <entry type="" property="generated" caption="Beleg" generator="ch.xwr.seicentobilling.ui.desktop.FunctionExpenseAttachmentDownload.Generator" />
                         </x:entityProperties>
                         <x:constraints weighty="1.0" width="100%" height="100%" />
                         <x:typeArguments>

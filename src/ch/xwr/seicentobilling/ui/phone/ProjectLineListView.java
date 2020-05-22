@@ -142,22 +142,22 @@ public class ProjectLineListView extends XdevView {
 	private void initUI() {
 		this.verticalLayout = new XdevVerticalLayout();
 		this.horizontalLayout = new XdevHorizontalLayout();
-		this.cmdLeft = new XdevButton();
-		this.label = new XdevLabel();
 		this.cmdNew = new XdevButton();
+		this.label = new XdevLabel();
+		this.cmdLeft = new XdevButton();
 		this.table = new XdevTable<>();
 
 		this.verticalLayout.setSpacing(false);
 		this.verticalLayout.setMargin(new MarginInfo(false));
 		this.horizontalLayout.setSpacing(false);
 		this.horizontalLayout.setMargin(new MarginInfo(false));
-		this.cmdLeft.setIcon(
-				new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/greenarrow_left32.png"));
-		this.cmdLeft.setCaption("Back");
-		this.label.setStyleName("colored");
-		this.label.setValue("Rapportliste");
 		this.cmdNew.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/new1.png"));
 		this.cmdNew.setCaption("Neu");
+		this.label.setStyleName("colored");
+		this.label.setValue("Rapportliste");
+		this.cmdLeft.setIcon(
+				new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/greenarrow_left32.png"));
+		this.cmdLeft.setCaption("Zurück");
 		this.table.setContainerDataSource(ProjectLine.class, false);
 		this.table.setVisibleColumns(ProjectLine_.prlReportDate.getName(), ProjectLine_.prlHours.getName(),
 				ProjectLine_.prlRate.getName(), ProjectLine_.prlText.getName());
@@ -170,17 +170,17 @@ public class ProjectLineListView extends XdevView {
 		this.table.setConverter("prlRate", ConverterBuilder.stringToDouble().currency().build());
 		this.table.setColumnHeader("prlText", "Text");
 
-		this.cmdLeft.setSizeUndefined();
-		this.horizontalLayout.addComponent(this.cmdLeft);
-		this.horizontalLayout.setComponentAlignment(this.cmdLeft, Alignment.MIDDLE_LEFT);
-		this.horizontalLayout.setExpandRatio(this.cmdLeft, 10.0F);
+		this.cmdNew.setSizeUndefined();
+		this.horizontalLayout.addComponent(this.cmdNew);
+		this.horizontalLayout.setComponentAlignment(this.cmdNew, Alignment.MIDDLE_LEFT);
+		this.horizontalLayout.setExpandRatio(this.cmdNew, 10.0F);
 		this.label.setSizeUndefined();
 		this.horizontalLayout.addComponent(this.label);
 		this.horizontalLayout.setComponentAlignment(this.label, Alignment.MIDDLE_CENTER);
-		this.cmdNew.setSizeUndefined();
-		this.horizontalLayout.addComponent(this.cmdNew);
-		this.horizontalLayout.setComponentAlignment(this.cmdNew, Alignment.MIDDLE_RIGHT);
-		this.horizontalLayout.setExpandRatio(this.cmdNew, 10.0F);
+		this.cmdLeft.setSizeUndefined();
+		this.horizontalLayout.addComponent(this.cmdLeft);
+		this.horizontalLayout.setComponentAlignment(this.cmdLeft, Alignment.MIDDLE_RIGHT);
+		this.horizontalLayout.setExpandRatio(this.cmdLeft, 10.0F);
 		this.horizontalLayout.setWidth(100, Unit.PERCENTAGE);
 		this.horizontalLayout.setHeight(-1, Unit.PIXELS);
 		this.verticalLayout.addComponent(this.horizontalLayout);
@@ -194,8 +194,8 @@ public class ProjectLineListView extends XdevView {
 		this.setSizeFull();
 
 		this.verticalLayout.addAttachListener(event -> this.verticalLayout_attach(event));
-		this.cmdLeft.addClickListener(event -> this.cmdLeft_buttonClick(event));
 		this.cmdNew.addClickListener(event -> this.cmdNew_buttonClick(event));
+		this.cmdLeft.addClickListener(event -> this.cmdLeft_buttonClick(event));
 		this.table.addItemClickListener(event -> this.table_itemClick(event));
 	} // </generated-code>
 

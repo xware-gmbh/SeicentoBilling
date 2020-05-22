@@ -1,5 +1,6 @@
 package ch.xwr.seicentobilling.ui.desktop;
 
+import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -8,7 +9,6 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.Upload;
 import com.vaadin.ui.Upload.SucceededEvent;
 import com.vaadin.ui.Window;
-import com.xdev.res.ApplicationResource;
 import com.xdev.res.StringResourceUtils;
 import com.xdev.ui.XdevButton;
 import com.xdev.ui.XdevFieldGroup;
@@ -176,10 +176,10 @@ public class RowFilePopup extends XdevView {
 		this.labelType.setValue(StringResourceUtils.optLocalizeString("{$labelType.value}", this));
 		this.labelState.setValue(StringResourceUtils.optLocalizeString("{$labelState.value}", this));
 		this.horizontalLayout.setMargin(new MarginInfo(false));
-		this.cmdSave.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/save1.png"));
+		this.cmdSave.setIcon(FontAwesome.SAVE);
 		this.cmdSave.setCaption(StringResourceUtils.optLocalizeString("{$cmdSave.caption}", this));
 		this.cmdSave.setTabIndex(20);
-		this.cmdReset.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/cancel1.png"));
+		this.cmdReset.setIcon(FontAwesome.CLOSE);
 		this.cmdReset.setCaption(StringResourceUtils.optLocalizeString("{$cmdReset.caption}", this));
 		this.cmdReset.setTabIndex(21);
 		this.fieldGroup.bind(this.textField, RowImage_.rimNumber.getName());

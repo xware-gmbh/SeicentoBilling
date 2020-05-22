@@ -19,27 +19,27 @@
         <x:constraints zpos="0" width="100%" height="100%" />
         <x:event>attach.attach</x:event>
         <XdevHorizontalLayout spacing="false" x:name="horizontalLayout" margin="">
-            <x:constraints weighty="0.0" width="100%" />
-            <XdevButton icon="WebContent/WEB-INF/resources/images/greenarrow_left32.png" caption="Back" x:name="cmdLeft">
-                <x:constraints weightx="0.1" alignment="MIDDLE_LEFT" />
+            <x:constraints weighty="0.0" width="100%" height="0px" />
+            <XdevButton icon="WebContent/WEB-INF/resources/images/new1.png" caption="Neu" x:name="cmdNew">
+                <x:constraints weightx="0.1" width="0px" alignment="MIDDLE_LEFT" height="0px" />
                 <x:event>click.buttonClick</x:event>
             </XdevButton>
             <XdevLabel styleName="colored" x:name="label" value="Rapportliste">
-                <x:constraints weightx="0.0" />
+                <x:constraints weightx="0.0" width="0px" height="0px" />
             </XdevLabel>
-            <XdevButton icon="WebContent/WEB-INF/resources/images/new1.png" caption="Neu" x:name="cmdNew">
-                <x:constraints weightx="0.1" alignment="MIDDLE_RIGHT" />
+            <XdevButton icon="WebContent/WEB-INF/resources/images/greenarrow_left32.png" caption="Zurück" x:name="cmdLeft">
+                <x:constraints weightx="0.1" width="0px" alignment="MIDDLE_RIGHT" height="0px" />
                 <x:event>click.buttonClick</x:event>
             </XdevButton>
         </XdevHorizontalLayout>
         <XdevTable x:name="table" x:entity="ProjectLine" x:autoQuery="false">
             <x:entityProperties>
                 <entry type="Date" property="prlReportDate" caption="Datum">
-                    <converter dateStyle="DEFAULT" timeStyle="DEFAULT" converterType="STRING_TO_DATE" locale="default" dateFormatType="DATE" />
+                    <converter dateStyle="DEFAULT" timeStyle="DEFAULT" currency="default" converterType="STRING_TO_DATE" locale="default" dateFormatType="DATE" />
                 </entry>
                 <entry type="Double" property="prlHours" caption="Stunden" alignment="RIGHT" />
                 <entry type="Double" property="prlRate" caption="Ansatz" alignment="RIGHT">
-                    <converter numberType="Double" numberFormatType="currency" converterType="STRING_TO_NUMBER" locale="default" />
+                    <converter numberType="Double" numberFormatType="currency" currency="default" converterType="STRING_TO_NUMBER" locale="default" />
                 </entry>
                 <entry type="String" property="prlText" caption="Text" />
             </x:entityProperties>

@@ -15,6 +15,9 @@ services:
       - clientkey=[Azure Client Key]
         #mögliche Werte: azure, local  (default: azure)
       - SEICENTO_LOGIN_METHOD=azure
+        #ohne Port. Standard 12201
+      - #GELF_URL=udp:1.2.3.4
+      
     ports:
       - 19080:8080
     networks:

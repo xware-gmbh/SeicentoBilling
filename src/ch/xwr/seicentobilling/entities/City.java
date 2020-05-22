@@ -58,7 +58,7 @@ public class City implements java.io.Serializable {
 		this.ctyId = ctyId;
 	}
 
-	@Caption("Name Ort")
+	@Caption("Ort")
 	@Column(name = "ctyName", nullable = false, columnDefinition = "nvarchar")
 	public String getCtyName() {
 		return this.ctyName;

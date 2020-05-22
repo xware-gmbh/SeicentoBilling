@@ -5,3 +5,8 @@ findByCode(String name)
 {
 	select * from PaymentCondition where upper(pacCode) = upper(:name)
 }
+
+findAllActive()
+{
+	select * from PaymentCondition where pacState = 1 order by pacNbrOfDays
+}

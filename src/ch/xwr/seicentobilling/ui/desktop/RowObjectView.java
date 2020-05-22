@@ -4,6 +4,7 @@ import com.vaadin.data.Property;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.filter.Compare;
 import com.vaadin.event.ItemClickEvent;
+import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.Alignment;
@@ -15,7 +16,6 @@ import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.CloseEvent;
 import com.vaadin.ui.Window.CloseListener;
 import com.xdev.dal.DAOs;
-import com.xdev.res.ApplicationResource;
 import com.xdev.res.StringResourceUtils;
 import com.xdev.ui.XdevButton;
 import com.xdev.ui.XdevFieldGroup;
@@ -31,18 +31,16 @@ import com.xdev.ui.XdevVerticalSplitPanel;
 import com.xdev.ui.XdevView;
 import com.xdev.ui.entitycomponent.combobox.XdevComboBox;
 import com.xdev.ui.entitycomponent.table.XdevTable;
+import com.xdev.ui.filter.XdevContainerFilterComponent;
 import com.xdev.ui.util.NestedProperty;
 
 import ch.xwr.seicentobilling.business.ConfirmDialog;
 import ch.xwr.seicentobilling.business.RowObjectManager;
-import ch.xwr.seicentobilling.dal.DatabaseVersionDAO;
 import ch.xwr.seicentobilling.dal.EntityDAO;
 import ch.xwr.seicentobilling.dal.RowImageDAO;
 import ch.xwr.seicentobilling.dal.RowObjectDAO;
 import ch.xwr.seicentobilling.dal.RowParameterDAO;
 import ch.xwr.seicentobilling.dal.RowTextDAO;
-import ch.xwr.seicentobilling.entities.DatabaseVersion;
-import ch.xwr.seicentobilling.entities.DatabaseVersion_;
 import ch.xwr.seicentobilling.entities.Entity;
 import ch.xwr.seicentobilling.entities.Entity_;
 import ch.xwr.seicentobilling.entities.RowImage;
@@ -493,8 +491,6 @@ public class RowObjectView extends XdevView {
 		this.txtObjRowId = new XdevTextField();
 		this.lblObjChanged = new XdevLabel();
 		this.dateObjChanged = new XdevPopupDateField();
-		this.lblDatabaseVersion = new XdevLabel();
-		this.cmbDatabaseVersion = new XdevComboBox<>();
 		this.lblObjChngcnt = new XdevLabel();
 		this.txtObjChngcnt = new XdevTextField();
 		this.lblObjChangedBy = new XdevLabel();
@@ -520,6 +516,7 @@ public class RowObjectView extends XdevView {
 		this.cmdNewParam = new XdevButton();
 		this.cmdDeleteParam = new XdevButton();
 		this.cmdUpdateParam = new XdevButton();
+		this.containerFilterComponent = new XdevContainerFilterComponent();
 		this.tableRowParam = new XdevTable<>();
 
 		this.setCaption(StringResourceUtils.optLocalizeString("{$RowObjectView.caption}", this));
@@ -545,10 +542,6 @@ public class RowObjectView extends XdevView {
 		this.lblObjChanged.setValue(StringResourceUtils.optLocalizeString("{$lblObjChanged.value}", this));
 		this.dateObjChanged.setTabIndex(7);
 		this.dateObjChanged.setResolution(Resolution.SECOND);
-		this.lblDatabaseVersion.setValue(StringResourceUtils.optLocalizeString("{$lblDatabaseVersion.value}", this));
-		this.cmbDatabaseVersion.setTabIndex(11);
-		this.cmbDatabaseVersion.setContainerDataSource(DatabaseVersion.class, DAOs.get(DatabaseVersionDAO.class).findAll());
-		this.cmbDatabaseVersion.setItemCaptionPropertyId(DatabaseVersion_.dbvMicro.getName());
 		this.lblObjChngcnt.setValue(StringResourceUtils.optLocalizeString("{$lblObjChngcnt.value}", this));
 		this.txtObjChngcnt.setTabIndex(4);
 		this.lblObjChangedBy.setValue(StringResourceUtils.optLocalizeString("{$lblObjChangedBy.value}", this));
@@ -566,19 +559,15 @@ public class RowObjectView extends XdevView {
 		this.fieldGroup.bind(this.txtObjChangedBy, RowObject_.objChangedBy.getName());
 		this.fieldGroup.bind(this.dateObjDeleted, RowObject_.objDeleted.getName());
 		this.fieldGroup.bind(this.txtObjDeletedBy, RowObject_.objDeletedBy.getName());
-		this.fieldGroup.bind(this.cmbDatabaseVersion, RowObject_.databaseVersion.getName());
 		this.fieldGroup.bind(this.txtObjState, RowObject_.objState.getName());
 		this.tabSheet.setStyleName("framed");
 		this.horizontalLayout2.setSpacing(false);
 		this.horizontalLayout2.setMargin(new MarginInfo(false, true, false, false));
-		this.cmdNewText
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/new1_16.png"));
+		this.cmdNewText.setIcon(FontAwesome.PLUS_CIRCLE);
 		this.cmdNewText.setCaption("New");
-		this.cmdDeleteText
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/delete3_16.png"));
+		this.cmdDeleteText.setIcon(FontAwesome.MINUS_CIRCLE);
 		this.cmdDeleteText.setCaption(StringResourceUtils.optLocalizeString("{$cmdDeleteText.caption}", this));
-		this.cmdUpdateText
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/edit1.png"));
+		this.cmdUpdateText.setIcon(FontAwesome.PENCIL);
 		this.cmdUpdateText.setCaption(StringResourceUtils.optLocalizeString("{$cmdUpdateText.caption}", this));
 		this.tableText.setContainerDataSource(RowText.class);
 		this.tableText.setVisibleColumns(RowText_.txtNumber.getName(), RowText_.txtFreetext.getName(),
@@ -590,14 +579,11 @@ public class RowObjectView extends XdevView {
 		this.tableText.setColumnHeader("txtState", "Status");
 		this.actionLayout.setSpacing(false);
 		this.actionLayout.setMargin(new MarginInfo(false, true, false, false));
-		this.cmdNewFile
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/new1_16.png"));
+		this.cmdNewFile.setIcon(FontAwesome.PLUS_CIRCLE);
 		this.cmdNewFile.setCaption(StringResourceUtils.optLocalizeString("{$cmdNewFile.caption}", this));
-		this.cmdDeleteFile
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/delete3_16.png"));
+		this.cmdDeleteFile.setIcon(FontAwesome.MINUS_CIRCLE);
 		this.cmdDeleteFile.setCaption(StringResourceUtils.optLocalizeString("{$cmdDeleteFile.caption}", this));
-		this.cmdUpdateFile
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/edit1.png"));
+		this.cmdUpdateFile.setIcon(FontAwesome.PENCIL);
 		this.cmdUpdateFile.setCaption(StringResourceUtils.optLocalizeString("{$cmdUpdateFile.caption}", this));
 		this.tableRowImage.setContainerDataSource(RowImage.class);
 		this.tableRowImage.addGeneratedColumn("generated", new FunctionUpDownloadRowFile.Generator());
@@ -614,15 +600,14 @@ public class RowObjectView extends XdevView {
 		this.tableRowImage.setColumnHeader("generated", "...");
 		this.actionLayoutParam.setSpacing(false);
 		this.actionLayoutParam.setMargin(new MarginInfo(false, true, false, false));
-		this.cmdNewParam
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/new1_16.png"));
+		this.cmdNewParam.setIcon(FontAwesome.PLUS_CIRCLE);
 		this.cmdNewParam.setCaption(StringResourceUtils.optLocalizeString("{$cmdNewFile.caption}", this));
-		this.cmdDeleteParam
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/delete3_16.png"));
+		this.cmdDeleteParam.setIcon(FontAwesome.MINUS_CIRCLE);
 		this.cmdDeleteParam.setCaption(StringResourceUtils.optLocalizeString("{$cmdDeleteFile.caption}", this));
-		this.cmdUpdateParam
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/edit1.png"));
+		this.cmdUpdateParam.setIcon(FontAwesome.PENCIL);
 		this.cmdUpdateParam.setCaption(StringResourceUtils.optLocalizeString("{$cmdUpdateFile.caption}", this));
+		this.containerFilterComponent.setFilterEnabled(false);
+		this.containerFilterComponent.setPrefixMatchOnly(false);
 		this.tableRowParam.setColumnReorderingAllowed(true);
 		this.tableRowParam.setColumnCollapsingAllowed(true);
 		this.tableRowParam.setContainerDataSource(RowParameter.class,
@@ -641,6 +626,9 @@ public class RowObjectView extends XdevView {
 		this.tableRowParam.setColumnCollapsed("prmState", true);
 		this.tableRowParam.setColumnHeader("rowObject.entity.entName", "Tabelle");
 		this.tableRowParam.setColumnCollapsed("rowObject.entity.entName", true);
+
+		this.containerFilterComponent.setContainer(this.tableRowParam.getBeanContainerDataSource());
+		this.containerFilterComponent.setSearchableProperties("prmValue", "prmGroup", "prmSubGroup", "prmKey");
 
 		this.form.setColumns(6);
 		this.form.setRows(5);
@@ -681,11 +669,6 @@ public class RowObjectView extends XdevView {
 		this.dateObjChanged.setWidth(100, Unit.PERCENTAGE);
 		this.dateObjChanged.setHeight(-1, Unit.PIXELS);
 		this.form.addComponent(this.dateObjChanged, 3, 2);
-		this.lblDatabaseVersion.setSizeUndefined();
-		this.form.addComponent(this.lblDatabaseVersion, 4, 2);
-		this.cmbDatabaseVersion.setWidth(100, Unit.PERCENTAGE);
-		this.cmbDatabaseVersion.setHeight(-1, Unit.PIXELS);
-		this.form.addComponent(this.cmbDatabaseVersion, 5, 2);
 		this.lblObjChngcnt.setSizeUndefined();
 		this.form.addComponent(this.lblObjChngcnt, 0, 3);
 		this.txtObjChngcnt.setSizeUndefined();
@@ -756,7 +739,13 @@ public class RowObjectView extends XdevView {
 		this.cmdUpdateParam.setSizeUndefined();
 		this.actionLayoutParam.addComponent(this.cmdUpdateParam);
 		this.actionLayoutParam.setComponentAlignment(this.cmdUpdateParam, Alignment.MIDDLE_CENTER);
-		this.actionLayoutParam.setSizeUndefined();
+		this.containerFilterComponent.setWidth(300, Unit.PIXELS);
+		this.containerFilterComponent.setHeight(-1, Unit.PIXELS);
+		this.actionLayoutParam.addComponent(this.containerFilterComponent);
+		this.actionLayoutParam.setComponentAlignment(this.containerFilterComponent, Alignment.MIDDLE_RIGHT);
+		this.actionLayoutParam.setExpandRatio(this.containerFilterComponent, 100.0F);
+		this.actionLayoutParam.setWidth(100, Unit.PERCENTAGE);
+		this.actionLayoutParam.setHeight(-1, Unit.PIXELS);
 		this.verticalLayoutParam.addComponent(this.actionLayoutParam);
 		this.verticalLayoutParam.setComponentAlignment(this.actionLayoutParam, Alignment.MIDDLE_LEFT);
 		this.tableRowParam.setSizeFull();
@@ -795,15 +784,15 @@ public class RowObjectView extends XdevView {
 	// <generated-code name="variables">
 	private XdevTable<RowParameter> tableRowParam;
 	private XdevLabel lblObjId, lblObjAdded, lblObjDeleted, lblEntity, lblObjAddedBy, lblObjDeletedBy, lblObjRowId,
-			lblObjChanged, lblDatabaseVersion, lblObjChngcnt, lblObjChangedBy, lblObjState;
+			lblObjChanged, lblObjChngcnt, lblObjChangedBy, lblObjState;
 	private XdevButton cmdNewText, cmdDeleteText, cmdUpdateText, cmdNewFile, cmdDeleteFile, cmdUpdateFile, cmdNewParam,
 			cmdDeleteParam, cmdUpdateParam;
-	private XdevComboBox<DatabaseVersion> cmbDatabaseVersion;
 	private XdevTable<RowText> tableText;
 	private XdevTable<RowImage> tableRowImage;
 	private XdevPanel panel;
 	private XdevTabSheet tabSheet;
 	private XdevGridLayout form;
+	private XdevContainerFilterComponent containerFilterComponent;
 	private XdevFieldGroup<RowObject> fieldGroup;
 	private XdevVerticalSplitPanel verticalSplitPanel;
 	private XdevHorizontalLayout horizontalLayout2, actionLayout, actionLayoutParam;

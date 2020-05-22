@@ -6,6 +6,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.persistence.PersistenceException;
 
@@ -13,6 +14,7 @@ import org.apache.poi.ss.formula.functions.T;
 import org.jfree.util.Log;
 
 import com.vaadin.data.Property;
+import com.vaadin.data.validator.IntegerRangeValidator;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.FontAwesome;
@@ -23,7 +25,6 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Notification;
-import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Window;
@@ -65,6 +66,7 @@ import ch.xwr.seicentobilling.business.LovState.AccountType;
 import ch.xwr.seicentobilling.business.NumberRangeHandler;
 import ch.xwr.seicentobilling.business.RowObjectManager;
 import ch.xwr.seicentobilling.business.Seicento;
+import ch.xwr.seicentobilling.business.helper.SeicentoCrud;
 import ch.xwr.seicentobilling.dal.ActivityDAO;
 import ch.xwr.seicentobilling.dal.AddressDAO;
 import ch.xwr.seicentobilling.dal.CityDAO;
@@ -100,6 +102,7 @@ import ch.xwr.seicentobilling.ui.desktop.crm.CustomerLinkPopup;
 import ch.xwr.seicentobilling.ui.desktop.crm.FunctionAddressHyperlink;
 import ch.xwr.seicentobilling.ui.desktop.crm.FunctionLinkHyperlink;
 import ch.xwr.seicentobilling.ui.desktop.crm.ImportContactsPopup;
+import ch.xwr.seicentobilling.ui.desktop.crm.VcardPopup;
 
 public class CustomerTabView extends XdevView {
 
@@ -144,6 +147,7 @@ public class CustomerTabView extends XdevView {
 	private void setROComponents(final boolean state) {
 		this.cmdSave.setEnabled(state);
 		this.cmdReset.setEnabled(state);
+		this.cmdVcard.setEnabled(state);
 		this.tabSheet.setEnabled(state);
 
 		if (Seicento.hasRole("BillingAdmin") && state) {
@@ -161,7 +165,7 @@ public class CustomerTabView extends XdevView {
 			return true;
 		}
 		final Customer bean = this.fieldGroup.getItemDataSource().getBean();
-		if (bean.getCusId() == null || bean.getCusId() < 1) {
+		if (bean.getCusId() == null || bean.getCusId().longValue() < 1) {
 			return true;
 		}
 		return false;
@@ -277,6 +281,8 @@ public class CustomerTabView extends XdevView {
 		checkCustomerNumber(true, false);
 		setROFields();
 
+		this.txtZip.setValue("");
+
 	}
 
 	/**
@@ -334,13 +340,7 @@ public class CustomerTabView extends XdevView {
 							Notification.Type.TRAY_NOTIFICATION);
 
 				} catch (final PersistenceException cx) {
-					String msg = cx.getMessage();
-					if (cx.getCause() != null) {
-						msg = cx.getCause().getMessage();
-						if (cx.getCause().getCause() != null) {
-							msg = cx.getCause().getCause().getMessage();
-						}
-					}
+					final String msg = SeicentoCrud.getPerExceptionError(cx);
 					Notification.show("Fehler beim Löschen", msg, Notification.Type.ERROR_MESSAGE);
 					cx.printStackTrace();
 				}
@@ -386,8 +386,8 @@ public class CustomerTabView extends XdevView {
 			displayChildTables();
 			setROFields();
 		}
-
 	}
+
 
 	private void displayChildTables() {
 		final Customer bean = this.fieldGroup.getItemDataSource().getBean();
@@ -457,24 +457,23 @@ public class CustomerTabView extends XdevView {
 			return;
 		}
 
-		try {
+		final boolean isNew = isNew(); // assign before save. is always false after save
+		if (SeicentoCrud.doSave(this.fieldGroup)) {
+			try {
+				this.setROFields();
+				checkCustomerNumber(isNew, true);
 
-			final boolean isNew = isNew(); // assign before save. is always false after save
+				final RowObjectManager man = new RowObjectManager();
+				man.updateObject(this.fieldGroup.getItemDataSource().getBean().getCusId(),
+						this.fieldGroup.getItemDataSource().getBean().getClass().getSimpleName());
 
-			this.fieldGroup.save();
+			} catch (final Exception e) {
+				Notification.show("Fehler beim Speichern", e.getMessage(), Notification.Type.ERROR_MESSAGE);
+				e.printStackTrace();
+			}
 
-			this.setROFields();
-			checkCustomerNumber(isNew, true);
-
-			final RowObjectManager man = new RowObjectManager();
-			man.updateObject(this.fieldGroup.getItemDataSource().getBean().getCusId(),
-					this.fieldGroup.getItemDataSource().getBean().getClass().getSimpleName());
-
-			Notification.show("Save clicked", "Daten wurden gespeichert", Notification.Type.TRAY_NOTIFICATION);
-		} catch (final Exception e) {
-			Notification.show("Fehler beim Speichern", e.getMessage(), Notification.Type.ERROR_MESSAGE);
-			e.printStackTrace();
 		}
+
 
 
 		cmdReload_buttonClick(event);
@@ -518,16 +517,6 @@ public class CustomerTabView extends XdevView {
 			this.fieldGroup.discard();
 		}
 		setROFields();
-	}
-
-	/**
-	 * Event handler delegate method for the {@link XdevTabSheet} {@link #tabSheet}.
-	 *
-	 * @see TabSheet.SelectedTabChangeListener#selectedTabChange(TabSheet.SelectedTabChangeEvent)
-	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
-	 */
-	private void tabSheet_selectedTabChange(final TabSheet.SelectedTabChangeEvent event) {
-
 	}
 
 	/**
@@ -1214,6 +1203,79 @@ public class CustomerTabView extends XdevView {
 
 	}
 
+	/**
+	 * Event handler delegate method for the {@link XdevTextField} {@link #txtZip}.
+	 *
+	 * @see Property.ValueChangeListener#valueChange(Property.ValueChangeEvent)
+	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
+	 */
+	private void txtZip_valueChange(final Property.ValueChangeEvent event) {
+		//System.out.println("value change");
+		final String val  = (String) event.getProperty().getValue();
+		if (val != null && val.length() > 3) {
+			City bean = null;
+			if (this.cmbCity.getSelectedItem() != null) {
+				bean = this.cmbCity.getSelectedItem().getBean();
+			}
+			if (bean == null || bean.getCtyZip().intValue() != Integer.parseInt(val)) {
+				final CityDAO dao = new CityDAO();
+				final List<City> ls = dao.findByZip(Integer.parseInt(val));
+				if (ls != null && ls.size() > 0) {
+					final City b2 = ls.get(0);
+
+					final Collection<?> xx = this.cmbCity.getBeanContainerDataSource().getItemIds();
+					for (final Iterator<?> iterator = xx.iterator(); iterator.hasNext();) {
+						final City object = (City) iterator.next();
+						if (object.getCtyId().equals(b2.getCtyId())) {
+							this.cmbCity.select(object);
+						}
+					}
+				} else {
+					this.cmbCity.clear();
+				}
+			}
+
+		}
+	}
+
+	/**
+	 * Event handler delegate method for the {@link XdevComboBox} {@link #cmbCity}.
+	 *
+	 * @see Property.ValueChangeListener#valueChange(Property.ValueChangeEvent)
+	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
+	 */
+	private void cmbCity_valueChange(final Property.ValueChangeEvent event) {
+		final City cty = (City) event.getProperty().getValue();
+		if (cty != null) {
+			final String zip = this.txtZip.getValue();
+			if (zip == null || !zip.equals(cty.getCtyZip().toString())) {
+				this.txtZip.setValue("" + cty.getCtyZip());
+			}
+			this.lblCountry.setValue(cty.getCtyCountry());
+		}
+	}
+
+	/**
+	 * Event handler delegate method for the {@link XdevButton} {@link #cmdVcard}.
+	 *
+	 * @see Button.ClickListener#buttonClick(Button.ClickEvent)
+	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
+	 */
+	private void cmdVcard_buttonClick(final Button.ClickEvent event) {
+		if (this.fieldGroup.getItemDataSource().getBean() == null) {
+			return;
+		}
+
+		UI.getCurrent().getSession().setAttribute("cusbeanId",  this.fieldGroup.getItemDataSource().getBean().getCusId());
+		popupVcard();
+	}
+
+
+	private void popupVcard() {
+		final Window win = VcardPopup.getPopupWindow();
+		this.getUI().addWindow(win);
+	}
+
 	/*
 	 * WARNING: Do NOT edit!<br>The content of this method is always regenerated by
 	 * the UI designer.
@@ -1249,7 +1311,10 @@ public class CustomerTabView extends XdevView {
 		this.linkMaps = new XdevLink();
 		this.txtCusAddress = new XdevTextField();
 		this.lblCity = new XdevLabel();
+		this.horizontalLayoutCity = new XdevHorizontalLayout();
+		this.txtZip = new XdevTextField();
 		this.cmbCity = new XdevComboBox<>();
+		this.lblCountry = new XdevLabel();
 		this.lblBirthdate = new XdevLabel();
 		this.datCusBirthdate = new XdevPopupDateField();
 		this.lblCusState = new XdevLabel();
@@ -1298,6 +1363,7 @@ public class CustomerTabView extends XdevView {
 		this.cmdEditActivity = new XdevButton();
 		this.cmdReloadActivity = new XdevButton();
 		this.cmdInfoActivity = new XdevButton();
+		this.containerFilterComponent2 = new XdevContainerFilterComponent();
 		this.tableActivity = new XdevTable<>();
 		this.gridLayoutRelation = new XdevGridLayout();
 		this.verticalLayout5 = new XdevVerticalLayout();
@@ -1311,26 +1377,26 @@ public class CustomerTabView extends XdevView {
 		this.tableOrder = new XdevTable<>();
 		this.verticalLayout4 = new XdevVerticalLayout();
 		this.tableProject = new XdevTable<>();
-		this.horizontalLayout = new XdevHorizontalLayout();
+		this.horizontalLayoutBtn = new XdevHorizontalLayout();
 		this.cmdSave = new XdevButton();
 		this.cmdReset = new XdevButton();
+		this.label = new XdevLabel();
+		this.cmdVcard = new XdevButton();
 		this.fieldGroup = new XdevFieldGroup<>(Customer.class);
 
 		this.horizontalSplitPanel.setStyleName("large");
 		this.horizontalSplitPanel.setSplitPosition(45.0F, Unit.PERCENTAGE);
 		this.verticalLayout.setMargin(new MarginInfo(false));
+		this.containerFilterComponent.setPrefixMatchOnly(false);
 		this.containerFilterComponent.setImmediate(true);
 		this.actionLayout.setSpacing(false);
 		this.actionLayout.setMargin(new MarginInfo(false));
-		this.cmdNew.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/new1_16.png"));
+		this.cmdNew.setIcon(FontAwesome.PLUS_CIRCLE);
 		this.cmdNew.setDescription(StringResourceUtils.optLocalizeString("{$cmdNew.description}", this));
-		this.cmdDelete
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/delete3_16.png"));
-		this.cmdReload.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/reload2.png"));
-		this.cmdReport.setIcon(
-				new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/Printer_black_18.png"));
-		this.cmdInfo
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/info_small.jpg"));
+		this.cmdDelete.setIcon(FontAwesome.MINUS_CIRCLE);
+		this.cmdReload.setIcon(FontAwesome.REFRESH);
+		this.cmdReport.setIcon(FontAwesome.PRINT);
+		this.cmdInfo.setIcon(FontAwesome.INFO_CIRCLE);
 		this.cmdImport.setIcon(FontAwesome.FILE_EXCEL_O);
 		this.cmdImport.setDescription("Import Kontakte");
 		this.cmdImport.setEnabled(false);
@@ -1380,10 +1446,15 @@ public class CustomerTabView extends XdevView {
 		this.linkMaps.setCaption("Adresse");
 		this.txtCusAddress.setMaxLength(40);
 		this.lblCity.setValue(StringResourceUtils.optLocalizeString("{$lblCity.value}", this));
+		this.horizontalLayoutCity.setMargin(new MarginInfo(false));
+		this.txtZip.setConverter(ConverterBuilder.stringToInteger().groupingUsed(false).maximumIntegerDigits(5).build());
+		this.txtZip.setMaxLength(5);
+		this.txtZip.addValidator(new IntegerRangeValidator("Plz muss numerisch sein (99999)", null, 99999));
 		this.cmbCity.setRequired(true);
 		this.cmbCity.setItemCaptionFromAnnotation(false);
 		this.cmbCity.setContainerDataSource(City.class, DAOs.get(CityDAO.class).findAll());
-		this.cmbCity.setItemCaptionPropertyId("fullname");
+		this.cmbCity.setItemCaptionPropertyId(City_.ctyName.getName());
+		this.lblCountry.setValue("CH");
 		this.lblBirthdate.setValue("Geburtsdatum");
 		this.lblCusState.setValue(StringResourceUtils.optLocalizeString("{$lblCusState.value}", this));
 		this.lblAccountManager.setValue("Account Manager");
@@ -1394,7 +1465,7 @@ public class CustomerTabView extends XdevView {
 		this.cmbPaymentCondition.setRequired(true);
 		this.cmbPaymentCondition.setItemCaptionFromAnnotation(false);
 		this.cmbPaymentCondition.setContainerDataSource(PaymentCondition.class,
-				DAOs.get(PaymentConditionDAO.class).findAll());
+				DAOs.get(PaymentConditionDAO.class).findAllActive());
 		this.cmbPaymentCondition.setItemCaptionPropertyId(PaymentCondition_.pacName.getName());
 		this.lblBillingTarget.setValue("Rechnungstyp");
 		this.cbxAccountBillingType.setItemCaptionFromAnnotation(false);
@@ -1415,17 +1486,12 @@ public class CustomerTabView extends XdevView {
 		this.verticalLayoutAdr.setMargin(new MarginInfo(false));
 		this.horizontalLayoutAddress.setSpacing(false);
 		this.horizontalLayoutAddress.setMargin(new MarginInfo(false));
-		this.cmdNewAddress
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/new1_16.png"));
+		this.cmdNewAddress.setIcon(FontAwesome.PLUS_CIRCLE);
 		this.cmdNewAddress.setDescription(StringResourceUtils.optLocalizeString("{$cmdNew.description}", this));
-		this.cmdDeleteAddress
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/delete3_16.png"));
-		this.cmdEditAddress
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/edit1.png"));
-		this.cmdReloadAddress
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/reload2.png"));
-		this.cmdInfoAddress
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/info_small.jpg"));
+		this.cmdDeleteAddress.setIcon(FontAwesome.MINUS_CIRCLE);
+		this.cmdEditAddress.setIcon(FontAwesome.PENCIL);
+		this.cmdReloadAddress.setIcon(FontAwesome.REFRESH);
+		this.cmdInfoAddress.setIcon(FontAwesome.INFO_CIRCLE);
 		this.tableAddress.setColumnReorderingAllowed(true);
 		this.tableAddress.setCaption("Adressen");
 		this.tableAddress.setColumnCollapsingAllowed(true);
@@ -1447,17 +1513,12 @@ public class CustomerTabView extends XdevView {
 		this.verticalLayoutLink.setMargin(new MarginInfo(false));
 		this.horizontalLayoutLink.setSpacing(false);
 		this.horizontalLayoutLink.setMargin(new MarginInfo(false));
-		this.cmdNewCustomerLink
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/new1_16.png"));
+		this.cmdNewCustomerLink.setIcon(FontAwesome.PLUS_CIRCLE);
 		this.cmdNewCustomerLink.setDescription(StringResourceUtils.optLocalizeString("{$cmdNew.description}", this));
-		this.cmdDeleteCustomerLink
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/delete3_16.png"));
-		this.cmdEditCustomerLink
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/edit1.png"));
-		this.cmdReloadCustomerLink
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/reload2.png"));
-		this.cmdInfoCustomerLink
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/info_small.jpg"));
+		this.cmdDeleteCustomerLink.setIcon(FontAwesome.MINUS_CIRCLE);
+		this.cmdEditCustomerLink.setIcon(FontAwesome.PENCIL);
+		this.cmdReloadCustomerLink.setIcon(FontAwesome.REFRESH);
+		this.cmdInfoCustomerLink.setIcon(FontAwesome.INFO_CIRCLE);
 		this.tableLink.setColumnReorderingAllowed(true);
 		this.tableLink.setCaption("Mail / Telefon / Links");
 		this.tableLink.setColumnCollapsingAllowed(true);
@@ -1477,17 +1538,15 @@ public class CustomerTabView extends XdevView {
 		this.verticalLayout3.setMargin(new MarginInfo(false));
 		this.horizontalLayout3.setSpacing(false);
 		this.horizontalLayout3.setMargin(new MarginInfo(false));
-		this.cmdNewActivity
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/new1_16.png"));
+		this.cmdNewActivity.setIcon(FontAwesome.PLUS_CIRCLE);
 		this.cmdNewActivity.setCaption("");
-		this.cmdDeleteActivity
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/delete3_16.png"));
-		this.cmdEditActivity
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/edit1.png"));
-		this.cmdReloadActivity
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/reload2.png"));
-		this.cmdInfoActivity
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/info_small.jpg"));
+		this.cmdDeleteActivity.setIcon(FontAwesome.MINUS_CIRCLE);
+		this.cmdEditActivity.setIcon(FontAwesome.PENCIL);
+		this.cmdReloadActivity.setIcon(FontAwesome.REFRESH);
+		this.cmdReloadActivity.setImmediate(true);
+		this.cmdInfoActivity.setIcon(FontAwesome.INFO_CIRCLE);
+		this.containerFilterComponent2.setFilterEnabled(false);
+		this.containerFilterComponent2.setPrefixMatchOnly(false);
 		this.tableActivity.setCaption("Aktivititäten");
 		this.tableActivity.setIcon(FontAwesome.ARROWS_ALT);
 		this.tableActivity.setSortAscending(false);
@@ -1509,11 +1568,9 @@ public class CustomerTabView extends XdevView {
 		this.verticalLayout5.setMargin(new MarginInfo(false));
 		this.horizontalLayout2.setSpacing(false);
 		this.horizontalLayout2.setMargin(new MarginInfo(false));
-		this.cmdNewRelation
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/new1_16.png"));
+		this.cmdNewRelation.setIcon(FontAwesome.PLUS_CIRCLE);
 		this.cmdNewRelation.setCaption("");
-		this.cmdDeleteRelation
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/delete3_16.png"));
+		this.cmdDeleteRelation.setIcon(FontAwesome.MINUS_CIRCLE);
 		this.tableRelation.setCaption("Beziehungen");
 		this.tableRelation.setIcon(FontAwesome.EXCHANGE);
 		this.tableRelation.setContainerDataSource(ContactRelation.class, false,
@@ -1557,11 +1614,12 @@ public class CustomerTabView extends XdevView {
 		this.tableProject.setColumnHeader("proEndDate", "End Datum");
 		this.tableProject.setConverter("proEndDate", ConverterBuilder.stringToDate().dateOnly().build());
 		this.tableProject.setColumnHeader("proHours", "Stunden");
-		this.horizontalLayout.setMargin(new MarginInfo(false));
-		this.cmdSave.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/save1.png"));
+		this.horizontalLayoutBtn.setMargin(new MarginInfo(false));
+		this.cmdSave.setIcon(FontAwesome.SAVE);
 		this.cmdSave.setCaption(StringResourceUtils.optLocalizeString("{$cmdSave.caption}", this));
-		this.cmdReset.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/cancel1.png"));
+		this.cmdReset.setIcon(FontAwesome.UNDO);
 		this.cmdReset.setCaption(StringResourceUtils.optLocalizeString("{$cmdReset.caption}", this));
+		this.cmdVcard.setCaption("Vcard...");
 		this.fieldGroup.bind(this.cmbCity, Customer_.city.getName());
 		this.fieldGroup.bind(this.cmbPaymentCondition, Customer_.paymentCondition.getName());
 		this.fieldGroup.bind(this.txtCusNumber, Customer_.cusNumber.getName());
@@ -1584,10 +1642,13 @@ public class CustomerTabView extends XdevView {
 
 		MasterDetail.connect(this.table, this.fieldGroup);
 
-		this.containerFilterComponent.setContainer(this.table.getBeanContainerDataSource(), "city.ctyName", "city.ctyZip",
-				"cusNumber", "cusName", "cusCompany", "cusFirstName", "cusAccountType", "cusState",
-				"labelDefinitions.cldId");
+		this.containerFilterComponent.setContainer(this.table.getBeanContainerDataSource(), "shortname",
+				"cusAccountManager", "cusNumber", "city.ctyName", "city.ctyZip", "cusName", "cusCompany", "cusFirstName",
+				"cusAccountType", "cusState", "labelDefinitions.cldId");
 		this.containerFilterComponent.setSearchableProperties("cusCompany", "cusName", "city.ctyName", "cusFirstName");
+		this.containerFilterComponent2.setContainer(this.tableActivity.getBeanContainerDataSource(), "actDate", "actType",
+				"actText", "costAccount", "actFollowingUpDate");
+		this.containerFilterComponent2.setSearchableProperties("actText");
 
 		this.cmdNew.setSizeUndefined();
 		this.actionLayout.addComponent(this.cmdNew);
@@ -1623,6 +1684,20 @@ public class CustomerTabView extends XdevView {
 		this.verticalLayout.addComponent(this.table);
 		this.verticalLayout.setComponentAlignment(this.table, Alignment.MIDDLE_CENTER);
 		this.verticalLayout.setExpandRatio(this.table, 100.0F);
+		this.txtZip.setWidth(70, Unit.PIXELS);
+		this.txtZip.setHeight(-1, Unit.PIXELS);
+		this.horizontalLayoutCity.addComponent(this.txtZip);
+		this.horizontalLayoutCity.setComponentAlignment(this.txtZip, Alignment.MIDDLE_LEFT);
+		this.horizontalLayoutCity.setExpandRatio(this.txtZip, 20.0F);
+		this.cmbCity.setWidth(220, Unit.PIXELS);
+		this.cmbCity.setHeight(-1, Unit.PIXELS);
+		this.horizontalLayoutCity.addComponent(this.cmbCity);
+		this.horizontalLayoutCity.setComponentAlignment(this.cmbCity, Alignment.MIDDLE_LEFT);
+		this.horizontalLayoutCity.setExpandRatio(this.cmbCity, 80.0F);
+		this.lblCountry.setSizeUndefined();
+		this.horizontalLayoutCity.addComponent(this.lblCountry);
+		this.horizontalLayoutCity.setComponentAlignment(this.lblCountry, Alignment.MIDDLE_LEFT);
+		this.horizontalLayoutCity.setExpandRatio(this.lblCountry, 10.0F);
 		this.gridLayoutContact.setColumns(4);
 		this.gridLayoutContact.setRows(10);
 		this.lblCusNumber.setSizeUndefined();
@@ -1660,9 +1735,9 @@ public class CustomerTabView extends XdevView {
 		this.gridLayoutContact.addComponent(this.txtCusAddress, 1, 5, 3, 5);
 		this.lblCity.setSizeUndefined();
 		this.gridLayoutContact.addComponent(this.lblCity, 0, 6);
-		this.cmbCity.setWidth(100, Unit.PERCENTAGE);
-		this.cmbCity.setHeight(-1, Unit.PIXELS);
-		this.gridLayoutContact.addComponent(this.cmbCity, 1, 6, 2, 6);
+		this.horizontalLayoutCity.setWidth(360, Unit.PIXELS);
+		this.horizontalLayoutCity.setHeight(-1, Unit.PIXELS);
+		this.gridLayoutContact.addComponent(this.horizontalLayoutCity, 1, 6, 3, 6);
 		this.lblBirthdate.setSizeUndefined();
 		this.gridLayoutContact.addComponent(this.lblBirthdate, 0, 7);
 		this.datCusBirthdate.setSizeUndefined();
@@ -1672,7 +1747,7 @@ public class CustomerTabView extends XdevView {
 		this.cbxState.setSizeUndefined();
 		this.gridLayoutContact.addComponent(this.cbxState, 1, 8);
 		this.gridLayoutContact.setColumnExpandRatio(0, 20.0F);
-		this.gridLayoutContact.setColumnExpandRatio(1, 100.0F);
+		this.gridLayoutContact.setColumnExpandRatio(1, 10.0F);
 		this.gridLayoutContact.setColumnExpandRatio(2, 20.0F);
 		this.gridLayoutContact.setColumnExpandRatio(3, 100.0F);
 		final CustomComponent gridLayoutContact_vSpacer = new CustomComponent();
@@ -1810,10 +1885,11 @@ public class CustomerTabView extends XdevView {
 		this.cmdInfoActivity.setSizeUndefined();
 		this.horizontalLayout3.addComponent(this.cmdInfoActivity);
 		this.horizontalLayout3.setComponentAlignment(this.cmdInfoActivity, Alignment.MIDDLE_CENTER);
-		final CustomComponent horizontalLayout3_spacer = new CustomComponent();
-		horizontalLayout3_spacer.setSizeFull();
-		this.horizontalLayout3.addComponent(horizontalLayout3_spacer);
-		this.horizontalLayout3.setExpandRatio(horizontalLayout3_spacer, 1.0F);
+		this.containerFilterComponent2.setWidth(200, Unit.PIXELS);
+		this.containerFilterComponent2.setHeight(-1, Unit.PIXELS);
+		this.horizontalLayout3.addComponent(this.containerFilterComponent2);
+		this.horizontalLayout3.setComponentAlignment(this.containerFilterComponent2, Alignment.MIDDLE_RIGHT);
+		this.horizontalLayout3.setExpandRatio(this.containerFilterComponent2, 100.0F);
 		this.horizontalLayout3.setWidth(100, Unit.PERCENTAGE);
 		this.horizontalLayout3.setHeight(-1, Unit.PIXELS);
 		this.verticalLayout3.addComponent(this.horizontalLayout3);
@@ -1882,18 +1958,25 @@ public class CustomerTabView extends XdevView {
 		this.tabSheet.addTab(this.gridLayoutListRef, "Referenzen", null);
 		this.tabSheet.setSelectedTab(this.gridLayoutContact);
 		this.cmdSave.setSizeUndefined();
-		this.horizontalLayout.addComponent(this.cmdSave);
-		this.horizontalLayout.setComponentAlignment(this.cmdSave, Alignment.MIDDLE_LEFT);
+		this.horizontalLayoutBtn.addComponent(this.cmdSave);
+		this.horizontalLayoutBtn.setComponentAlignment(this.cmdSave, Alignment.MIDDLE_LEFT);
 		this.cmdReset.setSizeUndefined();
-		this.horizontalLayout.addComponent(this.cmdReset);
-		this.horizontalLayout.setComponentAlignment(this.cmdReset, Alignment.MIDDLE_LEFT);
+		this.horizontalLayoutBtn.addComponent(this.cmdReset);
+		this.horizontalLayoutBtn.setComponentAlignment(this.cmdReset, Alignment.MIDDLE_LEFT);
+		this.label.setWidth(38, Unit.PIXELS);
+		this.label.setHeight(-1, Unit.PIXELS);
+		this.horizontalLayoutBtn.addComponent(this.label);
+		this.horizontalLayoutBtn.setComponentAlignment(this.label, Alignment.MIDDLE_CENTER);
+		this.cmdVcard.setSizeUndefined();
+		this.horizontalLayoutBtn.addComponent(this.cmdVcard);
+		this.horizontalLayoutBtn.setComponentAlignment(this.cmdVcard, Alignment.MIDDLE_CENTER);
 		this.form.setColumns(1);
 		this.form.setRows(2);
 		this.tabSheet.setSizeFull();
 		this.form.addComponent(this.tabSheet, 0, 0);
-		this.horizontalLayout.setSizeUndefined();
-		this.form.addComponent(this.horizontalLayout, 0, 1);
-		this.form.setComponentAlignment(this.horizontalLayout, Alignment.MIDDLE_CENTER);
+		this.horizontalLayoutBtn.setSizeUndefined();
+		this.form.addComponent(this.horizontalLayoutBtn, 0, 1);
+		this.form.setComponentAlignment(this.horizontalLayoutBtn, Alignment.MIDDLE_CENTER);
 		this.form.setColumnExpandRatio(0, 100.0F);
 		this.form.setRowExpandRatio(0, 100.0F);
 		this.verticalLayout.setSizeFull();
@@ -1911,7 +1994,8 @@ public class CustomerTabView extends XdevView {
 		this.cmdInfo.addClickListener(event -> this.cmdInfo_buttonClick(event));
 		this.cmdImport.addClickListener(event -> this.cmdImport_buttonClick(event));
 		this.table.addValueChangeListener(event -> this.table_valueChange(event));
-		this.tabSheet.addSelectedTabChangeListener(event -> this.tabSheet_selectedTabChange(event));
+		this.txtZip.addValueChangeListener(event -> this.txtZip_valueChange(event));
+		this.cmbCity.addValueChangeListener(event -> this.cmbCity_valueChange(event));
 		this.cmdNewAddress.addClickListener(event -> this.cmdNewAddress_buttonClick(event));
 		this.cmdDeleteAddress.addClickListener(event -> this.cmdDeleteAddress_buttonClick(event));
 		this.cmdEditAddress.addClickListener(event -> this.cmdEditAddress_buttonClick(event));
@@ -1935,33 +2019,35 @@ public class CustomerTabView extends XdevView {
 		this.cmdDeleteRelation.addClickListener(event -> this.cmdDeleteRelation_buttonClick(event));
 		this.cmdSave.addClickListener(event -> this.cmdSave_buttonClick(event));
 		this.cmdReset.addClickListener(event -> this.cmdReset_buttonClick(event));
+		this.cmdVcard.addClickListener(event -> this.cmdVcard_buttonClick(event));
 	} // </generated-code>
 
 	// <generated-code name="variables">
 	private XdevButton cmdNew, cmdDelete, cmdReload, cmdReport, cmdInfo, cmdImport, cmdNewAddress, cmdDeleteAddress,
 			cmdEditAddress, cmdReloadAddress, cmdInfoAddress, cmdNewCustomerLink, cmdDeleteCustomerLink,
 			cmdEditCustomerLink, cmdReloadCustomerLink, cmdInfoCustomerLink, cmdNewActivity, cmdDeleteActivity,
-			cmdEditActivity, cmdReloadActivity, cmdInfoActivity, cmdNewRelation, cmdDeleteRelation, cmdSave, cmdReset;
+			cmdEditActivity, cmdReloadActivity, cmdInfoActivity, cmdNewRelation, cmdDeleteRelation, cmdSave, cmdReset,
+			cmdVcard;
 	private XdevGridLayout form, gridLayoutContact, gridLayoutFlags, gridLayoutAddress, gridLayoutListActivity,
 			gridLayoutRelation, gridLayoutListRef;
-	private XdevContainerFilterComponent containerFilterComponent;
+	private XdevContainerFilterComponent containerFilterComponent, containerFilterComponent2;
 	private XdevTable<CustomerLink> tableLink;
 	private XdevFieldGroup<Customer> fieldGroup;
-	private XdevHorizontalLayout actionLayout, horizontalLayoutAddress, horizontalLayoutLink, horizontalLayout3,
-			horizontalLayout2, horizontalLayout;
+	private XdevHorizontalLayout actionLayout, horizontalLayoutCity, horizontalLayoutAddress, horizontalLayoutLink,
+			horizontalLayout3, horizontalLayout2, horizontalLayoutBtn;
 	private XdevComboBox<City> cmbCity;
 	private XdevVerticalSplitPanel verticalSplitPanel, verticalSplitPanel2;
 	private XdevPopupDateField datCusBirthdate;
 	private XdevComboBox<?> cbxAccountType, cbxAccountSalutation, cbxState, cbxAccountBillingType, cbxAccountBillingReports;
 	private XdevTable<Project> tableProject;
 	private XdevTable<Order> tableOrder;
-	private XdevTextField txtCusNumber, txtCusCompany, txtCusName, txtCusFirstName, txtCusAddress, txtAccountManager,
-			txtCusInfo, txtExtRef1, txtExtRef2;
+	private XdevTextField txtCusNumber, txtCusCompany, txtCusName, txtCusFirstName, txtCusAddress, txtZip,
+			txtAccountManager, txtCusInfo, txtExtRef1, txtExtRef2;
 	private XdevTwinColSelect<LabelDefinition> twinColSelect;
 	private XdevTable<ContactRelation> tableRelation;
-	private XdevLabel lblCusNumber, lblType, lblAnrede, lblCusCompany, lblCusName, lblCusFirstName, lblCity, lblBirthdate,
-			lblCusState, lblAccountManager, lblCusInfo, lblPaymentCondition, lblBillingTarget, lblBillingReports, lblLabels,
-			lblExtRef1, lblExtRef2;
+	private XdevLabel lblCusNumber, lblType, lblAnrede, lblCusCompany, lblCusName, lblCusFirstName, lblCity, lblCountry,
+			lblBirthdate, lblCusState, lblAccountManager, lblCusInfo, lblPaymentCondition, lblBillingTarget,
+			lblBillingReports, lblLabels, lblExtRef1, lblExtRef2, label;
 	private XdevTable<Activity> tableActivity;
 	private XdevComboBox<PaymentCondition> cmbPaymentCondition;
 	private XdevTabSheet tabSheet;

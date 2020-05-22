@@ -15,8 +15,8 @@ import com.xdev.ui.XdevPasswordField;
 import com.xdev.ui.XdevTextField;
 import com.xdev.ui.XdevView;
 
+import ch.xwr.seicentobilling.business.auth.DbAuthenticationProvider;
 import ch.xwr.seicentobilling.business.auth.MockupUser;
-import ch.xwr.seicentobilling.business.auth.MyAuthenticationProvider;
 
 public class AuthViewMockup extends XdevView implements com.xdev.security.authentication.ui.LoginView {
 
@@ -47,7 +47,7 @@ public class AuthViewMockup extends XdevView implements com.xdev.security.authen
 	private void cmdLogin_buttonClick(final Button.ClickEvent event) {
 		try {
 			final CredentialsUsernamePassword credentials = CredentialsUsernamePassword.New(getUsername(), getPassword());
-			final MyAuthenticationProvider authenticatorProvider = MyAuthenticationProvider.getInstance();
+			final DbAuthenticationProvider authenticatorProvider = DbAuthenticationProvider.getInstance();
 			final Object authenticationResult = authenticatorProvider.provideAuthenticator().authenticate(credentials);
 			//Authentication.login(new Subject.Implementation(credentials.username()), authenticationResult);
 			Authentication.login(new MockupUser(credentials.username()), authenticationResult);
@@ -95,18 +95,18 @@ public class AuthViewMockup extends XdevView implements com.xdev.security.authen
 		this.gridLayout2.setSizeFull();
 		this.panel.setContent(this.gridLayout2);
 		this.gridLayout.setColumns(2);
-		this.gridLayout.setRows(3);
+		this.gridLayout.setRows(2);
 		this.panel.setSizeUndefined();
-		this.gridLayout.addComponent(this.panel, 0, 1);
+		this.gridLayout.addComponent(this.panel, 0, 0);
 		this.gridLayout.setComponentAlignment(this.panel, Alignment.MIDDLE_CENTER);
 		final CustomComponent gridLayout_hSpacer = new CustomComponent();
 		gridLayout_hSpacer.setSizeFull();
-		this.gridLayout.addComponent(gridLayout_hSpacer, 1, 0, 1, 1);
+		this.gridLayout.addComponent(gridLayout_hSpacer, 1, 0, 1, 0);
 		this.gridLayout.setColumnExpandRatio(1, 1.0F);
 		final CustomComponent gridLayout_vSpacer = new CustomComponent();
 		gridLayout_vSpacer.setSizeFull();
-		this.gridLayout.addComponent(gridLayout_vSpacer, 0, 2, 0, 2);
-		this.gridLayout.setRowExpandRatio(2, 1.0F);
+		this.gridLayout.addComponent(gridLayout_vSpacer, 0, 1, 0, 1);
+		this.gridLayout.setRowExpandRatio(1, 1.0F);
 		this.gridLayout.setSizeFull();
 		this.setContent(this.gridLayout);
 		this.setSizeFull();

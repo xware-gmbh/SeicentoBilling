@@ -29,24 +29,24 @@
         <x:constraints zpos="0" width="100%" height="100%" />
         <XdevVerticalLayout x:name="verticalLayout" margin="">
             <x:constraints splitPos="FIRST" width="100%" height="100%" />
-            <XdevContainerFilterComponent x:searchableProperties="itmIdent,itmName" x:name="containerFilterComponent" x:filterableProperties="itmIdent,itmName,itmPrice1,itmUnit,itmState,itemGroup,vat" x:container="table">
+            <XdevContainerFilterComponent x:searchableProperties="itmIdent,itmName" x:name="containerFilterComponent" x:filterableProperties="itmIdent,itmName,itmPrice1,itmUnit,itmState,itemGroup,vat" x:container="table" prefixMatchOnly="false">
                 <x:constraints weighty="0.0" width="100%" height="0%" />
             </XdevContainerFilterComponent>
             <XdevHorizontalLayout spacing="false" x:name="actionLayout" margin="">
                 <x:constraints weighty="0.0" width="100%" height="0px" />
-                <XdevButton icon="WebContent/WEB-INF/resources/images/new1_16.png" description="Neuer Datensatz" x:name="cmdNew">
+                <XdevButton icon="FontAwesome.PLUS_CIRCLE" description="Neuer Datensatz" x:name="cmdNew">
                     <x:constraints weightx="0.0" width="0px" height="0px" />
                     <x:event>click.buttonClick</x:event>
                 </XdevButton>
-                <XdevButton icon="WebContent/WEB-INF/resources/images/delete3_16.png" x:name="cmdDelete">
+                <XdevButton icon="FontAwesome.MINUS_CIRCLE" x:name="cmdDelete">
                     <x:constraints weightx="0.0" width="0px" height="0px" />
                     <x:event>click.buttonClick</x:event>
                 </XdevButton>
-                <XdevButton icon="WebContent/WEB-INF/resources/images/reload2.png" x:name="cmdReload">
+                <XdevButton icon="FontAwesome.REFRESH" x:name="cmdReload">
                     <x:constraints weightx="0.0" width="0px" height="0px" />
                     <x:event>click.buttonClick</x:event>
                 </XdevButton>
-                <XdevButton icon="WebContent/WEB-INF/resources/images/info_small.jpg" x:name="cmdInfo">
+                <XdevButton icon="FontAwesome.INFO_CIRCLE" x:name="cmdInfo">
                     <x:constraints weightx="0.0" width="0px" height="0px" />
                     <x:event>click.buttonClick</x:event>
                 </XdevButton>
@@ -168,11 +168,11 @@
             </XdevLabel>
             <XdevHorizontalLayout x:name="horizontalLayout" margin="">
                 <x:constraints gridx="1" gridy="10" weighty="0.0" weightx="0.0" width="0px" alignment="MIDDLE_CENTER" gridWidth="2" height="0px" />
-                <XdevButton icon="WebContent/WEB-INF/resources/images/save1.png" caption="{$cmdSave.caption}" tabIndex="11" x:name="cmdSave">
+                <XdevButton icon="FontAwesome.SAVE" caption="{$cmdSave.caption}" tabIndex="11" x:name="cmdSave">
                     <x:constraints weightx="0.0" width="0px" height="0px" />
                     <x:event>click.buttonClick</x:event>
                 </XdevButton>
-                <XdevButton icon="WebContent/WEB-INF/resources/images/cancel1.png" caption="{$cmdReset.caption}" tabIndex="10" x:name="cmdReset">
+                <XdevButton icon="FontAwesome.UNDO" caption="{$cmdReset.caption}" tabIndex="10" x:name="cmdReset">
                     <x:constraints weightx="0.0" width="0px" alignment="MIDDLE_RIGHT" height="0px" />
                     <x:event>click.buttonClick</x:event>
                 </XdevButton>

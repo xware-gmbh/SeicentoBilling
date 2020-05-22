@@ -594,8 +594,7 @@ public class ProjectLineView extends XdevView {
 		this.menuText.setIcon(FontAwesome.LIST_ALT);
 		this.mnuResetItem.setIcon(FontAwesome.UNDO);
 		this.mnuResetItem.setCheckable(true);
-		this.mnuDeleteItem
-				.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/delete3_16.png"));
+		this.mnuDeleteItem.setIcon(FontAwesome.REMOVE);
 		this.mnuDeleteItem.setCheckable(true);
 		this.label.setStyleName("colored bold");
 		this.label.setValue("Rapport");
@@ -621,7 +620,7 @@ public class ProjectLineView extends XdevView {
 		this.lblPrlText.setValue(StringResourceUtils.optLocalizeString("{$lblPrlText.value}", this));
 		this.lblPrlWorkType.setValue(StringResourceUtils.optLocalizeString("{$lblPrlWorkType.value}", this));
 		this.horizontalLayoutAction.setMargin(new MarginInfo(true, false, false, false));
-		this.cmdSave.setIcon(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/save1.png"));
+		this.cmdSave.setIcon(FontAwesome.SAVE);
 		this.cmdSave.setCaption(StringResourceUtils.optLocalizeString("{$cmdSave.caption}", this));
 		this.cmdStartStop.setIcon(FontAwesome.CLOCK_O);
 		this.cmdStartStop.setCaption("Start/Stop");
