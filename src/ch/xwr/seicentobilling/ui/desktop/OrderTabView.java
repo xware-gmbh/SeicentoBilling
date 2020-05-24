@@ -928,8 +928,15 @@ public class OrderTabView extends XdevView {
 
 	private void prepareCustomerCombo(final Customer bean) {
 		if (bean != null) {
-			OrderTabView.this.cmbCustomer.addItem(bean);
-			OrderTabView.this.cmbCustomer.setValue(bean);
+			try {
+				OrderTabView.this.cmbCustomer.setEnabled(true);
+				OrderTabView.this.cmbCustomer.addItem(bean);
+				OrderTabView.this.cmbCustomer.setValue(bean);
+				OrderTabView.this.cmbCustomer.setEnabled(false);
+
+			} catch (final Exception e) {
+				LOG.error(e);
+			}
 		}
 	}
 
