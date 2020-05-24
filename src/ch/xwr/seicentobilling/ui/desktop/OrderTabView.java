@@ -178,12 +178,12 @@ public class OrderTabView extends XdevView {
 	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
 	 */
 	private void table_valueChange(final Property.ValueChangeEvent event) {
-//		final Order bean = (Order) event.getProperty().getValue();
-//		System.out.println("Select 2: " + this.table.isSelected(bean));
 		if (this.fieldGroup.getItemDataSource() == null) {
 			return;
 		}
-
+		if (this.fieldGroup.getItemDataSource().getBean().getOrdId() == null) {
+			return;
+		}
 
 		final Order bean2 = this.fieldGroup.getItemDataSource().getBean();
 		this.table.select(bean2);
@@ -201,8 +201,7 @@ public class OrderTabView extends XdevView {
 	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
 	 */
 	private void cmdNew_buttonClick(final Button.ClickEvent event) {
-		unselectOrderTable();
-
+		this.fieldGroup.setReadOnly(false);
 		this.fieldGroup.setItemDataSource(getNewDaoWithDefaults());
 		checkOrderNumber(true, false);
 		setROFields();
@@ -210,6 +209,7 @@ public class OrderTabView extends XdevView {
 		final XdevBeanContainer<OrderLine> myList = this.tableLine.getBeanContainerDataSource();
 		myList.removeAll();
 
+		unselectOrderTable();
 	}
 
 	private void unselectOrderTable() {
@@ -319,20 +319,14 @@ public class OrderTabView extends XdevView {
 	private void reloadTableOrderList() {
 		final Order ord = this.fieldGroup.getItemDataSource().getBean();
 
-		// final XdevBeanContainer<Order> myList =
-		// this.table.getBeanContainerDataSource();
-		// myList.remove...
-		// myList.addAll(new OrderDAO().findAll());
-
-		// this.table.removeAllItems();
-		// this.table.addItems(new OrderDAO().findAll());
-
 		this.table.refreshRowCache();
 		this.table.getBeanContainerDataSource().refresh();
 		this.table.sort();
 
-		if (ord != null) {
+		if (ord != null && ord.getOrdId() != null) {
 			this.table.select(ord);
+		} else {
+			unselectOrderTable();
 		}
 	}
 
@@ -671,6 +665,7 @@ public class OrderTabView extends XdevView {
 		}
 
 		if (!commitNbr) {
+			this.txtOrdNumber.setEnabled(true);
 			this.txtOrdNumber.setValue(this.CALC.getNewOrderNumber(false, nbr).toString());
 		} else {
 			this.CALC.getNewOrderNumber(true, nbr);
@@ -928,8 +923,10 @@ public class OrderTabView extends XdevView {
 
 	private void prepareCustomerCombo(final Customer bean) {
 		if (bean != null) {
-			OrderTabView.this.cmbCustomer.addItem(bean);
-			OrderTabView.this.cmbCustomer.setValue(bean);
+			this.fieldGroup.setReadOnly(false);
+
+			this.cmbCustomer.addItem(bean);
+			this.cmbCustomer.setValue(bean);
 		}
 	}
 
