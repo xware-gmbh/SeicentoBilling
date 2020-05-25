@@ -316,11 +316,12 @@ public class ProjectLineTemplateTabView extends XdevView {
 		this.cmbCostAccount.setItemCaptionPropertyId(CostAccount_.csaCode.getName());
 		this.lblPrtKeyNumber.setValue("Nummer");
 		this.txtPrtKeyNumber.setDescription("Possible Values 1-6");
-		this.txtPrtKeyNumber.setInputPrompt("Values 1-6");
+		this.txtPrtKeyNumber.setInputPrompt("Values 1-10");
 		this.txtPrtKeyNumber.setTabIndex(1);
 		this.txtPrtKeyNumber.setRequired(true);
 		this.lblPrtProject.setValue("Projekt");
 		this.comboBoxProject.setTabIndex(2);
+		this.comboBoxProject.setRequired(true);
 		this.comboBoxProject.setItemCaptionFromAnnotation(false);
 		this.comboBoxProject.setContainerDataSource(Project.class, DAOs.get(ProjectDAO.class).findAll());
 		this.comboBoxProject.setItemCaptionPropertyId(Project_.proName.getName());

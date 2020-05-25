@@ -541,7 +541,12 @@ public class ProjectLinePopup extends XdevView {
 
 			item.setEnabled(true);
 			item.setVisible(true);
-			item.setCaption("" + nbr + ": " + tpl.getProject().getProName());
+
+			if (tpl.getProject() != null) {
+				item.setCaption("" + nbr + ": " + tpl.getProject().getProName());
+			} else {
+				item.setCaption("" + nbr + ": n/a");
+			}
 		}
 
 	}
