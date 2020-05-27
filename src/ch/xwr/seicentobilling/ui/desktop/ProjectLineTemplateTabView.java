@@ -36,6 +36,7 @@ import ch.xwr.seicentobilling.business.ConfirmDialog;
 import ch.xwr.seicentobilling.business.LovState;
 import ch.xwr.seicentobilling.business.RowObjectManager;
 import ch.xwr.seicentobilling.business.Seicento;
+import ch.xwr.seicentobilling.business.helper.SeicentoCrud;
 import ch.xwr.seicentobilling.dal.CostAccountDAO;
 import ch.xwr.seicentobilling.dal.ProjectDAO;
 import ch.xwr.seicentobilling.dal.ProjectLineTemplateDAO;
@@ -107,16 +108,21 @@ public class ProjectLineTemplateTabView extends XdevView {
 	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
 	 */
 	private void cmdSave_buttonClick(final Button.ClickEvent event) {
-		this.fieldGroup.save();
+		if (SeicentoCrud.doSave(this.fieldGroup)) {
+			try {
+				final RowObjectManager man = new RowObjectManager();
+				man.updateObject(this.fieldGroup.getItemDataSource().getBean().getPrtId(),
+						this.fieldGroup.getItemDataSource().getBean().getClass().getSimpleName());
 
-		final RowObjectManager man = new RowObjectManager();
-		man.updateObject(this.fieldGroup.getItemDataSource().getBean().getPrtId(), this.fieldGroup.getItemDataSource().getBean().getClass().getSimpleName());
+				reloadMainTable();
+				setROFields();
 
-		Notification.show("Save clicked", "Daten wurden gespeichert", Notification.Type.TRAY_NOTIFICATION);
-		LOG.debug("Record saved ProjectLineTemplate");
+				Notification.show("Save clicked", "Daten wurden gespeichert", Notification.Type.TRAY_NOTIFICATION);
 
-		reloadMainTable();
-		setROFields();
+			} catch (final Exception e) {
+				LOG.error("could not save ObjRoot", e);
+			}
+		}
 	}
 
 	/**
@@ -316,11 +322,12 @@ public class ProjectLineTemplateTabView extends XdevView {
 		this.cmbCostAccount.setItemCaptionPropertyId(CostAccount_.csaCode.getName());
 		this.lblPrtKeyNumber.setValue("Nummer");
 		this.txtPrtKeyNumber.setDescription("Possible Values 1-6");
-		this.txtPrtKeyNumber.setInputPrompt("Values 1-6");
+		this.txtPrtKeyNumber.setInputPrompt("Values 1-10");
 		this.txtPrtKeyNumber.setTabIndex(1);
 		this.txtPrtKeyNumber.setRequired(true);
 		this.lblPrtProject.setValue("Projekt");
 		this.comboBoxProject.setTabIndex(2);
+		this.comboBoxProject.setRequired(true);
 		this.comboBoxProject.setItemCaptionFromAnnotation(false);
 		this.comboBoxProject.setContainerDataSource(Project.class, DAOs.get(ProjectDAO.class).findAll());
 		this.comboBoxProject.setItemCaptionPropertyId(Project_.proName.getName());

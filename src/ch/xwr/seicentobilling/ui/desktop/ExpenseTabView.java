@@ -109,6 +109,7 @@ public class ExpenseTabView extends XdevView {
 	private void cmdNew_buttonClick(final Button.ClickEvent event) {
 		UI.getCurrent().getSession().setAttribute("beanId",  null);
 		UI.getCurrent().getSession().setAttribute("reason",  "new");
+		UI.getCurrent().getSession().setAttribute("source",  "expense");
 
 		popupPeriode();
 	}
