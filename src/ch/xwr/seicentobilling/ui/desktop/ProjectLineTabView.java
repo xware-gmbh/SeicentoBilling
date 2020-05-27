@@ -199,6 +199,7 @@ public class ProjectLineTabView extends XdevView {
 
 		UI.getCurrent().getSession().setAttribute("beanId",  null);
 		UI.getCurrent().getSession().setAttribute("reason",  "new");
+		UI.getCurrent().getSession().setAttribute("source",  "projectline");
 
 		popupPeriode();
 	}
