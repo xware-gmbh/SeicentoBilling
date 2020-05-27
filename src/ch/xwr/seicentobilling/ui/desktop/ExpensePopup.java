@@ -173,15 +173,24 @@ public class ExpensePopup extends XdevView {
 			final int nbr = tpl.getExtKeyNumber();
 			item = getMnItem(nbr);
 
+			String value = "" + nbr + ": " + tpl.getProject().getProName();
+			if (tpl.getExtText() != null) {
+				value = value + " - " + tpl.getExtText();
+				if (value.length() > 35) {
+					value = value.substring(0, 35);
+				}
+			}
 			item.setEnabled(true);
 			item.setVisible(true);
-			item.setCaption("" + nbr + ": " + tpl.getProject().getProName());
+			item.setCaption(value);
 		}
 
 	}
 
 	private XdevMenuItem getMnItem(final int icount) {
+
 		switch (icount) {
+			case 0: return this.mnuTemplate10;
 			case 1: return this.mnuTemplate1;
 			case 2: return this.mnuTemplate2;
 			case 3: return this.mnuTemplate3;
