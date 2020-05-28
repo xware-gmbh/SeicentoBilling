@@ -36,11 +36,15 @@ public class ProjectLookupPopup extends XdevView {
 		super();
 		this.initUI();
 
+		this.setHeight(Seicento.calculateThemeHeight(this.getHeight(),UI.getCurrent().getTheme()));
+
 		// State
 		// this.comboBoxWorktype.addItems((Object[])LovState.WorkType.values());
 
 
 		setDefaultFilter();
+		//this.table.focus();
+		this.containerFilterComponent.getSearchTextField().focus();
 	}
 
 	private void setDefaultFilter() {
@@ -61,8 +65,8 @@ public class ProjectLookupPopup extends XdevView {
 
 	public static Window getPopupWindow() {
 		final Window win = new Window();
-		win.setWidth("700");
-		win.setHeight("520");
+		//win.setWidth("700");
+		//win.setHeight("520");
 		win.center();
 		win.setModal(true);
 		win.setContent(new ProjectLookupPopup());
@@ -78,13 +82,16 @@ public class ProjectLookupPopup extends XdevView {
 	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
 	 */
 	private void btnSelect_buttonClick(final Button.ClickEvent event) {
+		if (this.table.getVisibleItemIds().size() == 1) {
+			this.table.select(this.table.firstItemId());
+		}
+
 		if (this.table.getSelectedItem() != null) {
 			final Project beanId = this.table.getSelectedItem().getBean();
 			UI.getCurrent().getSession().setAttribute("beanId", beanId.getProId());
 
 			((Window) this.getParent()).close();
 		}
-
 	}
 
 	/**
@@ -130,6 +137,7 @@ public class ProjectLookupPopup extends XdevView {
 
 		this.panel.setCaption("Lookup Projekt");
 		this.panel.setTabIndex(0);
+		this.containerFilterComponent.setPrefixMatchOnly(false);
 		this.table.setColumnReorderingAllowed(true);
 		this.table.setPageLength(10);
 		this.table.setColumnCollapsingAllowed(true);
@@ -185,7 +193,8 @@ public class ProjectLookupPopup extends XdevView {
 		this.panel.setWidth(100, Unit.PERCENTAGE);
 		this.panel.setHeight(-1, Unit.PIXELS);
 		this.setContent(this.panel);
-		this.setSizeFull();
+		this.setWidth(760, Unit.PIXELS);
+		this.setHeight(520, Unit.PIXELS);
 
 		this.table.addItemClickListener(event -> this.table_itemClick(event));
 		this.btnSelect.addClickListener(event -> this.btnSelect_buttonClick(event));

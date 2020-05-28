@@ -135,6 +135,7 @@ public class ProjectLineTabView extends XdevView {
 			@Override
 			public void windowClose(final CloseEvent e) {
 				reloadTableLineList();
+				//ProjectLineTabView.this.cmdNewLine.focus();
 			}
 		});
 		this.getUI().addWindow(win);
