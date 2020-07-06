@@ -10,6 +10,7 @@
 <?import ch.xwr.seicentobilling.entities.Order?>
 <?import ch.xwr.seicentobilling.entities.Project?>
 <?import ch.xwr.seicentobilling.entities.Vat?>
+<?import com.vaadin.data.validator.IntegerRangeValidator?>
 <?import com.xdev.ui.XdevButton?>
 <?import com.xdev.ui.XdevCheckBox?>
 <?import com.xdev.ui.XdevFieldGroup?>
@@ -160,9 +161,10 @@
                     <XdevLabel x:name="lblProHours" value="Stunden Soll">
                         <x:constraints gridx="1" gridy="5" weighty="0.0" weightx="0.0" width="0px" height="0px" />
                     </XdevLabel>
-                    <XdevTextField columns="5" x:name="txtProHours">
+                    <XdevTextField columns="5" required="true" x:name="txtProHours">
                         <converter maximumFractionDigits="2" numberType="Double" numberFormatType="number" minimumFractionDigits="2" currency="default" converterType="STRING_TO_NUMBER" locale="default" />
                         <x:constraints gridx="2" gridy="5" weighty="0.0" weightx="1.0" width="-1px" height="0px" />
+                        <x:validator x:type="IntegerRangeValidator" message="Der Wert muss grösser 0 sein!" min="1" />
                     </XdevTextField>
                     <XdevLabel x:name="lblProHoursEffective" value="Ist">
                         <x:constraints gridx="3" gridy="5" weighty="0.0" weightx="0.0" width="0px" height="0px" />

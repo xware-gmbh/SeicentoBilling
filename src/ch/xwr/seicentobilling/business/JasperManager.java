@@ -12,7 +12,9 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.text.MessageFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.zip.ZipEntry;
@@ -420,19 +422,19 @@ public class JasperManager {
 	private String getTempFileName4Zip(final Order bean, final int iflag) {
 		String fileExt = ".pdf";
 
-		String prefix = "Rechnung_" + bean.getOrdNumber();
+		String prefix = "Rechnung_" + bean.getOrdNumber() + "_" + getTimeStamp();
 		if (iflag == 1) {
 			prefix = "ProjectSummary_" + bean.getProject().getProId();
 		}
 		if (iflag == 2) {
 			fileExt = ".zip";
-			prefix = "XWare_" + bean.getOrdNumber();
+			prefix = "XWare_" + bean.getOrdNumber() + "_" + getTimeStamp();
 		}
 		if (iflag == 3) {
 			prefix = "WorkReport" + bean.getProject().getProId();
 		}
 		if (iflag == 4) {
-			prefix = "RechnungLang_" + bean.getProject().getProId();
+			prefix = "RechnungLang_" + bean.getOrdNumber() + "_" + getTimeStamp();
 		}
 
 		return getTempFileName4Zip(prefix, fileExt);
@@ -443,6 +445,11 @@ public class JasperManager {
 
 		final String fname = tempDir + "/" + prefix + fileExt;
 		return Paths.get(fname).toFile().toString();
+	}
+
+	private String getTimeStamp() {
+		final String timeStamp = new SimpleDateFormat("yyMMddHHmmss").format(new Date());
+		return timeStamp;
 	}
 
     private boolean getBillReportOutputOptions(final Order obean, final String key)

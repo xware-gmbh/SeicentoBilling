@@ -10,6 +10,7 @@ import javax.persistence.PersistenceException;
 import org.apache.poi.ss.formula.functions.T;
 
 import com.vaadin.data.Property;
+import com.vaadin.data.validator.IntegerRangeValidator;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.external.org.slf4j.Logger;
 import com.vaadin.external.org.slf4j.LoggerFactory;
@@ -706,6 +707,8 @@ public class ProjectTabView extends XdevView {
 		this.lblProHours.setValue("Stunden Soll");
 		this.txtProHours
 				.setConverter(ConverterBuilder.stringToDouble().minimumFractionDigits(2).maximumFractionDigits(2).build());
+		this.txtProHours.setRequired(true);
+		this.txtProHours.addValidator(new IntegerRangeValidator("Der Wert muss grösser 0 sein!", 1, null));
 		this.lblProHoursEffective.setValue("Ist");
 		this.txtProHoursEffective
 				.setConverter(ConverterBuilder.stringToDouble().minimumFractionDigits(2).maximumFractionDigits(2).build());
