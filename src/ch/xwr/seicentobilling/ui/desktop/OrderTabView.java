@@ -151,8 +151,8 @@ public class OrderTabView extends XdevView {
 		boolean hasData = true;
 		if (this.fieldGroup.getItemDataSource() == null) {
 			hasData = false;
+			this.cmdSave.setEnabled(hasData);
 		}
-		this.cmdSave.setEnabled(hasData);
 		this.tabSheet.setEnabled(hasData);
 
 	}

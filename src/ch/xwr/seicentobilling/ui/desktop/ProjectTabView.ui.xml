@@ -23,6 +23,7 @@
 <?import com.xdev.ui.XdevTextArea?>
 <?import com.xdev.ui.XdevTextField?>
 <?import com.xdev.ui.XdevVerticalLayout?>
+<?import com.xdev.ui.XdevVerticalSplitPanel?>
 <?import com.xdev.ui.XdevView?>
 <?import com.xdev.ui.entitycomponent.combobox.XdevComboBox?>
 <?import com.xdev.ui.entitycomponent.table.XdevTable?>
@@ -105,7 +106,7 @@
         <XdevGridLayout x:name="gridLayoutData" margin="">
             <x:constraints splitPos="SECOND" weighty="0.0" width="100px" alignment="MIDDLE_CENTER" height="100px" />
             <XdevTabSheet styleName="framed" x:name="tabSheet" x:selectedTabIndex="0">
-                <x:constraints borderPos="CENTER" gridx="1" gridy="1" weighty="1.0" weightx="1.0" width="100%" height="100%" />
+                <x:constraints borderPos="CENTER" gridx="1" gridy="1" weighty="1.0" weightx="0.1" width="100%" height="100%" />
                 <XdevGridLayout caption="{$gridLayout.caption}" x:name="gridLayout">
                     <XdevLabel x:name="lblCustomer" value="{$lblCustomer.value}">
                         <x:constraints gridx="1" gridy="1" weighty="0.0" weightx="0.0" width="0px" height="0px" />
@@ -234,7 +235,7 @@
                         </x:typeArguments>
                     </XdevComboBox>
                 </XdevGridLayout>
-                <XdevGridLayout caption="{$gridLayout2.caption}" x:name="gridLayout2">
+                <XdevGridLayout caption="{$gridLayout2.caption}" x:name="gridLayoutDesc">
                     <XdevLabel x:name="lblProModel" value="{$lblProModel.value}">
                         <x:constraints gridx="1" gridy="1" weighty="0.0" weightx="0.0" width="0px" height="0px" />
                     </XdevLabel>
@@ -290,33 +291,50 @@
                 </XdevGridLayout>
                 <XdevGridLayout caption="Referenzen" x:name="gridLayoutRef" margin="">
                     <x:constraints width="100%" height="100%" />
-                    <XdevVerticalLayout x:name="verticalLayout2" margin="">
-                        <x:constraints splitPos="FIRST" gridx="1" gridy="1" weighty="0.1" weightx="0.1" width="100%" height="100%" />
-                        <XdevTable caption="Rechnungen" x:name="tableOrder" x:entity="Order" icon="FontAwesome.FILE" x:autoQuery="false">
-                            <x:entityProperties>
-                                <entry type="int" property="ordNumber" caption="Rechnungsnummer">
-                                    <converter decimalSeparatorAlwaysShown="false" numberType="Integer" numberFormatType="number" currency="default" groupingUsed="false" converterType="STRING_TO_NUMBER" locale="default" />
-                                </entry>
-                                <entry type="Date" property="ordBillDate" caption="Rechnungsdatum">
-                                    <converter dateStyle="DEFAULT" timeStyle="DEFAULT" currency="default" converterType="STRING_TO_DATE" locale="default" dateFormatType="DATE" />
-                                </entry>
-                                <entry type="Double" property="ordAmountNet" caption="Betrag Netto" alignment="RIGHT">
-                                    <converter numberType="Double" numberFormatType="currency" minimumFractionDigits="2" currency="default" converterType="STRING_TO_NUMBER" locale="default" />
-                                </entry>
-                                <entry type="Date" property="ordPayDate" caption="Bezahlt am">
-                                    <converter dateStyle="DEFAULT" timeStyle="DEFAULT" currency="default" converterType="STRING_TO_DATE" locale="default" dateFormatType="DATE" />
-                                </entry>
-                            </x:entityProperties>
-                            <x:constraints weighty="1.0" width="100%" height="100%" />
-                            <x:typeArguments>
-                                <typeArgument type="Order" />
-                            </x:typeArguments>
-                        </XdevTable>
-                    </XdevVerticalLayout>
+                    <XdevVerticalSplitPanel styleName="large" x:splitPosition="60.0" x:name="verticalSplitPanel">
+                        <x:constraints gridx="1" gridy="1" weighty="0.1" weightx="0.1" width="100%" height="100%" />
+                        <XdevVerticalLayout x:name="verticalLayoutBill" margin="">
+                            <x:constraints gridHeight="1" splitPos="FIRST" gridx="1" gridy="1" weighty="0.1" weightx="0.1" width="100%" alignment="TOP_LEFT" gridWidth="1" height="100%" />
+                            <XdevTable caption="Rechnungen" x:name="tableOrder" x:entity="Order" icon="FontAwesome.FILE" x:autoQuery="false">
+                                <x:entityProperties>
+                                    <entry type="int" property="ordNumber" caption="Rechnungsnummer">
+                                        <converter decimalSeparatorAlwaysShown="false" numberType="Integer" numberFormatType="number" currency="default" groupingUsed="false" converterType="STRING_TO_NUMBER" locale="default" />
+                                    </entry>
+                                    <entry type="Date" property="ordBillDate" caption="Rechnungsdatum">
+                                        <converter dateStyle="DEFAULT" timeStyle="DEFAULT" currency="default" converterType="STRING_TO_DATE" locale="default" dateFormatType="DATE" />
+                                    </entry>
+                                    <entry type="Double" property="ordAmountNet" caption="Betrag Netto" alignment="RIGHT">
+                                        <converter numberType="Double" numberFormatType="currency" minimumFractionDigits="2" currency="default" converterType="STRING_TO_NUMBER" locale="default" />
+                                    </entry>
+                                    <entry type="Date" property="ordPayDate" caption="Bezahlt am">
+                                        <converter dateStyle="DEFAULT" timeStyle="DEFAULT" currency="default" converterType="STRING_TO_DATE" locale="default" dateFormatType="DATE" />
+                                    </entry>
+                                </x:entityProperties>
+                                <x:constraints weighty="0.1" width="100%" height="100%" />
+                                <x:typeArguments>
+                                    <typeArgument type="Order" />
+                                </x:typeArguments>
+                            </XdevTable>
+                        </XdevVerticalLayout>
+                        <XdevVerticalLayout x:name="verticalLayoutSubProject" margin="">
+                            <x:constraints gridHeight="1" splitPos="SECOND" gridx="1" gridy="1" weighty="0.1" weightx="0.1" width="100%" alignment="TOP_LEFT" gridWidth="1" height="100%" />
+                            <XdevTable caption="Sub-Projekte" x:name="tableProject" x:entity="Project" icon="FontAwesome.CUBES" x:autoQuery="false">
+                                <x:entityProperties>
+                                    <entry type="String" property="proName" caption="Name" />
+                                    <entry type="Integer" property="proHours" caption="Soll-Stunden" />
+                                    <entry type="Double" property="proHoursEffective" caption="Ist-Stunden" />
+                                </x:entityProperties>
+                                <x:constraints weighty="0.1" width="100%" alignment="TOP_LEFT" height="100%" />
+                                <x:typeArguments>
+                                    <typeArgument type="Project" />
+                                </x:typeArguments>
+                            </XdevTable>
+                        </XdevVerticalLayout>
+                    </XdevVerticalSplitPanel>
                 </XdevGridLayout>
             </XdevTabSheet>
             <XdevHorizontalLayout x:name="horizontalLayout" margin="bl">
-                <x:constraints borderPos="SOUTH" gridx="1" gridy="2" weighty="0.0" weightx="0.0" width="0px" alignment="TOP_CENTER" height="0px" />
+                <x:constraints borderPos="SOUTH" gridx="1" gridy="2" weighty="0.1" weightx="0.1" width="0px" alignment="BOTTOM_CENTER" height="0px" />
                 <XdevButton icon="FontAwesome.SAVE" caption="{$cmdSave.caption}" x:name="cmdSave">
                     <x:constraints weightx="0.0" width="0px" height="0px" />
                     <x:event>click.buttonClick</x:event>
