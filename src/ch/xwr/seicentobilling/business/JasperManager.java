@@ -432,7 +432,7 @@ public class JasperManager {
 			prefix = "XWare_R" + bean.getOrdNumber() + "_" + getTimeStamp();
 		}
 		if (iflag == 3) {
-			prefix = "WorkReport_" + bean.getProject().getProName();
+			prefix = "WorkReport_" + getSelectedPeriod().getPerName();
 		}
 		if (iflag == 4) {
 			prefix = "RechnungLang_" + bean.getOrdNumber();
@@ -461,7 +461,7 @@ public class JasperManager {
     	if (cus.getCusBillingReport() != null) {
     		if (key.equalsIgnoreCase("reportWork")) {
     			if (hasNoReports()) {
-    				return true;
+    				return false;
     			}
     			if (cus.getCusBillingReport() == LovCrm.BillReport.working) {
 					return true;
