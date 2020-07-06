@@ -420,21 +420,22 @@ public class JasperManager {
 	}
 
 	private String getTempFileName4Zip(final Order bean, final int iflag) {
+		//Default
 		String fileExt = ".pdf";
+		String prefix = "Rechnung_" + bean.getOrdNumber();
 
-		String prefix = "Rechnung_" + bean.getOrdNumber() + "_" + getTimeStamp();
 		if (iflag == 1) {
-			prefix = "ProjectSummary_" + bean.getProject().getProId();
+			prefix = "ProjectSummary_#" + bean.getProject().getProId();
 		}
 		if (iflag == 2) {
 			fileExt = ".zip";
-			prefix = "XWare_" + bean.getOrdNumber() + "_" + getTimeStamp();
+			prefix = "XWare_R" + bean.getOrdNumber() + "_" + getTimeStamp();
 		}
 		if (iflag == 3) {
-			prefix = "WorkReport" + bean.getProject().getProId();
+			prefix = "WorkReport_" + bean.getProject().getProName();
 		}
 		if (iflag == 4) {
-			prefix = "RechnungLang_" + bean.getOrdNumber() + "_" + getTimeStamp();
+			prefix = "RechnungLang_" + bean.getOrdNumber();
 		}
 
 		return getTempFileName4Zip(prefix, fileExt);
