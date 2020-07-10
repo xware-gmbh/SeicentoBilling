@@ -506,10 +506,10 @@ public class JasperManager {
 		final Periode per = dao.find(getSelectedPeriod().getPerId());
 
 		if (per.getProjectLines().size() > 0) {
-			return true;
+			return false;  //has data
 		}
-		// No Reportlines to print
-		return false;
+		// No data to print
+		return true;
 	}
 
 	private String getRowParameter(final RowObject objRoot, final String group, final String subgroup, final String key)
