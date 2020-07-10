@@ -443,6 +443,12 @@ public class ProjectLineTabView extends XdevView {
 
 			private void doDelete() {
 				final ProjectLine bean = tab.getSelectedItem().getBean();
+
+				ProjectLine prev = (ProjectLine) tab.prevItemId(bean);
+				if (prev == null) {
+					prev = (ProjectLine) tab.nextItemId(bean);
+				}
+
 				// Update RowObject
 				final RowObjectManager man = new RowObjectManager();
 				man.deleteObject(bean.getPrlId(), bean.getClass().getSimpleName());
@@ -452,6 +458,10 @@ public class ProjectLineTabView extends XdevView {
 				// refresh tab
 				tab.removeItem(bean);
 				tab.getBeanContainerDataSource().refresh();
+
+				if (prev != null) {
+					tab.select(prev);
+				}
 
 				// if (!tab.isEmpty())
 				// tab.select(tab.getCurrentPageFirstItemId());

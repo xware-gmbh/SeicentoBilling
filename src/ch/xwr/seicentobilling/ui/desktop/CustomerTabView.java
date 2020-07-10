@@ -866,7 +866,8 @@ public class CustomerTabView extends XdevView {
 
 				final AddressDAO dao = new AddressDAO();
 				dao.remove(bean);
-				CustomerTabView.this.tableAddress.getBeanContainerDataSource().refresh();
+				CustomerTabView.this.fieldGroup.getItemDataSource().getBean().getAddresses().remove(bean);
+				CustomerTabView.this.tableAddress.removeItem(bean);
 
 				try {
 					CustomerTabView.this.tableAddress
@@ -918,7 +919,8 @@ public class CustomerTabView extends XdevView {
 
 				final CustomerLinkDAO dao = new CustomerLinkDAO();
 				dao.remove(bean);
-				CustomerTabView.this.tableLink.getBeanContainerDataSource().refresh();
+				CustomerTabView.this.fieldGroup.getItemDataSource().getBean().getCustomerLinks().remove(bean);
+				CustomerTabView.this.tableLink.removeItem(bean);
 
 				try {
 					CustomerTabView.this.tableLink.select(CustomerTabView.this.tableLink.getCurrentPageFirstItemId());
@@ -1000,9 +1002,12 @@ public class CustomerTabView extends XdevView {
 	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
 	 */
 	private void cmdReloadCustomerLink_buttonClick(final Button.ClickEvent event) {
-		this.tableLink.refreshRowCache();
-		this.tableLink.getBeanContainerDataSource().refresh();
-		this.tableLink.sort();
+		this.tableLink.removeAllItems();
+		this.tableLink.addItems(new CustomerLinkDAO().findByCustomer(CustomerTabView.this.table.getSelectedItem().getBean()));
+
+//		this.tableLink.refreshRowCache();
+//		this.tableLink.getBeanContainerDataSource().refresh();
+//		this.tableLink.sort();
 
 	}
 
@@ -1956,7 +1961,7 @@ public class CustomerTabView extends XdevView {
 		this.tabSheet.addTab(this.gridLayoutRelation, "Beziehungen", null);
 		this.gridLayoutListRef.setSizeFull();
 		this.tabSheet.addTab(this.gridLayoutListRef, "Referenzen", null);
-		this.tabSheet.setSelectedTab(this.gridLayoutContact);
+		this.tabSheet.setSelectedTab(this.gridLayoutAddress);
 		this.cmdSave.setSizeUndefined();
 		this.horizontalLayoutBtn.addComponent(this.cmdSave);
 		this.horizontalLayoutBtn.setComponentAlignment(this.cmdSave, Alignment.MIDDLE_LEFT);

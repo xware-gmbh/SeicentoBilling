@@ -334,15 +334,27 @@ public class ExpenseTabView extends XdevView {
 
 			private void doDelete() {
 				final Expense bean = tab.getSelectedItem().getBean();
+
+				Expense prev = (Expense) tab.prevItemId(bean);
+				if (prev == null) {
+					prev = (Expense) tab.nextItemId(bean);
+				}
+
 				// Update RowObject
 				final RowObjectManager man = new RowObjectManager();
 				man.deleteObject(bean.getExpId(), bean.getClass().getSimpleName());
 				// Delete Record
 				final ExpenseDAO dao = new ExpenseDAO();
 				dao.remove(bean);
+
 				// refresh tab
 				tab.removeItem(bean);
 				tab.getBeanContainerDataSource().refresh();
+
+				if (prev != null) {
+					tab.select(prev);
+				}
+
 
 				// if (!tab.isEmpty())
 				// tab.select(tab.getCurrentPageFirstItemId());
