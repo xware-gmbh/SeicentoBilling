@@ -1,5 +1,6 @@
 #FROM dockregxwr-on.azurecr.io/tomcatbase:latest
-FROM tomcat:9.0-jre8-alpine
+#FROM tomcat:9.0-jre11-alpine
+FROM tomcat:9.0-jdk11-openjdk-slim
 #FROM tomcat:9.0-jdk8-openjdk-slim
 
 
