@@ -13,8 +13,12 @@
     <x:constraints zpos="0" width="100%" height="100%" />
     <XdevVerticalLayout x:name="verticalLayout" margin="">
         <x:constraints zpos="0" width="100%" height="100%" />
-        <XdevTabSheet styleName="framed" x:name="tabSheet" x:selectedTabIndex="0">
+        <XdevTabSheet styleName="framed" x:name="tabSheet" x:selectedTabIndex="1">
             <x:constraints top="-9px" left="1037px" weighty="0.1" width="100%" height="100%" />
+            <XdevGridLayout caption="User Claims" x:name="gridLayoutUsr" margin="trl">
+                <x:constraints width="100%" height="100%" />
+                <x:event>attach.attach</x:event>
+            </XdevGridLayout>
             <XdevGridLayout caption="Application" x:name="gridLayoutApp" margin="trl">
                 <x:constraints width="100%" height="100%" />
                 <x:event>attach.attach</x:event>
@@ -72,10 +76,12 @@
                 <XdevLabel x:name="lblJava" value="Java">
                     <x:constraints gridx="2" gridy="8" top="67px" left="-1px" weighty="0.0" weightx="0.0" width="0px" height="0px" />
                 </XdevLabel>
-            </XdevGridLayout>
-            <XdevGridLayout caption="User Claims" x:name="gridLayoutUsr" margin="trl">
-                <x:constraints width="100%" height="100%" />
-                <x:event>attach.attach</x:event>
+                <XdevLabel x:name="label9" value="Operating System">
+                    <x:constraints gridx="1" gridy="9" top="101px" left="-1px" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+                </XdevLabel>
+                <XdevLabel x:name="LblOs" value="Windows">
+                    <x:constraints gridx="2" gridy="9" top="101px" left="-1px" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+                </XdevLabel>
             </XdevGridLayout>
         </XdevTabSheet>
     </XdevVerticalLayout>

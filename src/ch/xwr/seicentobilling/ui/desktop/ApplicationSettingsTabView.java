@@ -102,7 +102,8 @@ public class ApplicationSettingsTabView extends XdevView {
 
 		this.lblMemory.setValue("" + Seicento.getMemory());
 		this.lblSession.setValue(UI.getCurrent().getSession().getState().name());
-		this.lblJava.setValue(System.getProperty("java.version"));
+		this.lblJava.setValue(System.getProperty("java.version") + " - " + System.getProperty("java.vendor"));
+		this.LblOs.setValue(System.getProperty("os.name") + " - " + System.getProperty("os.version") + " - " + System.getProperty("os.arch"));
 	}
 
 
@@ -114,6 +115,7 @@ public class ApplicationSettingsTabView extends XdevView {
 	private void initUI() {
 		this.verticalLayout = new XdevVerticalLayout();
 		this.tabSheet = new XdevTabSheet();
+		this.gridLayoutUsr = new XdevGridLayout();
 		this.gridLayoutApp = new XdevGridLayout();
 		this.horizontalLayout = new XdevHorizontalLayout();
 		this.label4 = new XdevLabel();
@@ -133,10 +135,12 @@ public class ApplicationSettingsTabView extends XdevView {
 		this.lblSession = new XdevLabel();
 		this.label8 = new XdevLabel();
 		this.lblJava = new XdevLabel();
-		this.gridLayoutUsr = new XdevGridLayout();
+		this.label9 = new XdevLabel();
+		this.LblOs = new XdevLabel();
 
 		this.verticalLayout.setMargin(new MarginInfo(false));
 		this.tabSheet.setStyleName("framed");
+		this.gridLayoutUsr.setMargin(new MarginInfo(true, true, false, true));
 		this.gridLayoutApp.setMargin(new MarginInfo(true, true, false, true));
 		this.horizontalLayout.setIcon(FontAwesome.DASHBOARD);
 		this.horizontalLayout.setCaption("SeicentoBilling");
@@ -159,7 +163,8 @@ public class ApplicationSettingsTabView extends XdevView {
 		this.lblSession.setValue("Version");
 		this.label8.setValue("Java");
 		this.lblJava.setValue("Java");
-		this.gridLayoutUsr.setMargin(new MarginInfo(true, true, false, true));
+		this.label9.setValue("Operating System");
+		this.LblOs.setValue("Windows");
 
 		this.label4.setSizeUndefined();
 		this.horizontalLayout.addComponent(this.label4);
@@ -171,7 +176,7 @@ public class ApplicationSettingsTabView extends XdevView {
 		this.horizontalLayout.addComponent(this.labelArtifact);
 		this.horizontalLayout.setExpandRatio(this.labelArtifact, 20.0F);
 		this.gridLayoutApp.setColumns(2);
-		this.gridLayoutApp.setRows(9);
+		this.gridLayoutApp.setRows(10);
 		this.horizontalLayout.setWidth(100, Unit.PERCENTAGE);
 		this.horizontalLayout.setHeight(50, Unit.PIXELS);
 		this.gridLayoutApp.addComponent(this.horizontalLayout, 0, 0, 1, 0);
@@ -204,15 +209,19 @@ public class ApplicationSettingsTabView extends XdevView {
 		this.gridLayoutApp.addComponent(this.label8, 0, 7);
 		this.lblJava.setSizeUndefined();
 		this.gridLayoutApp.addComponent(this.lblJava, 1, 7);
+		this.label9.setSizeUndefined();
+		this.gridLayoutApp.addComponent(this.label9, 0, 8);
+		this.LblOs.setSizeUndefined();
+		this.gridLayoutApp.addComponent(this.LblOs, 1, 8);
 		this.gridLayoutApp.setColumnExpandRatio(1, 40.0F);
 		final CustomComponent gridLayoutApp_vSpacer = new CustomComponent();
 		gridLayoutApp_vSpacer.setSizeFull();
-		this.gridLayoutApp.addComponent(gridLayoutApp_vSpacer, 0, 8, 1, 8);
-		this.gridLayoutApp.setRowExpandRatio(8, 1.0F);
-		this.gridLayoutApp.setSizeFull();
-		this.tabSheet.addTab(this.gridLayoutApp, "Application", null);
+		this.gridLayoutApp.addComponent(gridLayoutApp_vSpacer, 0, 9, 1, 9);
+		this.gridLayoutApp.setRowExpandRatio(9, 1.0F);
 		this.gridLayoutUsr.setSizeFull();
 		this.tabSheet.addTab(this.gridLayoutUsr, "User Claims", null);
+		this.gridLayoutApp.setSizeFull();
+		this.tabSheet.addTab(this.gridLayoutApp, "Application", null);
 		this.tabSheet.setSelectedTab(this.gridLayoutApp);
 		this.tabSheet.setSizeFull();
 		this.verticalLayout.addComponent(this.tabSheet);
@@ -222,16 +231,16 @@ public class ApplicationSettingsTabView extends XdevView {
 		this.setContent(this.verticalLayout);
 		this.setSizeFull();
 
-		this.gridLayoutApp.addAttachListener(event -> this.gridLayoutApp_attach(event));
 		this.gridLayoutUsr.addAttachListener(event -> this.gridLayoutUsr_attach(event));
+		this.gridLayoutApp.addAttachListener(event -> this.gridLayoutApp_attach(event));
 	} // </generated-code>
 
 	// <generated-code name="variables">
 	private XdevLabel label4, labelVersion, labelArtifact, label5, labelUsername, label, labelCountry, label2,
-			labelLanguage, label3, labelTimeZone, label6, lblMemory, label7, lblSession, label8, lblJava;
+			labelLanguage, label3, labelTimeZone, label6, lblMemory, label7, lblSession, label8, lblJava, label9, LblOs;
 	private XdevHorizontalLayout horizontalLayout;
 	private XdevTabSheet tabSheet;
-	private XdevGridLayout gridLayoutApp, gridLayoutUsr;
+	private XdevGridLayout gridLayoutUsr, gridLayoutApp;
 	private XdevVerticalLayout verticalLayout;
 	// </generated-code>
 
