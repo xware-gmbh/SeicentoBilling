@@ -6,7 +6,7 @@
 	<artifactId>seicentobilling</artifactId>
 	<packaging>war</packaging>
 	<name>SeicentoBilling</name>
-	<version>20.3.0</version>
+	<version>20.2.1</version>
 	<description>
 		Einfache Leistungserfassungs und Rechnungssstellungs
 		Web-Applikation.
