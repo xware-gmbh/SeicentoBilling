@@ -1961,7 +1961,7 @@ public class CustomerTabView extends XdevView {
 		this.tabSheet.addTab(this.gridLayoutRelation, "Beziehungen", null);
 		this.gridLayoutListRef.setSizeFull();
 		this.tabSheet.addTab(this.gridLayoutListRef, "Referenzen", null);
-		this.tabSheet.setSelectedTab(this.gridLayoutAddress);
+		this.tabSheet.setSelectedTab(this.gridLayoutContact);
 		this.cmdSave.setSizeUndefined();
 		this.horizontalLayoutBtn.addComponent(this.cmdSave);
 		this.horizontalLayoutBtn.setComponentAlignment(this.cmdSave, Alignment.MIDDLE_LEFT);
