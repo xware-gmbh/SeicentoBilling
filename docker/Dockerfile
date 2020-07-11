@@ -8,7 +8,10 @@ ENV CATALINA_HOME /usr/local/tomcat
 #ENV PATH $CATALINA_HOME/bin:$PATH
 
 #add fonts
-RUN apk --update add fontconfig ttf-dejavu
+# alpine
+#RUN apk --update add fontconfig ttf-dejavu
+# ubuntu
+RUN sudo apt install ttf-dejavu
 
 #Provision Webapp	
 ADD ./SeicentoBilling.war $CATALINA_HOME/webapps/
