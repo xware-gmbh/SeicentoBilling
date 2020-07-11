@@ -10,6 +10,7 @@ import javax.persistence.PersistenceException;
 import org.apache.poi.ss.formula.functions.T;
 
 import com.vaadin.data.Property;
+import com.vaadin.data.validator.IntegerRangeValidator;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.external.org.slf4j.Logger;
 import com.vaadin.external.org.slf4j.LoggerFactory;
@@ -41,6 +42,7 @@ import com.xdev.ui.XdevTabSheet;
 import com.xdev.ui.XdevTextArea;
 import com.xdev.ui.XdevTextField;
 import com.xdev.ui.XdevVerticalLayout;
+import com.xdev.ui.XdevVerticalSplitPanel;
 import com.xdev.ui.XdevView;
 import com.xdev.ui.entitycomponent.combobox.XdevComboBox;
 import com.xdev.ui.entitycomponent.table.XdevTable;
@@ -90,8 +92,8 @@ public class ProjectTabView extends XdevView {
 		this.initUI();
 
 		// dummy (hight get lost)
-		this.tabSheet.setWidth(100, Unit.PERCENTAGE);
-		this.tabSheet.setHeight(-1, Unit.PIXELS);
+		//this.tabSheet.setWidth(100, Unit.PERCENTAGE);
+		//this.tabSheet.setHeight(-1, Unit.PIXELS);
 
 		// Type
 		this.cbxState.addItems((Object[]) LovState.State.values());
@@ -368,6 +370,11 @@ public class ProjectTabView extends XdevView {
 			this.tableOrder.clear();
 			this.tableOrder.removeAllItems();
 			this.tableOrder.addItems(new OrderDAO().findByProject(npro));
+
+			this.tableProject.clear();
+			this.tableProject.removeAllItems();
+			this.tableProject.addItems(new ProjectDAO().findAllChildren(npro.getProId()));
+
 		}
 
 	}
@@ -602,7 +609,7 @@ public class ProjectTabView extends XdevView {
 		this.cmbBillingAddress = new XdevComboBox<>();
 		this.lblProState = new XdevLabel();
 		this.cbxState = new XdevComboBox<>();
-		this.gridLayout2 = new XdevGridLayout();
+		this.gridLayoutDesc = new XdevGridLayout();
 		this.lblProModel = new XdevLabel();
 		this.cbxProModel = new XdevComboBox<>();
 		this.cbxInternal = new XdevCheckBox();
@@ -617,8 +624,11 @@ public class ProjectTabView extends XdevView {
 		this.lblProLastBill = new XdevLabel();
 		this.dateProLastBill = new XdevPopupDateField();
 		this.gridLayoutRef = new XdevGridLayout();
-		this.verticalLayout2 = new XdevVerticalLayout();
+		this.verticalSplitPanel = new XdevVerticalSplitPanel();
+		this.verticalLayoutBill = new XdevVerticalLayout();
 		this.tableOrder = new XdevTable<>();
+		this.verticalLayoutSubProject = new XdevVerticalLayout();
+		this.tableProject = new XdevTable<>();
 		this.horizontalLayout = new XdevHorizontalLayout();
 		this.cmdSave = new XdevButton();
 		this.cmdReset = new XdevButton();
@@ -706,6 +716,8 @@ public class ProjectTabView extends XdevView {
 		this.lblProHours.setValue("Stunden Soll");
 		this.txtProHours
 				.setConverter(ConverterBuilder.stringToDouble().minimumFractionDigits(2).maximumFractionDigits(2).build());
+		this.txtProHours.setRequired(true);
+		this.txtProHours.addValidator(new IntegerRangeValidator("Der Wert muss grösser 0 sein!", 1, null));
 		this.lblProHoursEffective.setValue("Ist");
 		this.txtProHoursEffective
 				.setConverter(ConverterBuilder.stringToDouble().minimumFractionDigits(2).maximumFractionDigits(2).build());
@@ -741,7 +753,9 @@ public class ProjectTabView extends XdevView {
 		this.lblProProjectState.setValue(StringResourceUtils.optLocalizeString("{$lblProProjectState.value}", this));
 		this.lblProLastBill.setValue(StringResourceUtils.optLocalizeString("{$lblProLastBill.value}", this));
 		this.gridLayoutRef.setMargin(new MarginInfo(false));
-		this.verticalLayout2.setMargin(new MarginInfo(false));
+		this.verticalSplitPanel.setStyleName("large");
+		this.verticalSplitPanel.setSplitPosition(60.0F, Unit.PERCENTAGE);
+		this.verticalLayoutBill.setMargin(new MarginInfo(false));
 		this.tableOrder.setCaption("Rechnungen");
 		this.tableOrder.setIcon(FontAwesome.FILE);
 		this.tableOrder.setContainerDataSource(Order.class, false);
@@ -758,6 +772,15 @@ public class ProjectTabView extends XdevView {
 				ConverterBuilder.stringToDouble().currency().minimumFractionDigits(2).build());
 		this.tableOrder.setColumnHeader("ordPayDate", "Bezahlt am");
 		this.tableOrder.setConverter("ordPayDate", ConverterBuilder.stringToDate().dateOnly().build());
+		this.verticalLayoutSubProject.setMargin(new MarginInfo(false));
+		this.tableProject.setCaption("Sub-Projekte");
+		this.tableProject.setIcon(FontAwesome.CUBES);
+		this.tableProject.setContainerDataSource(Project.class, false);
+		this.tableProject.setVisibleColumns(Project_.proName.getName(), Project_.proHours.getName(),
+				Project_.proHoursEffective.getName());
+		this.tableProject.setColumnHeader("proName", "Name");
+		this.tableProject.setColumnHeader("proHours", "Soll-Stunden");
+		this.tableProject.setColumnHeader("proHoursEffective", "Ist-Stunden");
 		this.horizontalLayout.setMargin(new MarginInfo(false, false, true, true));
 		this.cmdSave.setIcon(FontAwesome.SAVE);
 		this.cmdSave.setCaption(StringResourceUtils.optLocalizeString("{$cmdSave.caption}", this));
@@ -901,58 +924,66 @@ public class ProjectTabView extends XdevView {
 		gridLayout_vSpacer.setSizeFull();
 		this.gridLayout.addComponent(gridLayout_vSpacer, 0, 10, 3, 10);
 		this.gridLayout.setRowExpandRatio(10, 1.0F);
-		this.gridLayout2.setColumns(3);
-		this.gridLayout2.setRows(7);
+		this.gridLayoutDesc.setColumns(3);
+		this.gridLayoutDesc.setRows(7);
 		this.lblProModel.setSizeUndefined();
-		this.gridLayout2.addComponent(this.lblProModel, 0, 0);
+		this.gridLayoutDesc.addComponent(this.lblProModel, 0, 0);
 		this.cbxProModel.setSizeUndefined();
-		this.gridLayout2.addComponent(this.cbxProModel, 1, 0);
+		this.gridLayoutDesc.addComponent(this.cbxProModel, 1, 0);
 		this.cbxInternal.setSizeUndefined();
-		this.gridLayout2.addComponent(this.cbxInternal, 2, 0);
+		this.gridLayoutDesc.addComponent(this.cbxInternal, 2, 0);
 		this.lblProject.setSizeUndefined();
-		this.gridLayout2.addComponent(this.lblProject, 0, 1);
+		this.gridLayoutDesc.addComponent(this.lblProject, 0, 1);
 		this.cmbProject.setWidth(100, Unit.PERCENTAGE);
 		this.cmbProject.setHeight(-1, Unit.PIXELS);
-		this.gridLayout2.addComponent(this.cmbProject, 1, 1, 2, 1);
+		this.gridLayoutDesc.addComponent(this.cmbProject, 1, 1, 2, 1);
 		this.lblProDescription.setSizeUndefined();
-		this.gridLayout2.addComponent(this.lblProDescription, 0, 2);
+		this.gridLayoutDesc.addComponent(this.lblProDescription, 0, 2);
 		this.textArea.setWidth(100, Unit.PERCENTAGE);
 		this.textArea.setHeight(-1, Unit.PIXELS);
-		this.gridLayout2.addComponent(this.textArea, 1, 2, 2, 2);
+		this.gridLayoutDesc.addComponent(this.textArea, 1, 2, 2, 2);
 		this.lblProRemark.setSizeUndefined();
-		this.gridLayout2.addComponent(this.lblProRemark, 0, 3);
+		this.gridLayoutDesc.addComponent(this.lblProRemark, 0, 3);
 		this.textAreaRem.setWidth(100, Unit.PERCENTAGE);
 		this.textAreaRem.setHeight(-1, Unit.PIXELS);
-		this.gridLayout2.addComponent(this.textAreaRem, 1, 3, 2, 3);
+		this.gridLayoutDesc.addComponent(this.textAreaRem, 1, 3, 2, 3);
 		this.lblProProjectState.setSizeUndefined();
-		this.gridLayout2.addComponent(this.lblProProjectState, 0, 4);
+		this.gridLayoutDesc.addComponent(this.lblProProjectState, 0, 4);
 		this.cbxProState.setSizeUndefined();
-		this.gridLayout2.addComponent(this.cbxProState, 1, 4);
+		this.gridLayoutDesc.addComponent(this.cbxProState, 1, 4);
 		this.lblProLastBill.setSizeUndefined();
-		this.gridLayout2.addComponent(this.lblProLastBill, 0, 5);
+		this.gridLayoutDesc.addComponent(this.lblProLastBill, 0, 5);
 		this.dateProLastBill.setWidth(100, Unit.PERCENTAGE);
 		this.dateProLastBill.setHeight(-1, Unit.PIXELS);
-		this.gridLayout2.addComponent(this.dateProLastBill, 1, 5);
-		this.gridLayout2.setColumnExpandRatio(1, 100.0F);
-		this.gridLayout2.setColumnExpandRatio(2, 100.0F);
-		final CustomComponent gridLayout2_vSpacer = new CustomComponent();
-		gridLayout2_vSpacer.setSizeFull();
-		this.gridLayout2.addComponent(gridLayout2_vSpacer, 0, 6, 2, 6);
-		this.gridLayout2.setRowExpandRatio(6, 1.0F);
+		this.gridLayoutDesc.addComponent(this.dateProLastBill, 1, 5);
+		this.gridLayoutDesc.setColumnExpandRatio(1, 100.0F);
+		this.gridLayoutDesc.setColumnExpandRatio(2, 100.0F);
+		final CustomComponent gridLayoutDesc_vSpacer = new CustomComponent();
+		gridLayoutDesc_vSpacer.setSizeFull();
+		this.gridLayoutDesc.addComponent(gridLayoutDesc_vSpacer, 0, 6, 2, 6);
+		this.gridLayoutDesc.setRowExpandRatio(6, 1.0F);
 		this.tableOrder.setSizeFull();
-		this.verticalLayout2.addComponent(this.tableOrder);
-		this.verticalLayout2.setComponentAlignment(this.tableOrder, Alignment.MIDDLE_CENTER);
-		this.verticalLayout2.setExpandRatio(this.tableOrder, 100.0F);
+		this.verticalLayoutBill.addComponent(this.tableOrder);
+		this.verticalLayoutBill.setComponentAlignment(this.tableOrder, Alignment.MIDDLE_CENTER);
+		this.verticalLayoutBill.setExpandRatio(this.tableOrder, 10.0F);
+		this.tableProject.setSizeFull();
+		this.verticalLayoutSubProject.addComponent(this.tableProject);
+		this.verticalLayoutSubProject.setExpandRatio(this.tableProject, 10.0F);
+		this.verticalLayoutBill.setSizeFull();
+		this.verticalSplitPanel.setFirstComponent(this.verticalLayoutBill);
+		this.verticalLayoutSubProject.setSizeFull();
+		this.verticalSplitPanel.setSecondComponent(this.verticalLayoutSubProject);
 		this.gridLayoutRef.setColumns(1);
 		this.gridLayoutRef.setRows(1);
-		this.verticalLayout2.setSizeFull();
-		this.gridLayoutRef.addComponent(this.verticalLayout2, 0, 0);
+		this.verticalSplitPanel.setSizeFull();
+		this.gridLayoutRef.addComponent(this.verticalSplitPanel, 0, 0);
 		this.gridLayoutRef.setColumnExpandRatio(0, 10.0F);
 		this.gridLayoutRef.setRowExpandRatio(0, 10.0F);
 		this.gridLayout.setSizeFull();
 		this.tabSheet.addTab(this.gridLayout, StringResourceUtils.optLocalizeString("{$gridLayout.caption}", this), null);
-		this.gridLayout2.setSizeFull();
-		this.tabSheet.addTab(this.gridLayout2, StringResourceUtils.optLocalizeString("{$gridLayout2.caption}", this), null);
+		this.gridLayoutDesc.setSizeFull();
+		this.tabSheet.addTab(this.gridLayoutDesc, StringResourceUtils.optLocalizeString("{$gridLayout2.caption}", this),
+				null);
 		this.gridLayoutRef.setSizeFull();
 		this.tabSheet.addTab(this.gridLayoutRef, "Referenzen", null);
 		this.tabSheet.setSelectedTab(this.gridLayout);
@@ -968,9 +999,10 @@ public class ProjectTabView extends XdevView {
 		this.gridLayoutData.addComponent(this.tabSheet, 0, 0);
 		this.horizontalLayout.setSizeUndefined();
 		this.gridLayoutData.addComponent(this.horizontalLayout, 0, 1);
-		this.gridLayoutData.setComponentAlignment(this.horizontalLayout, Alignment.TOP_CENTER);
-		this.gridLayoutData.setColumnExpandRatio(0, 100.0F);
+		this.gridLayoutData.setComponentAlignment(this.horizontalLayout, Alignment.BOTTOM_CENTER);
+		this.gridLayoutData.setColumnExpandRatio(0, 10.0F);
 		this.gridLayoutData.setRowExpandRatio(0, 100.0F);
+		this.gridLayoutData.setRowExpandRatio(1, 10.0F);
 		this.verticalLayout.setSizeFull();
 		this.horizontalSplitPanel.setFirstComponent(this.verticalLayout);
 		this.gridLayoutData.setSizeFull();
@@ -1003,22 +1035,23 @@ public class ProjectTabView extends XdevView {
 	private XdevFieldGroup<Project> fieldGroup;
 	private XdevComboBox<Address> cmbBillingAddress;
 	private XdevTabSheet tabSheet;
-	private XdevGridLayout gridLayoutData, gridLayout, gridLayout2, gridLayoutRef;
+	private XdevGridLayout gridLayoutData, gridLayout, gridLayoutDesc, gridLayoutRef;
 	private XdevComboBox<Project> cmbProject;
 	private XdevHorizontalSplitPanel horizontalSplitPanel;
 	private XdevContainerFilterComponent containerFilterComponent;
 	private XdevHorizontalLayout actionLayout, horizontalLayoutCus, horizontalLayout;
 	private XdevComboBox<Vat> cmbVat;
+	private XdevVerticalSplitPanel verticalSplitPanel;
 	private XdevPopupDateField dateProStartDate, dateProEndDate, dateProLastBill;
 	private XdevTextArea textArea, textAreaRem;
-	private XdevTable<Project> table;
+	private XdevTable<Project> table, tableProject;
 	private XdevComboBox<?> cbxState, cbxProModel, cbxProState;
 	private XdevComboBox<Customer> cmbCustomer;
 	private XdevCheckBox cbxInternal;
 	private XdevTable<Order> tableOrder;
 	private XdevTextField txtProName, txtProExtReference, txtProContact, txtProHours, txtProHoursEffective, txtProRate,
 			txtProIntensityPercent;
-	private XdevVerticalLayout verticalLayout, verticalLayout2;
+	private XdevVerticalLayout verticalLayout, verticalLayoutBill, verticalLayoutSubProject;
 	// </generated-code>
 
 }

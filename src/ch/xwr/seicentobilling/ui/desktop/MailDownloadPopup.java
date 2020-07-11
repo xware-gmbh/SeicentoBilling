@@ -72,16 +72,27 @@ public class MailDownloadPopup extends XdevView {
 	}
 
 	private void initComboBoxes() {
-        final CostAccountDAO dao = new CostAccountDAO();
-		final List<CostAccount> ls1 = dao.findAllActive();
-		CostAccount bean = Seicento.getLoggedInCostAccount();
-		if (bean == null) {
-			bean = ls1.get(0); // Dev Mode
-		}
+		final CostAccount bean = lookupCostAccount();
 
 		initCmbCostAccount(bean);
 		initCmbPeriode(bean);
+	}
 
+	private CostAccount lookupCostAccount() {
+		CostAccount bean = Seicento.getLoggedInCostAccount();
+
+		if (this.orderBean.getProject() != null) {
+			if (this.orderBean.getProject().getCostAccount() != null) {
+				bean = this.orderBean.getProject().getCostAccount();
+			}
+		}
+
+		if (bean == null) {
+	        final CostAccountDAO dao = new CostAccountDAO();
+			final List<CostAccount> ls1 = dao.findAllActive();
+			bean = ls1.get(0); // Dev Mode
+		}
+		return bean;
 	}
 
 	private void initCmbPeriode(final CostAccount selectedCst) {
@@ -92,7 +103,7 @@ public class MailDownloadPopup extends XdevView {
 		this.comboBoxPeriode.clear();
 		this.comboBoxPeriode.setContainerDataSource(cstList);
 
-		final Periode per = getPeriode(selectedCst);
+		final Periode per = getPeriode(cstList);
 		if (this.comboBoxPeriode.containsId(per)) {
 			this.comboBoxPeriode.select(per);
 		} else {
@@ -100,9 +111,9 @@ public class MailDownloadPopup extends XdevView {
 		}
 	}
 
-	private Periode getPeriode(final CostAccount cst) {
-		final PeriodeDAO dao = new PeriodeDAO();
-		final List<Periode> li = dao.findByCostAccount(cst);
+	private Periode getPeriode(final XdevBeanItemContainer<Periode> cstList) {
+//		final PeriodeDAO dao = new PeriodeDAO();
+//		final List<Periode> li = dao.findByCostAccount(cst);
 
 		final Calendar now = Calendar.getInstance(); // Gets the current date
 		now.setTime(this.orderBean.getOrdBillDate());
@@ -111,7 +122,8 @@ public class MailDownloadPopup extends XdevView {
 			imonth = 12;
 		}
 
-		for (final Periode periode : li) {
+		final List<Periode> lix = cstList.getItemIds();
+		for (final Periode periode : lix) {
 			if (periode.getPerMonth().ordinal() == imonth) {
 				return periode;
 			}
@@ -129,11 +141,26 @@ public class MailDownloadPopup extends XdevView {
 		this.comboBoxCst.clear();
 		this.comboBoxCst.setContainerDataSource(dataList);
 
-		if (this.comboBoxCst.containsId(loggedInCostAccount)) {
-			this.comboBoxCst.select(loggedInCostAccount);
+		final CostAccount bean = lookupInList(dataList, loggedInCostAccount);
+
+		if (this.comboBoxCst.containsId(bean)) {
+			this.comboBoxCst.select(bean);
 		} else {
 			this.comboBoxCst.setValue(loggedInCostAccount);
 		}
+	}
+
+	private CostAccount lookupInList(final XdevBeanItemContainer<CostAccount> dataList, final CostAccount loggedInCostAccount) {
+
+		final List<CostAccount> col = dataList.getItemIds();
+		for (final CostAccount costAccount : col) {
+			if (costAccount.getCsaId().equals(loggedInCostAccount.getCsaId())) {
+				return costAccount;
+			}
+
+		}
+
+		return null;
 	}
 
 	public static Window getPopupWindow() {

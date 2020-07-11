@@ -12,7 +12,9 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.text.MessageFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.zip.ZipEntry;
@@ -418,21 +420,22 @@ public class JasperManager {
 	}
 
 	private String getTempFileName4Zip(final Order bean, final int iflag) {
+		//Default
 		String fileExt = ".pdf";
-
 		String prefix = "Rechnung_" + bean.getOrdNumber();
+
 		if (iflag == 1) {
-			prefix = "ProjectSummary_" + bean.getProject().getProId();
+			prefix = "ProjectSummary_#" + bean.getProject().getProId();
 		}
 		if (iflag == 2) {
 			fileExt = ".zip";
-			prefix = "XWare_" + bean.getOrdNumber();
+			prefix = "XWare_R" + bean.getOrdNumber() + "_" + getTimeStamp();
 		}
 		if (iflag == 3) {
-			prefix = "WorkReport" + bean.getProject().getProId();
+			prefix = "WorkReport_" + getSelectedPeriod().getPerName();
 		}
 		if (iflag == 4) {
-			prefix = "RechnungLang_" + bean.getProject().getProId();
+			prefix = "RechnungLang_" + bean.getOrdNumber();
 		}
 
 		return getTempFileName4Zip(prefix, fileExt);
@@ -445,6 +448,11 @@ public class JasperManager {
 		return Paths.get(fname).toFile().toString();
 	}
 
+	private String getTimeStamp() {
+		final String timeStamp = new SimpleDateFormat("yyMMddHHmmss").format(new Date());
+		return timeStamp;
+	}
+
     private boolean getBillReportOutputOptions(final Order obean, final String key)
     {
     	final Customer cus = obean.getCustomer();
@@ -453,7 +461,7 @@ public class JasperManager {
     	if (cus.getCusBillingReport() != null) {
     		if (key.equalsIgnoreCase("reportWork")) {
     			if (hasNoReports()) {
-    				return true;
+    				return false;
     			}
     			if (cus.getCusBillingReport() == LovCrm.BillReport.working) {
 					return true;
@@ -498,10 +506,10 @@ public class JasperManager {
 		final Periode per = dao.find(getSelectedPeriod().getPerId());
 
 		if (per.getProjectLines().size() > 0) {
-			return true;
+			return false;  //has data
 		}
-		// No Reportlines to print
-		return false;
+		// No data to print
+		return true;
 	}
 
 	private String getRowParameter(final RowObject objRoot, final String group, final String subgroup, final String key)
