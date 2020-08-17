@@ -63,7 +63,7 @@ public class VcardHandler {
 			targetStream = new FileInputStream(getFile());
 			return targetStream;
 		} catch (final FileNotFoundException e) {
-			LOG.error("Cano not create Stream", e);
+			LOG.error("Can not create Stream", e);
 		}
 
 		return null;

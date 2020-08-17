@@ -89,10 +89,6 @@ public class ProjectLineTabView extends XdevView {
 
 		setDefaultFilter();
 
-		//TODO: dummy
-		this.cmdAdmin.setEnabled(true);
-		this.cmdAdmin.setVisible(true);
-
 		if (Seicento.hasRole("BillingAdmin")) {
 			this.cmdAdmin.setEnabled(true);
 			this.cmdAdmin.setVisible(true);
