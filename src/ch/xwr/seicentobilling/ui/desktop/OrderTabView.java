@@ -155,6 +155,10 @@ public class OrderTabView extends XdevView {
 		}
 		this.tabSheet.setEnabled(hasData);
 
+		if (this.isAdmin) {
+			this.dateOrdBookedOn.setEnabled(true);
+		}
+
 	}
 
 	private void setDefaultFilter() {
