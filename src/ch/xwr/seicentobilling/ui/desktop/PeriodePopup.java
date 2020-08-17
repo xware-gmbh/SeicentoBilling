@@ -45,6 +45,8 @@ public class PeriodePopup extends XdevView {
 	private static final Logger LOG = LoggerFactory.getLogger(PeriodePopup.class);
 
 	private String source = "";
+	private boolean isAdmin = false;
+
 
 	/**
 	 *
@@ -69,6 +71,8 @@ public class PeriodePopup extends XdevView {
 		final Long beanId = (Long) UI.getCurrent().getSession().getAttribute("beanId");
 		Periode bean = null;
 
+		this.isAdmin = (boolean) UI.getCurrent().getSession().getAttribute("isAdmin");
+
 		if (beanId == null) {
 			bean = getNewDaoWithDefaults();
 		} else {
@@ -90,6 +94,11 @@ public class PeriodePopup extends XdevView {
 			this.cboSignOffExpense.setVisible(false);
 		} else {
 			this.cboSignOffExpense.setVisible(true);
+		}
+
+		if (this.isAdmin) {
+			this.comboBoxBookedExp.setEnabled(true);
+			this.comboBoxBookedPro.setEnabled(true);
 		}
 	}
 
