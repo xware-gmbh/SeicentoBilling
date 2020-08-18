@@ -3,6 +3,8 @@ package ch.xwr.seicentobilling.ui.desktop.crm;
 import java.io.File;
 import java.util.List;
 
+import javax.persistence.PersistenceException;
+
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.event.ShortcutAction;
@@ -35,6 +37,7 @@ import com.xdev.ui.entitycomponent.combobox.XdevComboBox;
 import ch.xwr.seicentobilling.business.crm.CrmExcelHandler;
 import ch.xwr.seicentobilling.business.crm.CustomerDto;
 import ch.xwr.seicentobilling.business.crm.VcardImporter;
+import ch.xwr.seicentobilling.business.helper.SeicentoCrud;
 import ch.xwr.seicentobilling.business.model.generic.FileUploadDto;
 import ch.xwr.seicentobilling.entities.Activity;
 import ch.xwr.seicentobilling.entities.Activity_;
@@ -352,14 +355,24 @@ public class ImportContactsPopup extends XdevView {
 	private void processUploadedFileVcard(final File upfile) {
 		final VcardImporter vc = new VcardImporter(upfile);
 		final Customer cus = vc.processVcard();
-		vc.saveVcard();
 
-		final String msg = "Vcard importiert. Adr# " + cus.getCusNumber();
-		this.labelResult.setValue(msg);
-		Notification.show(msg, Type.TRAY_NOTIFICATION);
-		LOG.info(msg);
+		try {
+			vc.saveVcard();
 
-		this.cmdStartImport.setEnabled(false);
+			final String msg = "Vcard importiert. Adr# " + cus.getCusNumber();
+			this.labelResult.setValue(msg);
+			Notification.show(msg, Type.TRAY_NOTIFICATION);
+			LOG.info(msg);
+
+			this.cmdStartImport.setEnabled(false);
+		} catch (final PersistenceException ex) {
+			final String msg = SeicentoCrud.getPerExceptionError(ex);
+			LOG.error(msg);
+			Notification.show("Fehler beim Speichern der Vcard", msg, Notification.Type.ERROR_MESSAGE);
+		} catch (final Exception e) {
+			LOG.error(e.getMessage());
+			Notification.show("Fehler beim Speichern der Vcard", e.getMessage(), Notification.Type.ERROR_MESSAGE);
+		}
 	}
 
 	/*

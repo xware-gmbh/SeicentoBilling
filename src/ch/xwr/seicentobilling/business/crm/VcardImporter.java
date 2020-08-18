@@ -32,6 +32,7 @@ public class VcardImporter {
 	private boolean isValid = false;
 	private List<CustomerLink> lst;
 	private City cty = null;
+	private double vervcf = 4.0;
 
 	public VcardImporter(final File vcard) {
 		this.file = vcard;
@@ -54,7 +55,7 @@ public class VcardImporter {
 	public void saveVcard() {
 		if (this.isValid) {
 			final CityDAO cdao = new CityDAO();
-			if (this.cty.getCtyId() < 0 ) {
+			if (this.cty.getCtyId() == null || this.cty.getCtyId() < 0 ) {
 				this.cty = cdao.save(this.cty);
 				this.cus.setCity(this.cty);
 			}
@@ -114,12 +115,12 @@ public class VcardImporter {
 					//ignore
 				}
 				if (row.startsWith("VERSION:")) {
-					//ignore
+					handleVersion(row);
 				}
 				if (row.startsWith("ORG:")) {
 					handleOrg(row);
 				}
-				if (row.startsWith("N:")) {
+				if (row.startsWith("N:") || row.startsWith("N;")) {
 					handleN(row);
 				}
 				if (row.startsWith("FN:")) {
@@ -138,6 +139,12 @@ public class VcardImporter {
 		}
 	}
 
+	private void handleVersion(final String row) {
+	    final String[] data = row.split(":");
+
+	    this.vervcf = Double.parseDouble(data[1]);
+	}
+
 	private void handleEmail(final String row) {
 		//this.vcard.println("EMAIL:"  + customerLink.getCnkLink());
 	    final String[] data = row.split(":");
@@ -153,6 +160,7 @@ public class VcardImporter {
 
 	private void handleTel(final String row) {
 		//this.vcard.println("TEL;TYPE=work,voice;VALUE=uri:tel:" + customerLink.getCnkLink());
+		//TEL;VOICE:+41 41 920 39 66
 	    final String[] data = row.split(":");
 
 	    final CustomerLink link = new CustomerLink();
@@ -160,6 +168,10 @@ public class VcardImporter {
 	    link.setCnkState(State.active);
 	    link.setCnkIndex((short) 1);
 	    link.setCnkLink(getVal(data,2));
+
+		if (this.vervcf < 4) {
+		    link.setCnkLink(getVal(data,1));
+		}
 
 	    this.lst.add(link);
 	}
@@ -221,18 +233,32 @@ public class VcardImporter {
 	    final String[] parent = row.split(":");
 	    final String[] data = parent[1].split(";");
 
+	    this.cus.setCusName(" ");  //Dummy (mandatory field)
+
 	    String val = getVal(data, 0);
 	    if (!val.isEmpty()) {
 	    	this.cus.setCusCompany(val);
 	    }
-	    val = getVal(data, 1);
-	    if (!val.isEmpty()) {
-	    	this.cus.setCusName(val);
-	    }
-	    val = getVal(data, 2);
-	    if (!val.isEmpty()) {
-	    	this.cus.setCusFirstName(val);
-	    }
+		if (this.vervcf >= 4) {
+		    val = getVal(data, 1);
+		    if (!val.isEmpty()) {
+		    	this.cus.setCusName(val);
+		    }
+		    val = getVal(data, 2);
+		    if (!val.isEmpty()) {
+		    	this.cus.setCusFirstName(val);
+		    	this.cus.setCusAccountType(AccountType.natürlich);
+		    }
+		} else {
+		    val = getVal(data, 1);
+		    if (!val.isEmpty()) {
+		    	this.cus.setCusFirstName(val);
+		    	this.cus.setCusName(this.cus.getCusCompany());
+		    	this.cus.setCusCompany("");
+		    	this.cus.setCusAccountType(AccountType.natürlich);
+		    }
+
+		}
 
 	}
 
