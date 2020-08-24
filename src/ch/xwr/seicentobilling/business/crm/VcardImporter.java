@@ -1,9 +1,6 @@
 package ch.xwr.seicentobilling.business.crm;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +18,11 @@ import ch.xwr.seicentobilling.dal.PaymentConditionDAO;
 import ch.xwr.seicentobilling.entities.City;
 import ch.xwr.seicentobilling.entities.Customer;
 import ch.xwr.seicentobilling.entities.CustomerLink;
+import ezvcard.Ezvcard;
+import ezvcard.VCard;
+import ezvcard.property.Address;
+import ezvcard.property.Email;
+import ezvcard.property.Telephone;
 
 public class VcardImporter {
 	/** Logger initialized */
@@ -28,28 +30,63 @@ public class VcardImporter {
 
 	private Customer cus = null;
 	private File file = null;
-	private int icount;
+	private VCard vcard = null;
 	private boolean isValid = false;
 	private List<CustomerLink> lst;
 	private City cty = null;
-	private double vervcf = 4.0;
 
 	public VcardImporter(final File vcard) {
 		this.file = vcard;
 		this.isValid = false;
 	}
 
-	public Customer processVcard() {
+	public CustomerDto processVcard() {
 		LOG.debug("Start creating vcard");
 
+		CustomerDto dto = new CustomerDto();
+
 		try {
+			this.vcard = Ezvcard.parse(this.file).first();
 			readFile();
+
+			final Long id = existCustomer();
+			if (id > 0) {
+				this.cus.setCusId(id);
+			}
+
+			dto = getCusDto();
+
 			this.isValid = true;
 
 		} catch (final IOException e) {
 			LOG.error(e);
 		}
-		return this.cus;
+		return dto;
+	}
+
+	private CustomerDto getCusDto() {
+		final CustomerDto dto = new CustomerDto();
+		dto.setCustomer(this.cus);
+
+		for (final CustomerLink link : this.lst) {
+			dto.getClinks().add(link);
+		}
+
+//		for (final Address adrs : lst) {
+//			dto.getAdrs().add(adrs);
+//		}
+
+		return dto;
+	}
+
+	private Long existCustomer() {
+		final CustomerDAO dao = new CustomerDAO();
+		final List<Customer> res = dao.findByCompanyAndName(this.cus.getCusCompany(), this.cus.getCusName());
+
+		if (res != null && res.size() > 0) {
+			return res.get(0).getCusId();
+		}
+		return (long) 0;
 	}
 
 	public void saveVcard() {
@@ -88,126 +125,67 @@ public class VcardImporter {
 		this.lst = new ArrayList<>();
 
 		LOG.info("Start processing file " + this.file.getName());
-		BufferedReader vcrdr = null;
-		try {
-			vcrdr = new BufferedReader(new FileReader(this.file));
-			loopLines(vcrdr);
-			vcrdr.close();
+		handleOrg();
+		handleAdr();
+		handleTel();
+		handleEmail();
+		LOG.info("End processing file " + this.file.getName());
+	}
 
-		} catch (final FileNotFoundException e) {
-			LOG.error("IO", e);
-		} catch (final IOException e) {
-			LOG.error("IO", e);
+	private void handleEmail() {
+		final List<Email> lst1 = this.vcard.getEmails();
+
+		for (final Email eml : lst1) {
+		    final CustomerLink link = new CustomerLink();
+		    link.setCnkType(LinkType.mail);
+		    link.setCnkState(State.active);
+		    link.setCnkIndex((short) 1);
+
+		    link.setCnkLink(eml.getValue());
+		    this.lst.add(link);
 		}
 
 	}
 
-	private void loopLines(final BufferedReader vcrdr) throws IOException {
-		String row = "";
-		while ((row = vcrdr.readLine()) != null) {
-			this.icount++;
-			if (this.icount == 1) {
-				if (!row.equalsIgnoreCase("BEGIN:VCARD")) {
-					throw new IOException("No valid vcard format 4.0");
-				}
-			} else {
-				if (row.equalsIgnoreCase("END:VCARD")) {
-					//ignore
-				}
-				if (row.startsWith("VERSION:")) {
-					handleVersion(row);
-				}
-				if (row.startsWith("ORG:")) {
-					handleOrg(row);
-				}
-				if (row.startsWith("N:") || row.startsWith("N;")) {
-					handleN(row);
-				}
-				if (row.startsWith("FN:")) {
-					//ignore (fullname)
-				}
-				if (row.startsWith("ADR;")) {
-					handleAdr(row);
-				}
-				if (row.startsWith("TEL;")) {
-					handleTel(row);
-				}
-				if (row.startsWith("EMAIL:")) {
-					handleEmail(row);
-				}
-			}
+
+	private void handleTel() {
+		final List<Telephone> lst1 = this.vcard.getTelephoneNumbers();
+
+		for (final Telephone tel : lst1) {
+		    final CustomerLink link = new CustomerLink();
+		    link.setCnkType(LinkType.phone);
+		    link.setCnkState(State.active);
+		    link.setCnkIndex((short) 1);
+
+		    link.setCnkLink(tel.getText());
+		    if (tel.getUri() != null) {
+			    link.setCnkLink(tel.getUri().getNumber());
+		    }
+		    this.lst.add(link);
 		}
 	}
 
-	private void handleVersion(final String row) {
-	    final String[] data = row.split(":");
-
-	    this.vervcf = Double.parseDouble(data[1]);
-	}
-
-	private void handleEmail(final String row) {
-		//this.vcard.println("EMAIL:"  + customerLink.getCnkLink());
-	    final String[] data = row.split(":");
-
-	    final CustomerLink link = new CustomerLink();
-	    link.setCnkType(LinkType.mail);
-	    link.setCnkState(State.active);
-	    link.setCnkIndex((short) 1);
-	    link.setCnkLink(data[1]);
-
-	    this.lst.add(link);
-	}
-
-	private void handleTel(final String row) {
-		//this.vcard.println("TEL;TYPE=work,voice;VALUE=uri:tel:" + customerLink.getCnkLink());
-		//TEL;VOICE:+41 41 920 39 66
-	    final String[] data = row.split(":");
-
-	    final CustomerLink link = new CustomerLink();
-	    link.setCnkType(LinkType.phone);
-	    link.setCnkState(State.active);
-	    link.setCnkIndex((short) 1);
-	    link.setCnkLink(getVal(data,2));
-
-		if (this.vervcf < 4) {
-		    link.setCnkLink(getVal(data,1));
-		}
-
-	    this.lst.add(link);
-	}
-
-	private void handleAdr(final String row) {
-		//this.vcard.println("ADR;Type=home:;;" + this.cus.getCusAddress() + ";" + this.cus.getCity().getCtyName() + ";" + this.cus.getCity().getCtyRegion() + ";" + this.cus.getCity().getCtyZip() + ";" + this.cus.getCity().getCtyCountry());
+	private void handleAdr() {
+		int icount = 0;
 		final City ctyl = new City();
 
-	    final String[] parent = row.split(":");
-	    final String[] data = parent[1].split(";");
+		final List<Address> lsa = this.vcard.getAddresses();
+		if (lsa != null && lsa.size() > 0) {
+			for (final Address address : lsa) {
+				if (icount == 0) {
+					this.cus.setCusAddress(address.getStreetAddress());
 
-	    String val = getVal(data, 2);
-	    if (!val.isEmpty()) {
-	    	this.cus.setCusAddress(val);
-	    }
+					ctyl.setCtyName(address.getLocality());
+			    	ctyl.setCtyZip(Integer.parseInt(address.getPostalCode()));
+			    	ctyl.setCtyCountry(address.getCountry());
+			    	ctyl.setCtyRegion(address.getRegion());
 
-	    val = getVal(data, 3);
-	    if (!val.isEmpty()) {
-	    	ctyl.setCtyName(val);
-	    }
-	    val = getVal(data, 4);
-	    if (!val.isEmpty()) {
-	    	ctyl.setCtyRegion(val);
-	    }
-	    val = getVal(data, 5);
-	    if (!val.isEmpty()) {
-	    	ctyl.setCtyZip(Integer.parseInt(val));
-	    }
-	    val = getVal(data, 6);
-	    if (!val.isEmpty()) {
-	    	ctyl.setCtyCountry(val);
-	    }
-
-	    this.cty = lookupCity(ctyl);
-	    this.cus.setCity(this.cty);
-
+				    this.cty = lookupCity(ctyl);
+				    this.cus.setCity(this.cty);
+				}
+				icount++;
+			}
+		}
 	}
 
 	private City lookupCity(final City ctyl) {
@@ -229,45 +207,28 @@ public class VcardImporter {
 		return ctyl;
 	}
 
-	private void handleN(final String row) {
-	    final String[] parent = row.split(":");
-	    final String[] data = parent[1].split(";");
-
-	    this.cus.setCusName(" ");  //Dummy (mandatory field)
-
-	    String val = getVal(data, 0);
-	    if (!val.isEmpty()) {
-	    	this.cus.setCusCompany(val);
-	    }
-		if (this.vervcf >= 4) {
-		    val = getVal(data, 1);
-		    if (!val.isEmpty()) {
-		    	this.cus.setCusName(val);
-		    }
-		    val = getVal(data, 2);
-		    if (!val.isEmpty()) {
-		    	this.cus.setCusFirstName(val);
-		    	this.cus.setCusAccountType(AccountType.natürlich);
-		    }
+	private void handleOrg() {
+		if (this.vcard.getOrganization() != null || this.vcard.getStructuredName().getGiven() == null) {
+		    this.cus.setCusAccountType(AccountType.juristisch);
+			this.cus.setCusCompany(this.vcard.getStructuredName().getFamily());
+			this.cus.setCusName(" ");
+			if (this.vcard.getStructuredName().getGiven() != null) {
+				this.cus.setCusName(this.vcard.getStructuredName().getGiven());
+			};
+			if (this.vcard.getStructuredName().getAdditionalNames() != null
+					&& this.vcard.getStructuredName().getAdditionalNames().size() > 0) {
+				this.cus.setCusFirstName(this.vcard.getStructuredName().getAdditionalNames().get(0));
+			};
 		} else {
-		    val = getVal(data, 1);
-		    if (!val.isEmpty()) {
-		    	this.cus.setCusFirstName(val);
-		    	this.cus.setCusName(this.cus.getCusCompany());
-		    	this.cus.setCusCompany("");
-		    	this.cus.setCusAccountType(AccountType.natürlich);
-		    }
-
+		    this.cus.setCusAccountType(AccountType.natürlich);
+			this.cus.setCusName(this.vcard.getStructuredName().getFamily());
+			this.cus.setCusFirstName(this.vcard.getStructuredName().getGiven());
+			if (this.vcard.getBirthday() != null) {
+				this.cus.setCusBirthdate(this.vcard.getBirthday().getDate());
+			}
 		}
-
 	}
 
-	private void handleOrg(final String row) {
-	    final String[] data = row.split(":");
-
-	    this.cus.setCusAccountType(AccountType.juristisch);
-	    this.cus.setCusCompany(data[1]);
-	}
 
 	private Customer getNewCusBean() {
 		final PaymentConditionDAO dao = new PaymentConditionDAO();
@@ -279,13 +240,5 @@ public class VcardImporter {
 		bean.setCusAccountType(AccountType.juristisch);
 
 		return bean;
-	}
-
-
-	private String getVal(final String[] data, final int idx) {
-		if ((idx + 1) > data.length) {
-			return "";
-		}
-		return data[idx];
 	}
 }
