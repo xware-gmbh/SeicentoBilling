@@ -1185,9 +1185,9 @@ public class OrderTabView extends XdevView {
 
 		MasterDetail.connect(this.table, this.fieldGroup);
 
-		this.containerFilterComponent.setContainer(this.table.getBeanContainerDataSource(), "customer", "paymentCondition",
-				"project", "ordNumber", "ordState", "ordAmountNet", "ordAmountBrut", "ordOrderDate", "ordBillDate",
-				"ordPayDate");
+		this.containerFilterComponent.setContainer(this.table.getBeanContainerDataSource(), "customer.cusNumber",
+				"ordNumber", "ordState", "ordAmountNet", "ordAmountBrut", "ordOrderDate", "ordBillDate", "ordPayDate",
+				"project", "paymentCondition");
 		this.containerFilterComponent.setSearchableProperties("ordCreatedBy", "ordText", "customer.cusCompany",
 				"customer.cusName", "project.proName", "project.proExtReference");
 
