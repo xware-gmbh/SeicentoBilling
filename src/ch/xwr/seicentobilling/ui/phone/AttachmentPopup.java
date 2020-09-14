@@ -137,9 +137,10 @@ public class AttachmentPopup extends XdevView {
 	        			em = em.getEntityManagerFactory().createEntityManager();
 		        		_logger.debug("New em State 1: " + em.isOpen());
 		        		em.persist(rec.getBean());
+		        		em.flush();
 
 	        			_logger.error("DB Session (EntityManager) is closed!");
-	    				Notification.show("Fehler beim speichern", "DB Session closed", Notification.Type.ERROR_MESSAGE);
+	    				Notification.show("Fehler beim Speichern", "DB Session closed", Notification.Type.ERROR_MESSAGE);
 
 	        		}
 
