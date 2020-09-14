@@ -129,17 +129,17 @@ public class AttachmentPopup extends XdevView {
 	        	    rec.uploadSucceeded(event);
 
 	        		_logger.debug("Session State: " + getSession().getState().name());
-	        		EntityManager em = AttachmentPopup.this.dao.getEntityManager();
+	        		final EntityManager em = AttachmentPopup.this.dao.getEntityManager();
 	        		if (em.isOpen()) {
 		        	    final RowImage bean = rec.getBean();
 		        	    AttachmentPopup.this.dao.save(bean);
 	        		} else {
-	        			em = em.getEntityManagerFactory().createEntityManager();
-		        		_logger.debug("New em State 1: " + em.isOpen());
-		        		em.getTransaction().begin();
-		        		em.persist(rec.getBean());
-		        		em.flush();
-		        		em.getTransaction().commit();
+//	        			em = em.getEntityManagerFactory().createEntityManager();
+//		        		_logger.debug("New em State 1: " + em.isOpen());
+//		        		em.getTransaction().begin();
+//		        		em.persist(rec.getBean());
+//		        		em.flush();
+//		        		em.getTransaction().commit();
 
 	        			_logger.error("DB Session (EntityManager) is closed!");
 	    				Notification.show("Fehler beim Speichern", "DB Session closed", Notification.Type.ERROR_MESSAGE);
