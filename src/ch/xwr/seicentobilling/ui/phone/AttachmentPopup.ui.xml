@@ -15,7 +15,7 @@
 <?import com.xdev.ui.entitycomponent.table.XdevTable?>
 <?import java.lang.String?>
 <XdevView xmlns:x="http://xml.xdev-software.com/xdevuiml" x:name="AttachmentPopup">
-    <x:constraints width="700px" zpos="0" height="590px" />
+    <x:constraints zpos="0" width="700px" height="590px" />
     <XdevVerticalLayout x:name="verticalLayout" margin="">
         <x:constraints zpos="0" width="100%" height="100%" />
         <XdevTable caption="Attachments" x:name="table" x:entity="RowImage" icon="FontAwesome.FILE_PICTURE_O" x:autoQuery="false">

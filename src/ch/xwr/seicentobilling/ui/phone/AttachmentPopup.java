@@ -117,13 +117,14 @@ public class AttachmentPopup extends XdevView {
 			this.upload.setEnabled(true);
 
 			final UploadReceiver rec = new UploadReceiver(bean);
+			rec.setResizeImage(true);
 			this.upload.setReceiver(rec);
 
 	        this.upload.addSucceededListener(new Upload.SucceededListener() {
 	            @Override
 				public void uploadSucceeded(final SucceededEvent event) {
 	                // This method gets called when the upload finished successfully
-	        	    System.out.println("________________ UPLOAD SUCCEEDED y");
+	        	    System.out.println("________________ UPLOAD SUCCEEDED 2");
 
 	        	    rec.uploadSucceeded(event);
 
