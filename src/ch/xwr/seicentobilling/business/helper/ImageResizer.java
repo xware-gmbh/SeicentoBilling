@@ -43,7 +43,6 @@ public class ImageResizer {
             final String tempFilePath = absolutePath
                   .substring(0, absolutePath.lastIndexOf(File.separator));
 
-            System.out.println("Temp file path : " + tempFilePath);
         } catch (final IOException e) {
             e.printStackTrace();
         }

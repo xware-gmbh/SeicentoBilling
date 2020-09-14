@@ -77,11 +77,15 @@ public class UploadReceiver implements Receiver, SucceededListener  {
 
 	private void resizeImage(final SucceededEvent event) {
 		final ImageResizer img = new ImageResizer();
-		img.resize(this.baos, 640, 480);
+		img.resize(this.baos, 800, 600);
 
 		try {
 			this.RowImage.setRimImage(Files.readAllBytes(Paths.get(img.getResizedFile().getAbsolutePath())));
 			this.RowImage.setRimSize(img.getResizedFile().length() + " Bytes");
+
+			this.baos = null;
+			System.gc();
+
 		} catch (final IOException e) {
 			e.printStackTrace();
 		}
