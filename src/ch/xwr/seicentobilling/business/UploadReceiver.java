@@ -80,7 +80,7 @@ public class UploadReceiver implements Receiver, SucceededListener  {
 		img.resize(this.baos, 640, 480);
 
 		try {
-			this.RowImage.setRimImage(Files.readAllBytes(Paths.get(img.getResizedFile().getName())));
+			this.RowImage.setRimImage(Files.readAllBytes(Paths.get(img.getResizedFile().getAbsolutePath())));
 			this.RowImage.setRimSize(img.getResizedFile().length() + " Bytes");
 		} catch (final IOException e) {
 			e.printStackTrace();
