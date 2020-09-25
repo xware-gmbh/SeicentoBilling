@@ -1404,8 +1404,6 @@ public class CustomerTabView extends XdevView {
 		this.cmdInfo.setIcon(FontAwesome.INFO_CIRCLE);
 		this.cmdImport.setIcon(FontAwesome.FILE_EXCEL_O);
 		this.cmdImport.setDescription("Import Kontakte");
-		this.cmdImport.setEnabled(false);
-		this.cmdImport.setVisible(false);
 		this.table.setColumnReorderingAllowed(true);
 		this.table.setColumnCollapsingAllowed(true);
 		this.table.setContainerDataSource(Customer.class, DAOs.get(CustomerDAO.class).findAllByNumberDesc(),

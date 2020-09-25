@@ -74,7 +74,7 @@
                     <x:constraints weightx="0.0" width="0px" height="0px" />
                     <x:event>click.buttonClick</x:event>
                 </XdevButton>
-                <XdevButton icon="FontAwesome.FILE_EXCEL_O" description="Import Kontakte" enabled="false" x:name="cmdImport" visible="false">
+                <XdevButton icon="FontAwesome.FILE_EXCEL_O" description="Import Kontakte" x:name="cmdImport">
                     <x:constraints weightx="0.0" width="0px" alignment="MIDDLE_RIGHT" height="0px" />
                     <x:event>click.buttonClick</x:event>
                 </XdevButton>
