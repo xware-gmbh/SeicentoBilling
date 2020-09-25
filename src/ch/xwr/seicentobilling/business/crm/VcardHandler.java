@@ -10,18 +10,27 @@ import java.util.List;
 
 import ch.xwr.seicentobilling.business.LovCrm;
 import ch.xwr.seicentobilling.business.LovState;
+import ch.xwr.seicentobilling.dal.AddressDAO;
 import ch.xwr.seicentobilling.dal.CustomerLinkDAO;
 import ch.xwr.seicentobilling.entities.Customer;
 import ch.xwr.seicentobilling.entities.CustomerLink;
+import ezvcard.Ezvcard;
+import ezvcard.VCard;
+import ezvcard.VCardVersion;
+import ezvcard.property.Address;
+import ezvcard.property.Email;
+import ezvcard.property.StructuredName;
+import ezvcard.property.Telephone;
 
 public class VcardHandler {
 	/** Logger initialized */
 	private static final org.apache.log4j.Logger LOG = org.apache.log4j.Logger.getLogger(VcardHandler.class);
 
-	private PrintWriter vcard = null;
+	private PrintWriter fout = null;
 	private Customer cus = null;
 	private File file = null;
 	private String fextension = ".vcard";
+	private VCard vcard = null;
 
 	public VcardHandler(final Customer cus, final String extension) {
 		if (extension != null) {
@@ -35,22 +44,91 @@ public class VcardHandler {
 		LOG.debug("Start creating vcard");
 
 		try {
-			this.vcard = new PrintWriter(this.file, "UTF-8");
+			computeVcard();
 
-			writeHeader();
-			writeName();
-			writeAddress();
-			writePhone();
-			writeEof();
+			final String str = Ezvcard.write(this.vcard).version(VCardVersion.V4_0).go();
+			this.fout = new PrintWriter(this.file, "UTF-8");
+			this.fout.println(str);
 
 		} catch (final FileNotFoundException e) {
 			LOG.error("File not found", e);
 		} catch (final UnsupportedEncodingException e) {
 			LOG.error("Invalid encoding", e);
 		} finally {
-			this.vcard.close();
-			this.vcard = null;
+			this.fout.close();
+			this.fout = null;
 		}
+	}
+
+	private void computeVcard() {
+		this.vcard = new VCard();
+
+		computeVcName();
+		computeAddresses();
+		computeLinks();
+
+	}
+
+	private void computeLinks() {
+		final CustomerLinkDAO dao = new CustomerLinkDAO();
+		final List<CustomerLink> lst = dao.findByCustomer(this.cus);
+		if (lst == null || lst.isEmpty()) {
+			return;
+		}
+
+		for (final CustomerLink customerLink : lst) {
+			if (customerLink.getCnkType().equals(LovCrm.LinkType.mail)) {
+				final Email email = new Email(customerLink.getCnkLink());
+				this.vcard.addEmail(email);
+			}
+			if (customerLink.getCnkType().equals(LovCrm.LinkType.phone)) {
+				final Telephone phone = new Telephone(customerLink.getCnkLink());
+				this.vcard.addTelephoneNumber(phone);
+			}
+		}
+
+	}
+
+	private void computeAddresses() {
+		final AddressDAO dao = new AddressDAO();
+		final List<ch.xwr.seicentobilling.entities.Address> lst = dao.findByCustomer(this.cus);
+		if (lst == null || lst.isEmpty()) {
+			return;
+		}
+
+
+		//Address
+		Address adr = new Address();
+		adr.setCountry(this.cus.getCity().getCtyCountry());
+		adr.setPostalCode(this.cus.getCity().getCtyZip().toString());
+		adr.setLocality(this.cus.getCity().getCtyName());
+		adr.setRegion(this.cus.getCity().getCtyRegion());
+		adr.setStreetAddress(this.cus.getCusAddress());
+		this.vcard.addAddress(adr);
+
+		for (final ch.xwr.seicentobilling.entities.Address adrx : lst) {
+			adr = new Address();
+			adr.setCountry(adrx.getAdrCountry());
+			adr.setPostalCode(adrx.getAdrZip());
+			adr.setLocality(adrx.getAdrCity());
+			adr.setRegion(adrx.getAdrRegion());
+			adr.setStreetAddress(adrx.getAdrLine0());
+			this.vcard.addAddress(adr);
+		}
+	}
+
+	private void computeVcName() {
+		final StructuredName n = new StructuredName();
+
+		if (this.cus.getCusAccountType() == LovState.AccountType.juristisch) {
+			n.setFamily(this.cus.getCusCompany());
+		} else {
+			n.setFamily(this.cus.getCusName());
+			n.setGiven(this.cus.getCusFirstName());
+		}
+
+		this.vcard.setStructuredName(n);
+		this.vcard.setFormattedName(this.cus.getShortname());
 	}
 
 	public File getFile() {
@@ -63,7 +141,7 @@ public class VcardHandler {
 			targetStream = new FileInputStream(getFile());
 			return targetStream;
 		} catch (final FileNotFoundException e) {
-			LOG.error("Cano not create Stream", e);
+			LOG.error("Can not create Stream", e);
 		}
 
 		return null;
@@ -76,60 +154,6 @@ public class VcardHandler {
 
 		final String fname = tempDir + "/" + prefix + this.fextension;
 		return fname;
-	}
-
-	private void writeHeader() {
-		this.vcard.println("BEGIN:VCARD");
-		this.vcard.println("VERSION:4.0");
-	}
-
-	private void writeName() {
-		String n1 = "";
-		String n2 = "";
-		String n3 = "";
-
-		if (this.cus.getCusAccountType() == LovState.AccountType.juristisch) {
-			n1 = this.cus.getCusCompany();
-			n2 = this.cus.getCusName();
-
-			if (this.cus.getCusFirstName() != null) {
-				n3 = this.cus.getCusFirstName();
-			}
-
-			this.vcard.println("ORG:"  + this.cus.getCusCompany());
-		} else {
-			n1 = this.cus.getCusName();
-			n2 = this.cus.getCusFirstName();
-			n3 = "";
-		}
-
-		this.vcard.println("N:"  + n1 + ";" + n2 + ";" + n3 + ";;");
-		this.vcard.println("FN:"  + this.cus.getShortname());
-	}
-
-	private void writeAddress() {
-		this.vcard.println("ADR;Type=home:;;" + this.cus.getCusAddress() + ";" + this.cus.getCity().getCtyName() + ";" + this.cus.getCity().getCtyRegion() + ";" + this.cus.getCity().getCtyZip() + ";" + this.cus.getCity().getCtyCountry());
-	}
-
-	private void writePhone() {
-		final CustomerLinkDAO dao = new CustomerLinkDAO();
-		final List<CustomerLink> lst = dao.findByCustomer(this.cus);
-		if (lst == null || lst.isEmpty()) {
-			return;
-		}
-
-		for (final CustomerLink customerLink : lst) {
-			if (customerLink.getCnkType().equals(LovCrm.LinkType.mail)) {
-				this.vcard.println("EMAIL:"  + customerLink.getCnkLink());
-			}
-			if (customerLink.getCnkType().equals(LovCrm.LinkType.phone)) {
-				this.vcard.println("TEL;TYPE=work,voice;VALUE=uri:tel:" + customerLink.getCnkLink());
-			}
-		}
-	}
-
-	private void writeEof() {
-		this.vcard.println("END:VCARD");
 	}
 
 }

@@ -1,13 +1,17 @@
 #FROM dockregxwr-on.azurecr.io/tomcatbase:latest
 FROM tomcat:9.0-jre8-alpine
-#FROM tomcat:9.0-jdk8-openjdk-slim
+#FROM tomcat:9.0-jdk11-openjdk-slim
+
 
 
 ENV CATALINA_HOME /usr/local/tomcat
 #ENV PATH $CATALINA_HOME/bin:$PATH
 
 #add fonts
+# alpine
 RUN apk --update add fontconfig ttf-dejavu
+# ubuntu
+#RUN apt-get update && apt-get install fonts-dejavu-core
 
 #Provision Webapp	
 ADD ./SeicentoBilling.war $CATALINA_HOME/webapps/

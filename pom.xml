@@ -6,7 +6,7 @@
 	<artifactId>seicentobilling</artifactId>
 	<packaging>war</packaging>
 	<name>SeicentoBilling</name>
-	<version>20.2.1</version>
+	<version>20.3.0</version>
 	<description>
 		Einfache Leistungserfassungs und Rechnungssstellungs
 		Web-Applikation.
@@ -209,7 +209,13 @@
 	        <groupId>com.vaadin</groupId>
 	        <artifactId>vaadin-themes</artifactId>
 	        <version>7.7.13</version>
-	    </dependency>		
+	    </dependency>
+		<dependency>
+		    <groupId>com.googlecode.ez-vcard</groupId>
+		    <artifactId>ez-vcard</artifactId>
+		    <version>0.9.11</version>
+		</dependency>
+	    		
 	</dependencies>
 	<properties>
 		<project.build.sourceEncoding>

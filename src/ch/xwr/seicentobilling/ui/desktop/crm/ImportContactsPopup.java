@@ -1,9 +1,13 @@
 package ch.xwr.seicentobilling.ui.desktop.crm;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.PersistenceException;
+
 import com.vaadin.data.Item;
+import com.vaadin.data.Property;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.external.org.slf4j.Logger;
 import com.vaadin.external.org.slf4j.LoggerFactory;
@@ -16,33 +20,39 @@ import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.Table.Align;
 import com.vaadin.ui.UI;
-import com.vaadin.ui.Upload;
-import com.vaadin.ui.Upload.SucceededEvent;
 import com.vaadin.ui.Window;
-import com.xdev.res.ApplicationResource;
+import com.vaadin.ui.Window.CloseEvent;
+import com.vaadin.ui.Window.CloseListener;
 import com.xdev.ui.XdevButton;
 import com.xdev.ui.XdevCheckBox;
 import com.xdev.ui.XdevFieldGroup;
 import com.xdev.ui.XdevGridLayout;
 import com.xdev.ui.XdevHorizontalLayout;
-import com.xdev.ui.XdevImage;
 import com.xdev.ui.XdevLabel;
 import com.xdev.ui.XdevPanel;
 import com.xdev.ui.XdevTreeTable;
-import com.xdev.ui.XdevUpload;
 import com.xdev.ui.XdevVerticalSplitPanel;
 import com.xdev.ui.XdevView;
+import com.xdev.ui.entitycomponent.combobox.XdevComboBox;
 
-import ch.xwr.seicentobilling.business.UploadReceiverExcel;
 import ch.xwr.seicentobilling.business.crm.CrmExcelHandler;
 import ch.xwr.seicentobilling.business.crm.CustomerDto;
+import ch.xwr.seicentobilling.business.crm.VcardImporter;
+import ch.xwr.seicentobilling.business.helper.SeicentoCrud;
+import ch.xwr.seicentobilling.business.model.generic.FileUploadDto;
 import ch.xwr.seicentobilling.entities.Activity;
+import ch.xwr.seicentobilling.entities.Activity_;
 import ch.xwr.seicentobilling.ui.desktop.ExcelUploadPopup;
+import ch.xwr.seicentobilling.ui.desktop.FileUploaderPopup;
 
 public class ImportContactsPopup extends XdevView {
 	/** Logger initialized */
 	private static final Logger LOG = LoggerFactory.getLogger(ExcelUploadPopup.class);
 
+	public static enum ImportType {
+		excel, vcard
+	}
+	protected FileUploadDto result;
 
 	/**
 	 *
@@ -53,27 +63,18 @@ public class ImportContactsPopup extends XdevView {
 
 		this.labelSize.setValue("");
 		this.labelResult.setValue("");
-		setupUploader();
-	}
+		this.labelType.setValue("Zum Hochladen, bitte Dateityp wählen");
+		this.labelHeader.setValue("");
+		this.labelFileName.setValue("");
 
-	private void setupUploader() {
-		//uploader
-		final UploadReceiverExcel rec = new UploadReceiverExcel();
-		this.upload.setReceiver(rec);
+		this.comboBoxType.addItems((Object[]) ImportType.values());
+		//this.comboBoxType.setValue(ImportType.excel); //trigger event
 
-        this.upload.addSucceededListener(new Upload.SucceededListener() {
-            @Override
-			public void uploadSucceeded(final SucceededEvent event) {
-                // This method gets called when the upload finished successfully
-        	    //System.out.println("________________ UPLOAD SUCCEEDED y");
-        	    rec.uploadSucceeded(event);
-        		Notification.show("Datei erfolgreich hochgeladen", Type.TRAY_NOTIFICATION);
-        		LOG.info("Excel Datei hochgeladen " + event.getFilename());
+		//setupUploader();
+		this.cmdStartImport.setEnabled(false);
+		this.cmdSave.setEnabled(false);
+		this.cmdSelect.setEnabled(false);
 
-        	    processUploadedFile(rec.getOutFile());
-            }
-
-        });
 	}
 
 	private void processUploadedFile(final File outFile) {
@@ -169,10 +170,10 @@ public class ImportContactsPopup extends XdevView {
 
 		//rebuild
 		this.treeGrid.addContainerProperty("", XdevCheckBox.class, true);
-		this.treeGrid.addContainerProperty("Firma", String.class, null);
-		this.treeGrid.addContainerProperty("Name", String.class, null);
-		this.treeGrid.addContainerProperty("Adresse", String.class, null);
-		this.treeGrid.addContainerProperty("Ort", String.class, null);
+		this.treeGrid.addContainerProperty("Firma", String.class, "");
+		this.treeGrid.addContainerProperty("Name", String.class, " ");
+		this.treeGrid.addContainerProperty("Adresse", String.class, "");
+		this.treeGrid.addContainerProperty("Ort", String.class, "");
 		this.treeGrid.addContainerProperty("Objekt", CustomerDto.class, null);
 
 		int icount = 0;
@@ -210,16 +211,37 @@ public class ImportContactsPopup extends XdevView {
 	private final Object[] getParentLine(final CustomerDto cusDto) {
 		final XdevCheckBox cbo = new XdevCheckBox();
 		cbo.setValue(true);
-		if (cusDto.getCustomer().getCusId() != null || cusDto.getCustomer().getCity().getCtyZip() == 0) {
+		if (cusDto.getCustomer().getCusId() != null || cusDto.getCustomer().getCity() == null) {
 			cbo.setValue(false);
 			cbo.setEnabled(false);
+			cbo.setDescription("Kontakt exstiert bereits!");
+			cbo.setIcon(FontAwesome.FILES_O);
+			if (cusDto.getCustomer().getCity() == null) {
+				cbo.setDescription("Ungültige Daten (Ort)!");
+				cbo.setIcon(FontAwesome.WARNING);
+			}
 		}
 
-		final String cusCompany = cusDto.getCustomer().getCusCompany();
-		final String cusName = cusDto.getCustomer().getCusName() + " " + cusDto.getCustomer().getCusFirstName();
-		final String cusAdr = cusDto.getCustomer().getCusAddress();
-		final String cusPlace = cusDto.getCustomer().getCity().getfullname();
+		String cusCompany = cusDto.getCustomer().getCusCompany();
+		String cusName = " ";
+		if (cusDto.getCustomer().getCusName().length() > 2) {
+			cusName = cusDto.getCustomer().getCusName();
+			if (cusDto.getCustomer().getCusFirstName() != null) {
+				cusName = cusName + " " + cusDto.getCustomer().getCusFirstName();
+			};
+		}
+		String cusAdr = cusDto.getCustomer().getCusAddress();
+		String cusPlace = "";
+		if (cusDto.getCustomer().getCity() != null) {
+			cusPlace = cusDto.getCustomer().getCity().getfullname();
+		}
 
+		if (cusCompany == null) {
+			cusCompany = " ";
+		}
+		if (cusAdr == null) {
+			cusAdr = " ";
+		}
 		final Object[] retval = new Object[] {cbo, cusCompany, cusName, cusAdr, cusPlace, cusDto};
 		return retval;
 	}
@@ -253,6 +275,134 @@ public class ImportContactsPopup extends XdevView {
 		((Window) this.getParent()).close();
 	}
 
+	/**
+	 * Event handler delegate method for the {@link XdevComboBox}
+	 * {@link #comboBoxType}.
+	 *
+	 * @see Property.ValueChangeListener#valueChange(Property.ValueChangeEvent)
+	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
+	 */
+	private void comboBoxType_valueChange(final Property.ValueChangeEvent event) {
+		final ImportType type = (ImportType) event.getProperty().getValue();
+
+		this.labelType.setValue("");
+		if (type != null) {
+			if (type.name().equals("excel")) {
+				//setupUploader();
+				setupUploaderExcel();
+				this.labelType.setValue("Excel importieren");
+				this.labelHeader.setValue("CAM1;CAM2;Nachname;Vorname;Firma;x;Adresse;PLZ;Ort;;TelefonG;Mobile;TelefonP;x;E-Mail;Webseite;x;Newsletter;X-Mas;Verwendung;Notizen");
+			} else {
+				setupUploaderVcard();
+				this.labelType.setValue("Vcard importieren");
+				this.labelHeader.setValue("Version >4.0");
+			}
+		}
+	}
+
+	private void setupUploaderVcard() {
+		final FileUploadDto p1 = new FileUploadDto();
+		p1.setFilter("*.vcard, *.vcf");
+		p1.setSubject("Import VCard");
+		UI.getCurrent().getSession().setAttribute("uploaddto", p1);
+
+		final Window win = FileUploaderPopup.getPopupWindow();
+		win.addCloseListener(new CloseListener() {
+			@Override
+			public void windowClose(final CloseEvent e) {
+				ImportContactsPopup.this.result = (FileUploadDto) UI.getCurrent().getSession().getAttribute("uploaddto");
+				showUploadResult();
+			}
+		});
+		this.getUI().addWindow(win);
+	}
+
+	private void setupUploaderExcel() {
+		final FileUploadDto p1 = new FileUploadDto();
+		p1.setFilter("*.xlsx, *.xls");
+		p1.setSubject("Import Excel");
+		UI.getCurrent().getSession().setAttribute("uploaddto", p1);
+
+		final Window win = FileUploaderPopup.getPopupWindow();
+		win.addCloseListener(new CloseListener() {
+			@Override
+			public void windowClose(final CloseEvent e) {
+				ImportContactsPopup.this.result = (FileUploadDto) UI.getCurrent().getSession().getAttribute("uploaddto");
+				showUploadResult();
+			}
+		});
+		this.getUI().addWindow(win);
+	}
+
+	private void showUploadResult() {
+		if (this.result ==null) {
+			return;
+		}
+
+		this.labelFileName.setValue(this.result.getUpfile().getName());
+		this.labelSize.setValue( (this.result.getSize() / 1000) + " KB");
+
+		this.cmdStartImport.setEnabled(this.result.isSuccess());
+
+		if (!this.result.isSuccess()) {
+			this.cmdSave.setEnabled(false);
+			this.cmdSelect.setEnabled(false);
+		}
+	}
+
+	/**
+	 * Event handler delegate method for the {@link XdevButton}
+	 * {@link #cmdStartImport}.
+	 *
+	 * @see Button.ClickListener#buttonClick(Button.ClickEvent)
+	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
+	 */
+	private void cmdStartImport_buttonClick(final Button.ClickEvent event) {
+		if (this.result != null && this.result.isSuccess()) {
+			if (this.comboBoxType.getValue().equals(ImportType.excel)) {
+			    processUploadedFile(this.result.getUpfile());
+			}
+			if (this.comboBoxType.getValue().equals(ImportType.vcard)) {
+			    processUploadedFileVcard(this.result.getUpfile());
+			}
+
+			this.cmdSave.setEnabled(true);
+			this.cmdSelect.setEnabled(true);
+		}
+
+	}
+
+	private void processUploadedFileVcard(final File upfile) {
+		final VcardImporter vc = new VcardImporter(upfile);
+		final CustomerDto dto = vc.processVcard();
+
+		try {
+			final List<CustomerDto> lst = new ArrayList<>();
+			lst.add(dto);
+
+			if (!lst.isEmpty()) {
+				this.labelSize.setValue("Zeilen: " + lst.size());
+			}
+
+			initTreeGrid(lst);
+
+			//vc.saveVcard();
+
+			final String msg = "Vcard importiert.";
+			this.labelResult.setValue(msg);
+			this.cmdStartImport.setEnabled(false);
+
+		} catch (final PersistenceException ex) {
+			final String msg = SeicentoCrud.getPerExceptionError(ex);
+			LOG.error(msg);
+			Notification.show("Fehler beim Speichern der Vcard", msg, Notification.Type.ERROR_MESSAGE);
+		} catch (final Exception e) {
+			LOG.error(e.getMessage());
+			Notification.show("Fehler beim Speichern der Vcard", e.getMessage(), Notification.Type.ERROR_MESSAGE);
+		}
+	}
+
+
 	/*
 	 * WARNING: Do NOT edit!<br>The content of this method is always regenerated by
 	 * the UI designer.
@@ -262,9 +412,11 @@ public class ImportContactsPopup extends XdevView {
 		this.verticalSplitPanel = new XdevVerticalSplitPanel();
 		this.panel = new XdevPanel();
 		this.form = new XdevGridLayout();
-		this.image = new XdevImage();
-		this.label = new XdevLabel();
-		this.upload = new XdevUpload();
+		this.comboBoxType = new XdevComboBox<>();
+		this.labelType = new XdevLabel();
+		this.horizontalLayout2 = new XdevHorizontalLayout();
+		this.cmdStartImport = new XdevButton();
+		this.labelFileName = new XdevLabel();
 		this.labelSize = new XdevLabel();
 		this.horizontalLayout = new XdevHorizontalLayout();
 		this.cmdSelect = new XdevButton();
@@ -278,14 +430,14 @@ public class ImportContactsPopup extends XdevView {
 		this.setCaption("Aktivität");
 		this.verticalSplitPanel.setStyleName("large");
 		this.verticalSplitPanel.setSplitPosition(35.0F, Unit.PERCENTAGE);
+		this.panel.setIcon(FontAwesome.FILE_TEXT);
 		this.panel.setCaption("Import Datei");
 		this.panel.setTabIndex(0);
-		this.form.setMargin(new MarginInfo(false, true, true, true));
-		this.image.setSource(new ApplicationResource(this.getClass(), "WebContent/WEB-INF/resources/images/excel24.png"));
-		this.image.setStyleName("light");
-		this.label.setStyleName("h3");
-		this.label.setValue("Excel Datei hochladen");
-		this.upload.setButtonCaption("Start Upload");
+		this.labelType.setValue("Label");
+		this.horizontalLayout2.setMargin(new MarginInfo(false));
+		this.cmdStartImport.setIcon(FontAwesome.ROCKET);
+		this.cmdStartImport.setCaption("Importieren");
+		this.labelFileName.setValue("Label");
 		this.labelSize.setValue("Label");
 		this.horizontalLayout.setMargin(new MarginInfo(false));
 		this.cmdSelect.setIcon(FontAwesome.CHECK_SQUARE);
@@ -301,7 +453,16 @@ public class ImportContactsPopup extends XdevView {
 		this.labelHeader.setStyleName("tiny");
 		this.labelHeader.setValue(
 				"CAM1;CAM2;Nachname;Vorname;Firma;x;Adresse;PLZ;Ort;;TelefonG;Mobile;TelefonP;x;E-Mail;Webseite;x;Newsletter;X-Mas;Verwendung;Notizen");
+		this.fieldGroup.bind(this.comboBoxType, Activity_.actType.getName());
 
+		this.cmdStartImport.setSizeUndefined();
+		this.horizontalLayout2.addComponent(this.cmdStartImport);
+		this.labelFileName.setSizeUndefined();
+		this.horizontalLayout2.addComponent(this.labelFileName);
+		final CustomComponent horizontalLayout2_spacer = new CustomComponent();
+		horizontalLayout2_spacer.setSizeFull();
+		this.horizontalLayout2.addComponent(horizontalLayout2_spacer);
+		this.horizontalLayout2.setExpandRatio(horizontalLayout2_spacer, 1.0F);
 		this.cmdSelect.setSizeUndefined();
 		this.horizontalLayout.addComponent(this.cmdSelect);
 		this.horizontalLayout.setComponentAlignment(this.cmdSelect, Alignment.MIDDLE_LEFT);
@@ -315,31 +476,28 @@ public class ImportContactsPopup extends XdevView {
 		horizontalLayout_spacer.setSizeFull();
 		this.horizontalLayout.addComponent(horizontalLayout_spacer);
 		this.horizontalLayout.setExpandRatio(horizontalLayout_spacer, 1.0F);
-		this.form.setColumns(3);
+		this.form.setColumns(2);
 		this.form.setRows(5);
-		this.image.setWidth(100, Unit.PIXELS);
-		this.image.setHeight(100, Unit.PIXELS);
-		this.form.addComponent(this.image, 0, 0);
-		this.form.setComponentAlignment(this.image, Alignment.MIDDLE_LEFT);
-		this.label.setSizeUndefined();
-		this.form.addComponent(this.label, 1, 0);
-		this.upload.setWidth(100, Unit.PERCENTAGE);
-		this.upload.setHeight(-1, Unit.PIXELS);
-		this.form.addComponent(this.upload, 0, 1, 1, 1);
+		this.comboBoxType.setSizeUndefined();
+		this.form.addComponent(this.comboBoxType, 0, 0);
+		this.labelType.setSizeUndefined();
+		this.form.addComponent(this.labelType, 1, 0);
+		this.horizontalLayout2.setWidth(100, Unit.PERCENTAGE);
+		this.horizontalLayout2.setHeight(-1, Unit.PIXELS);
+		this.form.addComponent(this.horizontalLayout2, 0, 1);
 		this.labelSize.setSizeUndefined();
-		this.form.addComponent(this.labelSize, 2, 1);
+		this.form.addComponent(this.labelSize, 1, 1);
 		this.horizontalLayout.setWidth(100, Unit.PERCENTAGE);
 		this.horizontalLayout.setHeight(-1, Unit.PIXELS);
-		this.form.addComponent(this.horizontalLayout, 0, 2, 1, 2);
+		this.form.addComponent(this.horizontalLayout, 0, 2);
 		this.labelResult.setSizeUndefined();
-		this.form.addComponent(this.labelResult, 2, 2);
+		this.form.addComponent(this.labelResult, 1, 2);
 		this.labelHeader.setWidth(100, Unit.PERCENTAGE);
 		this.labelHeader.setHeight(-1, Unit.PIXELS);
-		this.form.addComponent(this.labelHeader, 0, 3, 2, 3);
-		this.form.setColumnExpandRatio(1, 20.0F);
+		this.form.addComponent(this.labelHeader, 0, 3, 1, 3);
 		final CustomComponent form_vSpacer = new CustomComponent();
 		form_vSpacer.setSizeFull();
-		this.form.addComponent(form_vSpacer, 0, 4, 2, 4);
+		this.form.addComponent(form_vSpacer, 0, 4, 1, 4);
 		this.form.setRowExpandRatio(4, 1.0F);
 		this.form.setSizeFull();
 		this.panel.setContent(this.form);
@@ -351,18 +509,19 @@ public class ImportContactsPopup extends XdevView {
 		this.setContent(this.verticalSplitPanel);
 		this.setSizeFull();
 
+		this.comboBoxType.addValueChangeListener(event -> this.comboBoxType_valueChange(event));
+		this.cmdStartImport.addClickListener(event -> this.cmdStartImport_buttonClick(event));
 		this.cmdSelect.addClickListener(event -> this.cmdSelect_buttonClick(event));
 		this.cmdSave.addClickListener(event -> this.cmdSave_buttonClick(event));
 		this.cmdReset.addClickListener(event -> this.cmdReset_buttonClick(event));
 	} // </generated-code>
 
 	// <generated-code name="variables">
-	private XdevLabel label, labelSize, labelResult, labelHeader;
-	private XdevButton cmdSelect, cmdSave, cmdReset;
-	private XdevUpload upload;
+	private XdevLabel labelType, labelFileName, labelSize, labelResult, labelHeader;
+	private XdevButton cmdStartImport, cmdSelect, cmdSave, cmdReset;
 	private XdevVerticalSplitPanel verticalSplitPanel;
-	private XdevImage image;
-	private XdevHorizontalLayout horizontalLayout;
+	private XdevHorizontalLayout horizontalLayout2, horizontalLayout;
+	private XdevComboBox<?> comboBoxType;
 	private XdevPanel panel;
 	private XdevTreeTable treeGrid;
 	private XdevGridLayout form;

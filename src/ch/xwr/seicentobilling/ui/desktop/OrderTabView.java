@@ -155,6 +155,10 @@ public class OrderTabView extends XdevView {
 		}
 		this.tabSheet.setEnabled(hasData);
 
+		if (this.isAdmin) {
+			this.dateOrdBookedOn.setEnabled(true);
+		}
+
 	}
 
 	private void setDefaultFilter() {
@@ -811,8 +815,9 @@ public class OrderTabView extends XdevView {
 		if (! this.CALC.isOrderValid(bean)) {
 			LOG.warn("Ungültige Rechnung gefunden: " + bean.getOrdNumber() + " !!");
 			if (bean.getOrdBookedOn() == null) {
-				this.CALC.calculateHeader(bean);
-				LOG.info("Ungültige Rechnung  - neu berechnet");
+				final Order beanC = this.CALC.calculateHeader(bean);
+				new OrderDAO().save(beanC);
+				LOG.warn("Ungültige Rechnung  - neu berechnet");
 				return true;
 			}
 			Notification.show("Rechnung", "Die Rechnung hat ungültige Beträge. Bitte kontrollieren",
@@ -1180,8 +1185,9 @@ public class OrderTabView extends XdevView {
 
 		MasterDetail.connect(this.table, this.fieldGroup);
 
-		this.containerFilterComponent.setContainer(this.table.getBeanContainerDataSource(), "customer", "paymentCondition",
-				"project", "ordNumber", "ordState", "ordAmountBrut", "ordOrderDate", "ordBillDate", "ordPayDate");
+		this.containerFilterComponent.setContainer(this.table.getBeanContainerDataSource(), "customer.cusNumber",
+				"ordNumber", "ordState", "ordAmountNet", "ordAmountBrut", "ordOrderDate", "ordBillDate", "ordPayDate",
+				"project", "paymentCondition");
 		this.containerFilterComponent.setSearchableProperties("ordCreatedBy", "ordText", "customer.cusCompany",
 				"customer.cusName", "project.proName", "project.proExtReference");
 

@@ -117,7 +117,9 @@ public class FileUploaderPopup extends XdevView  implements Upload.SucceededList
 		this.horizontalLayoutProgress.setVisible(false);
 
 		UI.getCurrent().getSession().setAttribute("uploaddto",  this.dto);
-		((Window) this.getParent()).close();
+		if (this.file != null) {
+			((Window) this.getParent()).close();
+		}
 	}
 
 	@Override
@@ -193,7 +195,7 @@ public class FileUploaderPopup extends XdevView  implements Upload.SucceededList
             // Nothing to do...
         } else {
             showNotification("There was a problem uploading your file.",
-                    "<pre>"+event.getReason().getStackTrace().toString()+"</pre>");
+                    event.getReason().getLocalizedMessage());
         }
 
         try{

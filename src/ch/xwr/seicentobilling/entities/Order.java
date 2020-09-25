@@ -170,7 +170,7 @@ public class Order implements java.io.Serializable {
 		this.ordBillDate = ordBillDate;
 	}
 
-	@Caption("BetragBrutto")
+	@Caption("Betrag Brutto")
 	@Column(name = "ordAmountBrut", columnDefinition = "numeric", precision = 10, scale = 3)
 	public Double getOrdAmountBrut() {
 		return this.ordAmountBrut;
@@ -180,7 +180,7 @@ public class Order implements java.io.Serializable {
 		this.ordAmountBrut = ordAmountBrut;
 	}
 
-	@Caption("BetragNetto")
+	@Caption("Betrag Netto")
 	@Column(name = "ordAmountNet", columnDefinition = "numeric", precision = 10, scale = 3)
 	public Double getOrdAmountNet() {
 		return this.ordAmountNet;
