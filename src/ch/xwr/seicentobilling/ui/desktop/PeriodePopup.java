@@ -47,7 +47,6 @@ public class PeriodePopup extends XdevView {
 	private String source = "";
 	private boolean isAdmin = false;
 
-
 	/**
 	 *
 	 */

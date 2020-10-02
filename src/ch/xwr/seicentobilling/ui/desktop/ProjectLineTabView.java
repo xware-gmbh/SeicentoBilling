@@ -207,10 +207,10 @@ public class ProjectLineTabView extends XdevView {
 	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
 	 */
 	private void cmdNew_buttonClick(final Button.ClickEvent event) {
-
 		UI.getCurrent().getSession().setAttribute("beanId",  null);
 		UI.getCurrent().getSession().setAttribute("reason",  "new");
 		UI.getCurrent().getSession().setAttribute("source",  "projectline");
+		UI.getCurrent().getSession().setAttribute("isAdmin",  this.isAdmin);
 
 		popupPeriode();
 	}
