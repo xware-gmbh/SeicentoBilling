@@ -26,7 +26,7 @@ public class UploadReceiver implements Receiver, SucceededListener  {
 	ByteArrayOutputStream baos = null;
 
 	private boolean resizeImage = false;
-	private int maxImageSize = 100000;
+	private int maxImageSize = 204800;
 
 	private File fiup = null;
 	private String mimeType = null;
@@ -37,12 +37,10 @@ public class UploadReceiver implements Receiver, SucceededListener  {
 
 		final RowImageDAO dao = new RowImageDAO();
 		this.RowImage = dao.find(this.rowId);
-
 	}
 
 	public UploadReceiver(final RowImage rfile) {
 		this.RowImage = rfile;
-
 	}
 
 	/**
@@ -93,7 +91,7 @@ public class UploadReceiver implements Receiver, SucceededListener  {
     public void uploadSucceeded(final SucceededEvent event) {
 	    System.out.println("________________ UPLOAD SUCCEEDED 3:  (Size: " + this.fiup.length() + ")");
 
-	    if (isResizeImage() && this.fiup.length() > getMaxImageSize()) {
+	    if (isImage() && isResizeImage() && this.fiup.length() > getMaxImageSize()) {
 	    	resizeImage(event);
 	    } else {
 			this.RowImage.setRimSize(this.fiup.length() + " Bytes");
@@ -101,6 +99,26 @@ public class UploadReceiver implements Receiver, SucceededListener  {
 	    }
     }
 
+	private boolean isImage() {
+		if (this.RowImage.getRimName() == null) {
+			return false;
+		}
+
+		final String fname = this.RowImage.getRimName().toLowerCase();
+		if (fname.endsWith("jpg")) {
+			return true;
+		}
+		if (fname.endsWith("jpeg")) {
+			return true;
+		}
+		if (fname.endsWith("png")) {
+			return true;
+		}
+		if (fname.endsWith("gif")) {
+			return true;
+		}
+		return false;
+	}
 
 	private void resizeImage(final SucceededEvent event) {
 		final ImageResizer img = new ImageResizer(this.fiup);

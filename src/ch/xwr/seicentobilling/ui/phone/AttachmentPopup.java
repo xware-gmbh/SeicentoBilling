@@ -10,6 +10,7 @@ import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Notification;
+import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Upload;
 import com.vaadin.ui.Upload.SucceededEvent;
@@ -133,12 +134,22 @@ public class AttachmentPopup extends XdevView {
 	        	    rec.uploadSucceeded(event);
 	        	    AttachmentPopup.this.fio = rec.getFiup();
 	        	    AttachmentPopup.this.mimeType = rec.getMimeType();
-	        	    AttachmentPopup.this.cmdSave.setEnabled(true);
-	        	    AttachmentPopup.this.upload.setEnabled(true);
 
-	        	    AttachmentPopup.this.labelStatus.setValue("Upload ok. Please click SAVE.");
+	        	    if (rec.getFiup().length() >  (rec.getMaxImageSize() * 2)) {
+		        	    AttachmentPopup.this.upload.setEnabled(true);
+		        	    AttachmentPopup.this.labelStatus.setValue("Datei ist zu gross!");
+
+		        	    final int ikb = rec.getMaxImageSize() * 2 / 1024;
+		        		Notification.show("Datei ist zu gross", "Max Size: " + ikb + " KB " + rec.getFiup().getName(),Type.TRAY_NOTIFICATION);
+
+	        	    } else {
+		        	    AttachmentPopup.this.cmdSave.setEnabled(true);
+		        	    AttachmentPopup.this.upload.setEnabled(true);
+		        	    AttachmentPopup.this.labelStatus.setValue("Upload ok. Please click SAVE.");
+	        	    }
 
 	            }
+
 	        });
 		} else {
 			this.upload.setVisible(false);
