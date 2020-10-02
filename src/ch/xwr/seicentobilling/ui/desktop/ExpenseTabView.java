@@ -110,6 +110,7 @@ public class ExpenseTabView extends XdevView {
 		UI.getCurrent().getSession().setAttribute("beanId",  null);
 		UI.getCurrent().getSession().setAttribute("reason",  "new");
 		UI.getCurrent().getSession().setAttribute("source",  "expense");
+		UI.getCurrent().getSession().setAttribute("isAdmin",  false);
 
 		popupPeriode();
 	}
@@ -588,6 +589,7 @@ public class ExpenseTabView extends XdevView {
 		UI.getCurrent().getSession().setAttribute("beanId",  beanId);
 		UI.getCurrent().getSession().setAttribute("reason",  "update");
 		UI.getCurrent().getSession().setAttribute("source",  "expense");
+		UI.getCurrent().getSession().setAttribute("isAdmin",  false);
 
 		popupPeriode();
 
