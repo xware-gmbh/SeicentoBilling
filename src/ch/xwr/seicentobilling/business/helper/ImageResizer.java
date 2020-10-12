@@ -53,6 +53,29 @@ public class ImageResizer {
 //        return temp;
 //	}
 
+	public void resize(final int maxSizeByte) {
+		int ih = 800;
+		int iw = 1280;
+
+		final long isize = this.inpFile.length();
+		final int ratio = (int) (100. * maxSizeByte / (isize + 100));
+
+		BufferedImage inputImage;
+		try {
+			inputImage = ImageIO.read(this.inpFile);
+			ih = inputImage.getHeight();
+			iw = inputImage.getWidth();
+
+			iw = iw / 100 * ratio;
+			ih = ih / 100 * ratio;
+
+		} catch (final IOException e) {
+			e.printStackTrace();
+		}
+
+		resize(iw, ih);
+	}
+
 	public void resize(final int iW, final int iH) {
 		String fnews = this.inpFile.getAbsolutePath();
 		final String ext = getExtension(fnews);

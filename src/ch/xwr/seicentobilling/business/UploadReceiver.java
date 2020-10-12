@@ -122,7 +122,7 @@ public class UploadReceiver implements Receiver, SucceededListener  {
 
 	private void resizeImage(final SucceededEvent event) {
 		final ImageResizer img = new ImageResizer(this.fiup);
-		img.resize(1280, 800);
+		img.resize(getMaxImageSize());
 
 		try {
 			this.RowImage.setRimImage(Files.readAllBytes(Paths.get(img.getResizedFile().getAbsolutePath())));
