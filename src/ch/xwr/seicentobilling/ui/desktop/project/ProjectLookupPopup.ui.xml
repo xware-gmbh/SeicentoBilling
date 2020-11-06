@@ -16,7 +16,7 @@
 <?import java.lang.String?>
 <?import java.util.Date?>
 <XdevView xmlns:x="http://xml.xdev-software.com/xdevuiml" x:name="ProjectLookupPopup">
-    <x:constraints width="760px" zpos="0" height="520px" />
+    <x:constraints zpos="0" width="760px" height="520px" />
     <XdevPanel caption="Lookup Projekt" tabIndex="0" x:name="panel">
         <x:constraints gridHeight="1" gridx="3" zpos="0" gridy="1" weighty="0.0" weightx="0.0" width="100%" alignment="TOP_LEFT" gridWidth="1" height="-1px" />
         <XdevVerticalLayout x:name="verticalLayout">
@@ -27,6 +27,8 @@
             <XdevTable columnReorderingAllowed="true" x:name="table" pageLength="10" columnCollapsingAllowed="true" x:entity="Project" x:autoQuery="false">
                 <x:entityProperties>
                     <entry type="String" property="proName" caption="Name" />
+                    <entry type="int" property="customer.cusNumber" caption="Kunde" />
+                    <entry type="String" property="customer.shortname" caption="Kundenname" collapsed="true" />
                     <entry type="CostAccount" property="costAccount" caption="Kostenstelle" />
                     <entry type="Date" property="proStartDate" caption="Startdatum">
                         <converter dateStyle="DEFAULT" timeStyle="DEFAULT" currency="default" converterType="STRING_TO_DATE" locale="default" dateFormatType="DATE" />

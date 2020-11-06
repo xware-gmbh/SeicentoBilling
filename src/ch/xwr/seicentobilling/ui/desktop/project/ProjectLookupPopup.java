@@ -17,12 +17,14 @@ import com.xdev.ui.entitycomponent.table.XdevTable;
 import com.xdev.ui.filter.FilterData;
 import com.xdev.ui.filter.FilterOperator;
 import com.xdev.ui.filter.XdevContainerFilterComponent;
+import com.xdev.ui.util.NestedProperty;
 import com.xdev.util.ConverterBuilder;
 
 import ch.xwr.seicentobilling.business.Seicento;
 import ch.xwr.seicentobilling.dal.CostAccountDAO;
 import ch.xwr.seicentobilling.dal.ProjectDAO;
 import ch.xwr.seicentobilling.entities.CostAccount;
+import ch.xwr.seicentobilling.entities.Customer_;
 import ch.xwr.seicentobilling.entities.Project;
 import ch.xwr.seicentobilling.entities.Project_;
 
@@ -141,11 +143,17 @@ public class ProjectLookupPopup extends XdevView {
 		this.table.setColumnReorderingAllowed(true);
 		this.table.setPageLength(10);
 		this.table.setColumnCollapsingAllowed(true);
-		this.table.setContainerDataSource(Project.class, DAOs.get(ProjectDAO.class).findAllActive());
-		this.table.setVisibleColumns(Project_.proName.getName(), Project_.costAccount.getName(),
-				Project_.proStartDate.getName(), Project_.proRate.getName(), Project_.proHours.getName(),
-				Project_.proIntensityPercent.getName());
+		this.table.setContainerDataSource(Project.class, DAOs.get(ProjectDAO.class).findAllActive(),
+				NestedProperty.of(Project_.customer, Customer_.cusNumber),
+				NestedProperty.of("customer.shortname", String.class));
+		this.table.setVisibleColumns(Project_.proName.getName(),
+				NestedProperty.path(Project_.customer, Customer_.cusNumber), "customer.shortname",
+				Project_.costAccount.getName(), Project_.proStartDate.getName(), Project_.proRate.getName(),
+				Project_.proHours.getName(), Project_.proIntensityPercent.getName());
 		this.table.setColumnHeader("proName", "Name");
+		this.table.setColumnHeader("customer.cusNumber", "Kunde");
+		this.table.setColumnHeader("customer.shortname", "Kundenname");
+		this.table.setColumnCollapsed("customer.shortname", true);
 		this.table.setColumnHeader("costAccount", "Kostenstelle");
 		this.table.setColumnHeader("proStartDate", "Startdatum");
 		this.table.setConverter("proStartDate", ConverterBuilder.stringToDate().dateOnly().build());
