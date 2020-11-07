@@ -27,8 +27,8 @@
             <XdevTable columnReorderingAllowed="true" x:name="table" pageLength="10" columnCollapsingAllowed="true" x:entity="Project" x:autoQuery="false">
                 <x:entityProperties>
                     <entry type="String" property="proName" caption="Name" />
-                    <entry type="int" property="customer.cusNumber" caption="Kunde" />
-                    <entry type="String" property="customer.shortname" caption="Kundenname" collapsed="true" />
+                    <entry type="int" property="customer.cusNumber" caption="Kunde" collapsed="true" />
+                    <entry type="String" property="customer.shortname" caption="Kundenname" />
                     <entry type="CostAccount" property="costAccount" caption="Kostenstelle" />
                     <entry type="Date" property="proStartDate" caption="Startdatum">
                         <converter dateStyle="DEFAULT" timeStyle="DEFAULT" currency="default" converterType="STRING_TO_DATE" locale="default" dateFormatType="DATE" />

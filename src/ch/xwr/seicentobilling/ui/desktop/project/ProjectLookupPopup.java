@@ -152,8 +152,8 @@ public class ProjectLookupPopup extends XdevView {
 				Project_.proHours.getName(), Project_.proIntensityPercent.getName());
 		this.table.setColumnHeader("proName", "Name");
 		this.table.setColumnHeader("customer.cusNumber", "Kunde");
+		this.table.setColumnCollapsed("customer.cusNumber", true);
 		this.table.setColumnHeader("customer.shortname", "Kundenname");
-		this.table.setColumnCollapsed("customer.shortname", true);
 		this.table.setColumnHeader("costAccount", "Kostenstelle");
 		this.table.setColumnHeader("proStartDate", "Startdatum");
 		this.table.setConverter("proStartDate", ConverterBuilder.stringToDate().dateOnly().build());
