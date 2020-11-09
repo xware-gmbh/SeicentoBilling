@@ -822,7 +822,6 @@ public class ExpenseTabView extends XdevView {
 		this.tableLine.setColumnHeader("expDate", "Datum");
 		this.tableLine.setConverter("expDate", ConverterBuilder.stringToDate().dateOnly().build());
 		this.tableLine.setColumnHeader("expAccount", "Konto");
-		this.tableLine.setColumnCollapsed("expAccount", true);
 		this.tableLine.setColumnHeader("expFlagCostAccount", "KST");
 		this.tableLine.setConverter("expFlagCostAccount",
 				ConverterBuilder.stringToBoolean().trueString("Ja").falseString("Nein").build());
@@ -837,6 +836,7 @@ public class ExpenseTabView extends XdevView {
 		this.tableLine.setColumnExpandRatio("expText", 2.0F);
 		this.tableLine.setColumnHeader("project.proName", "Projekt");
 		this.tableLine.setColumnHeader("expState", "Status");
+		this.tableLine.setColumnCollapsed("expState", true);
 		this.tableLine.setColumnHeader("expUnit", "Einheit");
 		this.tableLine.setColumnCollapsed("expUnit", true);
 		this.tableLine.setColumnHeader("expQuantity", "Menge");
