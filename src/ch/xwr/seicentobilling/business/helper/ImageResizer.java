@@ -58,7 +58,10 @@ public class ImageResizer {
 		int iw = 1280;
 
 		final long isize = this.inpFile.length();
-		final int ratio = (int) (100. * maxSizeByte / (isize + 100));
+
+		//factor = Wurzel aus sizeR / size
+		final double fact = (double) maxSizeByte / isize;
+		final double sf = Math.sqrt(fact);
 
 		BufferedImage inputImage;
 		try {
@@ -66,8 +69,8 @@ public class ImageResizer {
 			ih = inputImage.getHeight();
 			iw = inputImage.getWidth();
 
-			iw = iw / 100 * ratio;
-			ih = ih / 100 * ratio;
+			iw = (int) (iw * sf);
+			ih = (int) (ih * sf);
 
 		} catch (final IOException e) {
 			e.printStackTrace();

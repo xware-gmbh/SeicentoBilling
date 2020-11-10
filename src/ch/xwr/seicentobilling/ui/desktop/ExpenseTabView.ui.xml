@@ -130,7 +130,7 @@
                             <entry type="Date" property="expDate" caption="Datum">
                                 <converter dateStyle="DEFAULT" timeStyle="DEFAULT" currency="default" converterType="STRING_TO_DATE" locale="default" dateFormatType="DATE" />
                             </entry>
-                            <entry type="String" property="expAccount" caption="Konto" collapsed="true" />
+                            <entry type="String" property="expAccount" caption="Konto" />
                             <entry type="Boolean" property="expFlagCostAccount" caption="KST">
                                 <converter trueString="Ja" currency="default" converterType="STRING_TO_BOOLEAN" locale="default" falseString="Nein" />
                             </entry>
@@ -142,7 +142,7 @@
                             <entry type="String" property="vat.vatName" caption="Bezeichnung" collapsed="true" />
                             <entry type="String" property="expText" caption="Text" expandRatio="2.0" />
                             <entry type="String" property="project.proName" caption="Projekt" />
-                            <entry type="State" property="expState" caption="Status" />
+                            <entry type="State" property="expState" caption="Status" collapsed="true" />
                             <entry type="ExpUnit" property="expUnit" caption="Einheit" collapsed="true" />
                             <entry type="Double" property="expQuantity" caption="Menge" collapsed="true" />
                             <entry type="Date" property="expBooked" caption="Gebucht" collapsed="true" />

@@ -173,13 +173,19 @@ public class ExpensePopup extends XdevView {
 			final int nbr = tpl.getExtKeyNumber();
 			item = getMnItem(nbr);
 
+			//#358
 			String value = "" + nbr + ": " + tpl.getProject().getProName();
 			if (tpl.getExtText() != null) {
-				value = value + " - " + tpl.getExtText();
-				if (value.length() > 35) {
-					value = value.substring(0, 35);
+				if (value.length() > 25) {
+					value = value.substring(0, 25);
 				}
+				value = value + " - " + tpl.getExtText();
 			}
+
+			if (value.length() > 40) {
+				value = value.substring(0, 40);
+			}
+
 			item.setEnabled(true);
 			item.setVisible(true);
 			item.setCaption(value);
