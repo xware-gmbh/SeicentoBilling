@@ -1214,7 +1214,7 @@ public class OrderTabView extends XdevView {
 		this.containerFilterComponent.setContainer(this.table.getBeanContainerDataSource(), "ordNumber", "ordAmountBrut",
 				"ordAmountNet", "ordBillDate", "project", "paymentCondition", "ordBookedOn", "ordCreatedBy", "ordState",
 				"customer", "customer.shortname", "customer.city");
-		this.containerFilterComponent.setSearchableProperties("customer.shortname", "ordText");
+		this.containerFilterComponent.setSearchableProperties("customer.shortname", "ordText", "ordCreatedBy");
 
 		this.cmdNew.setSizeUndefined();
 		this.actionLayout.addComponent(this.cmdNew);
