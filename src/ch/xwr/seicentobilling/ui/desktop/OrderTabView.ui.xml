@@ -38,8 +38,8 @@
         <x:constraints zpos="0" width="100%" height="100%" />
         <XdevVerticalLayout x:name="verticalLayoutLeft" margin="">
             <x:constraints splitPos="FIRST" width="100%" height="100%" />
-            <XdevContainerFilterComponent x:searchableProperties="ordCreatedBy,ordText,customer.cusCompany,customer.cusName,project.proName,project.proExtReference" x:name="containerFilterComponent" x:filterableProperties="customer.cusNumber,ordNumber,ordState,ordAmountNet,ordAmountBrut,ordOrderDate,ordBillDate,ordPayDate,project,paymentCondition" x:container="table" prefixMatchOnly="false">
-                <x:constraints top="-5px" left="1871px" weighty="0.0" width="100%" height="0%" />
+            <XdevContainerFilterComponent x:searchableProperties="customer.shortname,ordText" x:name="containerFilterComponent" x:filterableProperties="ordNumber,ordAmountBrut,ordAmountNet,ordBillDate,project,paymentCondition,ordBookedOn,ordCreatedBy,ordState,customer,customer.shortname,customer.city" x:container="table">
+                <x:constraints weighty="0.0" width="100%" height="0%" />
             </XdevContainerFilterComponent>
             <XdevHorizontalLayout spacing="false" x:name="actionLayout" margin="">
                 <x:constraints top="-5px" left="1871px" weighty="0.0" width="100%" height="0px" />

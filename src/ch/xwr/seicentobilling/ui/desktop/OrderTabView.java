@@ -485,11 +485,38 @@ public class OrderTabView extends XdevView {
 	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
 	 */
 	private void cmdReload_buttonClick(final Button.ClickEvent event) {
-		this.table.refreshRowCache();
-		this.table.getBeanContainerDataSource().refresh();
-		this.table.sort();
+//		this.table.refreshRowCache();
+//		this.table.getBeanContainerDataSource().refresh();
+//		this.table.sort();
 
 		// reloadTableOrderList();
+
+		// save filter
+		final FilterData[] fd = this.containerFilterComponent.getFilterData();
+		this.containerFilterComponent.setFilterData(null);
+
+		// clear+reload List
+		this.table.removeAllItems();
+
+		this.table.refreshRowCache();
+		final List<Order> lst = new OrderDAO().findAll();
+		this.table.getBeanContainerDataSource().addAll(lst);
+
+		// sort Table
+		final Object[] properties = { "ordNumber", "ordOrderDate" };
+		final boolean[] ordering = { false, false };
+		this.table.sort(properties, ordering);
+
+		// reassign filter
+		this.containerFilterComponent.setFilterData(fd);
+
+		final Order bean = this.fieldGroup.getItemDataSource().getBean();
+		if (bean != null) {
+			//final boolean exi = this.table.containsId(bean);
+			//final com.vaadin.data.Item x = this.table.getItem(bean);
+			this.table.select(bean);
+		}
+
 	}
 
 	/**
@@ -1018,7 +1045,6 @@ public class OrderTabView extends XdevView {
 		this.horizontalSplitPanel.setStyleName("large");
 		this.horizontalSplitPanel.setSplitPosition(40.0F, Unit.PERCENTAGE);
 		this.verticalLayoutLeft.setMargin(new MarginInfo(false));
-		this.containerFilterComponent.setPrefixMatchOnly(false);
 		this.actionLayout.setSpacing(false);
 		this.actionLayout.setMargin(new MarginInfo(false));
 		this.cmdNew.setIcon(FontAwesome.PLUS_CIRCLE);
@@ -1185,11 +1211,10 @@ public class OrderTabView extends XdevView {
 
 		MasterDetail.connect(this.table, this.fieldGroup);
 
-		this.containerFilterComponent.setContainer(this.table.getBeanContainerDataSource(), "customer.cusNumber",
-				"ordNumber", "ordState", "ordAmountNet", "ordAmountBrut", "ordOrderDate", "ordBillDate", "ordPayDate",
-				"project", "paymentCondition");
-		this.containerFilterComponent.setSearchableProperties("ordCreatedBy", "ordText", "customer.cusCompany",
-				"customer.cusName", "project.proName", "project.proExtReference");
+		this.containerFilterComponent.setContainer(this.table.getBeanContainerDataSource(), "ordNumber", "ordAmountBrut",
+				"ordAmountNet", "ordBillDate", "project", "paymentCondition", "ordBookedOn", "ordCreatedBy", "ordState",
+				"customer", "customer.shortname", "customer.city");
+		this.containerFilterComponent.setSearchableProperties("customer.shortname", "ordText");
 
 		this.cmdNew.setSizeUndefined();
 		this.actionLayout.addComponent(this.cmdNew);
