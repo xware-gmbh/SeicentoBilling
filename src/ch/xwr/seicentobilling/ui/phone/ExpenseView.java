@@ -1,5 +1,6 @@
 package ch.xwr.seicentobilling.ui.phone;
 
+import java.io.File;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -13,7 +14,10 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.Notification;
+import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.UI;
+import com.vaadin.ui.Upload;
+import com.vaadin.ui.Upload.SucceededEvent;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.CloseEvent;
 import com.vaadin.ui.Window.CloseListener;
@@ -31,6 +35,7 @@ import com.xdev.ui.XdevMenuBar.XdevMenuItem;
 import com.xdev.ui.XdevPanel;
 import com.xdev.ui.XdevPopupDateField;
 import com.xdev.ui.XdevTextField;
+import com.xdev.ui.XdevUpload;
 import com.xdev.ui.XdevVerticalLayout;
 import com.xdev.ui.XdevView;
 import com.xdev.ui.entitycomponent.combobox.XdevComboBox;
@@ -41,6 +46,8 @@ import ch.xwr.seicentobilling.business.ConfirmDialog;
 import ch.xwr.seicentobilling.business.LovState;
 import ch.xwr.seicentobilling.business.RowObjectManager;
 import ch.xwr.seicentobilling.business.Seicento;
+import ch.xwr.seicentobilling.business.UploadReceiver;
+import ch.xwr.seicentobilling.business.svc.SaveFileToDb;
 import ch.xwr.seicentobilling.dal.ExpenseDAO;
 import ch.xwr.seicentobilling.dal.ExpenseTemplateDAO;
 import ch.xwr.seicentobilling.dal.LovAccountDAO;
@@ -53,6 +60,7 @@ import ch.xwr.seicentobilling.entities.LovAccount;
 import ch.xwr.seicentobilling.entities.Periode;
 import ch.xwr.seicentobilling.entities.Project;
 import ch.xwr.seicentobilling.entities.Project_;
+import ch.xwr.seicentobilling.entities.RowImage;
 import ch.xwr.seicentobilling.entities.RowObject;
 import ch.xwr.seicentobilling.entities.Vat;
 import ch.xwr.seicentobilling.entities.Vat_;
@@ -63,6 +71,9 @@ public class ExpenseView extends XdevView {
 	private Expense expense;
 	@NavigationParameter
 	private Periode periode;
+
+	private UploadReceiver urcv = null;
+
 	/**
 	 *
 	 */
@@ -76,6 +87,32 @@ public class ExpenseView extends XdevView {
 		this.comboBoxGeneric.addItems((Object[]) LovState.ExpType.values());
 
 		this.panel.getContent().setSizeUndefined();
+		setupUploader(new RowImage());
+	}
+
+	private void setupUploader(final RowImage bean) {
+		this.upload.setVisible(true);
+		this.upload.setEnabled(true);
+
+		this.urcv = new UploadReceiver(bean);
+		this.urcv.setResizeImage(true);
+		this.upload.setReceiver(this.urcv);
+
+		this.upload.addSucceededListener(new Upload.SucceededListener() {
+			@Override
+			public void uploadSucceeded(final SucceededEvent event) {
+				// This method gets called when the upload finished successfully
+				System.out.println("________________ UPLOAD SUCCEEDED 2");
+
+				ExpenseView.this.urcv.uploadSucceeded(event);
+				Notification.show("Datei hochgeladen", "Name: " + ExpenseView.this.urcv.getFiup().getName(),
+						Type.TRAY_NOTIFICATION);
+				//ExpensePopup.this.upload.setButtonCaption("* Uploaded");
+				ExpenseView.this.upload.setEnabled(false);
+				ExpenseView.this.upload.setVisible(false);
+			}
+		});
+		// uploader
 	}
 
 //	private RowImage getRowImageBean() {
@@ -170,16 +207,6 @@ public class ExpenseView extends XdevView {
 
 
 	/**
-	 * Event handler delegate method for the {@link XdevButton} {@link #cmdReset}.
-	 *
-	 * @see Button.ClickListener#buttonClick(Button.ClickEvent)
-	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
-	 */
-	private void cmdReset_buttonClick(final Button.ClickEvent event) {
-		this.fieldGroup.discard();
-	}
-
-	/**
 	 * Event handler delegate method for the {@link XdevButton} {@link #cmdSave}.
 	 *
 	 * @see Button.ClickListener#buttonClick(Button.ClickEvent)
@@ -192,6 +219,9 @@ public class ExpenseView extends XdevView {
 			final RowObjectManager man = new RowObjectManager();
 			man.updateObject(this.fieldGroup.getItemDataSource().getBean().getExpId(),
 					this.fieldGroup.getItemDataSource().getBean().getClass().getSimpleName());
+
+			postSave();
+
 			goBack();
 
 		} catch (final Exception e) {
@@ -201,11 +231,24 @@ public class ExpenseView extends XdevView {
 	}
 
 	private void preSaveAccountAction() {
-		final LovAccount lov = this.comboBoxAccount.getSelectedItem().getBean();
-		if (lov != null) {
-			this.fieldGroup.getItemDataSource().getBean().setExpAccount(lov.getId());
+		if (this.comboBoxAccount.getSelectedItem() != null) {
+			final LovAccount lov = this.comboBoxAccount.getSelectedItem().getBean();
+			if (lov != null) {
+				this.fieldGroup.getItemDataSource().getBean().setExpAccount(lov.getId());
+			}
 		}
+	}
 
+	private void postSave() {
+		if (this.urcv != null && this.urcv.getFiup() != null) {
+			final RowObjectManager man = new RowObjectManager();
+			final RowObject rowobj = man.getRowObject(this.fieldGroup.getItemDataSource().getBean().getClass().getSimpleName(), this.fieldGroup.getItemDataSource().getBean().getExpId());
+
+
+			final File fio = this.urcv.getFiup();
+			final SaveFileToDb upsave = new SaveFileToDb(fio.getAbsolutePath(), this.urcv.getMimeType(), rowobj.getObjId());
+			upsave.importFile();
+		}
 	}
 
 	private void postLoadAccountAction(final Expense bean) {
@@ -577,7 +620,7 @@ public class ExpenseView extends XdevView {
 		this.txtExpQuantity = new XdevTextField();
 		this.horizontalLayout = new XdevHorizontalLayout();
 		this.cmdSave = new XdevButton();
-		this.cmdReset = new XdevButton();
+		this.upload = new XdevUpload();
 		this.cmdDefault1 = new XdevButton();
 		this.fieldGroup = new XdevFieldGroup<>(Expense.class);
 
@@ -632,9 +675,8 @@ public class ExpenseView extends XdevView {
 		this.cmdSave.setIcon(FontAwesome.SAVE);
 		this.cmdSave.setCaption(StringResourceUtils.optLocalizeString("{$cmdSave.caption}", this));
 		this.cmdSave.setTabIndex(14);
-		this.cmdReset.setIcon(FontAwesome.REMOVE);
-		this.cmdReset.setCaption(StringResourceUtils.optLocalizeString("{$cmdReset.caption}", this));
-		this.cmdReset.setTabIndex(13);
+		this.upload.setButtonCaption("Upload...");
+		this.upload.setImmediate(true);
 		this.cmdDefault1.setIcon(FontAwesome.BOOKMARK);
 		this.cmdDefault1.setCaption("Def 1");
 		this.cmdDefault1.setClickShortcut(ShortcutAction.KeyCode.NUM1, ShortcutAction.ModifierKey.CTRL);
@@ -664,9 +706,9 @@ public class ExpenseView extends XdevView {
 		this.cmdSave.setSizeUndefined();
 		this.horizontalLayout.addComponent(this.cmdSave);
 		this.horizontalLayout.setComponentAlignment(this.cmdSave, Alignment.MIDDLE_LEFT);
-		this.cmdReset.setSizeUndefined();
-		this.horizontalLayout.addComponent(this.cmdReset);
-		this.horizontalLayout.setComponentAlignment(this.cmdReset, Alignment.MIDDLE_LEFT);
+		this.upload.setSizeUndefined();
+		this.horizontalLayout.addComponent(this.upload);
+		this.horizontalLayout.setComponentAlignment(this.upload, Alignment.MIDDLE_CENTER);
 		this.cmdDefault1.setSizeUndefined();
 		this.horizontalLayout.addComponent(this.cmdDefault1);
 		this.horizontalLayout.setComponentAlignment(this.cmdDefault1, Alignment.MIDDLE_CENTER);
@@ -750,14 +792,13 @@ public class ExpenseView extends XdevView {
 		this.mnuDeleteItem.setCommand(selectedItem -> this.mnuDeleteItem_menuSelected(selectedItem));
 		this.cmdBack.addClickListener(event -> this.cmdBack_buttonClick(event));
 		this.cmdSave.addClickListener(event -> this.cmdSave_buttonClick(event));
-		this.cmdReset.addClickListener(event -> this.cmdReset_buttonClick(event));
 		this.cmdDefault1.addClickListener(event -> this.cmdDefault1_buttonClick(event));
 	} // </generated-code>
 
 	// <generated-code name="variables">
 	private XdevLabel label, lblExpDate, lblExpAmount, lblExpText, lblProject, lblVat, lblExpAccount, lblExpFlagCostAccount,
 			lblExpFlagGeneric, lblExpUnit, lblExpQuantity;
-	private XdevButton cmdBack, cmdSave, cmdReset, cmdDefault1;
+	private XdevButton cmdBack, cmdSave, cmdDefault1;
 	private XdevMenuBar menuBarLeftTop;
 	private XdevMenuItem mnuOption, mnuUpload, mnuSeperator2, mnuDefaults, mnuTemplate1, mnuTemplate2, mnuTemplate3,
 			mnuTemplate4, mnuTemplate5, mnuTemplate6, mnuTemplate7, mnuTemplate8, mnuTemplate9, mnuTemplate10, menuText,
@@ -766,6 +807,7 @@ public class ExpenseView extends XdevView {
 	private XdevPanel panel;
 	private XdevGridLayout form;
 	private XdevComboBox<Project> cmbProject;
+	private XdevUpload upload;
 	private XdevHorizontalLayout horizontalLayoutTitle, horizontalLayout;
 	private XdevComboBox<Vat> cmbVat;
 	private XdevPopupDateField dateExpDate;
