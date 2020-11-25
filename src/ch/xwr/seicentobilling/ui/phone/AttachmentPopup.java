@@ -182,8 +182,10 @@ public class AttachmentPopup extends XdevView {
 
 		if (img.getRimMimetype().toLowerCase().startsWith("image")) {
 			enableImage(true);
+			this.cmdCloseImage.focus();
 		} else {
 			enableBrowser(true);
+			this.cmdCloseImage.focus();
 		}
 
 	}
@@ -339,12 +341,13 @@ public class AttachmentPopup extends XdevView {
 		this.verticalLayoutBtn.setMargin(new MarginInfo(true, true, true, false));
 		this.cmdCloseImage.setIcon(FontAwesome.ARROW_CIRCLE_LEFT);
 		this.cmdCloseImage.setCaption("Zurück");
-		this.cmdCloseImage.setClickShortcut(ShortcutAction.KeyCode.ESCAPE);
+		this.cmdCloseImage.setClickShortcut(ShortcutAction.KeyCode.BACKSPACE);
 		this.cmdDelete.setIcon(FontAwesome.REMOVE);
 		this.cmdDelete.setCaption("Löschen");
 		this.cmdToggleViewer.setIcon(FontAwesome.EXPAND);
 		this.cmdToggleViewer.setCaption("Viewer");
 		this.cmdToggleViewer.setVisible(false);
+		this.cmdToggleViewer.setClickShortcut(ShortcutAction.KeyCode.PAGE_DOWN);
 		this.cmdClose.setIcon(FontAwesome.CHECK);
 		this.cmdClose.setCaption("Schliessen");
 		this.cmdClose.setClickShortcut(ShortcutAction.KeyCode.ESCAPE);
