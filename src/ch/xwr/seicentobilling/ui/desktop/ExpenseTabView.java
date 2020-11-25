@@ -296,6 +296,7 @@ public class ExpenseTabView extends XdevView {
 		if (bean != null) {
 			this.tableLine.refreshRowCache();
 			this.tableLine.getBeanContainerDataSource().refresh();
+			this.tableLine.sort();
 		}
 	}
 
