@@ -37,7 +37,6 @@ import com.xdev.ui.util.NestedProperty;
 import com.xdev.util.ConverterBuilder;
 
 import ch.xwr.seicentobilling.business.ConfirmDialog;
-import ch.xwr.seicentobilling.business.ExpenseHandler;
 import ch.xwr.seicentobilling.business.JasperManager;
 import ch.xwr.seicentobilling.business.LovState;
 import ch.xwr.seicentobilling.business.RowObjectManager;
@@ -234,23 +233,17 @@ public class ExpenseTabView extends XdevView {
 				}
 
 				if (retval.equals("cmdOk")) {
-					final Long fromId = (Long) UI.getCurrent().getSession().getAttribute("fromPerId");
 					final Long toId = (Long) UI.getCurrent().getSession().getAttribute("toPerId");
-					final PeriodeDAO dao = new PeriodeDAO();
 
-					//now start the action
-					final ExpenseHandler hdl = new ExpenseHandler();
-					try {
-						hdl.copyExpensePeriode(dao.find(fromId), dao.find(toId));
-
-						ExpenseTabView.this.table.select(dao.find(toId));
-						Notification.show("Spesen kopieren", "Daten wurden kopiert", Notification.Type.TRAY_NOTIFICATION);
-
-					} catch (final Exception e) {
-						Notification.show("Fehler beim Kopieren der Spesen", e.getMessage(), Notification.Type.ERROR_MESSAGE);
+					final Collection<?> col = ExpenseTabView.this.table.getItemIds();
+					for (final Iterator<?> iterator = col.iterator(); iterator.hasNext();) {
+						final Periode  per = (Periode ) iterator.next();
+						if (per.getPerId().compareTo(toId) == 0) {
+							ExpenseTabView.this.table.select(per);
+							break;
+						}
 					}
 				}
-
 			}
 
 		});
