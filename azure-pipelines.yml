@@ -1,0 +1,129 @@
+# Maven
+# Build your Java projects and run tests with Apache Maven.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/java
+
+pool:
+
+  name: Hosted Ubuntu 1604
+
+  demands: maven
+
+
+
+#Your build pipeline references an undefined variable named ‘Parameters.mavenPOMFile’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
+
+#Your build pipeline references an undefined variable named ‘Parameters.containerregistrytype’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
+
+variables:
+
+  ImageName: 'seicentobilling'
+
+  AppVersion: '2.1.3'
+
+
+
+steps:
+
+- task: Maven@2
+
+  displayName: 'Maven SeicentoBilling/pom.xml'
+
+  inputs:
+
+    mavenPomFile: '$(Parameters.mavenPOMFile)'
+
+    publishJUnitResults: false
+
+
+
+- task: CopyFiles@2
+
+  displayName: 'Copy Files to: $(build.artifactstagingdirectory)'
+
+  inputs:
+
+    SourceFolder: '$(system.defaultworkingdirectory)'
+
+    Contents: '**/*.war'
+
+    TargetFolder: '$(build.artifactstagingdirectory)'
+
+
+
+- task: CopyFiles@2
+
+  displayName: 'Copy Files to: docker'
+
+  inputs:
+
+    SourceFolder: target
+
+    Contents: '*.war'
+
+    TargetFolder: docker
+
+
+
+- task: PublishBuildArtifacts@1
+
+  displayName: 'Publish Artifact: wars'
+
+  inputs:
+
+    PathtoPublish: '$(build.artifactstagingdirectory)'
+
+    ArtifactName: wars
+
+
+
+- task: Docker@1
+
+  displayName: 'Build an image on Release'
+
+  inputs:
+
+    containerregistrytype: 'Container Registry'
+
+    dockerRegistryEndpoint: 'Dockerhub Josef Muri'
+
+    dockerFile: docker/hub/Dockerfile
+
+    imageName: 'jmurihub/$(ImageName):$(AppVersion)'
+
+  enabled: false
+
+
+
+- task: Docker@1
+
+  displayName: 'Build an image based on build - CI'
+
+  inputs:
+
+    containerregistrytype: 'Container Registry'
+
+    dockerRegistryEndpoint: 'Dockerhub Josef Muri'
+
+    dockerFile: docker/Dockerfile
+
+    imageName: 'jmurihub/$(ImageName):$(AppVersion)'
+
+
+
+- task: Docker@1
+
+  displayName: 'Push an image'
+
+  inputs:
+
+    containerregistrytype: '$(Parameters.containerregistrytype)'
+
+    dockerRegistryEndpoint: 'Dockerhub Josef Muri'
+
+    command: 'Push an image'
+
+    imageName: 'jmurihub/$(ImageName):$(AppVersion)'
+
+
+
