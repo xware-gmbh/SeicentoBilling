@@ -1,0 +1,7 @@
+import ch.xwr.seicentobilling.entities.CostAccount
+import ch.xwr.seicentobilling.entities.ProjectLineTemplate
+
+findByCostAccount(CostAccount dao)
+{
+	select * from ProjectLineTemplate where costAccount = :dao order by prtKeyNumber asc
+}

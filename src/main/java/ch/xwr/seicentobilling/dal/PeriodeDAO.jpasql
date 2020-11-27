@@ -1,0 +1,21 @@
+import ch.xwr.seicentobilling.entities.Periode
+import ch.xwr.seicentobilling.entities.CostAccount
+//import ch.xwr.seicentobookit.business.LovState
+
+findByCostAccount(CostAccount costaccount)
+{
+	//select * from Company where cmpState = :state
+	select * from Periode where costAccount = :costaccount order by perYear desc, perMonth desc
+}
+
+findByCostAccountOpenPeriode(CostAccount costaccount)
+{
+	//select * from Company where cmpState = :state
+	select * from Periode where costAccount = :costaccount and perBookedExpense = 0 and perState = 1 order by perYear desc, perMonth desc
+}
+
+findByCostAccountTop(CostAccount costaccount, int icount)
+{
+	//select * from Company where cmpState = :state
+	select * from Periode where costAccount = :costaccount order by perYear desc, perMonth desc limit :icount
+}

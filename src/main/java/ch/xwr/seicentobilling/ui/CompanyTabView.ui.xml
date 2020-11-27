@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<?xdevuiml version="1.0"?>
+<?template NONE?>
+<?import ch.xwr.seicentobilling.entities.Company?>
+<?import com.rapidclipse.framework.server.ui.filter.FilterComponent?>
+<?import com.vaadin.flow.component.button.Button?>
+<?import com.vaadin.flow.component.checkbox.Checkbox?>
+<?import com.vaadin.flow.component.formlayout.FormLayout?>
+<?import com.vaadin.flow.component.formlayout.FormLayout.FormItem?>
+<?import com.vaadin.flow.component.grid.Grid?>
+<?import com.vaadin.flow.component.orderedlayout.HorizontalLayout?>
+<?import com.vaadin.flow.component.orderedlayout.VerticalLayout?>
+<?import com.vaadin.flow.component.splitlayout.SplitLayout?>
+<?import com.vaadin.flow.component.tabs.Tab?>
+<?import com.vaadin.flow.component.tabs.Tabs?>
+<?import com.vaadin.flow.component.textfield.PasswordField?>
+<?import com.vaadin.flow.component.textfield.TextField?>
+<?import com.vaadin.flow.data.binder.BeanValidationBinder?>
+<VerticalLayout xmlns:x="http://xml.xdev-software.com/xdevuiml" x:name="CompanyTabView" x:route="company">
+    <x:constraints zpos="0" width="100%" height="100%" />
+    <BeanValidationBinder x:name="binder">
+        <x:typeArguments>
+            <typeArgument type="Company" />
+        </x:typeArguments>
+        <x:bindings>
+            <binding field="txtCmpName" property="cmpName" required="false" nullRepresentation="" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="txtCmpAddress" property="cmpAddress" required="false" nullRepresentation="" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="txtCmpZip" property="cmpZip" required="false" nullRepresentation="" readOnly="false">
+                <validator type="Bean" />
+                <converter TYPE="StringToInteger">
+                    <numberFormat format="Integer" currency="default" locale="default" />
+                </converter>
+            </binding>
+            <binding field="txtCmpPlace" property="cmpPlace" required="false" nullRepresentation="" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="txtCmpCurrency" property="cmpCurrency" required="false" nullRepresentation="" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="txtCmpUid" property="cmpUid" required="false" nullRepresentation="" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="txtCmpPhone" property="cmpPhone" required="false" nullRepresentation="" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="txtCmpMail" property="cmpMail" required="false" nullRepresentation="" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="txtCmpComm1" property="cmpComm1" required="false" nullRepresentation="" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="txtCmpBusiness" property="cmpBusiness" required="false" nullRepresentation="" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="txtCmpBookingYear" property="cmpBookingYear" required="false" nullRepresentation="" readOnly="false">
+                <validator type="Bean" />
+                <converter TYPE="StringToInteger">
+                    <numberFormat format="Integer" currency="default" locale="default" />
+                </converter>
+            </binding>
+            <binding field="txtCmpLastOrderNbr" property="cmpLastOrderNbr" required="false" nullRepresentation="" readOnly="false">
+                <validator type="Bean" />
+                <converter TYPE="StringToInteger">
+                    <numberFormat format="Integer" currency="default" locale="default" />
+                </converter>
+            </binding>
+            <binding field="txtCmpLastItemNbr" property="cmpLastItemNbr" required="false" nullRepresentation="" readOnly="false">
+                <validator type="Bean" />
+                <converter TYPE="StringToInteger">
+                    <numberFormat format="Integer" currency="default" locale="default" />
+                </converter>
+            </binding>
+            <binding field="txtCmpLastCustomerNbr" property="cmpLastCustomerNbr" required="false" nullRepresentation="" readOnly="false">
+                <validator type="Bean" />
+                <converter TYPE="StringToInteger">
+                    <numberFormat format="Integer" currency="default" locale="default" />
+                </converter>
+            </binding>
+            <binding field="txtCmpJasperUri" property="cmpJasperUri" required="false" nullRepresentation="" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="txtCmpReportUsr" property="cmpReportUsr" required="false" nullRepresentation="" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="passwordField" property="cmpReportPwd" required="false" nullRepresentation="" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="cboCmpAbaActive" property="cmpAbaActive" required="false" nullRepresentation="false" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="txtCmpAbaEndpointCus" property="cmpAbaEndpointCus" required="false" nullRepresentation="" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="txtCmpEndpointDoc" property="cmpAbaEndpointDoc" required="false" nullRepresentation="" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="txtCmpEndpointPay" property="cmpAbaEndpointPay" required="false" nullRepresentation="" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="txtCmpEndpointCre" property="cmpAbaEndpointCre" required="false" nullRepresentation="" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="txtCmpEndpointCreDoc" property="cmpAbaEndpointCreDoc" required="false" nullRepresentation="" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="txtCmpAbaUser" property="cmpAbaUser" required="false" nullRepresentation="" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="txtCmpAbaMandator" property="cmpAbaMandator" required="false" nullRepresentation="" readOnly="false">
+                <validator type="Bean" />
+                <converter TYPE="StringToInteger">
+                    <numberFormat format="Integer" currency="default" locale="default" />
+                </converter>
+            </binding>
+        </x:bindings>
+    </BeanValidationBinder>
+    <SplitLayout x:splitterPosition="60.0" x:name="splitLayout">
+        <x:constraints width="100%" height="100%" flex-grow="1.0" />
+        <VerticalLayout x:name="verticalLayout">
+            <x:constraints splitlayout-position="PRIMARY" width="100%" height="100%" />
+            <FilterComponent x:searchableProperties="cmpName,cmpPlace" x:name="filterComponent" x:filterableProperties="cmpPlace,cmpState,cmpZip" x:grid="grid">
+                <x:constraints width="100%" height="0%" flex-grow="0.0" />
+            </FilterComponent>
+            <HorizontalLayout minHeight="" x:name="horizontalLayout2" minWidth="100%">
+                <x:constraints width="100px" height="60px" flex-grow="0.0" />
+                <Button x:name="cmdNew">
+                    <x:icon src="com.vaadin.flow.component.icon.VaadinIcon#PLUS_CIRCLE" />
+                    <x:constraints width="0px" height="0px" flex-grow="0.0" />
+                    <x:event>click.onComponentEvent</x:event>
+                </Button>
+                <Button x:name="cmdDelete">
+                    <x:icon src="com.vaadin.flow.component.icon.VaadinIcon#MINUS_CIRCLE" />
+                    <x:constraints width="0px" height="0px" flex-grow="0.0" />
+                    <x:event>click.onComponentEvent</x:event>
+                </Button>
+                <Button x:name="cmdReload">
+                    <x:icon src="com.vaadin.flow.component.icon.VaadinIcon#REFRESH" />
+                    <x:constraints width="0px" height="0px" flex-grow="0.0" />
+                    <x:event>click.onComponentEvent</x:event>
+                </Button>
+                <Button x:name="cmdInfo">
+                    <x:icon src="com.vaadin.flow.component.icon.VaadinIcon#INFO_CIRCLE" />
+                    <x:constraints width="0px" height="0px" flex-grow="0.0" />
+                    <x:event>click.onComponentEvent</x:event>
+                </Button>
+            </HorizontalLayout>
+            <Grid x:name="grid">
+                <x:typeArguments>
+                    <typeArgument type="Company" />
+                </x:typeArguments>
+                <x:constraints width="100%" height="100%" flex-grow="1.0" />
+                <x:dataProvider dataFetchMethod="findAll" />
+                <x:columns>
+                    <column property="cmpName" header="Name" sortable="true" />
+                    <column property="cmpUid" header="Uid" sortable="true" />
+                    <column property="cmpBookingYear" header="BH Jahr" sortable="true" />
+                    <column property="cmpMail" header="Mail" sortable="true" />
+                    <column property="cmpPhone" header="Telefon" sortable="true" />
+                </x:columns>
+                <x:event>itemClick.onComponentEvent</x:event>
+            </Grid>
+        </VerticalLayout>
+        <VerticalLayout minHeight="100%" x:name="verticalLayout2">
+            <x:constraints splitlayout-position="SECONDARY" width="100px" alignment="AUTO" height="100px" flex-grow="0.0" />
+            <x:event>click.onComponentEvent</x:event>
+            <Tabs minHeight="50px" x:name="tabs" selectedIndex="0">
+                <x:constraints splitlayout-position="SECONDARY" width="100%" height="36px" flex-grow="0.0" />
+                <Tab x:name="tab" label="{$gridLayout.caption}" />
+                <Tab x:name="tab2" label="{$gridLayoutNbr.caption}" />
+                <Tab x:name="tab3" label="Jasper" />
+                <Tab x:name="tab4" label="Schnittstelle" />
+            </Tabs>
+            <FormLayout x:name="gridLayout" x:scrollbars="com.rapidclipse.vaadin.editor.model.ScrollbarsPolicy.VERTICAL">
+                <x:responsiveSteps>
+                    <entry minWidth="0px" columns="1" labelsPosition="TOP" />
+                    <entry minWidth="320px" columns="2" labelsPosition="TOP" />
+                    <entry minWidth="1000px" columns="2" labelsPosition="ASIDE" />
+                </x:responsiveSteps>
+                <x:constraints width="100%" height="100%" flex-grow="0.0" />
+                <FormItem x:name="formItem">
+                    <x:constraints width="0px" height="0px" />
+                    <TextField x:name="txtCmpName" label="{$lblCmpName.value}">
+                        <x:constraints width="100%" height="0px" />
+                    </TextField>
+                </FormItem>
+                <FormItem x:name="formItem2">
+                    <x:constraints width="0px" height="0px" />
+                    <TextField x:name="txtCmpAddress" label="{$lblCmpAddress.value}">
+                        <x:constraints width="100%" height="0px" />
+                    </TextField>
+                </FormItem>
+                <FormItem x:name="formItem3">
+                    <x:constraints width="0px" height="0px" />
+                    <TextField x:name="txtCmpZip" label="{$lblCmpZip.value}">
+                        <x:constraints width="100%" height="0px" />
+                    </TextField>
+                </FormItem>
+                <FormItem x:name="formItem4">
+                    <x:constraints width="0px" height="0px" />
+                    <TextField x:name="txtCmpPlace" label="{$lblCmpPlace.value}">
+                        <x:constraints width="100%" height="0px" />
+                    </TextField>
+                </FormItem>
+                <FormItem x:name="formItem5">
+                    <x:constraints width="0px" height="0px" />
+                    <TextField x:name="txtCmpCurrency" label="{$lblCmpCurrency.value}">
+                        <x:constraints width="100%" height="0px" />
+                    </TextField>
+                </FormItem>
+                <FormItem x:name="formItem6">
+                    <x:constraints width="0px" height="0px" />
+                    <TextField x:name="txtCmpUid" label="{$lblCmpUid.value}">
+                        <x:constraints width="100%" height="0px" />
+                    </TextField>
+                </FormItem>
+                <FormItem x:name="formItem7">
+                    <x:constraints width="0px" height="0px" />
+                    <TextField x:name="txtCmpPhone" label="{$lblCmpPhone.value}">
+                        <x:constraints width="100%" height="0px" />
+                    </TextField>
+                </FormItem>
+                <FormItem x:name="formItem8">
+                    <x:constraints width="0px" height="0px" />
+                    <TextField x:name="txtCmpMail" label="{$lblCmpMail.value}">
+                        <x:constraints width="100%" height="0px" />
+                    </TextField>
+                </FormItem>
+                <FormItem x:name="formItem9">
+                    <x:constraints width="0px" height="0px" />
+                    <TextField x:name="txtCmpComm1" label="{$lblCmpComm1.value}">
+                        <x:constraints width="100%" height="0px" />
+                    </TextField>
+                </FormItem>
+                <FormItem x:name="formItem10">
+                    <x:constraints width="0px" height="0px" />
+                    <TextField x:name="txtCmpBusiness" label="{$lblCmpBusiness.value}">
+                        <x:constraints width="100%" height="0px" />
+                    </TextField>
+                </FormItem>
+            </FormLayout>
+            <FormLayout x:name="gridLayoutNbr" x:scrollbars="com.rapidclipse.vaadin.editor.model.ScrollbarsPolicy.VERTICAL">
+                <x:responsiveSteps>
+                    <entry minWidth="0px" columns="1" labelsPosition="TOP" />
+                    <entry minWidth="320px" columns="2" labelsPosition="TOP" />
+                    <entry minWidth="1000px" columns="2" labelsPosition="ASIDE" />
+                </x:responsiveSteps>
+                <x:constraints width="100%" height="100%" flex-grow="0.0" />
+                <FormItem x:name="formItem11">
+                    <x:constraints width="0px" height="0px" />
+                    <TextField x:name="txtCmpBookingYear" label="{$lblCmpBookingYear.value}">
+                        <x:constraints width="100%" height="0px" />
+                    </TextField>
+                </FormItem>
+                <FormItem x:name="formItem12">
+                    <x:constraints width="0px" height="0px" />
+                    <TextField x:name="txtCmpLastOrderNbr" label="{$lblCmpLastOrderNbr.value}">
+                        <x:constraints width="100%" height="0px" />
+                    </TextField>
+                </FormItem>
+                <FormItem x:name="formItem13">
+                    <x:constraints width="0px" height="0px" />
+                    <TextField x:name="txtCmpLastItemNbr" label="{$lblCmpLastItemNbr.value}">
+                        <x:constraints width="100%" height="0px" />
+                    </TextField>
+                </FormItem>
+                <FormItem x:name="formItem14">
+                    <x:constraints width="0px" height="0px" />
+                    <TextField x:name="txtCmpLastCustomerNbr" label="{$lblCmpLastCustomerNbr.value}">
+                        <x:constraints width="100%" height="0px" />
+                    </TextField>
+                </FormItem>
+            </FormLayout>
+            <FormLayout x:name="gridLayoutJasper" x:scrollbars="com.rapidclipse.vaadin.editor.model.ScrollbarsPolicy.VERTICAL">
+                <x:responsiveSteps>
+                    <entry minWidth="0px" columns="1" labelsPosition="TOP" />
+                    <entry minWidth="320px" columns="2" labelsPosition="TOP" />
+                    <entry minWidth="1000px" columns="2" labelsPosition="ASIDE" />
+                </x:responsiveSteps>
+                <x:constraints width="100%" height="100%" flex-grow="0.0" />
+                <FormItem x:name="formItem15">
+                    <x:constraints width="0px" height="0px" />
+                    <TextField x:name="txtCmpJasperUri" label="{$lblCmpJasperUri.value}">
+                        <x:constraints width="100%" height="0px" />
+                    </TextField>
+                </FormItem>
+                <FormItem x:name="formItem16">
+                    <x:constraints width="0px" height="0px" />
+                    <TextField x:name="txtCmpReportUsr" label="{$lblCmpReportUsr.value}">
+                        <x:constraints width="100%" height="0px" />
+                    </TextField>
+                </FormItem>
+                <FormItem x:name="formItem17">
+                    <x:constraints width="0px" height="0px" />
+                    <PasswordField x:name="passwordField" label="{$lblCmpReportPwd.value}">
+                        <x:constraints width="100%" height="0px" />
+                    </PasswordField>
+                </FormItem>
+            </FormLayout>
+            <FormLayout x:name="gridLayoutIfc" x:scrollbars="com.rapidclipse.vaadin.editor.model.ScrollbarsPolicy.VERTICAL">
+                <x:responsiveSteps>
+                    <entry minWidth="0px" columns="1" labelsPosition="TOP" />
+                    <entry minWidth="320px" columns="2" labelsPosition="TOP" />
+                    <entry minWidth="1000px" columns="2" labelsPosition="ASIDE" />
+                </x:responsiveSteps>
+                <x:constraints width="100%" height="100%" flex-grow="0.0" />
+                <FormItem x:name="formItem18">
+                    <x:constraints width="0px" height="0px" />
+                    <x:styles>
+                        <entry name="padding-top" value="30px" />
+                    </x:styles>
+                    <Checkbox x:name="cboCmpAbaActive" label="Schnittstelle Aktiv">
+                        <x:constraints width="100%" height="0px" />
+                    </Checkbox>
+                </FormItem>
+                <FormItem x:name="formItem19">
+                    <x:constraints width="0px" height="0px" />
+                    <TextField x:name="txtCmpAbaEndpointCus" label="Endpoint Debi">
+                        <x:constraints width="100%" height="0px" />
+                    </TextField>
+                </FormItem>
+                <FormItem x:name="formItem20">
+                    <x:constraints width="0px" height="0px" />
+                    <TextField x:name="txtCmpEndpointDoc" label="Endpoint Beleg">
+                        <x:constraints width="100%" height="0px" />
+                    </TextField>
+                </FormItem>
+                <FormItem x:name="formItem21">
+                    <x:constraints width="0px" height="0px" />
+                    <TextField x:name="txtCmpEndpointPay" label="Endpoint Zahlung">
+                        <x:constraints width="100%" height="0px" />
+                    </TextField>
+                </FormItem>
+                <FormItem x:name="formItem22">
+                    <x:constraints width="0px" height="0px" />
+                    <TextField x:name="txtCmpEndpointCre" label="Endpoint Kredi">
+                        <x:constraints width="100%" height="0px" />
+                    </TextField>
+                </FormItem>
+                <FormItem x:name="formItem23">
+                    <x:constraints width="0px" height="0px" />
+                    <TextField x:name="txtCmpEndpointCreDoc" label="Endpoint Spesen">
+                        <x:constraints width="100%" height="0px" />
+                    </TextField>
+                </FormItem>
+                <FormItem x:name="formItem24">
+                    <x:constraints width="0px" height="0px" />
+                    <TextField x:name="txtCmpAbaUser" label="Benutzer">
+                        <x:constraints width="100%" height="0px" />
+                    </TextField>
+                </FormItem>
+                <FormItem x:name="formItem25">
+                    <x:constraints width="0px" height="0px" />
+                    <TextField x:name="txtCmpAbaMandator" label="Mandant">
+                        <x:constraints width="100%" height="0px" />
+                    </TextField>
+                </FormItem>
+            </FormLayout>
+            <HorizontalLayout x:name="horizontalLayout3">
+                <Button x:name="cmdSave" text="{$cmdSave.caption}">
+                    <x:icon src="com.flowingcode.vaadin.addons.ironicons.IronIcons#SAVE" />
+                    <x:event>click.onComponentEvent</x:event>
+                </Button>
+                <Button x:name="cmdReset" text="{$cmdReset.caption}">
+                    <x:icon src="com.flowingcode.vaadin.addons.ironicons.IronIcons#UNDO" />
+                    <x:event>click.onComponentEvent</x:event>
+                </Button>
+            </HorizontalLayout>
+        </VerticalLayout>
+    </SplitLayout>
+</VerticalLayout>

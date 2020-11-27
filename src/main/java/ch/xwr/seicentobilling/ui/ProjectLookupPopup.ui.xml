@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<?xdevuiml version="1.0"?>
+<?template NONE?>
+<?import ch.xwr.seicentobilling.entities.Project?>
+<?import com.rapidclipse.framework.server.ui.filter.FilterComponent?>
+<?import com.vaadin.flow.component.button.Button?>
+<?import com.vaadin.flow.component.grid.Grid?>
+<?import com.vaadin.flow.component.html.Label?>
+<?import com.vaadin.flow.component.orderedlayout.HorizontalLayout?>
+<?import com.vaadin.flow.component.orderedlayout.VerticalLayout?>
+<VerticalLayout xmlns:x="http://xml.xdev-software.com/xdevuiml" x:name="ProjectLookupPopup">
+    <x:constraints zpos="0" width="100%" height="100%" />
+    <VerticalLayout x:name="verticalLayout">
+        <x:constraints width="100%" height="100%" flex-grow="0.0" />
+        <HorizontalLayout x:name="horizontalLayout">
+            <x:constraints width="100%" height="30px" flex-grow="0.0" />
+            <Label x:name="label" text="Lookup Projekt">
+                <x:constraints width="0px" height="0px" flex-grow="0.0" />
+            </Label>
+        </HorizontalLayout>
+        <FilterComponent x:searchableProperties="proExtReference,proName" x:name="containerFilterComponent" x:filterableProperties="costAccount,customer,proName,proState" x:grid="grid">
+            <x:constraints width="100%" height="0%" flex-grow="0.0" />
+        </FilterComponent>
+        <Grid x:name="grid">
+            <x:typeArguments>
+                <typeArgument type="Project" />
+            </x:typeArguments>
+            <x:constraints width="100%" height="100%" flex-grow="1.0" />
+            <x:dataProvider dataFetchMethod="findAllActive" />
+            <x:columns>
+                <column property="proName" header="Name" sortable="true" />
+                <column property="costAccount" header="Kostenstelle" />
+                <column property="proStartDate" header="Startdatum" sortable="true" />
+                <column property="proRate" header="Ansatz" sortable="true" />
+                <column property="proHours" header="Stunden Soll" sortable="true" />
+                <column property="proIntensityPercent" header="Auslastung" sortable="true" />
+            </x:columns>
+            <x:event>itemClick.onComponentEvent</x:event>
+            <x:event>itemDoubleClick.onComponentEvent</x:event>
+        </Grid>
+        <HorizontalLayout x:name="horizontalLayout2" justifyContentMode="com.vaadin.flow.component.orderedlayout.FlexComponent.JustifyContentMode.CENTER" alignItems="com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment.CENTER">
+            <x:constraints width="100%" height="10%" flex-grow="0.0" />
+            <Button x:name="btnSelect" text="Übernehmen">
+                <x:constraints width="0px" height="0px" flex-grow="0.0" />
+                <x:event>click.onComponentEvent</x:event>
+            </Button>
+            <Button x:name="btnCancel" text="Schliessen">
+                <x:constraints width="0px" height="0px" flex-grow="0.0" />
+                <x:event>click.onComponentEvent</x:event>
+            </Button>
+        </HorizontalLayout>
+    </VerticalLayout>
+</VerticalLayout>

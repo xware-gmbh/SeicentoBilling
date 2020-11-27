@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<?xdevuiml version="1.0"?>
+<?template NONE?>
+<?import ch.xwr.seicentobilling.business.LovState.State?>
+<?import ch.xwr.seicentobilling.entities.City?>
+<?import com.rapidclipse.framework.server.ui.filter.FilterComponent?>
+<?import com.vaadin.flow.component.button.Button?>
+<?import com.vaadin.flow.component.combobox.ComboBox?>
+<?import com.vaadin.flow.component.formlayout.FormLayout?>
+<?import com.vaadin.flow.component.formlayout.FormLayout.FormItem?>
+<?import com.vaadin.flow.component.grid.Grid?>
+<?import com.vaadin.flow.component.html.Label?>
+<?import com.vaadin.flow.component.orderedlayout.HorizontalLayout?>
+<?import com.vaadin.flow.component.orderedlayout.VerticalLayout?>
+<?import com.vaadin.flow.component.splitlayout.SplitLayout?>
+<?import com.vaadin.flow.component.textfield.NumberField?>
+<?import com.vaadin.flow.component.textfield.TextField?>
+<?import com.vaadin.flow.data.binder.BeanValidationBinder?>
+<VerticalLayout xmlns:x="http://xml.xdev-software.com/xdevuiml" x:name="CityTabView" x:route="city">
+    <x:constraints zpos="0" width="100%" height="100%" />
+    <BeanValidationBinder x:name="binder" validatorsDisabled="true">
+        <x:typeArguments>
+            <typeArgument type="City" />
+        </x:typeArguments>
+        <x:bindings>
+            <binding field="txtCtyCountry" property="ctyCountry" required="false" nullRepresentation="" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="txtCtyName" property="ctyName" required="true" nullRepresentation="" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="txtCtyRegion" property="ctyRegion" required="false" nullRepresentation="" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="txtCtyGeoCoordinates" property="ctyGeoCoordinates" required="false" nullRepresentation="" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="txtCtyZip" property="ctyZip" required="true" readOnly="false">
+                <validator type="Bean" />
+                <converter TYPE="DoubleToInteger" />
+            </binding>
+            <binding field="comboBoxState" property="ctyState" required="false" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+        </x:bindings>
+    </BeanValidationBinder>
+    <SplitLayout x:splitterPosition="60.0" x:name="splitLayout">
+        <x:constraints width="100%" height="100%" flex-grow="1.0" />
+        <VerticalLayout x:name="verticalLayout">
+            <x:constraints splitlayout-position="PRIMARY" width="100%" height="100%" />
+            <FilterComponent x:searchableProperties="ctyCountry,ctyName,ctyRegion" x:name="filterComponent" x:filterableProperties="ctyName,ctyCountry,ctyZip,ctyRegion,ctyState,ctyGeoCoordinates" x:grid="grid">
+                <x:constraints width="100%" height="0%" flex-grow="0.0" />
+            </FilterComponent>
+            <HorizontalLayout minHeight="" x:name="horizontalLayout2" minWidth="100%">
+                <x:constraints width="100px" height="60px" flex-grow="0.0" />
+                <Button x:name="cmdNew">
+                    <x:icon src="com.vaadin.flow.component.icon.VaadinIcon#PLUS_CIRCLE" />
+                    <x:constraints width="0px" height="0px" flex-grow="0.0" />
+                    <x:event>click.onComponentEvent</x:event>
+                </Button>
+                <Button x:name="cmdDelete">
+                    <x:icon src="com.vaadin.flow.component.icon.VaadinIcon#MINUS_CIRCLE" />
+                    <x:constraints width="0px" height="0px" flex-grow="0.0" />
+                    <x:event>click.onComponentEvent</x:event>
+                </Button>
+                <Button x:name="cmdReload">
+                    <x:icon src="com.vaadin.flow.component.icon.VaadinIcon#REFRESH" />
+                    <x:constraints width="0px" height="0px" flex-grow="0.0" />
+                    <x:event>click.onComponentEvent</x:event>
+                </Button>
+                <Button x:name="cmdInfo">
+                    <x:icon src="com.vaadin.flow.component.icon.VaadinIcon#INFO_CIRCLE" />
+                    <x:constraints width="0px" height="0px" flex-grow="0.0" />
+                    <x:event>click.onComponentEvent</x:event>
+                </Button>
+                <Button x:name="cmdImport">
+                    <x:icon src="com.flowingcode.vaadin.addons.ironicons.FileIcons#EXCEL" />
+                    <x:constraints width="0px" height="0px" flex-grow="0.0" />
+                </Button>
+            </HorizontalLayout>
+            <Grid x:name="grid">
+                <x:typeArguments>
+                    <typeArgument type="City" />
+                </x:typeArguments>
+                <x:constraints width="100%" height="100%" flex-grow="1.0" />
+                <x:dataProvider dataFetchMethod="findAll" />
+                <x:columns>
+                    <column property="ctyName" header="Name" sortable="true" />
+                    <column property="ctyCountry" header="Land" sortable="true" />
+                    <column property="ctyZip" header="Plz" sortable="true" />
+                    <column property="ctyRegion" header="Region" sortable="true" />
+                    <column property="ctyState" header="Status" sortable="true" />
+                    <column property="ctyGeoCoordinates" header="Koordinaten" sortable="true" />
+                </x:columns>
+                <x:event>itemClick.onComponentEvent</x:event>
+            </Grid>
+        </VerticalLayout>
+        <FormLayout x:name="formLayout">
+            <x:responsiveSteps>
+                <entry minWidth="25em" columns="1" labelsPosition="TOP" />
+                <entry minWidth="32em" columns="2" labelsPosition="TOP" />
+                <entry minWidth="40em" columns="3" labelsPosition="TOP" />
+            </x:responsiveSteps>
+            <x:constraints splitlayout-position="SECONDARY" width="100%" height="100%" />
+            <x:styles>
+                <entry name="margin-left" value="10px" />
+            </x:styles>
+            <FormItem x:name="formItem2" x:columnSpan="4">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblCtyCountry" maxHeight="" text="{$lblCtyCountry.value}">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <TextField x:name="txtCtyCountry">
+                    <x:constraints width="100%" height="0px" />
+                </TextField>
+            </FormItem>
+            <FormItem x:name="formItem" x:columnSpan="4">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblCtyName" text="{$lblCtyName.value}">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <TextField x:name="txtCtyName">
+                    <x:constraints width="100%" height="0px" />
+                </TextField>
+            </FormItem>
+            <FormItem x:name="formItem3" x:columnSpan="4">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblCtyRegion" text="{$lblCtyRegion.value}">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <TextField x:name="txtCtyRegion">
+                    <x:constraints width="100%" height="0px" />
+                </TextField>
+            </FormItem>
+            <FormItem x:name="formItem4" x:columnSpan="4">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblCtyGeoCoordinates" text="{$lblCtyGeoCoordinates.value}">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <TextField x:name="txtCtyGeoCoordinates">
+                    <x:constraints width="100%" height="0px" />
+                </TextField>
+            </FormItem>
+            <FormItem x:name="formItem5" x:columnSpan="4">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblCtyZip" text="{$lblCtyZip.value}">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <NumberField x:name="txtCtyZip">
+                    <x:constraints width="100%" height="0px" />
+                </NumberField>
+            </FormItem>
+            <FormItem x:name="formItem6" x:columnSpan="4">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblCtyState" text="{$lblCtyState.value}">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <ComboBox x:name="comboBoxState">
+                    <x:typeArguments>
+                        <typeArgument type="State" />
+                    </x:typeArguments>
+                    <x:constraints width="100%" height="0px" />
+                </ComboBox>
+            </FormItem>
+            <FormItem x:name="formItem7">
+                <x:constraints width="0px" height="0px" />
+            </FormItem>
+            <HorizontalLayout x:name="horizontalLayout3">
+                <x:constraints width="100%" height="100px" />
+                <Button x:name="cmdSave" text="{$cmdSave.caption}">
+                    <x:icon src="com.flowingcode.vaadin.addons.ironicons.IronIcons#SAVE" />
+                    <x:constraints width="50%" height="0px" flex-grow="0.0" />
+                    <x:event>click.onComponentEvent</x:event>
+                </Button>
+                <Button x:name="cmdReset" text="{$cmdReset.caption}">
+                    <x:icon src="com.flowingcode.vaadin.addons.ironicons.IronIcons#UNDO" />
+                    <x:constraints width="50%" height="0px" flex-grow="0.0" />
+                    <x:event>click.onComponentEvent</x:event>
+                </Button>
+            </HorizontalLayout>
+        </FormLayout>
+    </SplitLayout>
+</VerticalLayout>

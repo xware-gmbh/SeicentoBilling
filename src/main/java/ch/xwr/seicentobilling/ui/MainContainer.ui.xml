@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<?xdevuiml version="1.0"?>
+<?template NONE?>
+<?import com.vaadin.flow.component.html.Div?>
+<?import com.vaadin.flow.component.menubar.MenuBar?>
+<?import com.vaadin.flow.component.orderedlayout.FlexLayout?>
+<?import com.vaadin.flow.component.orderedlayout.VerticalLayout?>
+<?import com.vaadin.flow.component.tabs.Tabs?>
+<VerticalLayout xmlns:x="http://xml.xdev-software.com/xdevuiml" spacing="false" x:name="MainContainer" padding="false" defaultHorizontalComponentAlignment="com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment.STRETCH" x:route="" x:routerLayout="true">
+    <x:constraints zpos="0" width="100%" height="100%" />
+    <MenuBar className="my-menubar" minHeight="60px" x:name="navMenuBar">
+        <x:constraints width="-1px" height="-1px" flex-grow="0.0" />
+    </MenuBar>
+    <FlexLayout minHeight="" x:name="contentContainer" maxWidth="">
+        <x:constraints width="100%" height="100%" flex-grow="1.0" />
+        <VerticalLayout minHeight="" x:name="verticalLayout" maxHeight="" maxWidth="" minWidth="100%">
+            <x:constraints width="100%" height="100%" flex-grow="0.0" />
+            <Tabs minHeight="null" x:name="tabs" minWidth="100%">
+                <x:constraints splitlayout-position="PRIMARY" width="100%" height="5px" flex-grow="0.0" />
+            </Tabs>
+            <Div minHeight="" x:name="div" minWidth="">
+                <x:constraints width="100%" height="100%" flex-grow="1.0" />
+            </Div>
+        </VerticalLayout>
+    </FlexLayout>
+</VerticalLayout>

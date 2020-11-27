@@ -1,7 +1,0 @@
-import ch.xwr.seicentobilling.entities.Customer
-import ch.xwr.seicentobilling.entities.LabelAssignment
-
-findByCustomer(Customer dao)
-{
-	select * from LabelAssignment where customer = :dao order by claIndex asc
-}

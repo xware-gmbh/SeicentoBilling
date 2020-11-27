@@ -1,7 +1,0 @@
-import ch.xwr.seicentobilling.entities.Order
-import ch.xwr.seicentobilling.entities.OrderLine
-
-findByOrder(Order dao)
-{
-	select * from OrderLine where orderhdr = :dao order by odlNumber asc
-}

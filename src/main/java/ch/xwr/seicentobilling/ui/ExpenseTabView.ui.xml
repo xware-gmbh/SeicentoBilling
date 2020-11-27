@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<?xdevuiml version="1.0"?>
+<?template NONE?>
+<?import ch.xwr.seicentobilling.entities.Expense?>
+<?import ch.xwr.seicentobilling.entities.Periode?>
+<?import com.rapidclipse.framework.server.ui.filter.FilterComponent?>
+<?import com.vaadin.flow.component.button.Button?>
+<?import com.vaadin.flow.component.grid.Grid?>
+<?import com.vaadin.flow.component.html.Label?>
+<?import com.vaadin.flow.component.orderedlayout.HorizontalLayout?>
+<?import com.vaadin.flow.component.orderedlayout.VerticalLayout?>
+<?import com.vaadin.flow.component.splitlayout.SplitLayout?>
+<VerticalLayout xmlns:x="http://xml.xdev-software.com/xdevuiml" x:name="ExpenseTabView" x:route="expense">
+    <x:constraints zpos="0" width="100%" height="100%" />
+    <SplitLayout x:name="splitLayout">
+        <x:constraints width="100%" height="100%" flex-grow="1.0" />
+        <VerticalLayout x:name="verticalLayout">
+            <x:constraints splitlayout-position="PRIMARY" width="100%" height="100%" />
+            <FilterComponent x:searchableProperties="costAccount.csaCode,costAccount.csaName,perName" x:name="filterComponent" x:filterableProperties="costAccount,costAccount.csaCode,costAccount.csaName,perBookedExpense,perBookedProject,perMonth,perSignOffExpense,perState,perYear" x:grid="grid">
+                <x:constraints width="100%" height="0%" flex-grow="0.0" />
+            </FilterComponent>
+            <HorizontalLayout minHeight="" x:name="horizontalLayout2" minWidth="100%">
+                <x:constraints width="100px" height="60px" flex-grow="0.0" />
+                <Button x:name="cmdNew">
+                    <x:icon src="com.vaadin.flow.component.icon.VaadinIcon#PLUS_CIRCLE" />
+                    <x:constraints width="0px" height="0px" flex-grow="0.0" />
+                    <x:event>click.onComponentEvent</x:event>
+                </Button>
+                <Button x:name="cmdDelete">
+                    <x:icon src="com.vaadin.flow.component.icon.VaadinIcon#MINUS_CIRCLE" />
+                    <x:constraints width="0px" height="0px" flex-grow="0.0" />
+                    <x:event>click.onComponentEvent</x:event>
+                </Button>
+                <Button x:name="cmdUpdate">
+                    <x:icon src="com.flowingcode.vaadin.addons.ironicons.ImageIcons#EDIT" />
+                    <x:constraints width="0px" height="0px" flex-grow="0.0" />
+                    <x:event>click.onComponentEvent</x:event>
+                </Button>
+                <Button x:name="cmdReload">
+                    <x:icon src="com.vaadin.flow.component.icon.VaadinIcon#REFRESH" />
+                    <x:constraints width="0px" height="0px" flex-grow="0.0" />
+                    <x:event>click.onComponentEvent</x:event>
+                </Button>
+                <Button x:name="cmdInfo">
+                    <x:icon src="com.vaadin.flow.component.icon.VaadinIcon#INFO_CIRCLE" />
+                    <x:constraints width="0px" height="0px" flex-grow="0.0" />
+                    <x:event>click.onComponentEvent</x:event>
+                </Button>
+            </HorizontalLayout>
+            <Grid x:name="grid">
+                <x:typeArguments>
+                    <typeArgument type="Periode" />
+                </x:typeArguments>
+                <x:constraints width="100%" height="100%" flex-grow="1.0" />
+                <x:dataProvider dataFetchMethod="findAll" />
+                <x:columns>
+                    <column property="perName" header="Periode" sortable="true" />
+                    <column property="perYear" header="Jahr" sortable="true" visible="false" />
+                    <column property="perMonth" header="Monat" sortable="true" visible="false" />
+                    <column property="perSignOffExpense" header="Freigabe" sortable="true" />
+                    <column property="perBookedExpense" header="Buchhaltung" sortable="true" />
+                    <column property="perBookedProject" header="Gebucht Projekt" sortable="true" visible="false" />
+                    <column property="perState" header="Status" sortable="true" visible="false" />
+                    <column property="costAccount.csaName" header="Kostenstelle" sortable="true" visible="false" />
+                </x:columns>
+                <x:event>itemClick.onComponentEvent</x:event>
+                <x:event>itemDoubleClick.onComponentEvent</x:event>
+            </Grid>
+        </VerticalLayout>
+        <VerticalLayout minHeight="100%" x:name="verticalLayout2" maxWidth="">
+            <x:constraints splitlayout-position="SECONDARY" width="100px" alignment="AUTO" height="100px" flex-grow="0.0" />
+            <Label x:name="verticalLayoutExpense" text="{$verticalLayoutExpense.caption}">
+                <x:constraints width="100%" height="30px" flex-grow="0.0" />
+            </Label>
+            <HorizontalLayout x:name="horizontalLayout3">
+                <x:constraints width="100%" height="10%" flex-grow="0.0" />
+                <Button x:name="cmdNewExpense" text="{$cmdNewExpense.caption}">
+                    <x:icon src="com.vaadin.flow.component.icon.VaadinIcon#PLUS_CIRCLE" />
+                    <x:constraints width="50%" height="0px" flex-grow="0.0" />
+                    <x:event>click.onComponentEvent</x:event>
+                </Button>
+                <Button x:name="cmdDeleteExpense" text="{$cmdDeleteExpense.caption}">
+                    <x:icon src="com.vaadin.flow.component.icon.VaadinIcon#MINUS_CIRCLE" />
+                    <x:constraints width="50%" height="0px" flex-grow="0.0" />
+                    <x:event>click.onComponentEvent</x:event>
+                </Button>
+                <Button x:name="cmdUpdateExpense" text="{$cmdUpdateExpense.caption}">
+                    <x:icon src="com.vaadin.flow.component.icon.VaadinIcon#PENCIL" />
+                    <x:constraints width="50%" height="0px" flex-grow="0.0" />
+                    <x:event>click.onComponentEvent</x:event>
+                </Button>
+                <Button x:name="cmdCopySingle">
+                    <x:icon src="com.vaadin.flow.component.icon.VaadinIcon#COPY" />
+                    <x:constraints width="0px" height="0px" flex-grow="0.0" />
+                    <x:event>click.onComponentEvent</x:event>
+                </Button>
+                <Button x:name="cmdInfoExpense">
+                    <x:icon src="com.vaadin.flow.component.icon.VaadinIcon#INFO_CIRCLE" />
+                    <x:constraints width="0px" height="0px" flex-grow="0.0" />
+                    <x:event>click.onComponentEvent</x:event>
+                </Button>
+            </HorizontalLayout>
+            <Grid x:name="tableLine">
+                <x:typeArguments>
+                    <typeArgument type="Expense" />
+                </x:typeArguments>
+                <x:constraints width="100%" height="100%" flex-grow="1.0" />
+                <x:columns>
+                    <column property="expDate" header="Datum" sortable="true" />
+                    <column property="expAccount" header="Konto" sortable="true" visible="false" />
+                    <column property="expFlagCostAccount" header="KST" sortable="true" />
+                    <column property="expFlagGeneric" header="Pauschal" sortable="true" />
+                    <column property="expAmount" header="Betrag" sortable="true" />
+                    <column property="vat.vatSign" header="Mwst" sortable="true" />
+                    <column property="vat.vatName" header="Bezeichnung" sortable="true" visible="false" />
+                    <column property="expText" header="Text" sortable="true" />
+                    <column property="project.proName" header="Projekt" sortable="true" />
+                    <column property="expState" header="Status" sortable="true" />
+                    <column property="expUnit" header="Einheit" sortable="true" visible="false" />
+                    <column property="expQuantity" header="Menge" sortable="true" visible="false" />
+                    <column property="expBooked" header="Gebucht" sortable="true" visible="false" />
+                </x:columns>
+                <x:event>itemClick.onComponentEvent</x:event>
+                <x:event>itemDoubleClick.onComponentEvent</x:event>
+            </Grid>
+        </VerticalLayout>
+    </SplitLayout>
+</VerticalLayout>

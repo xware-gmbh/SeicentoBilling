@@ -1,7 +1,0 @@
-import ch.xwr.seicentobilling.entities.RowText
-import ch.xwr.seicentobilling.entities.RowObject
-
-findByObject(RowObject rowObj, int numberTxt)
-{
-	select * from RowText where rowObject = :rowObj and txtNumber = :numberTxt
-}

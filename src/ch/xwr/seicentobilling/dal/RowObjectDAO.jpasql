@@ -1,7 +1,0 @@
-import ch.xwr.seicentobilling.entities.Entity
-import ch.xwr.seicentobilling.entities.RowObject
-
-findObjectBase(Entity ent, long id)
-{
-	select * from RowObject where objRowId = :id and entity = :ent
-}

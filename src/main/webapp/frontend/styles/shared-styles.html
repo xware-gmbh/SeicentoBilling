@@ -1,0 +1,33 @@
+<!-- <link rel="import" href="bower_components/polymer/lib/elements/custom-style.html"> -->
+
+<custom-style>
+	<style>
+		html {
+			--my-custom-color1: rgba(52, 73, 94, 1);
+			--my-custom-color2: rgba(52, 73, 94, .8);
+			--my-custom-color3: rgba(52, 73, 94, .6);
+			--my-custom-color4: rgba(52, 73, 94, .4);
+			--my-custom-color5: rgba(52, 73, 94, .2);
+			--my-custom-shadow-color: rgb(198, 208, 218);
+			--my-custom-font-color: rgb(95, 111, 129);
+			--my-custom-font-family: 'Lato', Arial, sans-serif;
+			font-family: var(--my-custom-font-family);
+		}
+		
+		/* header w/o navigation */
+		
+		.my-header {
+			color: white;
+			background-color: var(--my-custom-color1);
+			text-transform: uppercase;
+			line-height: var(--my-custom-line-height);
+		}
+		.my-header > :first-child {
+			margin-left: var(--lumo-space-m);
+		}
+		.my-menubar {
+			color: white;
+			background-color: var(--my-custom-color2);
+		}
+	</style>
+</custom-style>

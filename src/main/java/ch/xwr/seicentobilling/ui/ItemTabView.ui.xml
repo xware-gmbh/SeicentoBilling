@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<?xdevuiml version="1.0"?>
+<?template NONE?>
+<?import ch.xwr.seicentobilling.business.LovState.State?>
+<?import ch.xwr.seicentobilling.business.LovState.Unit?>
+<?import ch.xwr.seicentobilling.entities.Item?>
+<?import ch.xwr.seicentobilling.entities.ItemGroup?>
+<?import ch.xwr.seicentobilling.entities.Vat?>
+<?import com.rapidclipse.framework.server.ui.filter.FilterComponent?>
+<?import com.vaadin.flow.component.button.Button?>
+<?import com.vaadin.flow.component.combobox.ComboBox?>
+<?import com.vaadin.flow.component.formlayout.FormLayout?>
+<?import com.vaadin.flow.component.formlayout.FormLayout.FormItem?>
+<?import com.vaadin.flow.component.grid.Grid?>
+<?import com.vaadin.flow.component.html.Label?>
+<?import com.vaadin.flow.component.orderedlayout.HorizontalLayout?>
+<?import com.vaadin.flow.component.orderedlayout.VerticalLayout?>
+<?import com.vaadin.flow.component.splitlayout.SplitLayout?>
+<?import com.vaadin.flow.component.textfield.TextField?>
+<?import com.vaadin.flow.data.binder.BeanValidationBinder?>
+<VerticalLayout xmlns:x="http://xml.xdev-software.com/xdevuiml" x:name="ItemTabView" x:route="artikel">
+    <x:constraints zpos="0" width="100%" height="100%" />
+    <BeanValidationBinder x:name="binder">
+        <x:typeArguments>
+            <typeArgument type="Item" />
+        </x:typeArguments>
+        <x:bindings>
+            <binding field="txtItmIdent" property="itmIdent" required="true" nullRepresentation="" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="txtItmName" property="itmName" required="true" nullRepresentation="" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="txtItmPrice1" property="itmPrice1" required="true" nullRepresentation="" readOnly="false">
+                <validator type="Bean" />
+                <converter TYPE="StringToDouble">
+                    <numberFormat format="Currency" pattern="" currency="CHF" locale="default" />
+                </converter>
+            </binding>
+            <binding field="txtItmPrice2" property="itmPrice2" required="false" nullRepresentation="" readOnly="false">
+                <validator type="Bean" />
+                <converter TYPE="StringToDouble">
+                    <numberFormat format="Currency" pattern="" currency="default" locale="default" />
+                </converter>
+            </binding>
+            <binding field="comboBoxState" property="itmState" required="false" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="cbxUnit" property="itmUnit" required="false" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="txtAccount" property="itmAccount" required="false" nullRepresentation="" readOnly="false">
+                <validator type="Bean" />
+                <converter TYPE="StringToDouble">
+                    <numberFormat format="Decimal" currency="default" locale="default" />
+                </converter>
+            </binding>
+            <binding field="cmbItemGroup" property="itemGroup" required="false" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="cmbVat" property="vat" required="true" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+        </x:bindings>
+    </BeanValidationBinder>
+    <SplitLayout x:splitterPosition="60.0" x:name="splitLayout">
+        <x:constraints width="100%" height="100%" flex-grow="1.0" />
+        <VerticalLayout x:name="verticalLayout">
+            <x:constraints splitlayout-position="PRIMARY" width="100%" height="100%" />
+            <FilterComponent x:searchableProperties="itmIdent,itmName" x:name="filterComponent" x:filterableProperties="itemGroup.itgName,itmIdent,itmName,itmPrice1,itmState,itmUnit,vat.fullName" x:grid="grid">
+                <x:constraints width="100%" height="0%" flex-grow="0.0" />
+            </FilterComponent>
+            <HorizontalLayout minHeight="" x:name="horizontalLayout2" minWidth="100%">
+                <x:constraints width="100px" height="60px" flex-grow="0.0" />
+                <Button x:name="cmdNew">
+                    <x:icon src="com.vaadin.flow.component.icon.VaadinIcon#PLUS_CIRCLE" />
+                    <x:constraints width="0px" height="0px" flex-grow="0.0" />
+                    <x:event>click.onComponentEvent</x:event>
+                </Button>
+                <Button x:name="cmdDelete">
+                    <x:icon src="com.vaadin.flow.component.icon.VaadinIcon#MINUS_CIRCLE" />
+                    <x:constraints width="0px" height="0px" flex-grow="0.0" />
+                    <x:event>click.onComponentEvent</x:event>
+                </Button>
+                <Button x:name="cmdReload">
+                    <x:icon src="com.vaadin.flow.component.icon.VaadinIcon#REFRESH" />
+                    <x:constraints width="0px" height="0px" flex-grow="0.0" />
+                    <x:event>click.onComponentEvent</x:event>
+                </Button>
+                <Button x:name="cmdInfo">
+                    <x:icon src="com.vaadin.flow.component.icon.VaadinIcon#INFO_CIRCLE" />
+                    <x:constraints width="0px" height="0px" flex-grow="0.0" />
+                    <x:event>click.onComponentEvent</x:event>
+                </Button>
+            </HorizontalLayout>
+            <Grid x:name="grid">
+                <x:typeArguments>
+                    <typeArgument type="Item" />
+                </x:typeArguments>
+                <x:constraints width="100%" height="100%" flex-grow="1.0" />
+                <x:dataProvider dataFetchMethod="findAll" />
+                <x:columns>
+                    <column property="itmIdent" header="Ident" sortable="true" />
+                    <column property="itmName" header="Name" sortable="true" />
+                    <column property="itmPrice1" header="Preis 1" sortable="true">
+                        <renderer type="NumberRenderer" nullRepresentation="">
+                            <numberFormat format="Currency" pattern="" currency="default" locale="default" />
+                        </renderer>
+                    </column>
+                    <column property="itemGroup.itgName" header="Gruppe" sortable="true" />
+                    <column property="vat.vatName" header="Mwst" sortable="true" />
+                    <column property="itmState" header="Status" sortable="true" />
+                </x:columns>
+                <x:event>itemClick.onComponentEvent</x:event>
+            </Grid>
+        </VerticalLayout>
+        <FormLayout x:name="formLayout">
+            <x:responsiveSteps>
+                <entry minWidth="25em" columns="1" labelsPosition="TOP" />
+                <entry minWidth="32em" columns="2" labelsPosition="TOP" />
+                <entry minWidth="40em" columns="3" labelsPosition="TOP" />
+            </x:responsiveSteps>
+            <x:constraints splitlayout-position="SECONDARY" width="100%" height="100%" />
+            <x:styles>
+                <entry name="margin-left" value="10px" />
+            </x:styles>
+            <FormItem x:name="formItem2" x:columnSpan="4">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblItmIdent" maxHeight="" text="{$lblItmIdent.value}">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <TextField x:name="txtItmIdent">
+                    <x:constraints width="100%" height="0px" />
+                </TextField>
+            </FormItem>
+            <FormItem x:name="formItem" x:columnSpan="4">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblItmName" text="{$lblItmName.value}">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <TextField x:name="txtItmName">
+                    <x:constraints width="100%" height="0px" />
+                </TextField>
+            </FormItem>
+            <FormItem x:name="formItem3">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblItmPrice1" text="{$lblItmPrice1.value}">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <TextField x:name="txtItmPrice1" pattern="" title="">
+                    <x:constraints width="100%" height="0px" />
+                </TextField>
+            </FormItem>
+            <FormItem x:name="formItem4">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblItmPrice2" text="{$lblItmPrice2.value}">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <TextField x:name="txtItmPrice2">
+                    <x:constraints width="100%" height="0px" />
+                </TextField>
+            </FormItem>
+            <FormItem x:name="formItem7">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblItmUnit" text="{$lblItmUnit.value}">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <ComboBox pattern="" x:name="cbxUnit" label="" helperText="">
+                    <x:typeArguments>
+                        <typeArgument type="Unit" />
+                    </x:typeArguments>
+                    <x:constraints width="100%" height="0px" />
+                    <x:styles>
+                        <entry name="text-transform" value="capitalize" />
+                    </x:styles>
+                </ComboBox>
+            </FormItem>
+            <FormItem x:name="formItem8">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblItemGroup" text="{$lblItemGroup.value}">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <ComboBox x:name="cmbItemGroup">
+                    <x:typeArguments>
+                        <typeArgument type="ItemGroup" />
+                    </x:typeArguments>
+                    <x:constraints width="100%" height="0px" />
+                    <x:dataProvider dataFetchMethod="findAll" />
+                    <x:itemLabel type="Property" data="itgName" />
+                </ComboBox>
+            </FormItem>
+            <FormItem x:name="formItem9">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblVat" text="{$lblVat.value}">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <ComboBox x:name="cmbVat">
+                    <x:typeArguments>
+                        <typeArgument type="Vat" />
+                    </x:typeArguments>
+                    <x:constraints width="100%" height="0px" />
+                    <x:dataProvider dataFetchMethod="findAll" />
+                    <x:itemLabel type="Property" data="fullName" />
+                </ComboBox>
+            </FormItem>
+            <FormItem x:name="formItem10">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblAccount" text="Konto#">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <TextField x:name="txtAccount">
+                    <x:constraints width="100%" height="0px" />
+                </TextField>
+            </FormItem>
+            <FormItem x:name="formItem6" x:columnSpan="4">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblItmState" text="{$lblItmState.value}">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <ComboBox x:name="comboBoxState">
+                    <x:typeArguments>
+                        <typeArgument type="State" />
+                    </x:typeArguments>
+                    <x:constraints width="100%" height="0px" />
+                </ComboBox>
+            </FormItem>          
+        </FormLayout>
+	   <HorizontalLayout x:name="horizontalLayout3">
+			<x:constraints width="100%" height="100px" />
+			<Button x:name="cmdSave" text="{$cmdSave.caption}">
+				<x:icon src="com.flowingcode.vaadin.addons.ironicons.IronIcons#SAVE" />
+				<x:constraints width="50%" height="0px" flex-grow="0.0" />
+				<x:event>click.onComponentEvent</x:event>
+			</Button>
+			<Button x:name="cmdReset" text="{$cmdReset.caption}">
+				<x:icon src="com.flowingcode.vaadin.addons.ironicons.IronIcons#UNDO" />
+				<x:constraints width="50%" height="0px" flex-grow="0.0" />
+				<x:event>click.onComponentEvent</x:event>
+			</Button>
+		</HorizontalLayout>
+    </SplitLayout>
+</VerticalLayout>

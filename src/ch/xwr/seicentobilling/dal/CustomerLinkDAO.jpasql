@@ -1,7 +1,0 @@
-import ch.xwr.seicentobilling.entities.Customer
-import ch.xwr.seicentobilling.entities.CustomerLink
-
-findByCustomer(Customer dao)
-{
-	select * from CustomerLink where customer = :dao order by cnkValidFrom desc
-}

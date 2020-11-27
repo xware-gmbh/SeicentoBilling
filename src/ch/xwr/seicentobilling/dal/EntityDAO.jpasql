@@ -1,5 +1,0 @@
-import ch.xwr.seicentobilling.entities.Entity
-findByName(String name)
-{
-	select * from Entity where entName = :name 
-}

@@ -1,7 +1,0 @@
-import ch.xwr.seicentobilling.entities.RowParameter
-import ch.xwr.seicentobilling.entities.RowObject
-
-findByObject(RowObject rowObj, String groups, String subgroup, String key)
-{
-	select * from RowParameter where rowObject = :rowObj and prmGroup = :groups and  prmSubGroup = :subgroup and prmKey = :key
-}

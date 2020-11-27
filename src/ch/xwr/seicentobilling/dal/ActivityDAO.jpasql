@@ -1,7 +1,0 @@
-import ch.xwr.seicentobilling.entities.Customer
-import ch.xwr.seicentobilling.entities.Activity
-
-findByCustomer(Customer dao)
-{
-	select * from Activity where customer = :dao order by actDate desc, actType asc
-}

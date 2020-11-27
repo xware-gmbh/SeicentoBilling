@@ -1,0 +1,6 @@
+import ch.xwr.seicentobilling.entities.LabelDefinition
+
+findByName(String name)
+{
+	select * from LabelDefinition where upper(cldText) = upper(:name) and cldState = 1
+}

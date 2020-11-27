@@ -1,7 +1,0 @@
-import ch.xwr.seicentobilling.entities.CostAccount
-import ch.xwr.seicentobilling.entities.ExpenseTemplate
-
-findByCostAccount(CostAccount dao)
-{
-	select * from ExpenseTemplate where costAccount = :dao order by extKeyNumber asc
-}

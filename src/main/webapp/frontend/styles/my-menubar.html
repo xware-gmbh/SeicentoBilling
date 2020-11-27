@@ -1,0 +1,17 @@
+<dom-module id="my-menubar" theme-for="vaadin-menu-bar">
+	<template>
+		<style>
+			:host(.my-menubar) {
+				line-height: 60px;
+			}
+			:host(.my-menubar) [part="menu-bar-button"] {
+				height: unset !important;
+				margin: unset !important;
+				border-radius: unset;
+				color: white;
+				background-color: inherit;
+				box-shadow: inset -1px 0 var(--my-custom-shadow-color, white);
+			}
+		</style>
+	</template>
+</dom-module>

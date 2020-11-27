@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<?xdevuiml version="1.0"?>
+<?template NONE?>
+<?import ch.xwr.seicentobilling.business.LovState.BookingType?>
+<?import ch.xwr.seicentobilling.business.LovState.Month?>
+<?import ch.xwr.seicentobilling.business.LovState.State?>
+<?import ch.xwr.seicentobilling.entities.CostAccount?>
+<?import ch.xwr.seicentobilling.entities.Periode?>
+<?import com.vaadin.flow.component.button.Button?>
+<?import com.vaadin.flow.component.checkbox.Checkbox?>
+<?import com.vaadin.flow.component.combobox.ComboBox?>
+<?import com.vaadin.flow.component.formlayout.FormLayout?>
+<?import com.vaadin.flow.component.formlayout.FormLayout.FormItem?>
+<?import com.vaadin.flow.component.html.Label?>
+<?import com.vaadin.flow.component.icon.Icon?>
+<?import com.vaadin.flow.component.orderedlayout.HorizontalLayout?>
+<?import com.vaadin.flow.component.orderedlayout.VerticalLayout?>
+<?import com.vaadin.flow.component.textfield.TextField?>
+<?import com.vaadin.flow.data.binder.BeanValidationBinder?>
+<VerticalLayout xmlns:x="http://xml.xdev-software.com/xdevuiml" x:name="PeriodePopup">
+    <x:constraints zpos="0" width="100%" height="100%" />
+    <BeanValidationBinder x:name="binder">
+        <x:typeArguments>
+            <typeArgument type="Periode" />
+        </x:typeArguments>
+        <x:bindings>
+            <binding field="cmbCostAccount" property="costAccount" required="false" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="txtPerName" property="perName" required="false" nullRepresentation="" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="comboBoxMonth" property="perMonth" required="false" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="comboBoxBookedExp" property="perBookedExpense" required="false" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="cboSignOffExpense" property="perSignOffExpense" required="false" nullRepresentation="false" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="comboBoxBookedPro" property="perBookedProject" required="false" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="comboBoxState" property="perState" required="false" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="textFieldYear" property="perYear" required="false" nullRepresentation="" readOnly="false">
+                <validator type="Bean" />
+                <converter TYPE="StringToInteger">
+                    <numberFormat format="Integer" pattern="####" currency="default" locale="default" patternLocalized="false" />
+                </converter>
+            </binding>
+        </x:bindings>
+    </BeanValidationBinder>
+    <VerticalLayout x:name="verticalLayout">
+        <x:constraints width="100%" height="100%" flex-grow="0.0" />
+        <HorizontalLayout x:name="horizontalLayout">
+            <x:constraints width="100%" height="30px" flex-grow="0.0" />
+            <Icon x:icon="com.vaadin.flow.component.icon.VaadinIcon#CLOCK" x:name="icon">
+                <x:constraints width="0px" alignment="CENTER" height="0px" flex-grow="0.0" />
+            </Icon>
+            <Label x:name="label" text="Periode bearbeiten">
+                <x:constraints width="0px" alignment="CENTER" height="0px" flex-grow="0.0" />
+            </Label>
+        </HorizontalLayout>
+        <FormLayout x:name="formLayout">
+            <x:responsiveSteps>
+                <entry minWidth="0px" columns="1" labelsPosition="TOP" />
+                <entry minWidth="500px" columns="2" labelsPosition="TOP" />
+                <entry minWidth="1000px" columns="3" labelsPosition="ASIDE" />
+            </x:responsiveSteps>
+            <x:constraints width="100%" height="100%" flex-grow="0.0" />
+            <FormItem x:name="formItem2">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblCostAccount" text="{$lblCostAccount.value}">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <ComboBox x:name="cmbCostAccount">
+                    <x:typeArguments>
+                        <typeArgument type="CostAccount" />
+                    </x:typeArguments>
+                    <x:constraints width="100%" height="0px" />
+                    <x:dataProvider dataFetchMethod="findAll" />
+                    <x:itemLabel type="Property" data="csaCode" />
+                </ComboBox>
+            </FormItem>
+            <FormItem x:name="formItem">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblPerName" text="{$lblPerName.value}">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <TextField x:name="txtPerName">
+                    <x:constraints width="100%" height="0px" />
+                </TextField>
+            </FormItem>
+            <FormItem x:name="formItem4">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblPerMonth" text="{$lblPerMonth.value}">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <ComboBox x:name="comboBoxMonth">
+                    <x:typeArguments>
+                        <typeArgument type="Month" />
+                    </x:typeArguments>
+                    <x:constraints width="100%" height="0px" />
+                </ComboBox>
+            </FormItem>
+            <FormItem x:name="formItem3">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblPerYear" text="Jahr">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <TextField x:name="textFieldYear">
+                    <x:constraints width="100%" height="0px" />
+                </TextField>
+            </FormItem>
+            <FormItem x:name="formItem6">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblAmtExpense" text="Betrag" minWidth="">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <Checkbox x:name="cboSignOffExpense" label="Freigabe Buchhalter">
+                    <x:constraints width="100%" height="0px" />
+                    <x:event>valueChange.valueChanged</x:event>
+                </Checkbox>
+            </FormItem>
+            <FormItem x:name="formItem8">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblPerBookedExpense" text="{$lblPerBookedExpense.value}">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <ComboBox x:name="comboBoxBookedExp">
+                    <x:typeArguments>
+                        <typeArgument type="BookingType" />
+                    </x:typeArguments>
+                    <x:constraints width="100%" height="0px" />
+                </ComboBox>
+            </FormItem>
+            <FormItem x:name="formItem9">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblPerState" text="{$lblPerState.value}">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <ComboBox x:name="comboBoxState">
+                    <x:typeArguments>
+                        <typeArgument type="State" />
+                    </x:typeArguments>
+                    <x:constraints width="100%" height="0px" />
+                </ComboBox>
+            </FormItem>
+            <FormItem x:name="formItem5">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblPerBookedProject" text="{$lblPerBookedProject.value}">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <ComboBox x:name="comboBoxBookedPro">
+                    <x:typeArguments>
+                        <typeArgument type="BookingType" />
+                    </x:typeArguments>
+                    <x:constraints width="100%" height="0px" />
+                </ComboBox>
+            </FormItem>
+        </FormLayout>
+        <HorizontalLayout x:name="horizontalLayout2">
+            <x:constraints width="100%" height="12%" flex-grow="0.0" />
+            <Button x:name="cmdSave" text="{$cmdSave.caption}">
+                <x:icon src="com.flowingcode.vaadin.addons.ironicons.IronIcons#SAVE" />
+                <x:constraints width="0px" height="0px" flex-grow="0.0" />
+                <x:event>click.onComponentEvent</x:event>
+            </Button>
+            <Button x:name="cmdCancel" text="{$cmdCancel.caption}">
+                <x:icon src="com.flowingcode.vaadin.addons.ironicons.IronIcons#CANCEL" />
+                <x:constraints width="0px" height="0px" flex-grow="0.0" />
+                <x:event>click.onComponentEvent</x:event>
+            </Button>
+        </HorizontalLayout>
+    </VerticalLayout>
+</VerticalLayout>

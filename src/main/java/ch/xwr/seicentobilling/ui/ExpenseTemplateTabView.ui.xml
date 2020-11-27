@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<?xdevuiml version="1.0"?>
+<?template NONE?>
+<?import ch.xwr.seicentobilling.business.LovState$ExpType?>
+<?import ch.xwr.seicentobilling.business.LovState$ExpUnit?>
+<?import ch.xwr.seicentobilling.business.LovState.State?>
+<?import ch.xwr.seicentobilling.entities.CostAccount?>
+<?import ch.xwr.seicentobilling.entities.ExpenseTemplate?>
+<?import ch.xwr.seicentobilling.entities.LovAccount?>
+<?import ch.xwr.seicentobilling.entities.Project?>
+<?import ch.xwr.seicentobilling.entities.Vat?>
+<?import com.rapidclipse.framework.server.ui.filter.FilterComponent?>
+<?import com.vaadin.flow.component.button.Button?>
+<?import com.vaadin.flow.component.checkbox.Checkbox?>
+<?import com.vaadin.flow.component.combobox.ComboBox?>
+<?import com.vaadin.flow.component.formlayout.FormLayout?>
+<?import com.vaadin.flow.component.formlayout.FormLayout.FormItem?>
+<?import com.vaadin.flow.component.grid.Grid?>
+<?import com.vaadin.flow.component.html.Label?>
+<?import com.vaadin.flow.component.orderedlayout.HorizontalLayout?>
+<?import com.vaadin.flow.component.orderedlayout.VerticalLayout?>
+<?import com.vaadin.flow.component.splitlayout.SplitLayout?>
+<?import com.vaadin.flow.component.textfield.TextField?>
+<?import com.vaadin.flow.data.binder.BeanValidationBinder?>
+<VerticalLayout xmlns:x="http://xml.xdev-software.com/xdevuiml" x:name="ExpenseTemplateTabView" x:route="expensetemplate">
+    <x:constraints zpos="0" width="100%" height="100%" />
+    <BeanValidationBinder x:name="binder" validatorsDisabled="true">
+        <x:typeArguments>
+            <typeArgument type="ExpenseTemplate" />
+        </x:typeArguments>
+        <x:bindings>
+            <binding field="cmbCostAccount" property="costAccount" required="false" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="txtPrtKeyNumber" property="extKeyNumber" required="false" nullRepresentation="" readOnly="false">
+                <validator type="Bean" />
+                <converter TYPE="StringToInteger">
+                    <numberFormat format="Integer" currency="default" locale="default" />
+                </converter>
+            </binding>
+            <binding field="comboBoxProject" property="project" required="false" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="txtPrtText" property="extText" required="false" nullRepresentation="" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="txtExtAmount" property="extAmount" required="false" nullRepresentation="" readOnly="false">
+                <validator type="Bean" />
+                <converter TYPE="StringToDouble">
+                    <numberFormat format="Decimal" currency="default" locale="default" />
+                </converter>
+            </binding>
+            <binding field="comboBoxVat" property="vat" required="false" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="comboBoxGeneric" property="extFlagGeneric" required="false" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="checkbox" property="extFlagCostAccount" required="false" nullRepresentation="false" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="comboBoxUnit" property="extUnit" required="false" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="txtExtQuantity" property="extQuantity" required="false" nullRepresentation="" readOnly="false">
+                <validator type="Bean" />
+                <converter TYPE="StringToDouble">
+                    <numberFormat format="Decimal" currency="default" locale="default" />
+                </converter>
+            </binding>
+            <binding field="comboBoxState" property="extState" required="false" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+        </x:bindings>
+    </BeanValidationBinder>
+    <SplitLayout x:name="splitLayout">
+        <x:constraints width="100%" height="100%" flex-grow="1.0" />
+        <VerticalLayout x:name="verticalLayout">
+            <x:constraints splitlayout-position="PRIMARY" width="100%" height="100%" />
+            <FilterComponent x:searchableProperties="costAccount.csaCode,costAccount.csaName" x:name="containerFilterComponent" x:filterableProperties="costAccount,extState,project" x:grid="grid">
+                <x:constraints width="100%" height="0%" flex-grow="0.0" />
+            </FilterComponent>
+            <HorizontalLayout minHeight="" x:name="horizontalLayout2" minWidth="100%">
+                <x:constraints width="100px" height="60px" flex-grow="0.0" />
+                <Button tabIndex="1" x:name="cmdNew">
+                    <x:icon src="com.vaadin.flow.component.icon.VaadinIcon#PLUS_CIRCLE" />
+                    <x:constraints width="0px" height="0px" flex-grow="0.0" />
+                    <x:event>click.onComponentEvent</x:event>
+                </Button>
+                <Button tabIndex="2" x:name="cmdDelete">
+                    <x:icon src="com.vaadin.flow.component.icon.VaadinIcon#MINUS_CIRCLE" />
+                    <x:constraints width="0px" height="0px" flex-grow="0.0" />
+                    <x:event>click.onComponentEvent</x:event>
+                </Button>
+                <Button tabIndex="3" x:name="cmdReload">
+                    <x:icon src="com.vaadin.flow.component.icon.VaadinIcon#REFRESH" />
+                    <x:constraints width="0px" height="0px" flex-grow="0.0" />
+                    <x:event>click.onComponentEvent</x:event>
+                </Button>
+                <Button tabIndex="4" x:name="cmdInfo">
+                    <x:icon src="com.vaadin.flow.component.icon.VaadinIcon#INFO_CIRCLE" />
+                    <x:constraints width="0px" height="0px" flex-grow="0.0" />
+                    <x:event>click.onComponentEvent</x:event>
+                </Button>
+            </HorizontalLayout>
+            <Grid tabIndex="5" x:name="grid">
+                <x:typeArguments>
+                    <typeArgument type="ExpenseTemplate" />
+                </x:typeArguments>
+                <x:constraints width="100%" height="100%" flex-grow="1.0" />
+                <x:dataProvider dataFetchMethod="findAll" />
+                <x:columns>
+                    <column property="extKeyNumber" header="Nummer" sortable="true" />
+                    <column property="extAccount" header="Konto" sortable="true" />
+                    <column property="extText" header="Text" sortable="true" />
+                    <column property="extState" header="Status" sortable="true" />
+                </x:columns>
+                <x:event>itemClick.onComponentEvent</x:event>
+            </Grid>
+        </VerticalLayout>
+        <FormLayout x:name="formLayout">
+            <x:responsiveSteps>
+                <entry minWidth="25em" columns="1" labelsPosition="TOP" />
+                <entry minWidth="32em" columns="2" labelsPosition="TOP" />
+                <entry minWidth="40em" columns="3" labelsPosition="TOP" />
+            </x:responsiveSteps>
+            <x:constraints splitlayout-position="SECONDARY" width="100%" height="100%" />
+            <x:styles>
+                <entry name="margin-left" value="10px" />
+            </x:styles>
+            <FormItem x:name="formItem2">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblCostAccount" maxHeight="" text="Mitarbeiter">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <ComboBox tabIndex="6" x:name="cmbCostAccount">
+                    <x:typeArguments>
+                        <typeArgument type="CostAccount" />
+                    </x:typeArguments>
+                    <x:constraints width="0px" height="0px" />
+                    <x:dataProvider dataFetchMethod="findAll" />
+                    <x:itemLabel type="Property" data="csaCode" />
+                </ComboBox>
+            </FormItem>
+            <FormItem x:name="formItem">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblPrtKeyNumber" text="Nummer">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <TextField tabIndex="7" x:name="txtPrtKeyNumber" placeholder="">
+                    <x:constraints width="100%" height="0px" />
+                </TextField>
+            </FormItem>
+            <FormItem x:name="formItem12">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblPrtText" text="Text">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <TextField x:name="txtPrtText">
+                    <x:constraints width="100%" height="0px" />
+                </TextField>
+            </FormItem>
+            <FormItem x:name="formItem4">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblExtAmount" text="Betrag">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <TextField tabIndex="8" x:name="txtExtAmount">
+                    <x:constraints width="100%" height="0px" />
+                </TextField>
+            </FormItem>
+            <FormItem x:name="formItem5">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblExtVat" text="MwSt">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <ComboBox x:name="comboBoxVat">
+                    <x:typeArguments>
+                        <typeArgument type="Vat" />
+                    </x:typeArguments>
+                    <x:constraints width="0px" height="0px" />
+                    <x:dataProvider dataFetchMethod="findAllInclusive" />
+                    <x:itemLabel type="Property" data="fullName" />
+                </ComboBox>
+            </FormItem>
+            <FormItem x:name="formItem7">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblExtAccount" text="Konto">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <ComboBox x:name="comboBoxAccount">
+                    <x:typeArguments>
+                        <typeArgument type="LovAccount" />
+                    </x:typeArguments>
+                    <x:constraints width="0px" height="0px" />
+                    <x:dataProvider dataFetchMethod="findAllMine" />
+                    <x:itemLabel type="Property" data="name" />
+                </ComboBox>
+            </FormItem>
+            <FormItem x:name="formItem11">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblExtGeneral" text="Pauschal">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <ComboBox x:name="comboBoxGeneric">
+                    <x:typeArguments>
+                        <typeArgument type="LovState$ExpType" />
+                    </x:typeArguments>
+                    <x:constraints width="-1px" height="0px" />
+                </ComboBox>
+            </FormItem>
+            <FormItem x:name="formItem10">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblExtCostAccount" text=" ">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <Checkbox tabIndex="11" x:name="checkbox" label="Kostenstelle">
+                    <x:constraints width="100%" height="0px" />
+                </Checkbox>
+            </FormItem>
+            <FormItem x:name="formItem8">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblExtUnit" text="Einheit">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <ComboBox tabIndex="12" x:name="comboBoxUnit">
+                    <x:typeArguments>
+                        <typeArgument type="LovState$ExpUnit" />
+                    </x:typeArguments>
+                    <x:constraints width="0px" height="0px" />
+                </ComboBox>
+            </FormItem>
+            <FormItem x:name="formItem3">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblPrtProject" text="Projekt">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <ComboBox tabIndex="13" x:name="comboBoxProject">
+                    <x:typeArguments>
+                        <typeArgument type="Project" />
+                    </x:typeArguments>
+                    <x:constraints width="0px" height="0px" />
+                    <x:dataProvider dataFetchMethod="findAll" />
+                    <x:itemLabel type="Property" data="proName" />
+                </ComboBox>
+            </FormItem>
+            <FormItem x:name="formItem9">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblExtQuantity" text="Menge">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <TextField tabIndex="14" x:name="txtExtQuantity">
+                    <x:constraints width="100%" height="0px" />
+                </TextField>
+            </FormItem>
+            <FormItem x:name="formItem6">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblPrtState" text="Status">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <ComboBox tabIndex="15" x:name="comboBoxState">
+                    <x:typeArguments>
+                        <typeArgument type="State" />
+                    </x:typeArguments>
+                    <x:constraints width="100%" height="0px" />
+                </ComboBox>
+            </FormItem>
+            <HorizontalLayout x:name="horizontalLayout3">
+                <x:constraints width="100%" height="-1px" />
+                <Button tabIndex="16" x:name="cmdSave" text="Speichern">
+                    <x:icon src="com.flowingcode.vaadin.addons.ironicons.IronIcons#SAVE" />
+                    <x:constraints width="50%" height="0px" flex-grow="0.0" />
+                    <x:event>click.onComponentEvent</x:event>
+                </Button>
+                <Button tabIndex="17" x:name="cmdReset" text="Abbrechen">
+                    <x:icon src="com.flowingcode.vaadin.addons.ironicons.IronIcons#UNDO" />
+                    <x:constraints width="50%" height="0px" flex-grow="0.0" />
+                    <x:event>click.onComponentEvent</x:event>
+                </Button>
+            </HorizontalLayout>
+        </FormLayout>
+    </SplitLayout>
+</VerticalLayout>
