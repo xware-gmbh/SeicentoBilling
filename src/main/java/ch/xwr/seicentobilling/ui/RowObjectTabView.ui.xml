@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<?xdevuiml version="1.0"?>
+<?template NONE?>
+<?import ch.xwr.seicentobilling.entities.RowObject?>
+<?import com.rapidclipse.framework.server.ui.filter.FilterComponent?>
+<?import com.vaadin.flow.component.grid.Grid?>
+<?import com.vaadin.flow.component.orderedlayout.VerticalLayout?>
+<VerticalLayout xmlns:x="http://xml.xdev-software.com/xdevuiml" spacing="false" x:name="RowObjectTabView" padding="false" x:route="rowobject">
+    <x:constraints zpos="0" width="100%" height="100%" />
+    <VerticalLayout x:name="verticalLayout" padding="false">
+        <x:constraints splitlayout-position="PRIMARY" width="100%" height="100%" flex-grow="0.0" />
+        <FilterComponent x:searchableProperties="objAddedBy,objChangedBy,objDeletedBy" x:name="filterComponent" x:filterableProperties="entity.entName,objAdded,objAddedBy,objChanged,objChangedBy,objChngcnt,objDeleted,objDeletedBy,objRowId,objState" x:grid="grid">
+            <x:constraints width="100%" height="0%" flex-grow="0.0" />
+        </FilterComponent>
+        <Grid x:name="grid">
+            <x:typeArguments>
+                <typeArgument type="RowObject" />
+            </x:typeArguments>
+            <x:constraints width="100%" height="100%" flex-grow="1.0" />
+            <x:dataProvider dataFetchMethod="findAll" />
+            <x:columns>
+                <column property="entity.entName" header="Tabelle" sortable="true" />
+                <column property="objRowId" header="Objekt Id" sortable="true" />
+                <column property="objChngcnt" header="Anderungszähler" sortable="true" />
+                <column property="objAdded" header="Erstellt am" sortable="true" />
+                <column property="objAddedBy" header="Erstellt von" sortable="true" />
+                <column property="objChanged" header="Geändert am" sortable="true" />
+                <column property="objChangedBy" header="Geändert von" sortable="true" />
+                <column property="objDeleted" header="Gelöscht am" sortable="true" />
+                <column property="objDeletedBy" header="Gelöscht von" sortable="true" />
+                <column property="objState" header="Status" sortable="true" />
+            </x:columns>
+            <x:event>itemClick.onComponentEvent</x:event>
+            <x:event>itemDoubleClick.onComponentEvent</x:event>
+        </Grid>
+    </VerticalLayout>
+</VerticalLayout>

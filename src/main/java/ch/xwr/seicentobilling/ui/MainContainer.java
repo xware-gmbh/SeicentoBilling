@@ -51,7 +51,7 @@ public class MainContainer extends VerticalLayout implements PageConfigurator, R
 {
 	/** Logger initialized */
 	private static final org.apache.log4j.Logger LOG = org.apache.log4j.Logger.getLogger(MainContainer.class);
-	
+
 	/**
 	 *
 	 */
@@ -61,7 +61,7 @@ public class MainContainer extends VerticalLayout implements PageConfigurator, R
 		this.setLocale();
 		this.initUI();
 		this.navMenuBar.setHeight("20px");
-
+		
 		// final MenuItem itemHome = this.navMenuBar.addItem("Verkauf");
 		// itemHome.addClickListener(e -> UI.getCurrent().navigate(MainView.class));
 		final Map<String, String[]> mainMenu = new LinkedHashMap<>();
@@ -74,31 +74,31 @@ public class MainContainer extends VerticalLayout implements PageConfigurator, R
 			new String[]{"Kostenstelle", "Mwst", "Ortschaft"});
 		mainMenu.put("Optionen",
 			new String[]{"Firma", "Objektstamm"});
-
+		
 		final Map<String, Class> menuPages = new LinkedHashMap<>();
 		menuPages.put("Rechnung", View2.class);
 		menuPages.put("Artikel", ItemTabView.class);
 		menuPages.put("Kontakte", View4.class);
 		menuPages.put("Rechnungen generieren...", View1.class);
-		
+
 		menuPages.put("Spesen u. Rapporte", View1.class);
 		menuPages.put("Spesen", ExpenseTabView.class);
 		menuPages.put("Rapporte", View3.class);
 		menuPages.put("Vorlagen Rapport", ProjectLineTemplateTabView.class);
 		menuPages.put("Vorlagen Spesen", ExpenseTemplateTabView.class);
-
-		menuPages.put("Projekte", View1.class);
-		menuPages.put("Projekte", View2.class);
 		
+		menuPages.put("Projekte", View1.class);
+		menuPages.put("Projekte", ProjectTabView.class);
+
 		menuPages.put("Hilfstabellen", View1.class);
 		menuPages.put("Kostenstelle", CostAccountTabView.class);
 		menuPages.put("Mwst", VatTabView.class);
 		menuPages.put("Ortschaft", CityTabView.class);
-		
+
 		menuPages.put("Optionen", View1.class);
 		menuPages.put("Firma", CompanyTabView.class);
-		menuPages.put("Objektstamm", View3.class);
-		
+		menuPages.put("Objektstamm", RowObjectTabView.class);
+
 		for(final String key : mainMenu.keySet())
 		{
 			final MenuItem mainMenuItem    = this.navMenuBar.addItem(key);
@@ -111,7 +111,7 @@ public class MainContainer extends VerticalLayout implements PageConfigurator, R
 				subMenuItem.addClickListener(e -> this.loadTab(menuPages.get(subm), subMenuItem.getText()));
 			}
 		}
-		
+
 		this.checkLocalDevEnv();
 		this.setCallBackUri();
 		this.loadMyData();
@@ -123,98 +123,98 @@ public class MainContainer extends VerticalLayout implements PageConfigurator, R
 				selectedPage.setVisible(true);
 			}
 		});
-		
+
 	}
-	
+
 	// will be consumed in AuthView
 	private void setCallBackUri()
 	{
 		// final AzureHelper hlp = new AzureHelper();
 		// hlp.setCallBackUri(this.getPage().getLocation());
-
+		
 	}
-
+	
 	private void setLocale()
 	{
 		Locale.setDefault(new Locale("de", "CH"));
 		TimeZone.setDefault(TimeZone.getTimeZone("Europe/Zurich"));
-
+		
 	}
-
+	
 	// only for local testing with preview
 	private void checkLocalDevEnv()
 	{
 		if(this.isLocalDevEnv())
 		{
 			MainContainer.LOG.info("Local DEV Environment.... enable Menues, disable Gelf");
-			
+
 			// Eclipse Preview (does not have Path in Jetty)
 			// enableMenu(true);
 			Seicento.removeGelfAppender();
-			
+
 			// this.currentUser = new AzureUser(null);
-			
+
 			// this.menuBarRight.setVisible(false);
 			// this.menuBarRight.setEnabled(false);
-			
+
 		}
 	}
-	
+
 	private boolean isLocalDevEnv()
 	{
 		final VaadinRequest      vaadinRequest      = VaadinService.getCurrentRequest();
 		final HttpServletRequest httpServletRequest = ((VaadinServletRequest)vaadinRequest).getHttpServletRequest();
 		final String             path               = httpServletRequest.getRequestURL().toString();
-
+		
 		if(path == null || path.length() < 3)
 		{
 			return true; // Jetty
 		}
-		
+
 		// for Tomcat use MockUser
 		if(vaadinRequest.getRemotePort() == 8080 && vaadinRequest.getRemoteHost().equals("localhost"))
 		{ // local tomcat
 			MainContainer.LOG.info("Local Tomcat...Set Login to Mockup if needed");
 			// return true;
 		}
-		
+
 		return false;
 	}
-	
+
 	private void loadMyData()
 	{
-
+		
 		final CompanyDAO dao = new CompanyDAO();
 		final Company    cmp = dao.getActiveConfig();
-
+		
 		// this.lblEnvironment.setValue(dao.getDbNameNativeSQL());
 		// this.lblCompany.setValue(cmp.getCmpName());
-
+		
 		MainContainer.LOG.info("Company Data loaded for " + cmp.getCmpName());
 	}
-
+	
 	@Override
 	public void configurePage(final InitialPageSettings settings)
 	{
 		settings.addLink("shortcut icon", "frontend/images/favicon.ico");
 		settings.addFavIcon("icon", "frontend/images/favicon256.png", "256x256");
 	}
-
+	
 	@Override
 	public void showRouterLayoutContent(final HasElement content)
 	{
 		this.contentContainer.removeAll();
 		this.contentContainer.getElement().appendChild(content.getElement());
 	}
-
+	
 	Map<Tab, Component> tabsToPages = new HashMap<>();
-
+	
 	private void loadTab(final Class<?> myClass, final String desc)
 	{
 		this.tabsToPages.values().forEach(page -> page.setVisible(false));
 		Component cmp         = null;
 		Tab       tabToSelect = null;
-		
+
 		for(final Map.Entry<Tab, Component> entry : this.tabsToPages.entrySet())
 		{
 			if(entry.getKey().getLabel().equals(desc))
@@ -226,7 +226,7 @@ public class MainContainer extends VerticalLayout implements PageConfigurator, R
 				return;
 			}
 		}
-
+		
 		Constructor<?> cons;
 		try
 		{
@@ -251,9 +251,9 @@ public class MainContainer extends VerticalLayout implements PageConfigurator, R
 		{
 			e.printStackTrace();
 		}
-		
-	}
 
+	}
+	
 	/* WARNING: Do NOT edit!<br>The content of this method is always regenerated by the UI designer. */
 	// <generated-code name="initUI">
 	private void initUI()
@@ -268,12 +268,17 @@ public class MainContainer extends VerticalLayout implements PageConfigurator, R
 		this.setPadding(false);
 		this.setDefaultHorizontalComponentAlignment(FlexComponent.Alignment.STRETCH);
 		this.navMenuBar.setClassName("my-menubar");
-		this.navMenuBar.setMinHeight("60px");
+		this.navMenuBar.setMinHeight("48px");
+		this.navMenuBar.setMaxWidth("");
+		this.navMenuBar.setMinWidth("");
+		this.navMenuBar.getStyle().set("line-height", "30px");
 		this.contentContainer.setMinHeight("");
 		this.contentContainer.setMaxWidth("");
 		this.verticalLayout.setMinHeight("");
+		this.verticalLayout.setSpacing(false);
 		this.verticalLayout.setMaxHeight("");
 		this.verticalLayout.setMaxWidth("");
+		this.verticalLayout.setPadding(false);
 		this.verticalLayout.setMinWidth("100%");
 		this.tabs.setMinHeight("null");
 		this.tabs.setMinWidth("100%");
@@ -281,13 +286,14 @@ public class MainContainer extends VerticalLayout implements PageConfigurator, R
 		this.div.setMinWidth("");
 		
 		this.tabs.setWidthFull();
-		this.tabs.setHeight("5px");
+		this.tabs.setHeight("30px");
 		this.div.setSizeFull();
 		this.verticalLayout.add(this.tabs, this.div);
 		this.verticalLayout.setFlexGrow(1.0, this.div);
 		this.verticalLayout.setSizeFull();
 		this.contentContainer.add(this.verticalLayout);
-		this.navMenuBar.setSizeUndefined();
+		this.navMenuBar.setWidth(null);
+		this.navMenuBar.setHeight("21px");
 		this.contentContainer.setSizeFull();
 		this.add(this.navMenuBar, this.contentContainer);
 		this.setFlexGrow(1.0, this.contentContainer);
@@ -295,7 +301,7 @@ public class MainContainer extends VerticalLayout implements PageConfigurator, R
 		
 		this.tabs.setSelectedIndex(-1);
 	} // </generated-code>
-
+	
 	// <generated-code name="variables">
 	private MenuBar        navMenuBar;
 	private FlexLayout     contentContainer;
@@ -303,5 +309,5 @@ public class MainContainer extends VerticalLayout implements PageConfigurator, R
 	private Div            div;
 	private Tabs           tabs;
 	// </generated-code>
-
+	
 }

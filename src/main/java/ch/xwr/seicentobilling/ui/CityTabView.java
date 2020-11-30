@@ -52,7 +52,7 @@ public class CityTabView extends VerticalLayout
 {
 	/** Logger initialized */
 	private static final org.apache.log4j.Logger LOG = LogManager.getLogger(CityTabView.class);
-
+	
 	/**
 	 *
 	 */
@@ -63,7 +63,7 @@ public class CityTabView extends VerticalLayout
 		// State
 		this.comboBoxState.setItems(LovState.State.values());
 	}
-
+	
 	/**
 	 * Event handler delegate method for the {@link Grid} {@link #grid}.
 	 *
@@ -80,7 +80,7 @@ public class CityTabView extends VerticalLayout
 			this.binder.setBean(cityBean);
 		}
 	}
-
+	
 	private boolean isNew()
 	{
 		if(this.binder.getBean() == null)
@@ -94,7 +94,7 @@ public class CityTabView extends VerticalLayout
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdNew}.
 	 *
@@ -106,10 +106,10 @@ public class CityTabView extends VerticalLayout
 		final City bean = new City();
 		bean.setCtyState(LovState.State.active);
 		this.binder.setBean(bean);
-		
+
 		// this.fieldGroup.setItemDataSource(bean);
 	}
-	
+
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdReload}.
 	 *
@@ -120,7 +120,7 @@ public class CityTabView extends VerticalLayout
 	{
 		this.grid.setDataProvider(DataProvider.ofCollection(new CityDAO().findAll()));
 	}
-	
+
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdSave}.
 	 *
@@ -130,7 +130,7 @@ public class CityTabView extends VerticalLayout
 	private void cmdSave_onClick(final ClickEvent<Button> event)
 	{
 		final boolean isNew = this.isNew();
-
+		
 		if(SeicentoCrud.doSave(this.binder, new CityDAO()))
 		{
 			try
@@ -145,13 +145,13 @@ public class CityTabView extends VerticalLayout
 				CityTabView.LOG.error("could not save ObjRoot", e);
 			}
 		}
-
+		
 		if(isNew)
 		{
 			this.cmdReload_onClick(null);
 		}
 	}
-
+	
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdReset}.
 	 *
@@ -167,17 +167,17 @@ public class CityTabView extends VerticalLayout
 			this.binder.setBean(cityBean);
 		}
 	}
-
+	
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdInfo}.
 	 *
 	 * @see ComponentEventListener#onComponentEvent(ComponentEvent)
 	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
 	 */
-
+	
 	private void cmdInfo_onClick(final ClickEvent<Button> event)
 	{
-
+		
 		if(this.grid.getSelectedItems() != null)
 		{
 			final City   bean = this.grid.getSelectionModel().getFirstSelectedItem().get();
@@ -186,9 +186,9 @@ public class CityTabView extends VerticalLayout
 			win.add(new RowObjectView(bean.getCtyId(), bean.getClass().getSimpleName()));
 			win.open();
 		}
-
+		
 	}
-
+	
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdDelete}.
 	 *
@@ -203,44 +203,43 @@ public class CityTabView extends VerticalLayout
 				20, Notification.Position.BOTTOM_START);
 			return;
 		}
-		
-		ConfirmDialog.show(this.getUI().get(), "Datensatz löschen", "Wirklich löschen?");
-		
-		try
-		{
-			
-			final City bean = this.grid.getSelectionModel().getFirstSelectedItem().get();
-			
-			// Delete Record
-			final RowObjectManager man = new RowObjectManager();
-			man.deleteObject(bean.getCtyId(), bean.getClass().getSimpleName());
-			
-			final CityDAO dao = new CityDAO();
-			dao.remove(bean);
-			dao.flush();
-			
-			this.binder.removeBean();
-			CityTabView.this.binder.setBean(new City());
-			this.grid.setDataProvider(DataProvider.ofCollection(new CityDAO().findAll()));
-			CityTabView.this.grid.getDataProvider().refreshAll();
-			
-			Notification.show("Datensatz wurde gelöscht!",
-				20, Notification.Position.BOTTOM_START);
-			
-		}
-		catch(final PersistenceException cx)
-		{
-			final String msg = SeicentoCrud.getPerExceptionError(cx);
-			Notification.show(msg, 20, Notification.Position.BOTTOM_START);
-			cx.printStackTrace();
-		}
-		catch(final Exception e)
-		{
-			CityTabView.LOG.error("Error on delete", e);
-		}
-		
-	}
 
+		ConfirmDialog.show("Datensatz löschen", "Wirklich löschen?", okEvent -> {
+			try
+			{
+				
+				final City bean = this.grid.getSelectionModel().getFirstSelectedItem().get();
+				
+				// Delete Record
+				final RowObjectManager man = new RowObjectManager();
+				man.deleteObject(bean.getCtyId(), bean.getClass().getSimpleName());
+				
+				final CityDAO dao = new CityDAO();
+				dao.remove(bean);
+				dao.flush();
+				
+				this.binder.removeBean();
+				CityTabView.this.binder.setBean(new City());
+				this.grid.setDataProvider(DataProvider.ofCollection(new CityDAO().findAll()));
+				CityTabView.this.grid.getDataProvider().refreshAll();
+				
+				Notification.show("Datensatz wurde gelöscht!",
+					20, Notification.Position.BOTTOM_START);
+				
+			}
+			catch(final PersistenceException cx)
+			{
+				final String msg = SeicentoCrud.getPerExceptionError(cx);
+				Notification.show(msg, 20, Notification.Position.BOTTOM_START);
+				cx.printStackTrace();
+			}
+			catch(final Exception e)
+			{
+				CityTabView.LOG.error("Error on delete", e);
+			}
+		});
+	}
+	
 	/* WARNING: Do NOT edit!<br>The content of this method is always regenerated by the UI designer. */
 	// <generated-code name="initUI">
 	private void initUI()
@@ -279,7 +278,7 @@ public class CityTabView extends VerticalLayout
 		this.cmdSave              = new Button();
 		this.cmdReset             = new Button();
 		this.binder               = new BeanValidationBinder<>(City.class);
-		
+
 		this.horizontalLayout2.setMinHeight("");
 		this.horizontalLayout2.setMinWidth("100%");
 		this.cmdNew.setIcon(VaadinIcon.PLUS_CIRCLE.create());
@@ -321,7 +320,7 @@ public class CityTabView extends VerticalLayout
 		this.cmdReset.setText(StringResourceUtils.optLocalizeString("{$cmdReset.caption}", this));
 		this.cmdReset.setIcon(IronIcons.UNDO.create());
 		this.binder.setValidatorsDisabled(true);
-		
+
 		this.binder.forField(this.txtCtyCountry).withNullRepresentation("").bind("ctyCountry");
 		this.binder.forField(this.txtCtyName).asRequired().withNullRepresentation("").bind("ctyName");
 		this.binder.forField(this.txtCtyRegion).withNullRepresentation("").bind("ctyRegion");
@@ -329,12 +328,12 @@ public class CityTabView extends VerticalLayout
 		this.binder.forField(this.txtCtyZip).asRequired().withConverter(ConverterBuilder.DoubleToInteger().build())
 			.bind("ctyZip");
 		this.binder.forField(this.comboBoxState).bind("ctyState");
-		
+
 		this.filterComponent.connectWith(this.grid.getDataProvider());
 		this.filterComponent.setFilterSubject(
 			GridFilterSubjectFactory.CreateFilterSubject(this.grid, Arrays.asList("ctyCountry", "ctyName", "ctyRegion"),
 				Arrays.asList("ctyName", "ctyCountry", "ctyZip", "ctyRegion", "ctyState", "ctyGeoCoordinates")));
-		
+
 		this.cmdNew.setSizeUndefined();
 		this.cmdDelete.setSizeUndefined();
 		this.cmdReload.setSizeUndefined();
@@ -395,7 +394,7 @@ public class CityTabView extends VerticalLayout
 		this.add(this.splitLayout);
 		this.setFlexGrow(1.0, this.splitLayout);
 		this.setSizeFull();
-		
+
 		this.cmdNew.addClickListener(this::cmdNew_onClick);
 		this.cmdDelete.addClickListener(this::cmdDelete_onClick);
 		this.cmdReload.addClickListener(this::cmdReload_onClick);
@@ -404,7 +403,7 @@ public class CityTabView extends VerticalLayout
 		this.cmdSave.addClickListener(this::cmdSave_onClick);
 		this.cmdReset.addClickListener(this::cmdReset_onClick);
 	} // </generated-code>
-	
+
 	// <generated-code name="variables">
 	private Grid<City>                 grid;
 	private NumberField                txtCtyZip;
@@ -421,5 +420,5 @@ public class CityTabView extends VerticalLayout
 	private SplitLayout                splitLayout;
 	private TextField                  txtCtyCountry, txtCtyName, txtCtyRegion, txtCtyGeoCoordinates;
 	// </generated-code>
-	
+
 }

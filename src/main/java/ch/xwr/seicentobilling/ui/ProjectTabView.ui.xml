@@ -1,0 +1,429 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<?xdevuiml version="1.0"?>
+<?template NONE?>
+<?import ch.xwr.seicentobilling.business.LovState.ProModel?>
+<?import ch.xwr.seicentobilling.business.LovState.ProState?>
+<?import ch.xwr.seicentobilling.business.LovState.State?>
+<?import ch.xwr.seicentobilling.entities.Address?>
+<?import ch.xwr.seicentobilling.entities.CostAccount?>
+<?import ch.xwr.seicentobilling.entities.Customer?>
+<?import ch.xwr.seicentobilling.entities.Order?>
+<?import ch.xwr.seicentobilling.entities.Project?>
+<?import ch.xwr.seicentobilling.entities.Vat?>
+<?import com.rapidclipse.framework.server.ui.filter.FilterComponent?>
+<?import com.vaadin.flow.component.button.Button?>
+<?import com.vaadin.flow.component.checkbox.Checkbox?>
+<?import com.vaadin.flow.component.combobox.ComboBox?>
+<?import com.vaadin.flow.component.datepicker.DatePicker?>
+<?import com.vaadin.flow.component.formlayout.FormLayout?>
+<?import com.vaadin.flow.component.formlayout.FormLayout.FormItem?>
+<?import com.vaadin.flow.component.grid.Grid?>
+<?import com.vaadin.flow.component.html.Label?>
+<?import com.vaadin.flow.component.icon.Icon?>
+<?import com.vaadin.flow.component.orderedlayout.HorizontalLayout?>
+<?import com.vaadin.flow.component.orderedlayout.VerticalLayout?>
+<?import com.vaadin.flow.component.splitlayout.SplitLayout?>
+<?import com.vaadin.flow.component.tabs.Tab?>
+<?import com.vaadin.flow.component.tabs.Tabs?>
+<?import com.vaadin.flow.component.textfield.TextArea?>
+<?import com.vaadin.flow.component.textfield.TextField?>
+<?import com.vaadin.flow.data.binder.BeanValidationBinder?>
+<VerticalLayout xmlns:x="http://xml.xdev-software.com/xdevuiml" spacing="false" x:name="ProjectTabView" padding="false" x:route="project">
+    <x:constraints zpos="0" width="100%" height="100%" />
+    <BeanValidationBinder x:name="binder">
+        <x:typeArguments>
+            <typeArgument type="Project" />
+        </x:typeArguments>
+        <x:bindings>
+            <binding field="txtProName" property="proName" required="false" nullRepresentation="" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="cmbCustomer" property="customer" required="false" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="txtProExtReference" property="proExtReference" required="false" nullRepresentation="" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="txtProContact" property="proContact" required="false" nullRepresentation="" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="txtProHoursEffective" property="proHoursEffective" required="false" nullRepresentation="" readOnly="false">
+                <validator type="Bean" />
+                <converter TYPE="StringToDouble">
+                    <numberFormat format="Decimal" currency="default" locale="default" />
+                </converter>
+            </binding>
+            <binding field="txtProRate" property="proRate" required="false" nullRepresentation="" readOnly="false">
+                <validator type="Bean" />
+                <converter TYPE="StringToDouble">
+                    <numberFormat format="Decimal" currency="default" locale="default" />
+                </converter>
+            </binding>
+            <binding field="txtProIntensityPercent" property="proIntensityPercent" required="false" nullRepresentation="" readOnly="false">
+                <validator type="Bean" />
+                <converter TYPE="StringToInteger">
+                    <numberFormat format="Integer" currency="default" locale="default" />
+                </converter>
+            </binding>
+            <binding field="cmbVat" property="vat" required="false" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="cmbCostAccount" property="costAccount" required="false" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="cmbBillingAddress" property="address" required="false" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="cbxProModel" property="proModel" required="false" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="cbxInternal" property="internal" required="false" nullRepresentation="false" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="cmbProject" property="project" required="false" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="textArea" property="proDescription" required="false" nullRepresentation="" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="textAreaRem" property="proRemark" required="false" nullRepresentation="" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="cbxState" property="proState" required="false" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="cbxProState" property="proProjectState" required="false" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="txtProHours" property="proHours" required="false" nullRepresentation="" readOnly="false">
+                <validator type="Bean" />
+                <converter TYPE="StringToInteger">
+                    <numberFormat format="Integer" currency="default" locale="default" />
+                </converter>
+            </binding>
+        </x:bindings>
+    </BeanValidationBinder>
+    <SplitLayout x:splitterPosition="60.0" x:name="splitLayout">
+        <x:constraints width="100%" height="100%" flex-grow="1.0" />
+        <VerticalLayout spacing="false" x:name="verticalLayout" padding="false">
+            <x:constraints splitlayout-position="PRIMARY" width="100%" height="100%" />
+            <FilterComponent x:searchableProperties="costAccount.csaCode,customer.cusCompany,customer.cusName,proExtReference,proName" x:name="containerFilterComponent" x:filterableProperties="costAccount,customer,proEndDate,proModel,proName,proProjectState,proStartDate,proState,vat" x:grid="grid">
+                <x:constraints width="100%" height="0%" flex-grow="0.0" />
+            </FilterComponent>
+            <HorizontalLayout minHeight="" x:name="proHorizontalLayout" minWidth="100%">
+                <x:constraints width="100px" height="60px" flex-grow="0.0" />
+                <Button x:name="cmdNew">
+                    <x:icon src="com.vaadin.flow.component.icon.VaadinIcon#PLUS_CIRCLE" />
+                    <x:constraints width="0px" height="0px" flex-grow="0.0" />
+                    <x:event>click.onComponentEvent</x:event>
+                </Button>
+                <Button x:name="cmdDelete">
+                    <x:icon src="com.vaadin.flow.component.icon.VaadinIcon#MINUS_CIRCLE" />
+                    <x:constraints width="0px" height="0px" flex-grow="0.0" />
+                    <x:event>click.onComponentEvent</x:event>
+                </Button>
+                <Button x:name="cmdReload">
+                    <x:icon src="com.vaadin.flow.component.icon.VaadinIcon#REFRESH" />
+                    <x:constraints width="0px" height="0px" flex-grow="0.0" />
+                    <x:event>click.onComponentEvent</x:event>
+                </Button>
+                <Button x:name="cmdPlan">
+                    <x:icon src="com.vaadin.flow.component.icon.VaadinIcon#CHART" />
+                    <x:constraints width="0px" height="0px" flex-grow="0.0" />
+                    <x:event>click.onComponentEvent</x:event>
+                </Button>
+                <Button x:name="cmdReport">
+                    <x:icon src="com.flowingcode.vaadin.addons.ironicons.IronIcons#PRINT" />
+                    <x:constraints width="0px" height="0px" flex-grow="0.0" />
+                    <x:event>click.onComponentEvent</x:event>
+                </Button>
+                <Button x:name="cmdInfo">
+                    <x:icon src="com.vaadin.flow.component.icon.VaadinIcon#INFO_CIRCLE" />
+                    <x:constraints width="0px" height="0px" flex-grow="0.0" />
+                    <x:event>click.onComponentEvent</x:event>
+                </Button>
+            </HorizontalLayout>
+            <Grid x:name="grid">
+                <x:typeArguments>
+                    <typeArgument type="Project" />
+                </x:typeArguments>
+                <x:constraints width="100%" height="100%" flex-grow="1.0" />
+                <x:dataProvider dataFetchMethod="findAll" />
+                <x:columns>
+                    <column property="proName" header="Name" sortable="true" />
+                    <column property="customer.shortname" header="Kunde" sortable="true" />
+                    <column property="proStartDate" header="Start" sortable="true" />
+                    <column property="proEndDate" header="Ende" sortable="true" visible="false" />
+                    <column property="proExtReference" header="Ext. Referenz" sortable="true" />
+                    <column property="costAccount.csaName" header="KST Name" sortable="true" />
+                    <column property="costAccount" header="Kostenstelle" visible="false" />
+                    <column property="proRate" header="Ansatz" sortable="true" visible="false" />
+                    <column property="proProjectState" header="Projektstatus" sortable="true" visible="false" />
+                    <column property="proState" header="Status" sortable="true" />
+                    <column property="proHoursEffective" header="Stunden Ist" sortable="true" visible="false" />
+                    <column property="proHours" header="Stunden Soll" sortable="true" visible="false" />
+                </x:columns>
+                <x:event>itemClick.onComponentEvent</x:event>
+            </Grid>
+        </VerticalLayout>
+        <VerticalLayout minHeight="100%" spacing="false" x:name="verticalLayout2" padding="false">
+            <x:constraints splitlayout-position="SECONDARY" width="100px" alignment="AUTO" height="100px" flex-grow="0.0" />
+            <x:event>click.onComponentEvent</x:event>
+            <Tabs minHeight="50px" x:name="tabs" selectedIndex="0">
+                <x:constraints splitlayout-position="SECONDARY" width="100%" height="36px" flex-grow="0.0" />
+                <Tab x:name="tab" label="{$gridLayout.caption}" />
+                <Tab x:name="tab2" label="{$gridLayout2.caption}" />
+                <Tab x:name="tab3" label="Referenzen" />
+            </Tabs>
+            <FormLayout x:name="gridLayout" x:scrollbars="com.rapidclipse.vaadin.editor.model.ScrollbarsPolicy.VERTICAL">
+                <x:responsiveSteps>
+                    <entry minWidth="0px" columns="1" labelsPosition="TOP" />
+                    <entry minWidth="320px" columns="2" labelsPosition="TOP" />
+                    <entry minWidth="1000px" columns="2" labelsPosition="ASIDE" />
+                </x:responsiveSteps>
+                <x:constraints width="100%" height="100%" flex-grow="0.0" />
+                <FormItem x:name="formItem">
+                    <x:constraints width="0px" height="0px" />
+                    <ComboBox x:name="cmbCustomer" label="{$lblCustomer.value}">
+                        <x:typeArguments>
+                            <typeArgument type="Customer" />
+                        </x:typeArguments>
+                        <x:constraints width="75%" height="0px" />
+                        <x:dataProvider dataFetchMethod="findAll" />
+                        <x:itemLabel type="Property" data="fullname" />
+                        <x:event>valueChange.valueChanged</x:event>
+                    </ComboBox>
+                    <Button x:name="btnSearch">
+                        <x:icon src="com.flowingcode.vaadin.addons.ironicons.IronIcons#SEARCH" />
+                        <x:constraints width="0px" height="0px" />
+                        <x:event>click.onComponentEvent</x:event>
+                    </Button>
+                </FormItem>
+                <FormItem x:name="formItem2">
+                    <x:constraints width="0px" height="0px" />
+                    <TextField x:name="txtProName" label="{$lblProName.value}">
+                        <x:constraints width="100%" height="0px" />
+                    </TextField>
+                </FormItem>
+                <FormItem x:name="formItem3">
+                    <x:constraints width="0px" height="0px" />
+                    <TextField x:name="txtProExtReference" label="{$lblProExtReference.value}">
+                        <x:constraints width="100%" height="0px" />
+                    </TextField>
+                </FormItem>
+                <FormItem x:name="formItem4">
+                    <x:constraints width="0px" height="0px" />
+                    <TextField x:name="txtProContact" label="Kontakt">
+                        <x:constraints width="100%" height="0px" />
+                    </TextField>
+                </FormItem>
+                <FormItem x:name="formItem5">
+                    <x:constraints width="0px" height="0px" />
+                    <DatePicker locale="de-CH" x:name="dateProStartDate" label="{$lblProStartDate.value}">
+                        <x:constraints width="100%" height="0px" />
+                    </DatePicker>
+                </FormItem>
+                <FormItem x:name="formItem6">
+                    <x:constraints width="0px" height="0px" />
+                    <DatePicker locale="de-CH" x:name="dateProEndDate" label="Ende">
+                        <x:constraints width="100%" height="0px" />
+                    </DatePicker>
+                </FormItem>
+                <FormItem x:name="formItem7">
+                    <x:constraints width="0px" height="0px" />
+                    <TextField x:name="txtProHours" label="Stunden Soll">
+                        <x:constraints width="100%" height="0px" />
+                    </TextField>
+                </FormItem>
+                <FormItem x:name="formItem8">
+                    <x:constraints width="0px" height="0px" />
+                    <TextField x:name="txtProHoursEffective" label="Ist">
+                        <x:constraints width="100%" height="0px" />
+                    </TextField>
+                </FormItem>
+                <FormItem x:name="formItem9">
+                    <x:constraints width="0px" height="0px" />
+                    <TextField x:name="txtProRate" label="{$lblProRate.value}">
+                        <x:constraints width="100%" height="0px" />
+                    </TextField>
+                </FormItem>
+                <FormItem x:name="formItem101">
+                    <x:constraints width="0px" height="0px" />
+                    <TextField x:name="txtProIntensityPercent" label="{$lblProIntensityPercent.value}">
+                        <x:constraints width="100%" height="0px" />
+                    </TextField>
+                </FormItem>
+                <FormItem x:name="formItem11">
+                    <x:constraints width="0px" height="0px" />
+                    <ComboBox x:name="cmbVat" label="{$lblVat.value}">
+                        <x:typeArguments>
+                            <typeArgument type="Vat" />
+                        </x:typeArguments>
+                        <x:constraints width="100%" height="0px" />
+                        <x:dataProvider dataFetchMethod="findAllInclusive" />
+                        <x:itemLabel type="Property" data="fullName" />
+                    </ComboBox>
+                </FormItem>
+                <FormItem x:name="formItem12">
+                    <x:constraints width="0px" height="0px" />
+                    <ComboBox x:name="cmbCostAccount" label="{$lblCostAccount.value}">
+                        <x:typeArguments>
+                            <typeArgument type="CostAccount" />
+                        </x:typeArguments>
+                        <x:constraints width="100%" height="0px" />
+                        <x:dataProvider dataFetchMethod="findAllActive" />
+                        <x:itemLabel type="Property" data="csaName" />
+                    </ComboBox>
+                </FormItem>
+                <FormItem x:name="formItem13">
+                    <x:constraints width="0px" height="0px" />
+                    <ComboBox x:name="cmbBillingAddress" label="R-Adresse">
+                        <x:typeArguments>
+                            <typeArgument type="Address" />
+                        </x:typeArguments>
+                        <x:constraints width="100%" height="0px" />
+                        <x:dataProvider dataFetchMethod="findAll" />
+                        <x:itemLabel type="Property" data="shortname" />
+                    </ComboBox>
+                </FormItem>
+                <FormItem x:name="formItem14">
+                    <x:constraints width="0px" height="0px" />
+                    <ComboBox x:name="cbxState" label="{$lblProState.value}">
+                        <x:typeArguments>
+                            <typeArgument type="State" />
+                        </x:typeArguments>
+                        <x:constraints width="100%" height="0px" />
+                    </ComboBox>
+                </FormItem>
+            </FormLayout>
+            <FormLayout x:name="gridLayoutDesc" x:scrollbars="com.rapidclipse.vaadin.editor.model.ScrollbarsPolicy.VERTICAL">
+                <x:responsiveSteps>
+                    <entry minWidth="0px" columns="1" labelsPosition="TOP" />
+                    <entry minWidth="320px" columns="2" labelsPosition="TOP" />
+                    <entry minWidth="1000px" columns="2" labelsPosition="ASIDE" />
+                </x:responsiveSteps>
+                <x:constraints width="100%" height="100%" flex-grow="0.0" />
+                <FormItem x:name="formItem15">
+                    <x:constraints width="0px" height="0px" />
+                    <ComboBox x:name="cbxProModel" label="{$lblProModel.value}">
+                        <x:typeArguments>
+                            <typeArgument type="ProModel" />
+                        </x:typeArguments>
+                        <x:constraints width="100%" height="0px" />
+                    </ComboBox>
+                </FormItem>
+                <FormItem x:name="formItem10">
+                    <x:constraints width="0px" height="0px" />
+                    <Label x:name="lblCbxInternal" text="  ">
+                        <x:constraints width="0px" label="true" height="0px" />
+                    </Label>
+                    <Checkbox x:name="cbxInternal" label="Internes Projekt">
+                        <x:constraints width="100%" height="0px" />
+                        <x:styles>
+                            <entry name="margin-top" value="30px" />
+                        </x:styles>
+                    </Checkbox>
+                </FormItem>
+                <FormItem x:name="formItem16">
+                    <x:constraints width="0px" height="0px" />
+                    <ComboBox x:name="cmbProject" label="{$lblProject.value}">
+                        <x:typeArguments>
+                            <typeArgument type="Project" />
+                        </x:typeArguments>
+                        <x:constraints width="100%" height="0px" />
+                        <x:dataProvider dataFetchMethod="findAllActive" />
+                        <x:itemLabel type="Property" data="proName" />
+                    </ComboBox>
+                </FormItem>
+                <FormItem x:name="formItem17">
+                    <x:constraints width="0px" height="0px" />
+                    <TextArea x:name="textArea" label="{$lblProDescription.value}">
+                        <x:constraints width="100%" height="0px" />
+                    </TextArea>
+                </FormItem>
+                <FormItem x:name="formItem18">
+                    <x:constraints width="0px" height="0px" />
+                    <TextArea x:name="textAreaRem" label="{$lblProRemark.value}">
+                        <x:constraints width="100%" height="0px" />
+                    </TextArea>
+                </FormItem>
+                <FormItem x:name="formItem19">
+                    <x:constraints width="0px" height="0px" />
+                    <ComboBox x:name="cbxProState" label="{$lblProProjectState.value}">
+                        <x:typeArguments>
+                            <typeArgument type="ProState" />
+                        </x:typeArguments>
+                        <x:constraints width="100%" height="0px" />
+                    </ComboBox>
+                </FormItem>
+                <FormItem x:name="formItem20">
+                    <x:constraints width="0px" height="0px" />
+                    <DatePicker locale="de-CH" x:name="dateProLastBill" label="{$lblProLastBill.value}">
+                        <x:constraints width="100%" height="0px" />
+                    </DatePicker>
+                </FormItem>
+            </FormLayout>
+            <SplitLayout x:name="verticalSplitPanel" orientation="com.vaadin.flow.component.splitlayout.SplitLayout.Orientation.VERTICAL">
+                <x:constraints width="100%" height="100%" flex-grow="1.0" />
+                <VerticalLayout spacing="false" x:name="verticalLayoutBill" padding="false">
+                    <x:constraints splitlayout-position="PRIMARY" width="100%" height="100%" />
+                    <HorizontalLayout spacing="false" x:name="horizontalLayout2" alignItems="com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment.CENTER">
+                        <x:constraints width="100%" height="30px" flex-grow="0.0" />
+                        <Icon x:icon="com.vaadin.flow.component.icon.VaadinIcon#FILE" x:name="icon2">
+                            <x:constraints width="0px" height="0px" flex-grow="0.0" />
+                        </Icon>
+                        <Label x:name="labelRechnungen" text="Rechnungen">
+                            <x:constraints width="0px" height="0px" flex-grow="0.0" />
+                        </Label>
+                    </HorizontalLayout>
+                    <Grid x:name="tableOrder">
+                        <x:typeArguments>
+                            <typeArgument type="Order" />
+                        </x:typeArguments>
+                        <x:constraints width="100%" height="100%" flex-grow="1.0" />
+                        <x:columns>
+                            <column property="ordNumber" header="Rechnungsnummer" sortable="true" />
+                            <column property="ordBillDate" header="Rechnungsdatum" sortable="true" />
+                            <column property="ordAmountNet" header="Betrag Netto" sortable="true" textAlign="END" />
+                            <column property="ordPayDate" header="Bezahlt am" sortable="true" />
+                        </x:columns>
+                    </Grid>
+                </VerticalLayout>
+                <VerticalLayout spacing="false" x:name="verticalLayoutSubProject" padding="false">
+                    <x:constraints splitlayout-position="SECONDARY" width="100%" height="100%" />
+                    <HorizontalLayout spacing="false" x:name="horizontalLayout">
+                        <x:constraints width="100%" height="30px" flex-grow="0.0" />
+                        <Icon x:icon="com.vaadin.flow.component.icon.VaadinIcon#CUBES" x:name="icon">
+                            <x:constraints width="0px" height="0px" flex-grow="0.0" />
+                        </Icon>
+                        <Label x:name="subprojectLabel" text="Sub-Projekte">
+                            <x:constraints width="0px" height="0px" flex-grow="0.0" />
+                        </Label>
+                    </HorizontalLayout>
+                    <Grid x:name="tableProject">
+                        <x:typeArguments>
+                            <typeArgument type="Project" />
+                        </x:typeArguments>
+                        <x:constraints width="100%" height="100%" flex-grow="1.0" />
+                        <x:columns>
+                            <column property="proName" header="Name" sortable="true" />
+                            <column property="proHours" header="Soll-Stunden" sortable="true" />
+                            <column property="proHoursEffective" header="Ist-Stunden" sortable="true" />
+                        </x:columns>
+                    </Grid>
+                </VerticalLayout>
+            </SplitLayout>
+            <HorizontalLayout spacing="false" x:name="horizontalLayout3">
+                <Button x:name="cmdSave" text="{$cmdSave.caption}">
+                    <x:icon src="com.flowingcode.vaadin.addons.ironicons.IronIcons#SAVE" />
+                    <x:event>click.onComponentEvent</x:event>
+                </Button>
+                <Button x:name="cmdReset" text="{$cmdReset.caption}">
+                    <x:icon src="com.flowingcode.vaadin.addons.ironicons.IronIcons#UNDO" />
+                    <x:event>click.onComponentEvent</x:event>
+                </Button>
+            </HorizontalLayout>
+        </VerticalLayout>
+    </SplitLayout>
+</VerticalLayout>

@@ -1,38 +1,26 @@
 
 package ch.xwr.seicentobilling.business;
 
-import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.dialog.Dialog;
 
+import ch.xwr.seicentobilling.ui.ConfirmDialogPopup;
+import ch.xwr.seicentobilling.ui.ConfirmDialogPopup.OkEvent;
 
-public class ConfirmDialog
+
+public class ConfirmDialog extends Dialog
 {
-	static final String DEFAULT_WINDOW_CAPTION = "Confirm";
-	static final String DEFAULT_CANCEL_CAPTION = "Cancel";
-	static final String DEFAULT_OK_CAPTION     = "Ok";
 	
-	// public static final ContentMode CONTENT_TEXT_WITH_NEWLINES = ContentMode.TEXT; //-1;
-	// public static final ContentMode CONTENT_TEXT = Label.CONTENT_TEXT;
-	// public static final ContentMode CONTENT_PREFORMATTED = Label.CONTENT_PREFORMATTED;
-	// public static final ContentMode CONTENT_HTML = Label.CONTENT_RAW;
-	// public static final ContentMode CONTENT_DEFAULT = CONTENT_TEXT_WITH_NEWLINES;
-	
-	public static void show(final UI ui, final String title, final String text)
+	public static void show(final String caption, final String customConfirmMsg, final OkEvent ee)
 	{
-		
-		final Dialog win = new Dialog(new Text(text));
-		win.setWidth("480");
-		win.setHeight("210");
-		// win.center();
-		win.setModal(true);
-		
-		// UI.getCurrent().getSession().setAttribute(String.class,
-		// bean.getClass().getSimpleName());
-		// win.setContent(text);
-		// win.addAttachListener(lst);
+		ConfirmDialogPopup.show(caption, customConfirmMsg, ee);
 
-		ui.add(win);
 	}
 	
+	public static void show(final UI ui, final String caption, final String message)
+	{
+		ConfirmDialogPopup.show(caption, message, null);
+
+	}
+
 }

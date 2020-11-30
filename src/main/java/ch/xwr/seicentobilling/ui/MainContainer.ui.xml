@@ -9,15 +9,18 @@
 <?import com.vaadin.flow.component.tabs.Tabs?>
 <VerticalLayout xmlns:x="http://xml.xdev-software.com/xdevuiml" spacing="false" x:name="MainContainer" padding="false" defaultHorizontalComponentAlignment="com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment.STRETCH" x:route="" x:routerLayout="true">
     <x:constraints zpos="0" width="100%" height="100%" />
-    <MenuBar className="my-menubar" minHeight="60px" x:name="navMenuBar">
-        <x:constraints width="-1px" height="-1px" flex-grow="0.0" />
+    <MenuBar className="my-menubar" minHeight="48px" x:name="navMenuBar" maxWidth="" minWidth="">
+        <x:constraints width="-1px" height="21px" flex-grow="0.0" />
+        <x:styles>
+            <entry name="line-height" value="30px" />
+        </x:styles>
     </MenuBar>
     <FlexLayout minHeight="" x:name="contentContainer" maxWidth="">
         <x:constraints width="100%" height="100%" flex-grow="1.0" />
-        <VerticalLayout minHeight="" x:name="verticalLayout" maxHeight="" maxWidth="" minWidth="100%">
+        <VerticalLayout minHeight="" spacing="false" x:name="verticalLayout" maxHeight="" maxWidth="" padding="false" minWidth="100%">
             <x:constraints width="100%" height="100%" flex-grow="0.0" />
             <Tabs minHeight="null" x:name="tabs" minWidth="100%">
-                <x:constraints splitlayout-position="PRIMARY" width="100%" height="5px" flex-grow="0.0" />
+                <x:constraints splitlayout-position="PRIMARY" width="100%" height="30px" flex-grow="0.0" />
             </Tabs>
             <Div minHeight="" x:name="div" minWidth="">
                 <x:constraints width="100%" height="100%" flex-grow="1.0" />

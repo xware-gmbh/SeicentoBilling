@@ -61,8 +61,8 @@ public class RowObjectView extends VerticalLayout
 	public static Dialog getPopupWindow()
 	{
 		final Dialog win = new Dialog();
-		win.setWidth("1140");
-		win.setHeight("760");
+		// win.setWidth("1140");
+		// win.setHeight("760");
 		win.setSizeFull();
 		win.setModal(true);
 		win.setResizable(true);
@@ -135,8 +135,8 @@ public class RowObjectView extends VerticalLayout
 		this.splitLayout.setOrientation(SplitLayout.Orientation.VERTICAL);
 		this.formLayout.setResponsiveSteps(
 			new FormLayout.ResponsiveStep("0px", 1, FormLayout.ResponsiveStep.LabelsPosition.TOP),
-			new FormLayout.ResponsiveStep("500px", 4, FormLayout.ResponsiveStep.LabelsPosition.TOP),
-			new FormLayout.ResponsiveStep("1000px", 4, FormLayout.ResponsiveStep.LabelsPosition.ASIDE));
+			new FormLayout.ResponsiveStep("500px", 3, FormLayout.ResponsiveStep.LabelsPosition.TOP),
+			new FormLayout.ResponsiveStep("1000px", 4, FormLayout.ResponsiveStep.LabelsPosition.TOP));
 		this.lblObjId.setText(StringResourceUtils.optLocalizeString("{$lblObjId.value}", this));
 		this.txtObjId.setReadOnly(true);
 		this.lblObjAdded.setText(StringResourceUtils.optLocalizeString("{$lblObjAdded.value}", this));
@@ -243,20 +243,19 @@ public class RowObjectView extends VerticalLayout
 		this.setFlexGrow(1.0, this.splitLayout);
 		this.setSizeFull();
 	} // </generated-code>
-
+	
 	// <generated-code name="variables">
 	private FormLayout        formLayout;
 	private ComboBox<State>   txtObjState;
 	private SplitLayout       splitLayout;
 	private DatePicker        dateObjAdded, dateObjDeleted, dateObjChanged;
 	private ComboBox<Entity>  cmbEntity;
-	private Label             lblObjId, lblObjAdded, lblObjDeleted, lblEntity, lblObjAddedBy, lblObjDeletedBy,
-		lblObjRowId,
-		lblObjChanged, lblObjChngcnt, lblObjChangedBy, lblObjState;
+	private Label             lblObjId, lblObjAdded, lblObjDeleted, lblObjChanged, lblEntity, lblObjAddedBy,
+		lblObjDeletedBy, lblObjChangedBy, lblObjRowId, lblObjChngcnt, lblObjState;
 	private Binder<RowObject> binder;
-	private TextField         txtObjId, txtObjAddedBy, txtObjDeletedBy, txtObjRowId, txtObjChngcnt, txtObjChangedBy;
-	private FormItem          formItem, formItem12, formItem13, formItem3, formItem4, formItem5, formItem6, formItem7,
-		formItem8, formItem9, formItem10;
+	private TextField         txtObjId, txtObjAddedBy, txtObjDeletedBy, txtObjChangedBy, txtObjRowId, txtObjChngcnt;
+	private FormItem          formItem, formItem12, formItem13, formItem7, formItem3, formItem4, formItem5, formItem9,
+		formItem6, formItem8, formItem10;
 	// </generated-code>
 
 }
