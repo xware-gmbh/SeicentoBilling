@@ -132,7 +132,12 @@
 		  <artifactId>slf4j-log4j12</artifactId>
 		  <version>1.7.28</version>
 		</dependency>
-		
+
+		<dependency>
+			<groupId>com.microsoft.sqlserver</groupId>
+			<artifactId>mssql-jdbc</artifactId>
+			<version>7.2.0.jre8</version>
+		</dependency>
 	</dependencies>
 	<properties>
 		<project.build.sourceEncoding>
