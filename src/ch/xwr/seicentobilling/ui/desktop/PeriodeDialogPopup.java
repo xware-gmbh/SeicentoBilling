@@ -1,8 +1,6 @@
 package ch.xwr.seicentobilling.ui.desktop;
 
-import java.text.DateFormat;
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -207,13 +205,6 @@ public class PeriodeDialogPopup extends XdevView {
 		}
 		return retval;
 	}
-
-	private String getDateFormat(final Date myDate) {
-		final String pattern = "dd.MM.yyyy";
-		final DateFormat df = new SimpleDateFormat(pattern);
-		return df.format(myDate);
-	}
-
 
 	/**
 	 * Event handler delegate method for the {@link XdevButton} {@link #cmdOk}.
