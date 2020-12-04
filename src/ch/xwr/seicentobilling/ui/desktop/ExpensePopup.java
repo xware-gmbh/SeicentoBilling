@@ -765,8 +765,7 @@ public class ExpensePopup extends XdevView {
 		this.mnuTemplate10 = this.mnuDefaults.addItem("Rapporte", null);
 		this.menuText = this.menuOption.addItem("Text...", null);
 		this.mnuSeperator = this.menuOption.addSeparator();
-		this.mnuCancel = this.menuOption.addItem(StringResourceUtils.optLocalizeString("{$cmdReset.caption}", this),
-				null);
+		this.mnuCancel = this.menuOption.addItem(StringResourceUtils.optLocalizeString("{$cmdReset.caption}", this), null);
 		this.mnuSaveItem = this.menuOption.addItem("Speichern", null);
 		this.label = new XdevLabel();
 		this.label3 = new XdevLabel();
@@ -862,8 +861,7 @@ public class ExpensePopup extends XdevView {
 		this.comboBoxAccount.setContainerDataSource(LovAccount.class, DAOs.get(LovAccountDAO.class).findAllMine());
 		this.comboBoxAccount.setItemCaptionPropertyId("name");
 		this.lblExpFlagGeneric.setValue(StringResourceUtils.optLocalizeString("{$lblExpFlagGeneric.value}", this));
-		this.lblExpFlagCostAccount
-				.setValue(StringResourceUtils.optLocalizeString("{$lblExpFlagCostAccount.value}", this));
+		this.lblExpFlagCostAccount.setValue(StringResourceUtils.optLocalizeString("{$lblExpFlagCostAccount.value}", this));
 		this.chkExpFlagCostAccount.setCaption("");
 		this.lblExpUnit.setValue(StringResourceUtils.optLocalizeString("{$lblExpUnit.value}", this));
 		this.lblExpQuantity.setValue(StringResourceUtils.optLocalizeString("{$lblExpQuantity.value}", this));
@@ -887,7 +885,7 @@ public class ExpensePopup extends XdevView {
 		this.cmdReset.setIcon(FontAwesome.CLOSE);
 		this.cmdReset.setCaption(StringResourceUtils.optLocalizeString("{$cmdReset.caption}", this));
 		this.cmdReset.setClickShortcut(ShortcutAction.KeyCode.ESCAPE);
-		this.upload.setButtonCaption("Upload...");
+		this.upload.setButtonCaption("Beleg...");
 		this.upload.setImmediate(true);
 		this.label2.setValue("            ");
 		this.cmdDefault1.setIcon(FontAwesome.BOOKMARK);
