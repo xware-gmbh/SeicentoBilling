@@ -23,7 +23,7 @@ public class ExpenseHandler {
 		startLoop(from, toP);
 	}
 
-	private void validateInput(final Periode from, final Periode toP, final boolean checkIt) throws Exception {
+	public void validateInput(final Periode from, final Periode toP, final boolean checkIt) throws Exception {
 		if (from == null || toP == null) {
 			throw new Exception("Ungültige Periode(n) für das Kopieren!");
 		}
@@ -52,17 +52,22 @@ public class ExpenseHandler {
 		for (final Iterator<Expense> iterator = lst.iterator(); iterator.hasNext();) {
 			final Expense expense = iterator.next();
 
-			copySingleRecord(dao, expense, toP);
+			copySingleRecord(dao, expense, toP, expense.getExpDate());
 		}
 	}
 
-	private void copySingleRecord(final ExpenseDAO dao, final Expense expense, final Periode toP) {
+	private void copySingleRecord(final ExpenseDAO dao, final Expense expense, final Periode toP, final Date targetDate) {
 		PersistenceUtils.getEntityManager(Expense.class).detach(expense);
 
 		expense.setExpId(new Long(0));
 		expense.setExpBooked(null);
 		expense.setPeriode(toP);
-		expense.setExpDate(calcNewDate(expense.getExpDate(), toP));
+
+		if (expense.getExpDate().compareTo(targetDate) == 0) {
+			expense.setExpDate(calcNewDate(expense.getExpDate(), toP));
+		} else {
+			expense.setExpDate(targetDate);
+		}
 
 		final Expense newBean = dao.merge(expense);
 		dao.save(newBean);
@@ -107,10 +112,8 @@ public class ExpenseHandler {
 
 	}
 
-	public void copyExpenseRecord(final Expense exp, final Periode perF, final Periode perT, final boolean checkit) throws Exception {
-		validateInput(perF, perT, checkit);
-
-		copySingleRecord(new ExpenseDAO(), exp, perT);
+	public void copyExpenseRecord(final Expense exp, final Periode perF, final Periode perT, final boolean checkit, final Date targetDate) throws Exception {
+		copySingleRecord(new ExpenseDAO(), exp, perT, targetDate);
 	}
 
 }

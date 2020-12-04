@@ -27,6 +27,7 @@ import com.xdev.ui.XdevHorizontalSplitPanel;
 import com.xdev.ui.XdevImage;
 import com.xdev.ui.XdevLabel;
 import com.xdev.ui.XdevPanel;
+import com.xdev.ui.XdevPopupDateField;
 import com.xdev.ui.XdevTreeTable;
 import com.xdev.ui.XdevVerticalLayout;
 import com.xdev.ui.XdevView;
@@ -143,13 +144,13 @@ public class PeriodeDialogPopup extends XdevView {
 
 		//rebuild
 		this.treeGrid.addContainerProperty("", XdevCheckBox.class, true);
-		this.treeGrid.addContainerProperty("Datum", String.class, null);
-		this.treeGrid.addContainerProperty("Konto", String.class, null);
+		this.treeGrid.addContainerProperty("Datum", XdevPopupDateField.class, null);
+		this.treeGrid.addContainerProperty("Konto", XdevLabel.class, null);
 		this.treeGrid.addContainerProperty("Kst", XdevCheckBox.class, null);
-		this.treeGrid.addContainerProperty("Typ", String.class, null);
-		this.treeGrid.addContainerProperty("Betrag", String.class, null);
-		this.treeGrid.addContainerProperty("Projekt", String.class, null);
-		this.treeGrid.addContainerProperty("Text", String.class, null);
+		this.treeGrid.addContainerProperty("Typ", XdevLabel.class, null);
+		this.treeGrid.addContainerProperty("Betrag", XdevLabel.class, null);
+		this.treeGrid.addContainerProperty("Projekt", XdevLabel.class, null);
+		this.treeGrid.addContainerProperty("Text", XdevLabel.class, null);
 		this.treeGrid.addContainerProperty("Objekt", Expense.class, null);
 
 		int icount = 0;
@@ -173,20 +174,24 @@ public class PeriodeDialogPopup extends XdevView {
 
 		this.treeGrid.setVisibleColumns("", "Datum", "Konto", "Kst", "Typ", "Betrag", "Projekt", "Text");
 		this.treeGrid.setColumnAlignments(Align.LEFT,Align.LEFT,Align.LEFT,Align.LEFT,Align.LEFT,Align.RIGHT,Align.LEFT,Align.LEFT);
+		this.treeGrid.setEditable(true);
+		//this.treeGrid.setColumnCollapsingAllowed(false);
 	}
 
 	private Object[] getGridLine(final Expense expObj) {
 		final XdevCheckBox cbo = new XdevCheckBox();
 		cbo.setValue(true);
 
-		final String expDate = getDateFormat(expObj.getExpDate());
-		final String expAcc = expObj.getExpAccount();
-		final String proName = expObj.getProject().getProName();
-		final String amount = getAmtString(expObj.getExpAmount(), true);
+		final XdevPopupDateField expDate = new XdevPopupDateField();
+		expDate.setValue(expObj.getExpDate());
+		final XdevLabel expAcc = new XdevLabel(expObj.getExpAccount());
+		final XdevLabel proName = new XdevLabel(expObj.getProject().getProName());
+		final XdevLabel amount = new XdevLabel(getAmtString(expObj.getExpAmount(), true));
 		final XdevCheckBox kst = new XdevCheckBox();
 		kst.setValue(expObj.getExpFlagCostAccount().booleanValue());
-		final String type = expObj.getExpFlagGeneric().name();
-		final String text = expObj.getExpText();
+		kst.setEnabled(false);
+		final XdevLabel type = new XdevLabel(expObj.getExpFlagGeneric().name());
+		final XdevLabel text = new XdevLabel(expObj.getExpText());
 
 		final Object[] retval = new Object[] {cbo, expDate, expAcc, kst, type, amount, proName, text, expObj};
 		return retval;
@@ -275,13 +280,17 @@ public class PeriodeDialogPopup extends XdevView {
 		int icount = 0;
 
 		try {
+			hdl.validateInput(perF, perT, checkit);
 			for (final Object itemId: this.treeGrid.getContainerDataSource().getItemIds()) {
 				final Item item = this.treeGrid.getItem(itemId);
 				final XdevCheckBox cbo = (XdevCheckBox) item.getItemProperty("").getValue();
 
 				if (cbo.getValue().booleanValue()) {
 					final Expense exp = (Expense) item.getItemProperty("Objekt").getValue();
-					hdl.copyExpenseRecord(exp, perF, perT, checkit);
+					final XdevPopupDateField dfield = (XdevPopupDateField) item.getItemProperty("Datum").getValue();
+					final Date targetDate = dfield.getValue();
+
+					hdl.copyExpenseRecord(exp, perF, perT, checkit, targetDate);
 					icount++;
 				}
 	     	}
