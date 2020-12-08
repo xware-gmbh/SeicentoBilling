@@ -157,6 +157,11 @@
 		   <version>3.0.1</version>
 		</dependency>
 		
+		<dependency>
+			<groupId>com.microsoft.sqlserver</groupId>
+			<artifactId>mssql-jdbc</artifactId>
+			<version>7.2.0.jre8</version>
+		</dependency>
 	</dependencies>
 	<properties>
 		<project.build.sourceEncoding>
