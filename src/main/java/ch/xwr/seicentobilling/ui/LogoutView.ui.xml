@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<?xdevuiml version="1.0"?>
+<?template NONE?>
+<?import com.vaadin.flow.component.orderedlayout.VerticalLayout?>
+<VerticalLayout xmlns:x="http://xml.xdev-software.com/xdevuiml" x:name="LogoutView">
+    <x:constraints width="100%" zpos="0" height="100%" />
+</VerticalLayout>

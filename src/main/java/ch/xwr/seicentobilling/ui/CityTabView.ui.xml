@@ -77,6 +77,7 @@
                 <Button x:name="cmdImport">
                     <x:icon src="com.flowingcode.vaadin.addons.ironicons.FileIcons#EXCEL" />
                     <x:constraints width="0px" height="0px" flex-grow="0.0" />
+                    <x:event>click.onComponentEvent</x:event>
                 </Button>
             </HorizontalLayout>
             <Grid x:name="grid">

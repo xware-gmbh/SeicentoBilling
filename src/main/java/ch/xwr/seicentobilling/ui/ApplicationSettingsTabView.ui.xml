@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<?xdevuiml version="1.0"?>
+<?template NONE?>
+<?import com.vaadin.flow.component.formlayout.FormLayout?>
+<?import com.vaadin.flow.component.formlayout.FormLayout.FormItem?>
+<?import com.vaadin.flow.component.html.Label?>
+<?import com.vaadin.flow.component.orderedlayout.HorizontalLayout?>
+<?import com.vaadin.flow.component.orderedlayout.VerticalLayout?>
+<?import com.vaadin.flow.component.tabs.Tab?>
+<?import com.vaadin.flow.component.tabs.Tabs?>
+<VerticalLayout xmlns:x="http://xml.xdev-software.com/xdevuiml" spacing="false" x:name="ApplicationSettingsTabView" padding="false">
+    <x:constraints zpos="0" width="100%" height="100%" />
+    <Tabs x:name="tabs">
+        <x:constraints width="100%" height="-1px" flex-grow="0.0" />
+        <Tab x:name="tab2" label="User Claims" />
+        <Tab x:name="tab" label="Benutzer" />
+    </Tabs>
+    <VerticalLayout spacing="false" x:name="gridLayoutApp" padding="false">
+        <x:constraints width="100%" height="100%" flex-grow="0.0" />
+        <x:event>attach.onComponentEvent</x:event>
+        <HorizontalLayout x:name="horizontalLayout">
+            <x:constraints width="100%" height="40px" flex-grow="0.0" />
+            <Label x:name="versionTitleLabel" text="Version">
+                <x:constraints width="0px" height="0px" flex-grow="0.0" />
+            </Label>
+            <Label x:name="labelVersion" text="0.6">
+                <x:constraints width="0px" height="0px" flex-grow="0.0" />
+            </Label>
+            <Label x:name="labelArtifact" text="0.6">
+                <x:constraints width="0px" height="0px" flex-grow="0.0" />
+            </Label>
+        </HorizontalLayout>
+        <FormLayout x:name="formLayout">
+            <x:responsiveSteps>
+                <entry minWidth="0px" columns="1" labelsPosition="TOP" />
+                <entry minWidth="500px" columns="1" labelsPosition="TOP" />
+                <entry minWidth="1000px" columns="1" labelsPosition="ASIDE" />
+            </x:responsiveSteps>
+            <x:constraints width="100%" height="50%" flex-grow="0.0" />
+            <FormItem x:name="formItem3">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="label98" text="Username">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <Label x:name="labelUsername" text="unknown">
+                    <x:constraints width="0px" height="0px" />
+                </Label>
+            </FormItem>
+            <FormItem x:name="formItem4">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="label97" text="Language">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <Label x:name="labelLanguage" text="German">
+                    <x:constraints width="0px" height="0px" />
+                </Label>
+            </FormItem>
+            <FormItem x:name="formItem7">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="label96" text="Country">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <Label x:name="labelCountry" text="CH">
+                    <x:constraints width="0px" height="0px" />
+                </Label>
+            </FormItem>
+            <FormItem x:name="formItem8">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="label94" text="Time Zone">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <Label x:name="labelTimeZone" text="unknown">
+                    <x:constraints width="0px" height="0px" />
+                </Label>
+            </FormItem>
+            <FormItem x:name="formItem9">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="label93" text="Memory used MB">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <Label x:name="lblMemory" text="Version">
+                    <x:constraints width="0px" height="0px" />
+                </Label>
+            </FormItem>
+            <FormItem x:name="formItem10">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="label92" text="Session">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <Label x:name="lblSession" text="Version">
+                    <x:constraints width="0px" height="0px" />
+                </Label>
+            </FormItem>
+            <FormItem x:name="formItem11">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="label91" text="Java">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <Label x:name="lblJava" text="Java">
+                    <x:constraints width="0px" height="0px" />
+                </Label>
+            </FormItem>
+            <FormItem x:name="formItem12">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="label9" text="Operating System">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <Label x:name="LblOs" text="Windows">
+                    <x:constraints width="0px" height="0px" />
+                </Label>
+            </FormItem>
+        </FormLayout>
+    </VerticalLayout>
+    <VerticalLayout x:name="gridLayoutUsr">
+        <x:constraints width="100%" height="70%" flex-grow="0.0" />
+    </VerticalLayout>
+</VerticalLayout>

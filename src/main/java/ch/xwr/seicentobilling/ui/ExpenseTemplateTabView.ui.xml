@@ -2,8 +2,8 @@
 <!DOCTYPE xml>
 <?xdevuiml version="1.0"?>
 <?template NONE?>
-<?import ch.xwr.seicentobilling.business.LovState$ExpType?>
-<?import ch.xwr.seicentobilling.business.LovState$ExpUnit?>
+<?import ch.xwr.seicentobilling.business.LovState.ExpType?>
+<?import ch.xwr.seicentobilling.business.LovState.ExpUnit?>
 <?import ch.xwr.seicentobilling.business.LovState.State?>
 <?import ch.xwr.seicentobilling.entities.CostAccount?>
 <?import ch.xwr.seicentobilling.entities.ExpenseTemplate?>
@@ -205,7 +205,7 @@
                 </Label>
                 <ComboBox x:name="comboBoxGeneric">
                     <x:typeArguments>
-                        <typeArgument type="LovState$ExpType" />
+                        <typeArgument type="ExpType" />
                     </x:typeArguments>
                     <x:constraints width="-1px" height="0px" />
                 </ComboBox>
@@ -226,7 +226,7 @@
                 </Label>
                 <ComboBox tabIndex="12" x:name="comboBoxUnit">
                     <x:typeArguments>
-                        <typeArgument type="LovState$ExpUnit" />
+                        <typeArgument type="ExpUnit" />
                     </x:typeArguments>
                     <x:constraints width="0px" height="0px" />
                 </ComboBox>

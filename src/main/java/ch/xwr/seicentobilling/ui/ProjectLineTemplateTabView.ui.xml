@@ -103,7 +103,7 @@
                     <column property="project" header="Projekt" />
                     <column property="prtRate" header="Ansatz" sortable="true" />
                     <column property="prtState" header="Status" sortable="true" />
-                    <column property="costAccount" visible="false" />
+                    <column property="costAccount" header="Account" visible="false" />
                 </x:columns>
                 <x:event>itemClick.onComponentEvent</x:event>
             </Grid>

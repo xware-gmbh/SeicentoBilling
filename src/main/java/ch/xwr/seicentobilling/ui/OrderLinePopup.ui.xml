@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<?xdevuiml version="1.0"?>
+<?template NONE?>
+<?import ch.xwr.seicentobilling.business.LovState$State?>
+<?import ch.xwr.seicentobilling.entities.CostAccount?>
+<?import ch.xwr.seicentobilling.entities.Item?>
+<?import ch.xwr.seicentobilling.entities.Order?>
+<?import ch.xwr.seicentobilling.entities.OrderLine?>
+<?import ch.xwr.seicentobilling.entities.Vat?>
+<?import com.vaadin.flow.component.button.Button?>
+<?import com.vaadin.flow.component.combobox.ComboBox?>
+<?import com.vaadin.flow.component.formlayout.FormLayout?>
+<?import com.vaadin.flow.component.formlayout.FormLayout.FormItem?>
+<?import com.vaadin.flow.component.html.Label?>
+<?import com.vaadin.flow.component.icon.Icon?>
+<?import com.vaadin.flow.component.orderedlayout.HorizontalLayout?>
+<?import com.vaadin.flow.component.orderedlayout.VerticalLayout?>
+<?import com.vaadin.flow.component.textfield.TextField?>
+<?import com.vaadin.flow.data.binder.BeanValidationBinder?>
+<VerticalLayout xmlns:x="http://xml.xdev-software.com/xdevuiml" x:name="OrderLinePopup">
+    <x:constraints zpos="0" width="100%" height="100%" />
+    <BeanValidationBinder x:name="binder">
+        <x:typeArguments>
+            <typeArgument type="OrderLine" />
+        </x:typeArguments>
+        <x:bindings>
+            <binding field="cmbOrder" property="orderhdr" required="false" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="txtOdlNumber" property="odlNumber" required="false" nullRepresentation="" readOnly="false">
+                <validator type="Bean" />
+                <converter TYPE="StringToInteger">
+                    <numberFormat format="Integer" currency="default" locale="default" />
+                </converter>
+            </binding>
+            <binding field="cmbItem" property="item" required="false" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="cmbVat" property="vat" required="false" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="txtOdlQuantity" property="odlQuantity" required="false" nullRepresentation="" readOnly="false">
+                <validator type="Bean" />
+                <converter TYPE="StringToDouble">
+                    <numberFormat format="Decimal" currency="default" locale="default" />
+                </converter>
+            </binding>
+            <binding field="txtOdlPrice" property="odlPrice" required="false" nullRepresentation="" readOnly="false">
+                <validator type="Bean" />
+                <converter TYPE="StringToDouble">
+                    <numberFormat format="Decimal" currency="default" locale="default" />
+                </converter>
+            </binding>
+            <binding field="txtOdlText" property="odlText" required="false" nullRepresentation="" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="cmbCostAccount" property="costAccount" required="false" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="txtOdlAmountBrut" property="odlAmountBrut" required="false" nullRepresentation="" readOnly="false">
+                <validator type="Bean" />
+                <converter TYPE="StringToDouble">
+                    <numberFormat format="Currency" pattern="" currency="CHF" locale="de-CH" />
+                </converter>
+            </binding>
+            <binding field="txtOdlVatAmount" property="odlVatAmount" required="false" nullRepresentation="" readOnly="false">
+                <validator type="Bean" />
+                <converter TYPE="StringToDouble">
+                    <numberFormat format="Currency" pattern="" currency="CHF" locale="de-CH" />
+                </converter>
+            </binding>
+            <binding field="txtOdlAmountNet" property="odlAmountNet" required="false" nullRepresentation="" readOnly="false">
+                <validator type="Bean" />
+                <converter TYPE="StringToDouble">
+                    <numberFormat format="Currency" pattern="" currency="CHF" locale="de-CH" />
+                </converter>
+            </binding>
+            <binding field="comboBoxState" property="odlState" required="false" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+        </x:bindings>
+    </BeanValidationBinder>
+    <VerticalLayout x:name="verticalLayout">
+        <x:constraints width="100%" height="100%" flex-grow="0.0" />
+        <HorizontalLayout x:name="horizontalLayout">
+            <x:constraints width="100%" height="30px" flex-grow="0.0" />
+            <Icon x:icon="com.vaadin.flow.component.icon.VaadinIcon#CLOCK" x:name="icon">
+                <x:constraints width="0px" alignment="CENTER" height="0px" flex-grow="0.0" />
+            </Icon>
+            <Label x:name="label" text="OrderLine bearbeiten">
+                <x:constraints width="0px" alignment="CENTER" height="0px" flex-grow="0.0" />
+            </Label>
+        </HorizontalLayout>
+        <FormLayout x:name="formLayout">
+            <x:responsiveSteps>
+                <entry minWidth="0px" columns="1" labelsPosition="TOP" />
+                <entry minWidth="500px" columns="2" labelsPosition="TOP" />
+                <entry minWidth="1000px" columns="3" labelsPosition="ASIDE" />
+            </x:responsiveSteps>
+            <x:constraints width="100%" height="100%" flex-grow="0.0" />
+            <FormItem x:name="formItem2">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblOrder" text="{$lblOrder.value}">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <ComboBox x:name="cmbOrder">
+                    <x:typeArguments>
+                        <typeArgument type="Order" />
+                    </x:typeArguments>
+                    <x:constraints width="100%" height="0px" />
+                    <x:dataProvider dataFetchMethod="findAll" />
+                    <x:itemLabel type="Mixed" data="{%ordNumber}" />
+                </ComboBox>
+            </FormItem>
+            <FormItem x:name="formItem">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblOdlNumber" text="{$lblOdlNumber.value}">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <TextField x:name="txtOdlNumber">
+                    <x:constraints width="100%" height="0px" />
+                </TextField>
+            </FormItem>
+            <FormItem x:name="formItem4">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblItem" text="{$lblItem.value}">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <ComboBox x:name="cmbItem">
+                    <x:typeArguments>
+                        <typeArgument type="Item" />
+                    </x:typeArguments>
+                    <x:constraints width="100%" height="0px" />
+                    <x:dataProvider dataFetchMethod="findAll" />
+                    <x:itemLabel type="Property" data="prpShortName" />
+                    <x:event>valueChange.valueChanged</x:event>
+                </ComboBox>
+            </FormItem>
+            <FormItem x:name="formItem8">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblVat" text="{$lblVat.value}">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <ComboBox x:name="cmbVat">
+                    <x:typeArguments>
+                        <typeArgument type="Vat" />
+                    </x:typeArguments>
+                    <x:constraints width="100%" height="0px" />
+                    <x:dataProvider dataFetchMethod="findAllActive" />
+                    <x:itemLabel type="Property" data="fullName" />
+                    <x:event>valueChange.valueChanged</x:event>
+                </ComboBox>
+            </FormItem>
+            <FormItem x:name="formItem3">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblOdlQuantity" text="{$lblOdlQuantity.value}">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <TextField x:name="txtOdlQuantity">
+                    <x:constraints width="100%" height="0px" />
+                    <x:event>valueChange.valueChanged</x:event>
+                </TextField>
+            </FormItem>
+            <FormItem x:name="formItem6">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblOdlPrice" text="{$lblOdlPrice.value}">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <TextField x:name="txtOdlPrice">
+                    <x:constraints width="100%" height="0px" />
+                    <x:event>valueChange.valueChanged</x:event>
+                </TextField>
+            </FormItem>
+            <FormItem x:name="formItem7">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblOdlText" text="{$lblOdlText.value}">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <TextField x:name="txtOdlText">
+                    <x:constraints width="100%" height="0px" />
+                </TextField>
+            </FormItem>
+            <FormItem x:name="formItem9">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblCostAccount" text="{$lblCostAccount.value}">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <ComboBox x:name="cmbCostAccount">
+                    <x:typeArguments>
+                        <typeArgument type="CostAccount" />
+                    </x:typeArguments>
+                    <x:constraints width="100%" height="0px" />
+                    <x:dataProvider dataFetchMethod="findAll" />
+                    <x:itemLabel type="Property" data="csaName" />
+                </ComboBox>
+            </FormItem>
+            <FormItem x:name="formItem11">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblOdlAmountBrut" text="{$lblOdlAmountBrut.value}">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <TextField x:name="txtOdlAmountBrut">
+                    <x:constraints width="100%" height="0px" />
+                </TextField>
+            </FormItem>
+            <FormItem x:name="formItem10">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblOdlVatAmount" text="{$lblOdlVatAmount.value}">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <TextField x:name="txtOdlVatAmount">
+                    <x:constraints width="100%" height="0px" />
+                </TextField>
+            </FormItem>
+            <FormItem x:name="formItem12">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblOdlAmountNet" text="lblOdlAmountNet">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <TextField x:name="txtOdlAmountNet">
+                    <x:constraints width="100%" height="0px" />
+                </TextField>
+            </FormItem>
+            <FormItem x:name="formItem5">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblOdlState" text="{$lblOdlState.value}">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <ComboBox x:name="comboBoxState">
+                    <x:typeArguments>
+                        <typeArgument type="LovState$State" />
+                    </x:typeArguments>
+                    <x:constraints width="100%" height="0px" />
+                </ComboBox>
+            </FormItem>
+        </FormLayout>
+        <HorizontalLayout x:name="horizontalLayout2">
+            <x:constraints width="100%" height="12%" flex-grow="0.0" />
+            <Button x:name="cmdSave" text="{$cmdSave.caption}">
+                <x:icon src="com.flowingcode.vaadin.addons.ironicons.IronIcons#SAVE" />
+                <x:constraints width="0px" height="0px" flex-grow="0.0" />
+                <x:event>click.onComponentEvent</x:event>
+            </Button>
+            <Button x:name="cmdCancel" text="{$cmdReset.caption}">
+                <x:icon src="com.flowingcode.vaadin.addons.ironicons.IronIcons#CANCEL" />
+                <x:constraints width="0px" height="0px" flex-grow="0.0" />
+                <x:event>click.onComponentEvent</x:event>
+            </Button>
+        </HorizontalLayout>
+    </VerticalLayout>
+</VerticalLayout>

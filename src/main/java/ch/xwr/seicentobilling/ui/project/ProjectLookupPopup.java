@@ -1,10 +1,13 @@
 
-package ch.xwr.seicentobilling.ui;
+package ch.xwr.seicentobilling.ui.project;
 
 import java.util.Arrays;
 
 import com.rapidclipse.framework.server.data.renderer.CaptionRenderer;
 import com.rapidclipse.framework.server.ui.filter.FilterComponent;
+import com.rapidclipse.framework.server.ui.filter.FilterData;
+import com.rapidclipse.framework.server.ui.filter.FilterEntry;
+import com.rapidclipse.framework.server.ui.filter.FilterOperator;
 import com.rapidclipse.framework.server.ui.filter.GridFilterSubjectFactory;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.ComponentEvent;
@@ -23,7 +26,9 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.data.provider.Query;
 
+import ch.xwr.seicentobilling.business.Seicento;
 import ch.xwr.seicentobilling.dal.ProjectDAO;
+import ch.xwr.seicentobilling.entities.CostAccount;
 import ch.xwr.seicentobilling.entities.Project;
 
 
@@ -52,19 +57,11 @@ public class ProjectLookupPopup extends VerticalLayout
 	
 	private void setDefaultFilter()
 	{
-		// CostAccount bean = Seicento.getLoggedInCostAccount();
-		// if(bean == null)
-		// {
-		// bean = new CostAccountDAO().findAll().get(0); // Dev Mode
-		// }
-		//
-		// // final LovState.State[] valState = new LovState.State[] { LovState.State.active };
-		// final CostAccount[] val2 = new CostAccount[]{bean};
-		// final FilterData[] fd = new FilterData[]{};
-		//
-		// final FilterEntry fe = new FilterEntry("costAccount", new FilterOperator.Is().key(), new Object[]{val2});
-		// this.containerFilterComponent.setValue(new FilterData("costAccount", new FilterEntry[]{fe}));
-
+		final CostAccount bean = Seicento.getLoggedInCostAccount();
+		
+		final FilterEntry ce =
+			new FilterEntry("costAccount", new FilterOperator.Is().key(), new CostAccount[]{bean});
+		this.containerFilterComponent.setValue(new FilterData("", new FilterEntry[]{ce}));
 	}
 
 	public static Dialog getPopupWindow()

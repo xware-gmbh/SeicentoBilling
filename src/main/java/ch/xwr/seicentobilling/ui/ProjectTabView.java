@@ -25,6 +25,9 @@ import com.rapidclipse.framework.server.resources.StringResourceUtils;
 import com.rapidclipse.framework.server.ui.ItemLabelGeneratorFactory;
 import com.rapidclipse.framework.server.ui.StartsWithIgnoreCaseItemFilter;
 import com.rapidclipse.framework.server.ui.filter.FilterComponent;
+import com.rapidclipse.framework.server.ui.filter.FilterData;
+import com.rapidclipse.framework.server.ui.filter.FilterEntry;
+import com.rapidclipse.framework.server.ui.filter.FilterOperator;
 import com.rapidclipse.framework.server.ui.filter.GridFilterSubjectFactory;
 import com.vaadin.flow.component.AbstractField.ComponentValueChangeEvent;
 import com.vaadin.flow.component.ClickEvent;
@@ -43,6 +46,7 @@ import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.formlayout.FormLayout.FormItem;
 import com.vaadin.flow.component.grid.ColumnTextAlign;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.GridSortOrder;
 import com.vaadin.flow.component.grid.ItemClickEvent;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
@@ -59,6 +63,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.BinderValidationStatus;
 import com.vaadin.flow.data.provider.DataProvider;
+import com.vaadin.flow.data.provider.SortDirection;
 import com.vaadin.flow.router.Route;
 
 import ch.xwr.seicentobilling.business.ConfirmDialog;
@@ -85,6 +90,7 @@ import ch.xwr.seicentobilling.entities.Customer;
 import ch.xwr.seicentobilling.entities.Order;
 import ch.xwr.seicentobilling.entities.Project;
 import ch.xwr.seicentobilling.entities.Vat;
+import ch.xwr.seicentobilling.ui.crm.CustomerLookupPopup;
 
 
 @Route("project")
@@ -107,6 +113,8 @@ public class ProjectTabView extends VerticalLayout
 		this.cbxState.setItems(LovState.State.values());
 		this.cbxProModel.setItems(LovState.ProModel.values());
 		this.cbxProState.setItems(LovState.ProState.values());
+		
+		this.sortList();
 
 		this.verticalSplitPanel.setVisible(false);
 		this.gridLayoutDesc.setVisible(false);
@@ -152,6 +160,16 @@ public class ProjectTabView extends VerticalLayout
 			}
 		}
 	}
+
+	private void sortList()
+	{
+		final GridSortOrder<Project> sortCol1 =
+			new GridSortOrder<>(this.grid.getColumnByKey("proStartDate"), SortDirection.DESCENDING);
+		final GridSortOrder<Project> sortCol2 =
+			new GridSortOrder<>(this.grid.getColumnByKey("proEndDate"), SortDirection.DESCENDING);
+		this.grid.sort(Arrays.asList(sortCol1, sortCol2));
+
+	}
 	
 	private void setROFields()
 	{
@@ -185,13 +203,11 @@ public class ProjectTabView extends VerticalLayout
 			bean = new CostAccountDAO().findAll().get(0); // Dev Mode
 		}
 
-		final LovState.State[] valState = new LovState.State[]{LovState.State.active};
-		// final CostAccount[] val2 = new CostAccount[] { bean };
-		// final FilterData[] fd = new FilterData[] { new FilterData("costAccount", new FilterOperator.Is(), val2),
-		// new FilterData("proState", new FilterOperator.Is(), valState) };
-		//
-		// this.containerFilterComponent.setFilterData(fd);
-
+		final FilterEntry pe =
+			new FilterEntry("proState", new FilterOperator.Is().key(), new LovState.State[]{LovState.State.active});
+		final FilterEntry ce =
+			new FilterEntry("costAccount", new FilterOperator.Is().key(), new CostAccount[]{bean});
+		this.containerFilterComponent.setValue(new FilterData("", new FilterEntry[]{ce, pe}));
 	}
 
 	/**
@@ -349,12 +365,17 @@ public class ProjectTabView extends VerticalLayout
 	 */
 	private void cmdReload_onClick(final ClickEvent<Button> event)
 	{
+		final FilterData fd = this.containerFilterComponent.getValue();
+		this.containerFilterComponent.setValue(null);
+
 		this.grid.setDataProvider(DataProvider.ofCollection(new ProjectDAO().findAll()));
+
+		this.sortList();
+		
+		this.containerFilterComponent.setValue(fd);
 		final Project bean = this.binder.getBean();
 		if(bean != null)
 		{
-			// final boolean exi = this.table.containsId(bean);
-			// final com.vaadin.data.Item x = this.table.getItem(bean);
 			this.grid.getSelectionModel().select(bean);
 		}
 	}

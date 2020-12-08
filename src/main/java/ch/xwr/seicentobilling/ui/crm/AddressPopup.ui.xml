@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<?xdevuiml version="1.0"?>
+<?template NONE?>
+<?import ch.xwr.seicentobilling.business.LovCrm.AddressType?>
+<?import ch.xwr.seicentobilling.business.LovCrm.Salutation?>
+<?import ch.xwr.seicentobilling.business.LovState.State?>
+<?import ch.xwr.seicentobilling.entities.Address?>
+<?import com.vaadin.flow.component.button.Button?>
+<?import com.vaadin.flow.component.combobox.ComboBox?>
+<?import com.vaadin.flow.component.datepicker.DatePicker?>
+<?import com.vaadin.flow.component.formlayout.FormLayout?>
+<?import com.vaadin.flow.component.formlayout.FormLayout.FormItem?>
+<?import com.vaadin.flow.component.html.Label?>
+<?import com.vaadin.flow.component.orderedlayout.HorizontalLayout?>
+<?import com.vaadin.flow.component.orderedlayout.VerticalLayout?>
+<?import com.vaadin.flow.component.textfield.TextField?>
+<?import com.vaadin.flow.data.binder.BeanValidationBinder?>
+<VerticalLayout xmlns:x="http://xml.xdev-software.com/xdevuiml" x:name="AddressPopup">
+    <x:constraints zpos="0" width="100%" height="100%" />
+    <BeanValidationBinder x:name="binder">
+        <x:typeArguments>
+            <typeArgument type="Address" />
+        </x:typeArguments>
+        <x:bindings>
+            <binding field="dateAdrValidFrom" property="adrValidFrom" required="false" readOnly="false">
+                <validator type="Bean" />
+                <converter zone="default" TYPE="LocalDateToUtilDate" />
+            </binding>
+            <binding field="txtAdrIndex" property="adrIndex" required="false" nullRepresentation="" readOnly="false">
+                <validator type="Bean" />
+                <converter TYPE="StringToShort">
+                    <numberFormat format="Integer" currency="default" locale="default" />
+                </converter>
+            </binding>
+            <binding field="comboBoxType" property="adrType" required="false" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="comboBoxSalutation" property="adrSalutation" required="false" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="txtAdrName" property="adrName" required="false" nullRepresentation="" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="txtAdrAddOn" property="adrAddOn" required="false" nullRepresentation="" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="txtAdrLine" property="adrLine0" required="false" nullRepresentation="" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="txtAdrLine1" property="adrLine1" required="false" nullRepresentation="" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="txtAdrZip" property="adrZip" required="false" nullRepresentation="" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="txtAdrCity" property="adrCity" required="false" nullRepresentation="" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="txtAdrCountry" property="adrCountry" required="false" nullRepresentation="" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="txtAdrRegion" property="adrRegion" required="false" nullRepresentation="" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="txtAdrRemark" property="adrRemark" required="false" nullRepresentation="" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="comboBoxState" property="adrState" required="false" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+        </x:bindings>
+    </BeanValidationBinder>
+    <VerticalLayout x:name="verticalLayout">
+        <x:constraints width="100%" height="100%" flex-grow="0.0" />
+        <HorizontalLayout x:name="horizontalLayout">
+            <x:constraints width="100%" height="30px" flex-grow="0.0" />
+            <Label x:name="label" text="Adressen">
+                <x:constraints width="0px" alignment="CENTER" height="0px" flex-grow="0.0" />
+            </Label>
+        </HorizontalLayout>
+        <FormLayout x:name="formLayout">
+            <x:responsiveSteps>
+                <entry minWidth="0px" columns="1" labelsPosition="TOP" />
+                <entry minWidth="500px" columns="2" labelsPosition="TOP" />
+                <entry minWidth="1000px" columns="3" labelsPosition="ASIDE" />
+            </x:responsiveSteps>
+            <x:constraints width="100%" height="100%" flex-grow="0.0" />
+            <FormItem x:name="formItem">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblAdrValidFrom" text="Gültig ab">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <DatePicker x:name="dateAdrValidFrom">
+                    <x:constraints width="100%" height="0px" />
+                </DatePicker>
+            </FormItem>
+            <FormItem x:name="formItem5">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblAdrIndex" text="Index">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <TextField x:name="txtAdrIndex">
+                    <x:constraints width="100%" height="0px" />
+                </TextField>
+            </FormItem>
+            <FormItem x:name="formItem2">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblAdrType" text="Type">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <ComboBox x:name="comboBoxType">
+                    <x:typeArguments>
+                        <typeArgument type="AddressType" />
+                    </x:typeArguments>
+                    <x:constraints width="100%" height="0px" />
+                </ComboBox>
+            </FormItem>
+            <FormItem x:name="formItem3">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblAdrSalutation" text="Anrede">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <ComboBox x:name="comboBoxSalutation">
+                    <x:typeArguments>
+                        <typeArgument type="Salutation" />
+                    </x:typeArguments>
+                    <x:constraints width="100%" height="0px" />
+                </ComboBox>
+            </FormItem>
+            <FormItem x:name="formItem4">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblName" text="Name">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <TextField x:name="txtAdrName">
+                    <x:constraints width="100%" height="0px" />
+                </TextField>
+            </FormItem>
+            <FormItem x:name="formItem6">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblAddOn" text="Zusatz">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <TextField x:name="txtAdrAddOn">
+                    <x:constraints width="100%" height="0px" />
+                </TextField>
+            </FormItem>
+            <FormItem x:name="formItem7">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblAdrLine" text="Address 1">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <TextField x:name="txtAdrLine">
+                    <x:constraints width="100%" height="0px" />
+                </TextField>
+            </FormItem>
+            <FormItem x:name="formItem8">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblAdrLine1" text="Address 2">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <TextField x:name="txtAdrLine1">
+                    <x:constraints width="100%" height="0px" />
+                </TextField>
+            </FormItem>
+            <FormItem x:name="formItem9">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblAdrZip" text="Plz">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <TextField x:name="txtAdrZip">
+                    <x:constraints width="100%" height="0px" />
+                    <x:event>valueChange.valueChanged</x:event>
+                </TextField>
+            </FormItem>
+            <FormItem x:name="formItem10">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblAdrCity" text="City">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <TextField x:name="txtAdrCity">
+                    <x:constraints width="100%" height="0px" />
+                </TextField>
+            </FormItem>
+            <FormItem x:name="formItem11">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblAdrCountry" text="Land">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <TextField x:name="txtAdrCountry">
+                    <x:constraints width="100%" height="0px" />
+                </TextField>
+            </FormItem>
+            <FormItem x:name="formItem12">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblAdrRegion" text="Region">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <TextField x:name="txtAdrRegion">
+                    <x:constraints width="100%" height="0px" />
+                </TextField>
+            </FormItem>
+            <FormItem x:name="formItem13">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblAdrRemark" text="Bemerkung">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <TextField x:name="txtAdrRemark">
+                    <x:constraints width="100%" height="0px" />
+                </TextField>
+            </FormItem>
+            <FormItem x:name="formItem14">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblAdrState" text="State">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <ComboBox x:name="comboBoxState">
+                    <x:typeArguments>
+                        <typeArgument type="State" />
+                    </x:typeArguments>
+                    <x:constraints width="100%" height="0px" />
+                </ComboBox>
+            </FormItem>
+        </FormLayout>
+        <HorizontalLayout x:name="horizontalLayout2">
+            <x:constraints width="100%" height="12%" flex-grow="0.0" />
+            <Button x:name="cmdSave" text="Speichern">
+                <x:icon src="com.flowingcode.vaadin.addons.ironicons.IronIcons#SAVE" />
+                <x:constraints width="0px" height="0px" flex-grow="0.0" />
+                <x:event>click.onComponentEvent</x:event>
+            </Button>
+            <Button x:name="cmdReset" text="Abbrechen">
+                <x:icon src="com.flowingcode.vaadin.addons.ironicons.IronIcons#CANCEL" />
+                <x:constraints width="0px" height="0px" flex-grow="0.0" />
+                <x:event>click.onComponentEvent</x:event>
+            </Button>
+        </HorizontalLayout>
+    </VerticalLayout>
+</VerticalLayout>

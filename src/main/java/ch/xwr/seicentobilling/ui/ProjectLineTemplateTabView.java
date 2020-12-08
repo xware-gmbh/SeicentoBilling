@@ -1,9 +1,7 @@
 
 package ch.xwr.seicentobilling.ui;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import javax.persistence.PersistenceException;
 
@@ -18,6 +16,8 @@ import com.rapidclipse.framework.server.ui.ItemLabelGeneratorFactory;
 import com.rapidclipse.framework.server.ui.StartsWithIgnoreCaseItemFilter;
 import com.rapidclipse.framework.server.ui.filter.FilterComponent;
 import com.rapidclipse.framework.server.ui.filter.FilterData;
+import com.rapidclipse.framework.server.ui.filter.FilterEntry;
+import com.rapidclipse.framework.server.ui.filter.FilterOperator;
 import com.rapidclipse.framework.server.ui.filter.GridFilterSubjectFactory;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.ComponentEvent;
@@ -74,16 +74,7 @@ public class ProjectLineTemplateTabView extends VerticalLayout
 		this.comboBoxState.setItems(LovState.State.values());
 		this.comboBoxWorkType.setItems(LovState.WorkType.values());
 
-		// sort Table
-		// final List<GridSortOrder<ProjectLineTemplate>> sort =
-		// new ArrayList<>();
-		// final GridSortOrder<ProjectLineTemplate> gs =
-		// new GridSortOrder<>(this.grid.getColumnByKey("prtKeyNumber"), SortDirection.ASCENDING);
-		// sort.add(gs);
-		// final GridSortOrder<ProjectLineTemplate> gs2 =
-		// new GridSortOrder<>(this.grid.getColumnByKey("prtWorkType"), SortDirection.DESCENDING);
-		// sort.add(gs2);
-		// this.grid.sort(sort);
+		this.sortList();
 		
 		this.setROFields();
 		this.setDefaultFilter();
@@ -103,14 +94,13 @@ public class ProjectLineTemplateTabView extends VerticalLayout
 
 	private void setDefaultFilter()
 	{
-		// final CostAccount bean = Seicento.getLoggedInCostAccount();
-		// final FilterEntry fe =
-		// new FilterEntry("prtState", new FilterOperator.Is().key(), new Object[]{LovState.State.active});
-		// final CostAccount[] val2 = new CostAccount[]{bean};
-		// final FilterEntry fe2 =
-		// new FilterEntry("costAccount", new FilterOperator.Is().key(), val2);
-		//
-		// this.containerFilterComponent.setValue(new FilterData("", new FilterEntry[]{fe, fe2}));
+		final CostAccount bean = Seicento.getLoggedInCostAccount();
+
+		final FilterEntry pe =
+			new FilterEntry("prtState", new FilterOperator.Is().key(), new LovState.State[]{LovState.State.active});
+		final FilterEntry ce =
+			new FilterEntry("costAccount", new FilterOperator.Is().key(), new CostAccount[]{bean});
+		this.containerFilterComponent.setValue(new FilterData("", new FilterEntry[]{ce, pe}));
 
 	}
 	
@@ -170,19 +160,20 @@ public class ProjectLineTemplateTabView extends VerticalLayout
 		this.grid.setDataProvider(DataProvider.ofCollection(new ProjectLineTemplateDAO().findAll()));
 		this.grid.getDataProvider().refreshAll();
 		
-		final List<GridSortOrder<ProjectLineTemplate>> sort =
-			new ArrayList<>();
-		final GridSortOrder<ProjectLineTemplate>       gs   =
-			new GridSortOrder<>(this.grid.getColumnByKey("prtKeyNumber"), SortDirection.ASCENDING);
-		sort.add(gs);
-		final GridSortOrder<ProjectLineTemplate> gs2 =
-			new GridSortOrder<>(this.grid.getColumnByKey("prtWorkType"), SortDirection.DESCENDING);
-		sort.add(gs2);
-		this.grid.sort(sort);
+		this.sortList();
 		
 		// reassign filter
 		this.containerFilterComponent.setValue(fd);
 
+	}
+	
+	private void sortList()
+	{
+		final GridSortOrder<ProjectLineTemplate> prtKeyNumber =
+			new GridSortOrder<>(this.grid.getColumnByKey("prtKeyNumber"), SortDirection.ASCENDING);
+		final GridSortOrder<ProjectLineTemplate> prtWorkType  =
+			new GridSortOrder<>(this.grid.getColumnByKey("prtWorkType"), SortDirection.DESCENDING);
+		this.grid.sort(Arrays.asList(prtKeyNumber));
 	}
 	
 	/**
@@ -198,7 +189,6 @@ public class ProjectLineTemplateTabView extends VerticalLayout
 		{
 			try
 			{
-				this.cmdReload_onClick(null);
 				final RowObjectManager man = new RowObjectManager();
 				man.updateObject(this.binder.getBean().getPrtId(),
 					this.binder.getBean().getClass().getSimpleName());
@@ -345,7 +335,7 @@ public class ProjectLineTemplateTabView extends VerticalLayout
 		this.cmdSave                  = new Button();
 		this.cmdReset                 = new Button();
 		this.binder                   = new BeanValidationBinder<>(ProjectLineTemplate.class);
-
+		
 		this.horizontalLayout2.setMinHeight("");
 		this.horizontalLayout2.setMinWidth("100%");
 		this.cmdNew.setIcon(VaadinIcon.PLUS_CIRCLE.create());
@@ -363,8 +353,7 @@ public class ProjectLineTemplateTabView extends VerticalLayout
 			.setHeader("Status")
 			.setSortable(true);
 		this.grid.addColumn(new CaptionRenderer<>(ProjectLineTemplate::getCostAccount)).setKey("costAccount")
-			.setHeader(CaptionUtils.resolveCaption(ProjectLineTemplate.class, "costAccount")).setSortable(false)
-			.setVisible(false);
+			.setHeader("Account").setSortable(false).setVisible(false);
 		this.grid.setDataProvider(DataProvider.ofCollection(new ProjectLineTemplateDAO().findAll()));
 		this.grid.setSelectionMode(Grid.SelectionMode.SINGLE);
 		this.formLayout.getStyle().set("margin-left", "10px");
@@ -405,7 +394,7 @@ public class ProjectLineTemplateTabView extends VerticalLayout
 		this.cmdReset.setText("Abbrechen");
 		this.cmdReset.setIcon(IronIcons.UNDO.create());
 		this.binder.setValidatorsDisabled(true);
-
+		
 		this.binder.forField(this.cmbCostAccount).bind("costAccount");
 		this.binder.forField(this.txtPrtKeyNumber).withNullRepresentation("")
 			.withConverter(
@@ -421,12 +410,12 @@ public class ProjectLineTemplateTabView extends VerticalLayout
 			.bind("prtRate");
 		this.binder.forField(this.comboBoxWorkType).bind("prtWorkType");
 		this.binder.forField(this.comboBoxState).bind("prtState");
-
+		
 		this.containerFilterComponent.connectWith(this.grid.getDataProvider());
 		this.containerFilterComponent.setFilterSubject(GridFilterSubjectFactory.CreateFilterSubject(this.grid,
 			Arrays.asList("costAccount.csaCode", "costAccount.csaName", "prtText"),
 			Arrays.asList("costAccount", "project", "prtRate", "prtState", "prtWorkType")));
-
+		
 		this.cmdNew.setSizeUndefined();
 		this.cmdDelete.setSizeUndefined();
 		this.cmdReload.setSizeUndefined();
@@ -493,7 +482,7 @@ public class ProjectLineTemplateTabView extends VerticalLayout
 		this.add(this.splitLayout);
 		this.setFlexGrow(1.0, this.splitLayout);
 		this.setSizeFull();
-
+		
 		this.cmdNew.addClickListener(this::cmdNew_onClick);
 		this.cmdDelete.addClickListener(this::cmdDelete_onClick);
 		this.cmdReload.addClickListener(this::cmdReload_onClick);

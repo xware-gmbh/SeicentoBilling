@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<?xdevuiml version="1.0"?>
+<?template NONE?>
+<?import ??>
+<?import ch.xwr.seicentobilling.ui.crm.ImportContactsPopup$ImportType?>
+<?import com.vaadin.flow.component.button.Button?>
+<?import com.vaadin.flow.component.combobox.ComboBox?>
+<?import com.vaadin.flow.component.html.Label?>
+<?import com.vaadin.flow.component.icon.Icon?>
+<?import com.vaadin.flow.component.orderedlayout.HorizontalLayout?>
+<?import com.vaadin.flow.component.orderedlayout.VerticalLayout?>
+<?import com.vaadin.flow.component.splitlayout.SplitLayout?>
+<?import com.vaadin.flow.component.treegrid.TreeGrid?>
+<VerticalLayout xmlns:x="http://xml.xdev-software.com/xdevuiml" x:name="ImportContactsPopup">
+    <x:constraints zpos="0" width="100%" height="100%" />
+    <SplitLayout x:name="splitLayout" orientation="com.vaadin.flow.component.splitlayout.SplitLayout.Orientation.VERTICAL">
+        <x:constraints width="100%" height="100%" flex-grow="1.0" />
+        <VerticalLayout x:name="verticalLayout">
+            <x:constraints splitlayout-position="PRIMARY" width="100%" alignment="AUTO" height="70%" flex-grow="0.0" />
+            <HorizontalLayout x:name="horizontalLayout">
+                <x:constraints width="100%" height="30px" flex-grow="0.0" />
+                <Icon x:icon="com.vaadin.flow.component.icon.VaadinIcon#FILE_TABLE" x:name="icon">
+                    <x:constraints width="0px" alignment="CENTER" height="0px" flex-grow="0.0" />
+                </Icon>
+                <Label x:name="titlelabel" text="Import Datei">
+                    <x:constraints width="0px" alignment="CENTER" height="0px" flex-grow="0.0" />
+                </Label>
+            </HorizontalLayout>
+            <VerticalLayout x:name="verticalLayout2" padding="false">
+                <x:constraints width="100%" height="-1px" flex-grow="0.0" />
+                <HorizontalLayout x:name="horizontalLayout6">
+                    <x:constraints width="100%" height="60px" flex-grow="0.0" />
+                    <ComboBox x:name="comboBoxType">
+                        <x:typeArguments>
+                            <typeArgument type="ImportContactsPopup$ImportType" />
+                        </x:typeArguments>
+                        <x:constraints width="0px" height="44px" flex-grow="0.0" />
+                    </ComboBox>
+                    <HorizontalLayout x:name="horizontalLayout7">
+                        <x:constraints width="500px" height="40px" flex-grow="0.0" />
+                    </HorizontalLayout>
+                    <Label x:name="labelType" text="Label">
+                        <x:constraints width="270px" alignment="CENTER" height="40px" flex-grow="1.0" />
+                    </Label>
+                </HorizontalLayout>
+                <HorizontalLayout x:name="buttonHorizontalLayout">
+                    <x:constraints width="100%" height="60px" flex-grow="0.0" />
+                    <Button x:name="cmdStartImport" text="Importieren">
+                        <x:icon src="com.vaadin.flow.component.icon.VaadinIcon#ROCKET" />
+                        <x:constraints width="25%" alignment="CENTER" height="0px" flex-grow="0.0" />
+                    </Button>
+                    <Label x:name="labelFileName" text="Label">
+                        <x:constraints width="100px" height="40px" flex-grow="0.0" />
+                    </Label>
+                    <HorizontalLayout x:name="horizontalLayout4">
+                        <x:constraints width="500px" height="20px" flex-grow="0.0" />
+                    </HorizontalLayout>
+                    <Label x:name="labelSize" text="Label">
+                        <x:constraints width="300px" height="40px" flex-grow="0.0" />
+                    </Label>
+                </HorizontalLayout>
+            </VerticalLayout>
+            <HorizontalLayout x:name="horizontalLayout2">
+                <x:constraints width="100%" height="60px" flex-grow="0.0" />
+                <Button x:name="cmdSelect" text="Select/Unselect">
+                    <x:icon src="com.flowingcode.vaadin.addons.ironicons.IronIcons#CHECK_BOX" />
+                    <x:constraints width="30%" alignment="CENTER" height="0px" flex-grow="0.0" />
+                </Button>
+                <Button x:name="cmdSave" text="Speichern">
+                    <x:icon src="com.flowingcode.vaadin.addons.ironicons.IronIcons#SAVE" />
+                    <x:constraints width="25%" alignment="CENTER" height="0px" flex-grow="0.0" />
+                    <x:event>click.onComponentEvent</x:event>
+                </Button>
+                <Button x:name="cmdReset" text="Schliessen">
+                    <x:icon src="com.vaadin.flow.component.icon.VaadinIcon#CLOSE_SMALL" />
+                    <x:constraints width="25%" alignment="CENTER" height="0px" flex-grow="0.0" />
+                </Button>
+                <HorizontalLayout x:name="horizontalLayout3">
+                    <x:constraints width="91px" height="30px" flex-grow="0.0" />
+                </HorizontalLayout>
+                <Label x:name="labelResult" text="Label">
+                    <x:constraints width="280px" height="100%" flex-grow="0.0" />
+                </Label>
+            </HorizontalLayout>
+            <Label x:name="labelHeader" text="CAM1;CAM2;Nachname;Vorname;Firma;x;Adresse;PLZ;Ort;;TelefonG;Mobile;TelefonP;x;E-Mail;Webseite;x;Newsletter;X-Mas;Verwendung;Notizen">
+                <x:constraints width="100%" height="0px" flex-grow="0.0" />
+                <x:styles>
+                    <entry name="font-size" value="10px" />
+                </x:styles>
+            </Label>
+        </VerticalLayout>
+        <TreeGrid x:name="treeGrid">
+            <x:typeArguments>
+                <typeArgument type="?" />
+            </x:typeArguments>
+            <x:constraints splitlayout-position="SECONDARY" width="-1px" height="-1px" />
+        </TreeGrid>
+    </SplitLayout>
+</VerticalLayout>

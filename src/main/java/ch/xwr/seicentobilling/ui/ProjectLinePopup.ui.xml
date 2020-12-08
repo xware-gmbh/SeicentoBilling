@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<?xdevuiml version="1.0"?>
+<?template NONE?>
+<?import ch.xwr.seicentobilling.business.LovState$WorkType?>
+<?import ch.xwr.seicentobilling.business.LovState.State?>
+<?import ch.xwr.seicentobilling.entities.Periode?>
+<?import ch.xwr.seicentobilling.entities.Project?>
+<?import ch.xwr.seicentobilling.entities.ProjectLine?>
+<?import com.vaadin.flow.component.button.Button?>
+<?import com.vaadin.flow.component.combobox.ComboBox?>
+<?import com.vaadin.flow.component.datepicker.DatePicker?>
+<?import com.vaadin.flow.component.formlayout.FormLayout?>
+<?import com.vaadin.flow.component.formlayout.FormLayout.FormItem?>
+<?import com.vaadin.flow.component.html.Label?>
+<?import com.vaadin.flow.component.orderedlayout.HorizontalLayout?>
+<?import com.vaadin.flow.component.orderedlayout.VerticalLayout?>
+<?import com.vaadin.flow.component.textfield.TextField?>
+<?import com.vaadin.flow.data.binder.BeanValidationBinder?>
+<VerticalLayout xmlns:x="http://xml.xdev-software.com/xdevuiml" x:name="ProjectLinePopup">
+    <x:constraints zpos="0" width="100%" height="100%" />
+    <BeanValidationBinder x:name="binder">
+        <x:typeArguments>
+            <typeArgument type="ProjectLine" />
+        </x:typeArguments>
+        <x:bindings>
+            <binding field="cmbPeriode" property="periode" required="false" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="cmbProject" property="project" required="false" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="datePrlReportDate" property="prlReportDate" required="false" readOnly="false">
+                <validator type="Bean" />
+                <converter zone="default" TYPE="LocalDateToUtilDate" />
+            </binding>
+            <binding field="timePicker" property="prlTimeFrom" required="false" readOnly="false">
+                <validator type="Bean" />
+                <converter zone="default" TYPE="LocalDateToUtilDate" />
+            </binding>
+            <binding field="timePicker" property="prlTimeTo" required="false" readOnly="false">
+                <validator type="Bean" />
+                <converter zone="default" TYPE="LocalDateToUtilDate" />
+            </binding>
+            <binding field="txtPrlHours" property="prlHours" required="false" nullRepresentation="" readOnly="false">
+                <validator type="Bean" />
+                <converter TYPE="StringToDouble">
+                    <numberFormat format="Decimal" currency="default" locale="default" />
+                </converter>
+            </binding>
+            <binding field="txtPrlRate" property="prlRate" required="false" nullRepresentation="" readOnly="false">
+                <validator type="Bean" />
+                <converter TYPE="StringToDouble">
+                    <numberFormat format="Decimal" currency="default" locale="default" />
+                </converter>
+            </binding>
+            <binding field="txtPrlText" property="prlText" required="false" nullRepresentation="" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="comboBoxWorktype" property="prlWorkType" required="false" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="comboBoxState" property="prlState" required="false" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+        </x:bindings>
+    </BeanValidationBinder>
+    <VerticalLayout x:name="verticalLayout">
+        <x:constraints width="100%" height="100%" flex-grow="0.0" />
+        <HorizontalLayout x:name="horizontalLayout">
+            <x:constraints width="100%" height="30px" flex-grow="0.0" />
+            <Label x:name="label" text="Rapporte erfassen">
+                <x:constraints width="0px" alignment="CENTER" height="0px" flex-grow="0.0" />
+            </Label>
+        </HorizontalLayout>
+        <FormLayout x:name="formLayout">
+            <x:responsiveSteps>
+                <entry minWidth="0px" columns="1" labelsPosition="TOP" />
+                <entry minWidth="500px" columns="2" labelsPosition="TOP" />
+                <entry minWidth="1000px" columns="3" labelsPosition="ASIDE" />
+            </x:responsiveSteps>
+            <x:constraints width="100%" height="100%" flex-grow="0.0" />
+            <FormItem x:name="formItem2">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblPeriode" text="{$lblPeriode.value}">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <ComboBox x:name="cmbPeriode">
+                    <x:typeArguments>
+                        <typeArgument type="Periode" />
+                    </x:typeArguments>
+                    <x:constraints width="100%" height="0px" />
+                    <x:dataProvider dataFetchMethod="findAll" />
+                    <x:itemLabel type="Property" data="perName" />
+                </ComboBox>
+            </FormItem>
+            <FormItem x:name="formItem">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblPrlReportDate" text="{$lblPrlReportDate.value}">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <DatePicker x:name="datePrlReportDate">
+                    <x:constraints width="100%" height="0px" />
+                    <x:event>valueChange.valueChanged</x:event>
+                </DatePicker>
+            </FormItem>
+            <FormItem x:name="formItem3">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblPrlFromTo" text="Von/Bis">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <DatePicker x:name="datePrlReportDateFrom">
+                    <x:constraints width="100%" height="0px" />
+                    <x:event>valueChange.valueChanged</x:event>
+                </DatePicker>
+            </FormItem>
+            <FormItem x:name="formItem4">
+                <x:constraints width="0px" height="0px" />
+                <DatePicker x:name="datePrlReportDateTo">
+                    <x:constraints width="100%" height="0px" />
+                </DatePicker>
+            </FormItem>
+            <FormItem x:name="formItem7">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblProject" text="{$lblProject.value}">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <ComboBox enabled="false" x:name="cmbProject">
+                    <x:typeArguments>
+                        <typeArgument type="Project" />
+                    </x:typeArguments>
+                    <x:constraints width="75%" height="0px" />
+                    <x:dataProvider dataFetchMethod="findAllActive" />
+                    <x:itemLabel type="Property" data="proName" />
+                </ComboBox>
+                <Button x:name="btnSearch">
+                    <x:icon src="com.flowingcode.vaadin.addons.ironicons.IronIcons#SEARCH" />
+                    <x:constraints width="0px" height="0px" />
+                    <x:event>click.onComponentEvent</x:event>
+                </Button>
+            </FormItem>
+            <FormItem x:name="formItem8">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblPrlHours" text="{$lblPrlHours.value}">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <TextField x:name="txtPrlHours">
+                    <x:constraints width="100%" height="0px" />
+                </TextField>
+            </FormItem>
+            <FormItem x:name="formItem9">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblPrlRate" text="{$lblPrlRate.value}">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <TextField x:name="txtPrlRate">
+                    <x:constraints width="100%" height="0px" />
+                </TextField>
+            </FormItem>
+            <FormItem x:name="formItem11">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblPrlText" text="{$lblPrlText.value}">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <TextField x:name="txtPrlText">
+                    <x:constraints width="100%" height="0px" />
+                </TextField>
+            </FormItem>
+            <FormItem x:name="formItem12">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblPrlWorkType" text="{$lblPrlWorkType.value}">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <ComboBox x:name="comboBoxWorktype">
+                    <x:typeArguments>
+                        <typeArgument type="LovState$WorkType" />
+                    </x:typeArguments>
+                    <x:constraints width="100%" height="0px" />
+                </ComboBox>
+            </FormItem>
+            <FormItem x:name="formItem13">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblPrlState" text="{$lblPrlState.value}">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <ComboBox x:name="comboBoxState">
+                    <x:typeArguments>
+                        <typeArgument type="State" />
+                    </x:typeArguments>
+                    <x:constraints width="100%" height="0px" />
+                </ComboBox>
+            </FormItem>
+        </FormLayout>
+        <HorizontalLayout x:name="horizontalLayout2">
+            <x:constraints width="100%" height="12%" flex-grow="0.0" />
+            <Button x:name="cmdSave" text="{$cmdSave.caption}">
+                <x:icon src="com.flowingcode.vaadin.addons.ironicons.IronIcons#SAVE" />
+                <x:constraints width="0px" height="0px" flex-grow="0.0" />
+                <x:event>click.onComponentEvent</x:event>
+            </Button>
+            <Button x:name="cmdCancel" text="{$cmdCancel.caption}">
+                <x:icon src="com.flowingcode.vaadin.addons.ironicons.IronIcons#CANCEL" />
+                <x:constraints width="0px" height="0px" flex-grow="0.0" />
+                <x:event>click.onComponentEvent</x:event>
+            </Button>
+            <Button x:name="cmdStartStop" text="Start/Stop">
+                <x:icon src="com.vaadin.flow.component.icon.VaadinIcon#CLOCK" />
+                <x:constraints width="0px" height="0px" flex-grow="0.0" />
+                <x:event>click.onComponentEvent</x:event>
+            </Button>
+            <Button x:name="cmdDefault1" text="Def 1">
+                <x:icon src="com.vaadin.flow.component.icon.VaadinIcon#BOOKMARK" />
+                <x:constraints width="0px" height="0px" flex-grow="0.0" />
+                <x:event>click.onComponentEvent</x:event>
+            </Button>
+        </HorizontalLayout>
+    </VerticalLayout>
+</VerticalLayout>

@@ -1,6 +1,7 @@
 
 package ch.xwr.seicentobilling.ui;
 
+import com.rapidclipse.framework.security.authentication.AuthenticationFailedException;
 import com.rapidclipse.framework.security.authentication.CredentialsUsernamePassword;
 import com.rapidclipse.framework.server.security.authentication.Authentication;
 import com.vaadin.flow.component.ClickEvent;
@@ -18,6 +19,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
 
 import ch.xwr.seicentobilling.MyAuthenticationProvider;
+import ch.xwr.seicentobilling.business.auth.SeicentoUser;
 
 
 @Route("login")
@@ -29,7 +31,7 @@ public class LoginView extends VerticalLayout
 		super();
 		this.initUI();
 	}
-
+	
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdLogin}.
 	 *
@@ -40,13 +42,15 @@ public class LoginView extends VerticalLayout
 	{
 		final CredentialsUsernamePassword credentials = CredentialsUsernamePassword.New(
 			this.txtUsername.getValue(), this.txtPassword.getValue());
-
-		final MyAuthenticationProvider authenticatorProvider = MyAuthenticationProvider.getInstance();
-
-		if(Authentication.tryLogin(credentials, authenticatorProvider))
+		try
 		{
+			final MyAuthenticationProvider authenticatorProvider = MyAuthenticationProvider.getInstance();
+			final Object                   authenticationResult  =
+				authenticatorProvider.provideAuthenticator().authenticate(credentials);
+			Authentication.login(new SeicentoUser(credentials.username()), authenticationResult);
 		}
-		else
+		
+		catch(final AuthenticationFailedException e)
 		{
 			Notification.show("Invalid username/password");
 		}

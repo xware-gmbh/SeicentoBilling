@@ -1,11 +1,14 @@
 
-package ch.xwr.seicentobilling.ui;
+package ch.xwr.seicentobilling.ui.crm;
 
 import java.util.Arrays;
 import java.util.Optional;
 
 import com.rapidclipse.framework.server.data.renderer.CaptionRenderer;
 import com.rapidclipse.framework.server.ui.filter.FilterComponent;
+import com.rapidclipse.framework.server.ui.filter.FilterData;
+import com.rapidclipse.framework.server.ui.filter.FilterEntry;
+import com.rapidclipse.framework.server.ui.filter.FilterOperator;
 import com.rapidclipse.framework.server.ui.filter.GridFilterSubjectFactory;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.ComponentEvent;
@@ -24,8 +27,10 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.data.provider.Query;
 
+import ch.xwr.seicentobilling.business.Seicento;
 import ch.xwr.seicentobilling.dal.CustomerDAO;
 import ch.xwr.seicentobilling.entities.City;
+import ch.xwr.seicentobilling.entities.CostAccount;
 import ch.xwr.seicentobilling.entities.Customer;
 
 
@@ -48,25 +53,16 @@ public class CustomerLookupPopup extends VerticalLayout
 		// this.comboBoxWorktype.addItems((Object[])LovState.WorkType.values());
 		
 		this.setDefaultFilter();
-		// this.table.focus();
-		// this.containerFilterComponent.getSearchTextField().focus();
+
 	}
 
 	private void setDefaultFilter()
 	{
-		// CostAccount bean = Seicento.getLoggedInCostAccount();
-		// if(bean == null)
-		// {
-		// bean = new CostAccountDAO().findAll().get(0); // Dev Mode
-		// }
-		//
-		// // final LovState.State[] valState = new LovState.State[] { LovState.State.active };
-		// final CostAccount[] val2 = new CostAccount[]{bean};
-		// final FilterData[] fd = new FilterData[]{};
-		//
-		// final FilterEntry fe = new FilterEntry("costAccount", new FilterOperator.Is().key(), new Object[]{val2});
-		// this.containerFilterComponent.setValue(new FilterData("costAccount", new FilterEntry[]{fe}));
-		
+		final CostAccount bean = Seicento.getLoggedInCostAccount();
+		final String[]    val1 = new String[]{bean.getCsaCode()};
+		final FilterEntry ce   =
+			new FilterEntry("cusAccountManager", new FilterOperator.Contains().key(), val1);
+		this.containerFilterComponent.setValue(new FilterData("", new FilterEntry[]{ce}));
 	}
 	
 	public static Dialog getPopupWindow()
@@ -160,11 +156,10 @@ public class CustomerLookupPopup extends VerticalLayout
 		this.horizontalLayout2        = new HorizontalLayout();
 		this.btnSelect                = new Button();
 		this.btnCancel                = new Button();
-
+		
 		this.label.setText("Kontakte suchen");
 		this.grid.addColumn(Customer::getShortname).setKey("shortname").setHeader("Name").setSortable(true);
-		this.grid.addColumn(new CaptionRenderer<>(Customer::getAddresses)).setKey("addresses").setHeader("Adresse")
-			.setSortable(false);
+		this.grid.addColumn(Customer::getCusAddress).setKey("cusAddress").setHeader("Adresse").setSortable(true);
 		this.grid.addColumn(v -> Optional.ofNullable(v).map(Customer::getCity).map(City::getCtyZip).orElse(null))
 			.setKey("city.ctyZip").setHeader("PLZ").setSortable(true);
 		this.grid.addColumn(v -> Optional.ofNullable(v).map(Customer::getCity).map(City::getCtyName).orElse(null))
@@ -180,12 +175,12 @@ public class CustomerLookupPopup extends VerticalLayout
 		this.horizontalLayout2.setAlignItems(FlexComponent.Alignment.CENTER);
 		this.btnSelect.setText("Übernehmen");
 		this.btnCancel.setText("Schliessen");
-
+		
 		this.containerFilterComponent.connectWith(this.grid.getDataProvider());
 		this.containerFilterComponent.setFilterSubject(GridFilterSubjectFactory.CreateFilterSubject(this.grid,
 			Arrays.asList("city.ctyName", "cusCompany", "cusName"), Arrays.asList("city.ctyCountry", "city.ctyName",
 				"city.ctyZip", "cusAccountManager", "cusAccountType", "cusState", "shortname")));
-
+		
 		this.label.setSizeUndefined();
 		this.horizontalLayout.add(this.label);
 		this.btnSelect.setSizeUndefined();
@@ -204,7 +199,7 @@ public class CustomerLookupPopup extends VerticalLayout
 		this.verticalLayout.setSizeFull();
 		this.add(this.verticalLayout);
 		this.setSizeFull();
-
+		
 		this.grid.addItemClickListener(this::grid_onItemClick);
 		this.grid.addItemDoubleClickListener(this::grid_onItemDoubleClick);
 		this.btnSelect.addClickListener(this::btnSelect_onClick);

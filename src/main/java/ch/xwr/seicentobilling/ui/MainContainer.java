@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasElement;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.contextmenu.SubMenu;
@@ -31,10 +32,12 @@ import com.vaadin.flow.server.PageConfigurator;
 import com.vaadin.flow.server.VaadinRequest;
 import com.vaadin.flow.server.VaadinService;
 import com.vaadin.flow.server.VaadinServletRequest;
+import com.vaadin.flow.server.VaadinSession;
 import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.lumo.Lumo;
 
 import ch.xwr.seicentobilling.business.Seicento;
+import ch.xwr.seicentobilling.business.auth.SeicentoUser;
 import ch.xwr.seicentobilling.dal.CompanyDAO;
 import ch.xwr.seicentobilling.entities.Company;
 
@@ -44,14 +47,14 @@ import ch.xwr.seicentobilling.entities.Company;
  */
 @Route("")
 @HtmlImport("frontend://styles/shared-styles.html")
-@HtmlImport("frontend://styles/shared-styles.html")
 @HtmlImport("frontend://styles/my-menubar.html")
 @Theme(value = Lumo.class, variant = Lumo.DARK)
 public class MainContainer extends VerticalLayout implements PageConfigurator, RouterLayout
 {
 	/** Logger initialized */
 	private static final org.apache.log4j.Logger LOG = org.apache.log4j.Logger.getLogger(MainContainer.class);
-
+	private SeicentoUser                         currentUser;
+	
 	/**
 	 *
 	 */
@@ -74,16 +77,18 @@ public class MainContainer extends VerticalLayout implements PageConfigurator, R
 			new String[]{"Kostenstelle", "Mwst", "Ortschaft"});
 		mainMenu.put("Optionen",
 			new String[]{"Firma", "Objektstamm"});
+		mainMenu.put("User",
+			new String[]{"Profil", "Info", "Logout"});
 		
 		final Map<String, Class> menuPages = new LinkedHashMap<>();
-		menuPages.put("Rechnung", View2.class);
+		menuPages.put("Rechnung", OrderTabView.class);
 		menuPages.put("Artikel", ItemTabView.class);
-		menuPages.put("Kontakte", View4.class);
-		menuPages.put("Rechnungen generieren...", View1.class);
+		menuPages.put("Kontakte", CustomerTabView.class);
+		menuPages.put("Rechnungen generieren...", OrderGenerateTabView.class);
 
 		menuPages.put("Spesen u. Rapporte", View1.class);
 		menuPages.put("Spesen", ExpenseTabView.class);
-		menuPages.put("Rapporte", View3.class);
+		menuPages.put("Rapporte", ProjectLineTabView.class);
 		menuPages.put("Vorlagen Rapport", ProjectLineTemplateTabView.class);
 		menuPages.put("Vorlagen Spesen", ExpenseTemplateTabView.class);
 		
@@ -98,7 +103,12 @@ public class MainContainer extends VerticalLayout implements PageConfigurator, R
 		menuPages.put("Optionen", View1.class);
 		menuPages.put("Firma", CompanyTabView.class);
 		menuPages.put("Objektstamm", RowObjectTabView.class);
-
+		
+		menuPages.put("User", View1.class);
+		menuPages.put("Profil", ProfileTabView.class);
+		menuPages.put("Info", ApplicationSettingsTabView.class);
+		menuPages.put("Logout", LogoutView.class);
+		
 		for(final String key : mainMenu.keySet())
 		{
 			final MenuItem mainMenuItem    = this.navMenuBar.addItem(key);
@@ -133,7 +143,12 @@ public class MainContainer extends VerticalLayout implements PageConfigurator, R
 		// hlp.setCallBackUri(this.getPage().getLocation());
 		
 	}
-	
+
+	public SeicentoUser getUser()
+	{
+		return this.currentUser;
+	}
+
 	private void setLocale()
 	{
 		Locale.setDefault(new Locale("de", "CH"));
@@ -211,6 +226,17 @@ public class MainContainer extends VerticalLayout implements PageConfigurator, R
 	
 	private void loadTab(final Class<?> myClass, final String desc)
 	{
+		if(desc.equals("Logout"))
+		{
+			this.tabs.removeAll();
+			this.loggedIn(false, null);
+			// Close the session
+			VaadinSession.getCurrent().getSession().invalidate();
+			UI.getCurrent().getSession().close();
+			UI.getCurrent().getPage().executeJs("window.location.href=''");
+			// UI.getCurrent().navigate("login");
+			return;
+		}
 		this.tabsToPages.values().forEach(page -> page.setVisible(false));
 		Component cmp         = null;
 		Tab       tabToSelect = null;
@@ -250,6 +276,26 @@ public class MainContainer extends VerticalLayout implements PageConfigurator, R
 		catch(final Exception e)
 		{
 			e.printStackTrace();
+		}
+
+	}
+
+	public void loggedIn(final boolean lgin, final SeicentoUser user)
+	{
+		
+		if(lgin)
+		{
+			this.currentUser = user;
+			// MainContainer.LOG.info("User logged in " + this.currentUser.name());
+			// this.menuItemUser.setCaption(this.currentUser.name());
+			this.setLocale();
+		}
+		else
+		{
+			// getSession().close(); //leads to Session expired
+			// MainContainer.LOG.info("User logged out " + this.currentUser.name());
+			// this.menuItemUser.setCaption("");
+			this.currentUser = null;
 		}
 
 	}

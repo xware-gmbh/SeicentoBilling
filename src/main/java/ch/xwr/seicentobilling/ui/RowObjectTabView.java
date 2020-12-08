@@ -1,20 +1,27 @@
 
 package ch.xwr.seicentobilling.ui;
 
+import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Optional;
 
 import com.rapidclipse.framework.server.data.renderer.CaptionRenderer;
 import com.rapidclipse.framework.server.ui.filter.FilterComponent;
+import com.rapidclipse.framework.server.ui.filter.FilterData;
+import com.rapidclipse.framework.server.ui.filter.FilterEntry;
+import com.rapidclipse.framework.server.ui.filter.FilterOperator;
 import com.rapidclipse.framework.server.ui.filter.GridFilterSubjectFactory;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.GridSortOrder;
 import com.vaadin.flow.component.grid.ItemClickEvent;
 import com.vaadin.flow.component.grid.ItemDoubleClickEvent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.provider.DataProvider;
+import com.vaadin.flow.data.provider.SortDirection;
 import com.vaadin.flow.router.Route;
 
 import ch.xwr.seicentobilling.dal.RowObjectDAO;
@@ -34,24 +41,31 @@ public class RowObjectTabView extends VerticalLayout
 		this.initUI();
 
 		// Sort it
-		// final Object [] properties={"objChanged","objRowId"};
-		// final boolean [] ordering={false, false};
-		// this.table.sort(properties, ordering);
+		this.sortList();
 		
 		this.setDefaultFilter();
 	}
 	
+	private void sortList()
+	{
+		final GridSortOrder<RowObject> sortCol1 =
+			new GridSortOrder<>(this.grid.getColumnByKey("objChanged"), SortDirection.DESCENDING);
+		final GridSortOrder<RowObject> sortCol2 =
+			new GridSortOrder<>(this.grid.getColumnByKey("objRowId"), SortDirection.DESCENDING);
+		this.grid.sort(Arrays.asList(sortCol1, sortCol2));
+
+	}
+	
 	private void setDefaultFilter()
 	{
-		/*
-		 * final LocalDate ld1 = LocalDate.now().minusDays(1);
-		 * final Date yesterday = java.sql.Timestamp.valueOf(ld1.atStartOfDay());
-		 * final Date[] dateArray = new Date[] { yesterday };
-		 *
-		 * final FilterData[] fd = new FilterData[]{new FilterData("objChanged", new FilterOperator.Greater(),
-		 * dateArray)};
-		 * this.containerFilterComponent.setFilterData(fd);
-		 */
+		
+		final LocalDate ld1       = LocalDate.now().minusDays(1);
+		final Date      yesterday = java.sql.Timestamp.valueOf(ld1.atStartOfDay());
+		final Date[]    dateArray = new Date[]{yesterday};
+		
+		final FilterEntry pe =
+			new FilterEntry("objChanged", new FilterOperator.Greater().key(), dateArray);
+		this.containerFilterComponent.setValue(new FilterData("", new FilterEntry[]{pe}));
 	}
 
 	/**
@@ -89,9 +103,9 @@ public class RowObjectTabView extends VerticalLayout
 	// <generated-code name="initUI">
 	private void initUI()
 	{
-		this.verticalLayout  = new VerticalLayout();
-		this.filterComponent = new FilterComponent();
-		this.grid            = new Grid<>(RowObject.class, false);
+		this.verticalLayout           = new VerticalLayout();
+		this.containerFilterComponent = new FilterComponent();
+		this.grid                     = new Grid<>(RowObject.class, false);
 		
 		this.setSpacing(false);
 		this.setPadding(false);
@@ -114,16 +128,16 @@ public class RowObjectTabView extends VerticalLayout
 		this.grid.setDataProvider(DataProvider.ofCollection(new RowObjectDAO().findAll()));
 		this.grid.setSelectionMode(Grid.SelectionMode.SINGLE);
 		
-		this.filterComponent.connectWith(this.grid.getDataProvider());
-		this.filterComponent.setFilterSubject(GridFilterSubjectFactory.CreateFilterSubject(this.grid,
+		this.containerFilterComponent.connectWith(this.grid.getDataProvider());
+		this.containerFilterComponent.setFilterSubject(GridFilterSubjectFactory.CreateFilterSubject(this.grid,
 			Arrays.asList("objAddedBy", "objChangedBy", "objDeletedBy"),
 			Arrays.asList("entity.entName", "objAdded", "objAddedBy", "objChanged", "objChangedBy", "objChngcnt",
 				"objDeleted", "objDeletedBy", "objRowId", "objState")));
 		
-		this.filterComponent.setWidthFull();
-		this.filterComponent.setHeight(null);
+		this.containerFilterComponent.setWidthFull();
+		this.containerFilterComponent.setHeight(null);
 		this.grid.setSizeFull();
-		this.verticalLayout.add(this.filterComponent, this.grid);
+		this.verticalLayout.add(this.containerFilterComponent, this.grid);
 		this.verticalLayout.setFlexGrow(1.0, this.grid);
 		this.verticalLayout.setSizeFull();
 		this.add(this.verticalLayout);
@@ -135,7 +149,7 @@ public class RowObjectTabView extends VerticalLayout
 
 	// <generated-code name="variables">
 	private VerticalLayout  verticalLayout;
-	private FilterComponent filterComponent;
+	private FilterComponent containerFilterComponent;
 	private Grid<RowObject> grid;
 	// </generated-code>
 	

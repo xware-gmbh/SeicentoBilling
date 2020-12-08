@@ -104,7 +104,7 @@
                     <column property="itmIdent" header="Ident" sortable="true" />
                     <column property="itmName" header="Name" sortable="true" />
                     <column property="itmPrice1" header="Preis 1" sortable="true">
-                        <renderer type="NumberRenderer" nullRepresentation="">
+                        <renderer nullRepresentation="" type="NumberRenderer">
                             <numberFormat format="Currency" pattern="" currency="default" locale="default" />
                         </renderer>
                     </column>
@@ -115,6 +115,19 @@
                 <x:event>itemClick.onComponentEvent</x:event>
             </Grid>
         </VerticalLayout>
+        <HorizontalLayout x:name="horizontalLayout3">
+            <x:constraints splitlayout-position="PRIMARY" width="100%" height="100px" />
+            <Button x:name="cmdSave" text="{$cmdSave.caption}">
+                <x:icon src="com.flowingcode.vaadin.addons.ironicons.IronIcons#SAVE" />
+                <x:constraints width="50%" height="0px" flex-grow="0.0" />
+                <x:event>click.onComponentEvent</x:event>
+            </Button>
+            <Button x:name="cmdReset" text="{$cmdReset.caption}">
+                <x:icon src="com.flowingcode.vaadin.addons.ironicons.IronIcons#UNDO" />
+                <x:constraints width="50%" height="0px" flex-grow="0.0" />
+                <x:event>click.onComponentEvent</x:event>
+            </Button>
+        </HorizontalLayout>
         <FormLayout x:name="formLayout">
             <x:responsiveSteps>
                 <entry minWidth="25em" columns="1" labelsPosition="TOP" />
@@ -224,20 +237,7 @@
                     </x:typeArguments>
                     <x:constraints width="100%" height="0px" />
                 </ComboBox>
-            </FormItem>          
+            </FormItem>
         </FormLayout>
-	   <HorizontalLayout x:name="horizontalLayout3">
-			<x:constraints width="100%" height="100px" />
-			<Button x:name="cmdSave" text="{$cmdSave.caption}">
-				<x:icon src="com.flowingcode.vaadin.addons.ironicons.IronIcons#SAVE" />
-				<x:constraints width="50%" height="0px" flex-grow="0.0" />
-				<x:event>click.onComponentEvent</x:event>
-			</Button>
-			<Button x:name="cmdReset" text="{$cmdReset.caption}">
-				<x:icon src="com.flowingcode.vaadin.addons.ironicons.IronIcons#UNDO" />
-				<x:constraints width="50%" height="0px" flex-grow="0.0" />
-				<x:event>click.onComponentEvent</x:event>
-			</Button>
-		</HorizontalLayout>
     </SplitLayout>
 </VerticalLayout>

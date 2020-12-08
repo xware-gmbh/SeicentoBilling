@@ -1,0 +1,452 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<?xdevuiml version="1.0"?>
+<?template NONE?>
+<?import ch.xwr.seicentobilling.business.LovState.State?>
+<?import ch.xwr.seicentobilling.entities.Customer?>
+<?import ch.xwr.seicentobilling.entities.Order?>
+<?import ch.xwr.seicentobilling.entities.OrderLine?>
+<?import ch.xwr.seicentobilling.entities.PaymentCondition?>
+<?import ch.xwr.seicentobilling.entities.Project?>
+<?import com.rapidclipse.framework.server.ui.filter.FilterComponent?>
+<?import com.vaadin.flow.component.button.Button?>
+<?import com.vaadin.flow.component.combobox.ComboBox?>
+<?import com.vaadin.flow.component.datepicker.DatePicker?>
+<?import com.vaadin.flow.component.formlayout.FormLayout?>
+<?import com.vaadin.flow.component.formlayout.FormLayout.FormItem?>
+<?import com.vaadin.flow.component.grid.Grid?>
+<?import com.vaadin.flow.component.html.Label?>
+<?import com.vaadin.flow.component.orderedlayout.HorizontalLayout?>
+<?import com.vaadin.flow.component.orderedlayout.VerticalLayout?>
+<?import com.vaadin.flow.component.splitlayout.SplitLayout?>
+<?import com.vaadin.flow.component.tabs.Tab?>
+<?import com.vaadin.flow.component.tabs.Tabs?>
+<?import com.vaadin.flow.component.textfield.TextArea?>
+<?import com.vaadin.flow.component.textfield.TextField?>
+<?import com.vaadin.flow.data.binder.BeanValidationBinder?>
+<VerticalLayout xmlns:x="http://xml.xdev-software.com/xdevuiml" x:name="OrderTabView" x:route="order">
+    <x:constraints zpos="0" width="100%" height="100%" />
+    <BeanValidationBinder x:name="binder" validatorsDisabled="true">
+        <x:typeArguments>
+            <typeArgument type="Order" />
+        </x:typeArguments>
+        <x:bindings>
+            <binding field="txtOrdNumber" property="ordNumber" required="false" nullRepresentation="" readOnly="false">
+                <validator type="Bean" />
+                <converter TYPE="StringToInteger">
+                    <numberFormat format="Integer" currency="default" locale="default" />
+                </converter>
+            </binding>
+            <binding field="cmbCustomer" property="customer" required="false" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="textArea" property="ordText" required="false" nullRepresentation="" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="cmbProject" property="project" required="false" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="cmbPaymentCondition" property="paymentCondition" required="false" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="txtOrdAmountBrut" property="ordAmountBrut" required="false" nullRepresentation="" readOnly="false">
+                <validator type="Bean" />
+                <converter TYPE="StringToDouble">
+                    <numberFormat format="Currency" pattern="" currency="CHF" locale="de-CH" />
+                </converter>
+            </binding>
+            <binding field="txtOrdAmountNet" property="ordAmountNet" required="false" nullRepresentation="" readOnly="false">
+                <validator type="Bean" />
+                <converter TYPE="StringToDouble">
+                    <numberFormat format="Currency" pattern="" currency="CHF" locale="de-CH" />
+                </converter>
+            </binding>
+            <binding field="txtOrdAmountVat" property="ordAmountVat" required="false" nullRepresentation="" readOnly="false">
+                <validator type="Bean" />
+                <converter TYPE="StringToDouble">
+                    <numberFormat format="Currency" pattern="" currency="CHF" locale="de-CH" />
+                </converter>
+            </binding>
+            <binding field="comboBoxState" property="ordState" required="false" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="dateOrdBillDate" property="ordBillDate" required="false" readOnly="false">
+                <validator type="Bean" />
+                <converter zone="default" TYPE="LocalDateToUtilDate" />
+            </binding>
+            <binding field="dateOrdOrderDate" property="ordOrderDate" required="false" readOnly="false">
+                <validator type="Bean" />
+                <converter zone="default" TYPE="LocalDateToUtilDate" />
+            </binding>
+            <binding field="dateOrdCreated" property="ordCreated" required="false" readOnly="false">
+                <validator type="Bean" />
+                <converter zone="default" TYPE="LocalDateToUtilDate" />
+            </binding>
+            <binding field="dateOrdPayDate" property="ordPayDate" required="false" readOnly="false">
+                <validator type="Bean" />
+                <converter zone="default" TYPE="LocalDateToUtilDate" />
+            </binding>
+            <binding field="dateOrdDueDate" property="ordDueDate" required="false" readOnly="false">
+                <validator type="Bean" />
+                <converter zone="default" TYPE="LocalDateToUtilDate" />
+            </binding>
+            <binding field="dateOrdBookedOn" property="ordBookedOn" required="false" readOnly="false">
+                <validator type="Bean" />
+                <converter zone="default" TYPE="LocalDateToUtilDate" />
+            </binding>
+        </x:bindings>
+    </BeanValidationBinder>
+    <SplitLayout x:splitterPosition="60.0" x:name="splitLayout">
+        <x:constraints width="100%" height="100%" flex-grow="1.0" />
+        <VerticalLayout spacing="false" x:name="verticalLayout" padding="false">
+            <x:constraints splitlayout-position="PRIMARY" width="100%" height="100%" />
+            <FilterComponent x:searchableProperties="customer.cusCompany,customer.cusName,ordCreatedBy,ordText,project.proExtReference,project.proName" x:name="containerFilterComponent" x:filterableProperties="customer.cusName,customer.cusNumber,ordAmountBrut,ordAmountNet,ordBillDate,ordNumber,ordOrderDate,ordPayDate,ordState,paymentCondition,project" x:grid="grid">
+                <x:constraints width="100%" height="0%" flex-grow="0.0" />
+            </FilterComponent>
+            <HorizontalLayout minHeight="" x:name="horizontalLayout2" minWidth="100%">
+                <x:constraints width="100px" height="60px" flex-grow="0.0" />
+                <Button x:name="cmdNew">
+                    <x:icon src="com.vaadin.flow.component.icon.VaadinIcon#PLUS_CIRCLE" />
+                    <x:constraints width="0px" height="0px" flex-grow="0.0" />
+                    <x:event>click.onComponentEvent</x:event>
+                </Button>
+                <Button x:name="cmdDelete">
+                    <x:icon src="com.vaadin.flow.component.icon.VaadinIcon#MINUS_CIRCLE" />
+                    <x:constraints width="0px" height="0px" flex-grow="0.0" />
+                    <x:event>click.onComponentEvent</x:event>
+                </Button>
+                <Button x:name="cmdReload">
+                    <x:icon src="com.vaadin.flow.component.icon.VaadinIcon#REFRESH" />
+                    <x:constraints width="0px" height="0px" flex-grow="0.0" />
+                    <x:event>click.onComponentEvent</x:event>
+                </Button>
+                <Button x:name="cmdInfo">
+                    <x:icon src="com.vaadin.flow.component.icon.VaadinIcon#INFO_CIRCLE" />
+                    <x:constraints width="0px" height="0px" flex-grow="0.0" />
+                    <x:event>click.onComponentEvent</x:event>
+                </Button>
+                <Button x:name="cmdCopy">
+                    <x:icon src="com.vaadin.flow.component.icon.VaadinIcon#COPY" />
+                    <x:constraints width="0px" height="0px" flex-grow="0.0" />
+                    <x:event>click.onComponentEvent</x:event>
+                </Button>
+                <Button x:name="cmdReport">
+                    <x:icon src="com.flowingcode.vaadin.addons.ironicons.IronIcons#PRINT" />
+                    <x:constraints width="0px" height="0px" flex-grow="0.0" />
+                    <x:event>click.onComponentEvent</x:event>
+                </Button>
+                <Button x:name="cmdPdfReport">
+                    <x:icon src="com.vaadin.flow.component.icon.VaadinIcon#ENVELOPE" />
+                    <x:constraints width="0px" height="0px" flex-grow="0.0" />
+                    <x:event>click.onComponentEvent</x:event>
+                </Button>
+                <Button x:name="cmdAdmin">
+                    <x:icon src="com.flowingcode.vaadin.addons.ironicons.IronIcons#SETTINGS" />
+                    <x:constraints width="0px" height="0px" flex-grow="0.0" />
+                    <x:event>click.onComponentEvent</x:event>
+                </Button>
+            </HorizontalLayout>
+            <Grid x:name="grid">
+                <x:typeArguments>
+                    <typeArgument type="Order" />
+                </x:typeArguments>
+                <x:constraints width="100%" height="100%" flex-grow="1.0" />
+                <x:dataProvider dataFetchMethod="findAll" />
+                <x:columns>
+                    <column property="ordNumber" header="Nummer" frozen="true" resizable="true" sortable="true" />
+                    <column property="customer.cusName" header="K#" frozen="true" resizable="true" sortable="true" />
+                    <column property="customer.shortname" header="Kunde" frozen="true" resizable="true" sortable="true" />
+                    <column property="customer.city.ctyName" header="Ort" frozen="true" resizable="true" sortable="true" />
+                    <column property="ordAmountBrut" header="Brutto" frozen="true" resizable="true" sortable="true">
+                        <renderer nullRepresentation="" type="NumberRenderer">
+                            <numberFormat format="Currency" pattern="" currency="default" locale="de-CH" />
+                        </renderer>
+                    </column>
+                    <column property="ordAmountNet" header="Netto" frozen="true" resizable="true" sortable="true" visible="false">
+                        <renderer nullRepresentation="" type="NumberRenderer">
+                            <numberFormat format="Currency" pattern="" currency="default" locale="de-CH" />
+                        </renderer>
+                    </column>
+                    <column property="ordBillDate" header="R-Datum" resizable="true" sortable="true" visible="false" autoWidth="true" />
+                    <column property="project" header="Projekt" visible="false" autoWidth="true" />
+                    <column property="paymentCondition" header="Frist" visible="false" autoWidth="true" />
+                    <column property="ordBookedOn" header="Gebucht" resizable="true" sortable="true" visible="false" autoWidth="true" />
+                    <column property="ordCreatedBy" header="Erstellt von" resizable="true" sortable="true" visible="false" autoWidth="true" />
+                    <column property="ordState" header="Status" resizable="true" sortable="true" autoWidth="true" />
+                </x:columns>
+                <x:event>itemClick.onComponentEvent</x:event>
+            </Grid>
+        </VerticalLayout>
+        <VerticalLayout minHeight="100%" spacing="false" x:name="verticalLayout2" padding="false">
+            <x:constraints splitlayout-position="SECONDARY" width="100px" alignment="AUTO" height="100px" flex-grow="0.0" />
+            <Tabs minHeight="50px" x:name="tabs" selectedIndex="0">
+                <x:constraints splitlayout-position="SECONDARY" width="100%" height="36px" flex-grow="0.0" />
+                <Tab x:name="gridLayoutHdrTab" label="{$gridLayoutHdr.caption}" />
+                <Tab x:name="gridLayoutDetailsTab" label="{$gridLayoutDetails.caption}" />
+            </Tabs>
+            <SplitLayout x:name="splitLayout2" orientation="com.vaadin.flow.component.splitlayout.SplitLayout.Orientation.VERTICAL">
+                <x:constraints width="100%" height="100%" flex-grow="1.0" />
+                <VerticalLayout spacing="false" x:name="verticalLayout3" padding="false">
+                    <x:constraints splitlayout-position="PRIMARY" width="100%" height="100%" />
+                    <FormLayout x:name="gridLayoutHdr">
+                        <x:responsiveSteps>
+                            <entry minWidth="0px" columns="1" labelsPosition="TOP" />
+                            <entry minWidth="320px" columns="2" labelsPosition="TOP" />
+                            <entry minWidth="1000px" columns="3" labelsPosition="ASIDE" />
+                        </x:responsiveSteps>
+                        <x:constraints width="100%" height="100%" flex-grow="0.0" />
+                        <FormItem x:name="formItem2">
+                            <x:constraints width="0px" height="0px" />
+                            <Label x:name="lblOrdNumber" text="{$lblOrdNumber.value}">
+                                <x:constraints width="0px" label="true" height="0px" />
+                            </Label>
+                            <TextField x:name="txtOrdNumber">
+                                <x:constraints width="100%" height="0px" />
+                            </TextField>
+                        </FormItem>
+                        <FormItem x:name="formItem">
+                            <x:constraints width="0px" height="0px" />
+                            <Label x:name="lblCustomer" text="{$lblCustomer.value}">
+                                <x:constraints width="0px" label="true" height="0px" />
+                            </Label>
+                            <ComboBox x:name="cmbCustomer">
+                                <x:typeArguments>
+                                    <typeArgument type="Customer" />
+                                </x:typeArguments>
+                                <x:constraints width="75%" height="0px" />
+                                <x:dataProvider dataFetchMethod="findAll" />
+                                <x:itemLabel type="Property" data="fullname" />
+                                <x:event>valueChange.valueChanged</x:event>
+                            </ComboBox>
+                            <Button x:name="btnSearch">
+                                <x:icon src="com.flowingcode.vaadin.addons.ironicons.IronIcons#SEARCH" />
+                                <x:constraints width="0px" height="0px" />
+                                <x:event>click.onComponentEvent</x:event>
+                            </Button>
+                        </FormItem>
+                        <FormItem x:name="formItem3">
+                            <x:constraints width="0px" height="0px" />
+                            <Label x:name="lblOrdBillDate" text="{$lblOrdBillDate.value}">
+                                <x:constraints width="0px" label="true" height="0px" />
+                            </Label>
+                            <DatePicker locale="de-CH" x:name="dateOrdBillDate">
+                                <x:constraints width="100%" height="0px" />
+                            </DatePicker>
+                        </FormItem>
+                        <FormItem x:name="formItem4">
+                            <x:constraints width="0px" height="0px" />
+                            <Label x:name="lblOrdOrderDate" text="{$lblOrdOrderDate.value}">
+                                <x:constraints width="0px" label="true" height="0px" />
+                            </Label>
+                            <DatePicker locale="de-CH" x:name="dateOrdOrderDate">
+                                <x:constraints width="100%" height="0px" />
+                            </DatePicker>
+                        </FormItem>
+                        <FormItem x:name="formItem5">
+                            <x:constraints width="0px" height="0px" />
+                            <Label x:name="lblOrdText" text="{$lblOrdText.value}">
+                                <x:constraints width="0px" label="true" height="0px" />
+                            </Label>
+                            <TextArea x:name="textArea" label="">
+                                <x:constraints width="100%" height="0px" />
+                            </TextArea>
+                        </FormItem>
+                        <FormItem x:name="formItem6">
+                            <x:constraints width="0px" height="0px" />
+                            <Label x:name="lblProject" text="{$lblProject.value}">
+                                <x:constraints width="0px" label="true" height="0px" />
+                            </Label>
+                            <ComboBox x:name="cmbProject">
+                                <x:typeArguments>
+                                    <typeArgument type="Project" />
+                                </x:typeArguments>
+                                <x:constraints width="100%" height="0px" />
+                                <x:dataProvider dataFetchMethod="findAllActive" />
+                                <x:itemLabel type="Property" data="proName" />
+                            </ComboBox>
+                        </FormItem>
+                        <FormItem x:name="formItem7">
+                            <x:constraints width="0px" height="0px" />
+                            <Label x:name="lblPaymentCondition" text="{$lblPaymentCondition.value}">
+                                <x:constraints width="0px" label="true" height="0px" />
+                            </Label>
+                            <ComboBox x:name="cmbPaymentCondition">
+                                <x:typeArguments>
+                                    <typeArgument type="PaymentCondition" />
+                                </x:typeArguments>
+                                <x:constraints width="100%" height="0px" />
+                                <x:dataProvider dataFetchMethod="findAllActive" />
+                                <x:itemLabel type="Property" data="pacName" />
+                                <x:event>valueChange.valueChanged</x:event>
+                            </ComboBox>
+                        </FormItem>
+                        <FormItem x:name="formItem8">
+                            <x:constraints width="0px" height="0px" />
+                            <Label x:name="lblOrdAmountBrut" text="{$lblOrdAmountBrut.value}">
+                                <x:constraints width="0px" label="true" height="0px" />
+                            </Label>
+                            <TextField x:name="txtOrdAmountBrut">
+                                <x:constraints width="100%" height="0px" />
+                            </TextField>
+                        </FormItem>
+                        <FormItem x:name="formItem9">
+                            <x:constraints width="0px" height="0px" />
+                            <Label x:name="lblOrdAmountNet" text="{$lblOrdAmountNet.value}">
+                                <x:constraints width="0px" label="true" height="0px" />
+                            </Label>
+                            <TextField x:name="txtOrdAmountNet">
+                                <x:constraints width="100%" height="0px" />
+                            </TextField>
+                        </FormItem>
+                        <FormItem x:name="formItem10">
+                            <x:constraints width="0px" height="0px" />
+                            <Label x:name="lblOrdAmountVat" text="{$lblOrdAmountVat.value}">
+                                <x:constraints width="0px" label="true" height="0px" />
+                            </Label>
+                            <TextField x:name="txtOrdAmountVat">
+                                <x:constraints width="100%" height="0px" />
+                            </TextField>
+                        </FormItem>
+                    </FormLayout>
+                    <FormLayout x:name="gridLayoutDetail">
+                        <x:responsiveSteps>
+                            <entry minWidth="0px" columns="1" labelsPosition="TOP" />
+                            <entry minWidth="320px" columns="2" labelsPosition="TOP" />
+                            <entry minWidth="1000px" columns="3" labelsPosition="ASIDE" />
+                        </x:responsiveSteps>
+                        <x:constraints width="100%" height="100%" flex-grow="0.0" />
+                        <FormItem x:name="formItem20">
+                            <x:constraints width="0px" height="0px" />
+                            <Label x:name="lblOrdCreated" text="{$lblOrdCreated.value}">
+                                <x:constraints width="0px" label="true" height="0px" />
+                            </Label>
+                            <DatePicker locale="de-CH" x:name="dateOrdCreated">
+                                <x:constraints width="100%" height="0px" />
+                            </DatePicker>
+                        </FormItem>
+                        <FormItem x:name="formItem21">
+                            <x:constraints width="0px" height="0px" />
+                            <Label x:name="lblOrdPayDate" text="{$lblOrdPayDate.value}">
+                                <x:constraints width="0px" label="true" height="0px" />
+                            </Label>
+                            <DatePicker locale="de-CH" x:name="dateOrdPayDate">
+                                <x:constraints width="100%" height="0px" />
+                            </DatePicker>
+                        </FormItem>
+                        <FormItem x:name="formItem22">
+                            <x:constraints width="0px" height="0px" />
+                            <Label x:name="lblOrdDueDate" text="{$lblOrdDueDate.value}">
+                                <x:constraints width="0px" label="true" height="0px" />
+                            </Label>
+                            <DatePicker locale="de-CH" x:name="dateOrdDueDate">
+                                <x:constraints width="100%" height="0px" />
+                            </DatePicker>
+                        </FormItem>
+                        <FormItem x:name="formItem23">
+                            <x:constraints width="0px" height="0px" />
+                            <Label x:name="lblOrdBookedOn" text="{$lblOrdBookedOn.value}">
+                                <x:constraints width="0px" label="true" height="0px" />
+                            </Label>
+                            <DatePicker locale="de-CH" x:name="dateOrdBookedOn">
+                                <x:constraints width="100%" height="0px" />
+                            </DatePicker>
+                        </FormItem>
+                        <FormItem x:name="formItem24">
+                            <x:constraints width="0px" height="0px" />
+                            <Label x:name="lblOrdState" text="{$lblOrdState.value}">
+                                <x:constraints width="0px" label="true" height="0px" />
+                            </Label>
+                            <ComboBox x:name="comboBoxState">
+                                <x:typeArguments>
+                                    <typeArgument type="State" />
+                                </x:typeArguments>
+                                <x:constraints width="100%" height="0px" />
+                            </ComboBox>
+                        </FormItem>
+                    </FormLayout>
+                </VerticalLayout>
+                <VerticalLayout spacing="false" x:name="verticalLayout4" padding="false">
+                    <x:constraints splitlayout-position="SECONDARY" width="100%" height="100%" />
+                    <HorizontalLayout spacing="false" x:name="horizontalLayout">
+                        <x:constraints width="100%" height="-1px" flex-grow="0.0" />
+                        <Button x:name="cmdNewLine">
+                            <x:icon src="com.vaadin.flow.component.icon.VaadinIcon#PLUS_CIRCLE" />
+                            <x:constraints width="0px" height="0px" flex-grow="0.0" />
+                            <x:event>click.onComponentEvent</x:event>
+                        </Button>
+                        <Button x:name="cmdDeleteLine">
+                            <x:icon src="com.vaadin.flow.component.icon.VaadinIcon#MINUS_CIRCLE" />
+                            <x:constraints width="0px" height="0px" flex-grow="0.0" />
+                            <x:event>click.onComponentEvent</x:event>
+                        </Button>
+                        <Button x:name="cmdReloadLine">
+                            <x:icon src="com.vaadin.flow.component.icon.VaadinIcon#REFRESH" />
+                            <x:constraints width="0px" height="0px" flex-grow="0.0" />
+                            <x:event>click.onComponentEvent</x:event>
+                        </Button>
+                        <Button x:name="cmdInfoLine">
+                            <x:icon src="com.vaadin.flow.component.icon.VaadinIcon#INFO_CIRCLE" />
+                            <x:constraints width="0px" height="0px" flex-grow="0.0" />
+                            <x:event>click.onComponentEvent</x:event>
+                        </Button>
+                        <Button x:name="cmdEditLine">
+                            <x:icon src="com.flowingcode.vaadin.addons.ironicons.ImageIcons#EDIT" />
+                            <x:constraints width="0px" height="0px" flex-grow="0.0" />
+                            <x:event>click.onComponentEvent</x:event>
+                        </Button>
+                    </HorizontalLayout>
+                    <Grid x:name="grid2">
+                        <x:typeArguments>
+                            <typeArgument type="OrderLine" />
+                        </x:typeArguments>
+                        <x:constraints width="100%" height="100%" flex-grow="1.0" />
+                        <x:columns>
+                            <column property="odlNumber" header="Position" sortable="true" />
+                            <column property="odlText" header="Text" sortable="true" />
+                            <column property="odlQuantity" header="Menge" sortable="true" />
+                            <column property="odlPrice" header="Preis" sortable="true">
+                                <renderer nullRepresentation="" type="NumberRenderer">
+                                    <numberFormat format="Currency" pattern="" currency="CHF" locale="de-CH" />
+                                </renderer>
+                            </column>
+                            <column property="odlAmountBrut" header="Brutto" sortable="true" visible="false">
+                                <renderer nullRepresentation="" type="NumberRenderer">
+                                    <numberFormat format="Currency" pattern="" currency="CHF" locale="de-CH" />
+                                </renderer>
+                            </column>
+                            <column property="odlVatAmount" header="Mwst" sortable="true" visible="false">
+                                <renderer nullRepresentation="" type="NumberRenderer">
+                                    <numberFormat format="Currency" pattern="" currency="CHF" locale="de-CH" />
+                                </renderer>
+                            </column>
+                            <column property="odlAmountNet" header="Netto" sortable="true">
+                                <renderer nullRepresentation="" type="NumberRenderer">
+                                    <numberFormat format="Currency" pattern="" currency="CHF" locale="de-CH" />
+                                </renderer>
+                            </column>
+                            <column property="costAccount" header="Kostenstelle" />
+                            <column property="vat" header="Mwst Code" />
+                            <column property="item" header="Artikel" />
+                            <column property="odlState" header="Status" sortable="true" />
+                        </x:columns>
+                        <x:event>itemClick.onComponentEvent</x:event>
+                        <x:event>itemDoubleClick.onComponentEvent</x:event>
+                    </Grid>
+                </VerticalLayout>
+            </SplitLayout>
+            <HorizontalLayout x:name="horizontalLayout3">
+                <x:constraints width="-1px" height="100px" flex-grow="0.0" />
+                <Button x:name="cmdSave" text="{$cmdSave.caption}">
+                    <x:icon src="com.flowingcode.vaadin.addons.ironicons.IronIcons#SAVE" />
+                    <x:constraints width="50%" height="0px" flex-grow="0.0" />
+                    <x:event>click.onComponentEvent</x:event>
+                </Button>
+                <Button x:name="cmdReset" text="{$cmdReset.caption}">
+                    <x:icon src="com.flowingcode.vaadin.addons.ironicons.IronIcons#UNDO" />
+                    <x:constraints width="50%" height="0px" flex-grow="0.0" />
+                    <x:event>click.onComponentEvent</x:event>
+                </Button>
+            </HorizontalLayout>
+        </VerticalLayout>
+    </SplitLayout>
+</VerticalLayout>

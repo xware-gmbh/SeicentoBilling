@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<?xdevuiml version="1.0"?>
+<?template NONE?>
+<?import ch.xwr.seicentobilling.business.LovState.State?>
+<?import ch.xwr.seicentobilling.business.LovState.Theme?>
+<?import ch.xwr.seicentobilling.entities.AppUser?>
+<?import ch.xwr.seicentobilling.entities.CostAccount?>
+<?import ch.xwr.seicentobilling.entities.Customer?>
+<?import com.vaadin.flow.component.button.Button?>
+<?import com.vaadin.flow.component.combobox.ComboBox?>
+<?import com.vaadin.flow.component.datepicker.DatePicker?>
+<?import com.vaadin.flow.component.formlayout.FormLayout?>
+<?import com.vaadin.flow.component.formlayout.FormLayout.FormItem?>
+<?import com.vaadin.flow.component.html.Label?>
+<?import com.vaadin.flow.component.icon.Icon?>
+<?import com.vaadin.flow.component.orderedlayout.HorizontalLayout?>
+<?import com.vaadin.flow.component.orderedlayout.VerticalLayout?>
+<?import com.vaadin.flow.component.tabs.Tab?>
+<?import com.vaadin.flow.component.tabs.Tabs?>
+<?import com.vaadin.flow.component.textfield.TextField?>
+<?import com.vaadin.flow.data.binder.BeanValidationBinder?>
+<VerticalLayout xmlns:x="http://xml.xdev-software.com/xdevuiml" spacing="false" x:name="ProfileTabView" padding="false">
+    <x:constraints zpos="0" width="100%" height="100%" />
+    <BeanValidationBinder x:name="binder">
+        <x:typeArguments>
+            <typeArgument type="AppUser" />
+        </x:typeArguments>
+        <x:bindings>
+            <binding field="txtUsername" property="username" required="false" nullRepresentation="" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="txtUsrRoles" property="usrRoles" required="false" nullRepresentation="" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="txtUsrFullName" property="usrFullName" required="false" nullRepresentation="" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="cmbThemeDesktop" property="usrThemeDesktop" required="false" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="cmbThemeMobile" property="usrThemeMobile" required="false" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="txtUsrLanguage" property="usrLanguage" required="false" nullRepresentation="" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="txtUsrCountry" property="usrCountry" required="false" nullRepresentation="" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="txtUsrTimeZone" property="usrTimeZone" required="false" nullRepresentation="" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="cmbCostAccount" property="costAccount" required="false" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="cmbCustomer" property="customer" required="false" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+            <binding field="dateUsrValidFrom" property="usrValidFrom" required="false" nullRepresentation="2020-12-07" readOnly="false">
+                <validator type="Bean" />
+                <converter zone="default" TYPE="LocalDateToUtilDate" />
+            </binding>
+            <binding field="dateUsrValidTo" property="usrValidTo" required="false" nullRepresentation="2020-12-07" readOnly="false">
+                <validator type="Bean" />
+                <converter zone="default" TYPE="LocalDateToUtilDate" />
+            </binding>
+            <binding field="comboBoxState" property="usrState" required="false" readOnly="false">
+                <validator type="Bean" />
+            </binding>
+        </x:bindings>
+    </BeanValidationBinder>
+    <Tabs x:name="tabs">
+        <x:constraints width="100%" height="-1px" flex-grow="0.0" />
+        <Tab x:name="tab" label="Benutzer" />
+    </Tabs>
+    <VerticalLayout spacing="false" x:name="gridLayoutProfile" padding="false">
+        <x:constraints width="100%" height="100%" flex-grow="0.0" />
+        <x:event>attach.onComponentEvent</x:event>
+        <FormLayout x:name="formLayout">
+            <x:responsiveSteps>
+                <entry minWidth="0px" columns="1" labelsPosition="TOP" />
+                <entry minWidth="500px" columns="2" labelsPosition="TOP" />
+                <entry minWidth="1000px" columns="3" labelsPosition="ASIDE" />
+            </x:responsiveSteps>
+            <x:constraints width="100%" height="100%" flex-grow="0.0" />
+            <FormItem x:name="formItem">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblLoginMode" text="Label">
+                    <x:constraints width="100%" height="0px" />
+                </Label>
+            </FormItem>
+            <FormItem x:name="formItem2" x:columnSpan="2">
+                <x:constraints width="0px" height="0px" />
+                <Icon x:icon="com.vaadin.flow.component.icon.VaadinIcon#INFO_CIRCLE" x:name="icon">
+                    <x:constraints width="0px" height="0px" />
+                </Icon>
+            </FormItem>
+            <FormItem x:name="formItem3">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblUsername" text="Login Name">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <TextField x:name="txtUsername">
+                    <x:constraints width="100%" height="0px" />
+                </TextField>
+            </FormItem>
+            <FormItem x:name="formItem5" x:columnSpan="2">
+                <x:constraints width="0px" height="0px" />
+                <Button x:name="cmdSetPassword" text="Passwort...">
+                    <x:icon src="com.vaadin.flow.component.icon.VaadinIcon#PASSWORD" />
+                    <x:constraints width="20%" height="0px" />
+                    <x:event>click.onComponentEvent</x:event>
+                </Button>
+            </FormItem>
+            <FormItem x:name="formItem4">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblUsrRoles" text="Roles">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <TextField x:name="txtUsrRoles">
+                    <x:constraints width="100%" height="0px" />
+                </TextField>
+            </FormItem>
+            <FormItem x:name="formItem6" x:columnSpan="2">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblUsrFullName" text="Name">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <TextField x:name="txtUsrFullName">
+                    <x:constraints width="40%" height="0px" />
+                </TextField>
+            </FormItem>
+            <FormItem x:name="formItem7">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblUsrThemeDesktop" text="Theme Desktop">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <ComboBox x:name="cmbThemeDesktop">
+                    <x:typeArguments>
+                        <typeArgument type="Theme" />
+                    </x:typeArguments>
+                    <x:constraints width="100%" height="0px" />
+                </ComboBox>
+            </FormItem>
+            <FormItem x:name="formItem8">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblUsrThemeMobile" text="Theme Mobile">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <ComboBox x:name="cmbThemeMobile">
+                    <x:typeArguments>
+                        <typeArgument type="Theme" />
+                    </x:typeArguments>
+                    <x:constraints width="100%" height="0px" />
+                </ComboBox>
+            </FormItem>
+            <FormItem x:name="formItem9">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblUsrLanguage" text="Language">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <TextField x:name="txtUsrLanguage">
+                    <x:constraints width="100%" height="0px" />
+                </TextField>
+            </FormItem>
+            <FormItem x:name="formItem10">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblUsrCountry" text="Country">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <TextField x:name="txtUsrCountry">
+                    <x:constraints width="100%" height="0px" />
+                </TextField>
+            </FormItem>
+            <FormItem x:name="formItem11">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblUsrTimeZone" text="TimeZone">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <TextField x:name="txtUsrTimeZone">
+                    <x:constraints width="100%" height="0px" />
+                </TextField>
+            </FormItem>
+            <FormItem x:name="formItem12">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblCostAccount" text="CostAccount">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <ComboBox x:name="cmbCostAccount">
+                    <x:typeArguments>
+                        <typeArgument type="CostAccount" />
+                    </x:typeArguments>
+                    <x:constraints width="100%" height="0px" />
+                    <x:dataProvider dataFetchMethod="findAll" />
+                    <x:itemLabel type="Property" data="csaCode" />
+                </ComboBox>
+            </FormItem>
+            <FormItem x:name="formItem13">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblCustomer" text="Contact">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <ComboBox x:name="cmbCustomer">
+                    <x:typeArguments>
+                        <typeArgument type="Customer" />
+                    </x:typeArguments>
+                    <x:constraints width="100%" height="0px" />
+                    <x:dataProvider dataFetchMethod="findAll" />
+                    <x:itemLabel type="Property" data="cusName" />
+                </ComboBox>
+            </FormItem>
+            <FormItem x:name="formItem14">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblUsrValidFrom" text="Valid From">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <DatePicker x:name="dateUsrValidFrom">
+                    <x:constraints width="100%" height="0px" />
+                </DatePicker>
+            </FormItem>
+            <FormItem x:name="formItem15">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblUsrValidTo" text="Valid To">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <DatePicker x:name="dateUsrValidTo">
+                    <x:constraints width="100%" height="0px" />
+                </DatePicker>
+            </FormItem>
+            <FormItem x:name="formItem16">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="lblUsrState" text="Status">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <ComboBox x:name="comboBoxState">
+                    <x:typeArguments>
+                        <typeArgument type="State" />
+                    </x:typeArguments>
+                    <x:constraints width="100%" height="0px" />
+                </ComboBox>
+            </FormItem>
+        </FormLayout>
+        <HorizontalLayout x:name="horizontalLayout">
+            <x:constraints width="100%" height="40px" flex-grow="0.0" />
+            <Button x:name="cmdSave" text="Speichern">
+                <x:icon src="com.flowingcode.vaadin.addons.ironicons.IronIcons#SAVE" />
+                <x:constraints width="0px" alignment="CENTER" height="0px" flex-grow="0.0" />
+                <x:event>click.onComponentEvent</x:event>
+            </Button>
+            <Button x:name="cmdReset2" text="Verwerfen">
+                <x:icon src="com.flowingcode.vaadin.addons.ironicons.IronIcons#UNDO" />
+                <x:constraints width="0px" alignment="CENTER" height="0px" flex-grow="0.0" />
+                <x:event>click.onComponentEvent</x:event>
+            </Button>
+            <HorizontalLayout x:name="horizontalLayout2">
+                <x:constraints width="200px" height="20px" flex-grow="0.0" />
+            </HorizontalLayout>
+            <Button x:name="cmdApplyTheme" text="Theme anwenden">
+                <x:icon src="com.vaadin.flow.component.icon.VaadinIcon#DASHBOARD" />
+                <x:constraints width="0px" alignment="CENTER" height="0px" flex-grow="0.0" />
+                <x:event>click.onComponentEvent</x:event>
+            </Button>
+        </HorizontalLayout>
+    </VerticalLayout>
+</VerticalLayout>

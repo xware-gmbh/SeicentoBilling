@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<?xdevuiml version="1.0"?>
+<?template NONE?>
+<?import com.vaadin.flow.component.button.Button?>
+<?import com.vaadin.flow.component.formlayout.FormLayout?>
+<?import com.vaadin.flow.component.formlayout.FormLayout.FormItem?>
+<?import com.vaadin.flow.component.html.Label?>
+<?import com.vaadin.flow.component.icon.Icon?>
+<?import com.vaadin.flow.component.orderedlayout.HorizontalLayout?>
+<?import com.vaadin.flow.component.orderedlayout.VerticalLayout?>
+<?import com.vaadin.flow.component.progressbar.ProgressBar?>
+<?import com.vaadin.flow.component.textfield.TextArea?>
+<?import com.vaadin.flow.component.textfield.TextField?>
+<VerticalLayout xmlns:x="http://xml.xdev-software.com/xdevuiml" x:name="ExcelUploadPopup">
+    <x:constraints zpos="0" width="100%" height="100%" />
+    <VerticalLayout spacing="false" x:name="verticalLayout">
+        <x:constraints width="90%" height="65%" flex-grow="0.0" />
+        <HorizontalLayout x:name="horizontalLayout">
+            <x:constraints width="100%" height="30px" flex-grow="0.0" />
+            <Icon x:icon="com.vaadin.flow.component.icon.VaadinIcon#FILE_TABLE" x:name="icon">
+                <x:constraints width="0px" alignment="CENTER" height="0px" flex-grow="0.0" />
+            </Icon>
+            <Label x:name="titlelabel" text="Rapporte importieren (xls)">
+                <x:constraints width="0px" alignment="CENTER" height="0px" flex-grow="0.0" />
+            </Label>
+        </HorizontalLayout>
+        <VerticalLayout x:name="verticalLayout2">
+            <x:constraints width="100%" height="-1px" flex-grow="0.0" />
+            <HorizontalLayout x:name="horizontalLayout6">
+                <x:constraints width="100%" height="100px" flex-grow="0.0" />
+                <TextArea x:name="textArea" value="Die Funktion ermöglicht es Rapporte von einem Excel File zu importieren. Das Format der Excel Datei ist definiert und darf nicht abweichen. EinTemplate ist vom Admin erhältlich. Die Reihenfolge der Sheets in Excel ist wie folgt: Stammdaten (0), Dezember Vorjahr (1), Januar (2), Februar.(3).... Mit dieser Reihenfolge ist der Wert im Feld Arbeitsblatt korrekt berechnet.">
+                    <x:constraints width="100%" height="0px" flex-grow="0.0" />
+                </TextArea>
+            </HorizontalLayout>
+        </VerticalLayout>
+        <FormLayout x:name="formLayout">
+            <x:responsiveSteps>
+                <entry minWidth="0px" columns="1" labelsPosition="TOP" />
+                <entry minWidth="500px" columns="1" labelsPosition="TOP" />
+                <entry minWidth="1000px" columns="1" labelsPosition="ASIDE" />
+            </x:responsiveSteps>
+            <x:constraints width="100%" height="-1px" flex-grow="0.0" />
+        </FormLayout>
+        <HorizontalLayout x:name="horizontalLayoutUpload">
+            <x:constraints width="100%" height="200px" flex-grow="0.0" />
+            <FormLayout x:name="formLayout2">
+                <x:responsiveSteps>
+                    <entry minWidth="0px" columns="1" labelsPosition="TOP" />
+                    <entry minWidth="500px" columns="2" labelsPosition="TOP" />
+                    <entry minWidth="1000px" columns="2" labelsPosition="ASIDE" />
+                </x:responsiveSteps>
+                <x:constraints width="100%" height="70%" flex-grow="0.0" />
+                <FormItem x:name="formItem" x:columnSpan="2">
+                    <x:constraints width="0px" height="0px" />
+                    <Label x:name="label" text="Arbeitsblatt">
+                        <x:constraints width="0px" label="true" height="0px" />
+                    </Label>
+                    <TextField x:name="textFieldSheet">
+                        <x:constraints width="30%" height="0px" />
+                    </TextField>
+                </FormItem>
+                <FormItem x:name="formItem2" x:columnSpan="2">
+                    <x:constraints width="0px" height="0px" />
+                    <Label x:name="label2" text="Offset Zeile">
+                        <x:constraints width="0px" label="true" height="0px" />
+                    </Label>
+                    <TextField x:name="textFieldRow">
+                        <x:constraints width="30%" height="0px" />
+                    </TextField>
+                </FormItem>
+                <FormItem x:name="formItem3">
+                    <x:constraints width="0px" height="0px" />
+                    <Label x:name="label3" text="Datei">
+                        <x:constraints width="0px" label="true" height="0px" />
+                    </Label>
+                    <Label x:name="lblFileName" text="Label">
+                        <x:constraints width="400px" height="0px" />
+                    </Label>
+                </FormItem>
+                <Label x:name="lblSize" text="Label">
+                    <x:constraints width="100%" height="100%" />
+                </Label>
+                <FormItem x:name="formItem4" x:columnSpan="2">
+                    <x:constraints width="0px" height="0px" />
+                    <Label x:name="label4" text="Status">
+                        <x:constraints width="0px" label="true" height="0px" />
+                    </Label>
+                    <Label x:name="labelStatus" text="Label">
+                        <x:constraints width="100%" height="100%" />
+                    </Label>
+                </FormItem>
+            </FormLayout>
+        </HorizontalLayout>
+        <HorizontalLayout x:name="horizontalLayout2">
+            <x:constraints width="100%" height="-1px" flex-grow="0.0" />
+            <Button x:name="cmdUpload" text="Datei...">
+                <x:icon src="com.vaadin.flow.component.icon.VaadinIcon#UPLOAD" />
+                <x:constraints width="0px" height="0px" flex-grow="0.0" />
+                <x:event>click.onComponentEvent</x:event>
+            </Button>
+            <Button x:name="cmdProcess" text="Importieren">
+                <x:icon src="com.vaadin.flow.component.icon.VaadinIcon#ROCKET" />
+                <x:constraints width="0px" height="0px" flex-grow="0.0" />
+                <x:event>click.onComponentEvent</x:event>
+                <x:event>focus.onComponentEvent</x:event>
+            </Button>
+            <HorizontalLayout x:name="horizontalLayout3">
+                <x:constraints width="100px" height="30px" flex-grow="0.0" />
+            </HorizontalLayout>
+            <Button x:name="cmdCancel" text="Schliessen">
+                <x:icon src="com.vaadin.flow.component.icon.VaadinIcon#CLOSE_SMALL" />
+                <x:constraints width="0px" height="0px" flex-grow="0.0" />
+                <x:event>click.onComponentEvent</x:event>
+            </Button>
+        </HorizontalLayout>
+        <HorizontalLayout spacing="false" x:name="horizontalLayoutFooter">
+            <x:constraints width="100%" height="50px" flex-grow="0.0" />
+            <Label x:name="lblCount" text="Label">
+                <x:constraints width="200px" height="100%" flex-grow="0.0" />
+            </Label>
+            <HorizontalLayout x:name="horizontalLayout4">
+                <x:constraints width="200px" height="40px" flex-grow="0.0" />
+            </HorizontalLayout>
+            <ProgressBar x:name="progressBar">
+                <x:constraints width="20%" height="0px" flex-grow="0.0" />
+            </ProgressBar>
+        </HorizontalLayout>
+    </VerticalLayout>
+</VerticalLayout>

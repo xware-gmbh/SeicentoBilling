@@ -14,6 +14,9 @@ import com.flowingcode.vaadin.addons.ironicons.ImageIcons;
 import com.rapidclipse.framework.server.data.renderer.CaptionRenderer;
 import com.rapidclipse.framework.server.resources.StringResourceUtils;
 import com.rapidclipse.framework.server.ui.filter.FilterComponent;
+import com.rapidclipse.framework.server.ui.filter.FilterData;
+import com.rapidclipse.framework.server.ui.filter.FilterEntry;
+import com.rapidclipse.framework.server.ui.filter.FilterOperator;
 import com.rapidclipse.framework.server.ui.filter.GridFilterSubjectFactory;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.ComponentEvent;
@@ -23,6 +26,7 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.GridSortOrder;
 import com.vaadin.flow.component.grid.ItemClickEvent;
 import com.vaadin.flow.component.grid.ItemDoubleClickEvent;
 import com.vaadin.flow.component.html.Label;
@@ -32,6 +36,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.data.provider.DataProvider;
+import com.vaadin.flow.data.provider.SortDirection;
 import com.vaadin.flow.router.Route;
 
 import ch.xwr.seicentobilling.business.ConfirmDialog;
@@ -65,6 +70,7 @@ public class ExpenseTabView extends VerticalLayout
 		this.initUI();
 		this.tableLine.setItems(new ArrayList<Expense>());
 		
+		this.sortList(true);
 		// set RO Fields
 		this.setROFields();
 
@@ -105,15 +111,35 @@ public class ExpenseTabView extends VerticalLayout
 		final Calendar cal   = Calendar.getInstance();
 		final int      iyear = cal.get(Calendar.YEAR);
 
-		final Integer[]     val  = new Integer[]{iyear};
-		final CostAccount[] val2 = new CostAccount[]{bean};
-		// final FilterData[] fd = new FilterData[]{new FilterData("perYear", new FilterOperator.Is(), val),
-		// new FilterData("costAccount", new FilterOperator.Is(), val2)};
-		//
-		// this.containerFilterComponent.setFilterData(fd);
+		final FilterEntry ie =
+			new FilterEntry("perYear", new FilterOperator.Is().key(), new Integer[]{iyear});
+		final FilterEntry ce =
+			new FilterEntry("costAccount", new FilterOperator.Is().key(), new CostAccount[]{bean});
+		this.containerFilterComponent.setValue(new FilterData("", new FilterEntry[]{ie, ce}));
 
 	}
-	
+
+	private void sortList(final boolean all)
+	{
+		final GridSortOrder<Periode> sortCol1 =
+			new GridSortOrder<>(this.grid.getColumnByKey("perYear"), SortDirection.DESCENDING);
+		final GridSortOrder<Periode> sortCol2 =
+			new GridSortOrder<>(this.grid.getColumnByKey("perMonth"), SortDirection.DESCENDING);
+		final GridSortOrder<Periode> sortCol3 =
+			new GridSortOrder<>(this.grid.getColumnByKey("costaccount"), SortDirection.ASCENDING);
+		this.grid.sort(Arrays.asList(sortCol1, sortCol2, sortCol3));
+		
+		if(!all)
+		{
+			return;
+		}
+		final GridSortOrder<Expense> sortCol11 =
+			new GridSortOrder<>(this.tableLine.getColumnByKey("expDate"), SortDirection.DESCENDING);
+		final GridSortOrder<Expense> sortCol21 =
+			new GridSortOrder<>(this.tableLine.getColumnByKey("expFlagGeneric"), SortDirection.ASCENDING);
+		this.tableLine.sort(Arrays.asList(sortCol11, sortCol21));
+	}
+
 	private boolean isBooked()
 	{
 		if(!this.grid.getSelectionModel().getFirstSelectedItem().isPresent())
@@ -209,21 +235,18 @@ public class ExpenseTabView extends VerticalLayout
 	
 	private void reloadMainTable()
 	{
-		// //save filter
-		// final FilterData[] fd = this.containerFilterComponent.getFilterData();
-		// this.containerFilterComponent.setFilterData(null);
-		//
-		// //clear+reload List
-		// this.table.removeAllItems();
-		// this.table.getBeanContainerDataSource().addAll(new PeriodeDAO().findAll());
-		//
-		// //define sort
-		// final Object[] properties2 = { "perYear", "perMonth", "costaccount" };
-		// final boolean[] ordering2 = { false, false, true };
-		// this.table.sort(properties2, ordering2);
-		//
-		// //reassign filter
-		// this.containerFilterComponent.setFilterData(fd);
+		// save filter
+		final FilterData fd = this.containerFilterComponent.getValue();
+		this.containerFilterComponent.setValue(null);
+
+		// clear+reload List
+		DataProvider.ofCollection(new PeriodeDAO().findAll());
+		this.grid.getDataProvider().refreshAll();
+
+		this.sortList(false);
+
+		// reassign filter
+		this.containerFilterComponent.setValue(fd);
 	}
 
 	/**
@@ -564,25 +587,25 @@ public class ExpenseTabView extends VerticalLayout
 	// <generated-code name="initUI">
 	private void initUI()
 	{
-		this.splitLayout           = new SplitLayout();
-		this.verticalLayout        = new VerticalLayout();
-		this.filterComponent       = new FilterComponent();
-		this.horizontalLayout2     = new HorizontalLayout();
-		this.cmdNew                = new Button();
-		this.cmdDelete             = new Button();
-		this.cmdUpdate             = new Button();
-		this.cmdReload             = new Button();
-		this.cmdInfo               = new Button();
-		this.grid                  = new Grid<>(Periode.class, false);
-		this.verticalLayout2       = new VerticalLayout();
-		this.verticalLayoutExpense = new Label();
-		this.horizontalLayout3     = new HorizontalLayout();
-		this.cmdNewExpense         = new Button();
-		this.cmdDeleteExpense      = new Button();
-		this.cmdUpdateExpense      = new Button();
-		this.cmdCopySingle         = new Button();
-		this.cmdInfoExpense        = new Button();
-		this.tableLine             = new Grid<>(Expense.class, false);
+		this.splitLayout              = new SplitLayout();
+		this.verticalLayout           = new VerticalLayout();
+		this.containerFilterComponent = new FilterComponent();
+		this.horizontalLayout2        = new HorizontalLayout();
+		this.cmdNew                   = new Button();
+		this.cmdDelete                = new Button();
+		this.cmdUpdate                = new Button();
+		this.cmdReload                = new Button();
+		this.cmdInfo                  = new Button();
+		this.grid                     = new Grid<>(Periode.class, false);
+		this.verticalLayout2          = new VerticalLayout();
+		this.verticalLayoutExpense    = new Label();
+		this.horizontalLayout3        = new HorizontalLayout();
+		this.cmdNewExpense            = new Button();
+		this.cmdDeleteExpense         = new Button();
+		this.cmdUpdateExpense         = new Button();
+		this.cmdCopySingle            = new Button();
+		this.cmdInfoExpense           = new Button();
+		this.tableLine                = new Grid<>(Expense.class, false);
 
 		this.horizontalLayout2.setMinHeight("");
 		this.horizontalLayout2.setMinWidth("100%");
@@ -648,8 +671,8 @@ public class ExpenseTabView extends VerticalLayout
 			.setVisible(false);
 		this.tableLine.setSelectionMode(Grid.SelectionMode.SINGLE);
 
-		this.filterComponent.connectWith(this.grid.getDataProvider());
-		this.filterComponent.setFilterSubject(GridFilterSubjectFactory.CreateFilterSubject(this.grid,
+		this.containerFilterComponent.connectWith(this.grid.getDataProvider());
+		this.containerFilterComponent.setFilterSubject(GridFilterSubjectFactory.CreateFilterSubject(this.grid,
 			Arrays.asList("costAccount.csaCode", "costAccount.csaName", "perName"),
 			Arrays.asList("costAccount", "costAccount.csaCode", "costAccount.csaName", "perBookedExpense",
 				"perBookedProject", "perMonth", "perSignOffExpense", "perState", "perYear")));
@@ -660,12 +683,12 @@ public class ExpenseTabView extends VerticalLayout
 		this.cmdReload.setSizeUndefined();
 		this.cmdInfo.setSizeUndefined();
 		this.horizontalLayout2.add(this.cmdNew, this.cmdDelete, this.cmdUpdate, this.cmdReload, this.cmdInfo);
-		this.filterComponent.setWidthFull();
-		this.filterComponent.setHeight(null);
+		this.containerFilterComponent.setWidthFull();
+		this.containerFilterComponent.setHeight(null);
 		this.horizontalLayout2.setWidth("100px");
 		this.horizontalLayout2.setHeight("60px");
 		this.grid.setSizeFull();
-		this.verticalLayout.add(this.filterComponent, this.horizontalLayout2, this.grid);
+		this.verticalLayout.add(this.containerFilterComponent, this.horizontalLayout2, this.grid);
 		this.verticalLayout.setFlexGrow(1.0, this.grid);
 		this.cmdNewExpense.setWidth("50%");
 		this.cmdNewExpense.setHeight(null);
@@ -717,7 +740,7 @@ public class ExpenseTabView extends VerticalLayout
 	private VerticalLayout   verticalLayout, verticalLayout2;
 	private HorizontalLayout horizontalLayout2, horizontalLayout3;
 	private Label            verticalLayoutExpense;
-	private FilterComponent  filterComponent;
+	private FilterComponent  containerFilterComponent;
 	// </generated-code>
 
 }

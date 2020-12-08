@@ -10,6 +10,8 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -17,6 +19,8 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceContextType;
 
 import org.apache.log4j.LogManager;
+
+import com.vaadin.flow.component.upload.ProgressListener;
 
 import ch.xwr.seicentobilling.business.LovState;
 import ch.xwr.seicentobilling.business.model.crm.ZipModel;
@@ -35,8 +39,8 @@ public final class ZipImporter
 	int            iNew      = 0;
 	int            iUpdate   = 0;
 	
-	private CityDAO dao;
-	// private LinkedHashSet<ProgressListener> progressListeners;
+	private CityDAO                         dao;
+	private LinkedHashSet<ProgressListener> progressListeners;
 	
 	@PersistenceContext(unitName = "City", type = PersistenceContextType.EXTENDED)
 	private EntityManager entityManager;
@@ -78,26 +82,31 @@ public final class ZipImporter
 		ZipImporter.LOG.info(
 			"[END] Number of lines processed " + this.icount + " New: " + this.iNew + " Updated: " + this.iUpdate);
 	}
-	
-	// public void addProgressListener(final ProgressListener listener) {
-	// if (this.progressListeners == null) {
-	// this.progressListeners = new LinkedHashSet<>();
-	// }
-	// this.progressListeners.add(listener);
-	// }
-	
-	// protected void fireUpdateProgress(final long totalBytes, final long contentLength) {
-	// // this is implemented differently than other listeners to maintain
-	// // backwards compatibility
-	// if (this.progressListeners != null) {
-	// for (final Iterator<ProgressListener> it = this.progressListeners
-	// .iterator(); it.hasNext();) {
-	// final ProgressListener l = it.next();
-	// l.updateProgress(totalBytes, contentLength);
-	// }
-	// }
-	// }
-	
+
+	public void addProgressListener(final ProgressListener listener)
+	{
+		if(this.progressListeners == null)
+		{
+			this.progressListeners = new LinkedHashSet<>();
+		}
+		this.progressListeners.add(listener);
+	}
+
+	protected void fireUpdateProgress(final long totalBytes, final long contentLength)
+	{
+		// this is implemented differently than other listeners to maintain
+		// backwards compatibility
+		if(this.progressListeners != null)
+		{
+			for(final Iterator<ProgressListener> it = this.progressListeners
+				.iterator(); it.hasNext();)
+			{
+				final ProgressListener l = it.next();
+				l.updateProgress(totalBytes, contentLength);
+			}
+		}
+	}
+
 	public String getResultString()
 	{
 		return ("Number of lines processed " + this.icount + " New: " + this.iNew + " Updated: " + this.iUpdate);

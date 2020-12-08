@@ -158,7 +158,8 @@ public class Seicento
 
 	public static String getLoginMethod()
 	{
-		String lm = "azure";
+		// String lm = "azure";TODO:to keep db login validation temp
+		String lm = "local";
 		if(System.getenv("SEICENTO_LOGIN_METHOD") != null)
 		{
 			lm = System.getenv("SEICENTO_LOGIN_METHOD");

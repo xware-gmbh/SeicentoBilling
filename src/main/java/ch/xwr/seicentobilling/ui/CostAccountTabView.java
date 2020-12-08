@@ -55,7 +55,7 @@ public class CostAccountTabView extends VerticalLayout
 {
 	/** Logger initialized */
 	private static final org.apache.log4j.Logger LOG = LogManager.getLogger(CostAccountTabView.class);
-
+	
 	/**
 	 *
 	 */
@@ -65,11 +65,11 @@ public class CostAccountTabView extends VerticalLayout
 		this.initUI();
 		// State
 		this.comboBoxState.setItems(LovState.State.values());
-
+		
 		this.setROFields();
 		this.setDefaultFilter();
 	}
-
+	
 	private void setROFields()
 	{
 		if(Seicento.hasRole("BillingAdmin"))
@@ -81,18 +81,14 @@ public class CostAccountTabView extends VerticalLayout
 			this.txtCsaExtRef.setEnabled(false);
 		}
 	}
-
+	
 	private void setDefaultFilter()
 	{
 		final FilterEntry fe =
 			new FilterEntry("csaState", new FilterOperator.Is().key(), new Object[]{LovState.State.active});
-
-		// final FilterData[] fd = new FilterData[] { new FilterData("",new FilterEntry[] {fe}) };
-
 		this.containerFilterComponent.setValue(new FilterData("", new FilterEntry[]{fe}));
-
 	}
-	
+
 	/**
 	 * Event handler delegate method for the {@link Grid} {@link #grid}.
 	 *
@@ -109,7 +105,7 @@ public class CostAccountTabView extends VerticalLayout
 			this.binder.setBean(coustAccountBean);
 		}
 	}
-	
+
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdNew}.
 	 *
@@ -121,10 +117,10 @@ public class CostAccountTabView extends VerticalLayout
 		final CostAccount bean = new CostAccount();
 		bean.setCsaState(LovState.State.active);
 		this.binder.setBean(bean);
-		
+
 		// this.fieldGroup.setItemDataSource(bean);
 	}
-	
+
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdReload}.
 	 *
@@ -133,17 +129,17 @@ public class CostAccountTabView extends VerticalLayout
 	 */
 	private void cmdReload_onClick(final ClickEvent<Button> event)
 	{
-		
+
 		// save filter
 		final FilterData fd = this.containerFilterComponent.getValue();
 		this.containerFilterComponent.setValue(null);
-		
+
 		// clear+reload List
-		this.grid.setDataProvider(DataProvider.ofCollection(new CostAccountDAO().findAllActive()));
-		
+		this.grid.setDataProvider(DataProvider.ofCollection(new CostAccountDAO().findAll()));
+
 		// reassign filter
 		this.containerFilterComponent.setValue(fd);
-		
+
 		if(this.binder.getBean() != null)
 		{
 			final CostAccount bean = this.binder.getBean();
@@ -152,9 +148,9 @@ public class CostAccountTabView extends VerticalLayout
 				this.grid.select(bean);
 			}
 		}
-		
+
 	}
-	
+
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdSave}.
 	 *
@@ -163,7 +159,7 @@ public class CostAccountTabView extends VerticalLayout
 	 */
 	private void cmdSave_onClick(final ClickEvent<Button> event)
 	{
-		
+
 		if(SeicentoCrud.doSave(this.binder, new CostAccountDAO()))
 		{
 			try
@@ -178,11 +174,11 @@ public class CostAccountTabView extends VerticalLayout
 				CostAccountTabView.LOG.error("could not save ObjRoot", e);
 			}
 		}
-		
+
 		this.cmdReload_onClick(null);
-
+		
 	}
-
+	
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdReset}.
 	 *
@@ -198,17 +194,17 @@ public class CostAccountTabView extends VerticalLayout
 			this.binder.setBean(coustAccountBean);
 		}
 	}
-
+	
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdInfo}.
 	 *
 	 * @see ComponentEventListener#onComponentEvent(ComponentEvent)
 	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
 	 */
-
+	
 	private void cmdInfo_onClick(final ClickEvent<Button> event)
 	{
-
+		
 		if(this.grid.getSelectedItems() != null)
 		{
 			final CostAccount bean = this.grid.getSelectionModel().getFirstSelectedItem().get();
@@ -217,9 +213,9 @@ public class CostAccountTabView extends VerticalLayout
 			win.add(new RowObjectView(bean.getCsaId(), bean.getClass().getSimpleName()));
 			win.open();
 		}
-
+		
 	}
-
+	
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdDelete}.
 	 *
@@ -234,30 +230,30 @@ public class CostAccountTabView extends VerticalLayout
 				20, Notification.Position.BOTTOM_START);
 			return;
 		}
-		
+
 		ConfirmDialog.show(this.getUI().get(), "Datensatz löschen", "Wirklich löschen?");
-		
+
 		try
 		{
-			
+
 			final CostAccount bean = this.grid.getSelectionModel().getFirstSelectedItem().get();
-			
+
 			// Delete Record
 			final RowObjectManager man = new RowObjectManager();
 			man.deleteObject(bean.getCsaId(), bean.getClass().getSimpleName());
-			
+
 			final CostAccountDAO dao = new CostAccountDAO();
 			dao.remove(bean);
 			dao.flush();
-			
+
 			this.binder.removeBean();
 			CostAccountTabView.this.binder.setBean(new CostAccount());
 			this.grid.setDataProvider(DataProvider.ofCollection(new CostAccountDAO().findAll()));
 			CostAccountTabView.this.grid.getDataProvider().refreshAll();
-			
+
 			Notification.show("Datensatz wurde gelöscht!",
 				20, Notification.Position.BOTTOM_START);
-			
+
 		}
 		catch(final PersistenceException cx)
 		{
@@ -269,9 +265,9 @@ public class CostAccountTabView extends VerticalLayout
 		{
 			CostAccountTabView.LOG.error("Error on delete", e);
 		}
-		
-	}
 
+	}
+	
 	/* WARNING: Do NOT edit!<br>The content of this method is always regenerated by the UI designer. */
 	// <generated-code name="initUI">
 	private void initUI()
@@ -306,7 +302,7 @@ public class CostAccountTabView extends VerticalLayout
 		this.cmdSave                  = new Button();
 		this.cmdReset                 = new Button();
 		this.binder                   = new BeanValidationBinder<>(CostAccount.class);
-
+		
 		this.horizontalLayout2.setMinHeight("");
 		this.horizontalLayout2.setMinWidth("100%");
 		this.cmdNew.setIcon(VaadinIcon.PLUS_CIRCLE.create());
@@ -349,17 +345,17 @@ public class CostAccountTabView extends VerticalLayout
 		this.cmdReset.setText(StringResourceUtils.optLocalizeString("{$cmdReset.caption}", this));
 		this.cmdReset.setIcon(IronIcons.UNDO.create());
 		this.binder.setValidatorsDisabled(true);
-
+		
 		this.binder.forField(this.txtCsaCode).withNullRepresentation("").bind("csaCode");
 		this.binder.forField(this.txtCsaName).withNullRepresentation("").bind("csaName");
 		this.binder.forField(this.cmbCostAccount).bind("costAccount");
 		this.binder.forField(this.txtCsaExtRef).withNullRepresentation("").bind("csaExtRef");
 		this.binder.forField(this.comboBoxState).bind("csaState");
-
+		
 		this.containerFilterComponent.connectWith(this.grid.getDataProvider());
 		this.containerFilterComponent.setFilterSubject(GridFilterSubjectFactory.CreateFilterSubject(this.grid,
 			Arrays.asList("csaCode", "csaName"), Arrays.asList("costAccount", "csaCode", "csaName", "csaState")));
-
+		
 		this.cmdNew.setSizeUndefined();
 		this.cmdDelete.setSizeUndefined();
 		this.cmdReload.setSizeUndefined();
@@ -413,7 +409,7 @@ public class CostAccountTabView extends VerticalLayout
 		this.add(this.splitLayout);
 		this.setFlexGrow(1.0, this.splitLayout);
 		this.setSizeFull();
-
+		
 		this.cmdNew.addClickListener(this::cmdNew_onClick);
 		this.cmdDelete.addClickListener(this::cmdDelete_onClick);
 		this.cmdReload.addClickListener(this::cmdReload_onClick);
@@ -422,7 +418,7 @@ public class CostAccountTabView extends VerticalLayout
 		this.cmdSave.addClickListener(this::cmdSave_onClick);
 		this.cmdReset.addClickListener(this::cmdReset_onClick);
 	} // </generated-code>
-	
+
 	// <generated-code name="variables">
 	private Grid<CostAccount>                 grid;
 	private VerticalLayout                    verticalLayout;
@@ -438,5 +434,5 @@ public class CostAccountTabView extends VerticalLayout
 	private TextField                         txtCsaCode, txtCsaName, txtCsaExtRef;
 	private ComboBox<CostAccount>             cmbCostAccount;
 	// </generated-code>
-	
+
 }

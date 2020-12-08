@@ -64,46 +64,44 @@ import ch.xwr.seicentobilling.entities.LovAccount;
 import ch.xwr.seicentobilling.entities.Periode;
 import ch.xwr.seicentobilling.entities.Project;
 import ch.xwr.seicentobilling.entities.Vat;
+import ch.xwr.seicentobilling.ui.project.ProjectLookupPopup;
 
 
 public class ExpensePopup extends VerticalLayout
 {
 	/** Logger initialized */
 	private static final Logger LOG = LoggerFactory.getLogger(ExpensePopup.class);
-	
-	private final String  source  = "";
-	private final boolean isAdmin = false;
-	
+
 	/**
-	 *
+
 	 */
 	public ExpensePopup()
 	{
 		super();
 		this.initUI();
-
-		// this.setHeight(Seicento.calculateThemeHeight(Float.parseFloat(this.getHeight()), Lumo.DARK));
 		
+		// this.setHeight(Seicento.calculateThemeHeight(Float.parseFloat(this.getHeight()), Lumo.DARK));
+
 		// State
 		this.comboBoxState.setItems(LovState.State.values());
 		this.comboBoxUnit.setItems(LovState.ExpUnit.values());
 		this.comboBoxGeneric.setItems(LovState.ExpType.values());
-		
+
 		// this.comboBoxAccount.addItems((Object[])LovState.Accounts.values());
 		// loadDummyCb();
-		
+
 		// get Parameter
 		final Long beanId = (Long)UI.getCurrent().getSession().getAttribute("beanId");
 		final Long objId  = (Long)UI.getCurrent().getSession().getAttribute("objId");
 		Expense    bean   = null;
 		Periode    obj    = null;
-		
+
 		if(beanId == null)
 		{
 			// new
 			final PeriodeDAO objDao = new PeriodeDAO();
 			obj = objDao.find(objId);
-			
+
 			bean = new Expense();
 			bean.setExpState(LovState.State.active);
 			// bean.setPrlWorkType(LovState.WorkType.project);
@@ -121,54 +119,54 @@ public class ExpensePopup extends VerticalLayout
 		{
 			final ExpenseDAO dao = new ExpenseDAO();
 			bean = dao.find(beanId.longValue());
-			
+
 			if(bean.getExpBooked() != null)
 			{
 				this.dateExpBooked.setValue(bean.getExpBooked().toInstant()
 					.atZone(ZoneId.systemDefault())
 					.toLocalDate());
 			}
-			
+
 			// this.prepareProjectCombo(bean.getProject());
 		}
-		
+
 		this.setBeanGui(bean);
 		this.checkTemplates();
-		
+
 		if(bean.getExpId() == null || bean.getExpId().floatValue() < 1)
 		{
 			// this.mnuUpload.setEnabled(false);
 		}
 	}
-	
+
 	private void prepareProjectCombo(final Project bean)
 	{
 		// ExpensePopup.this.cmbProject.getDataProvider().refreshItem(bean);
 		// ExpensePopup.this.cmbProject.setValue(bean);
 	}
-	
+
 	private void setBeanGui(final Expense bean)
 	{
 		// set Bean + Fields
 		this.binder.setBean(bean);
-		
-		this.setROFields();
 
+		this.setROFields();
+		
 		this.postLoadAccountAction(bean);
 		this.txtExpText.focus();
-
+		
 	}
-	
+
 	private void postLoadAccountAction(final Expense bean)
 	{
 		if(bean.getExpAccount() == null)
 		{
 			return;
 		}
-
+		
 		// final boolean exist = this.comboBoxAccount.containsId(lov);
 		// funktioniert auf keine Weise....
-
+		
 		final Collection<?> col1 =
 			this.comboBoxAccount.getDataProvider().fetch(new Query<>()).collect(Collectors.toList());
 		for(final Iterator<?> iterator = col1.iterator(); iterator.hasNext();)
@@ -180,16 +178,16 @@ public class ExpensePopup extends VerticalLayout
 				break;
 			}
 		}
-
+		
 	}
-
+	
 	private void checkTemplates()
 	{
 		final Expense line = this.binder.getBean();
-		
+
 		final ExpenseTemplateDAO    dao = new ExpenseTemplateDAO();
 		final List<ExpenseTemplate> lst = dao.findByCostAccount(line.getPeriode().getCostAccount());
-		
+
 		// XdevMenuItem item = null;
 		//
 		// for(int i = 1; i < 11; i++)
@@ -223,16 +221,16 @@ public class ExpensePopup extends VerticalLayout
 		// item.setVisible(true);
 		// item.setCaption(value);
 		// }
-		
+
 	}
-	
+
 	private void setROFields()
 	{
 		this.dateExpBooked.setEnabled(false);
 		this.cmbPeriode.setEnabled(false);
 		this.cmbProject.setEnabled(false);
 	}
-
+	
 	public static Dialog getPopupWindow()
 	{
 		final Dialog win = new Dialog();
@@ -247,7 +245,7 @@ public class ExpensePopup extends VerticalLayout
 		win.add(cancelButton, new ExpensePopup());
 		return win;
 	}
-	
+
 	private void preSaveAccountAction()
 	{
 		if(this.binder.getBean().getExpDate() == null)
@@ -259,27 +257,27 @@ public class ExpensePopup extends VerticalLayout
 			final Date date = Date.from(this.dateExpBooked.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
 			this.binder.getBean().setExpBooked(date);
 		}
-
+		
 		final LovAccount lov = this.comboBoxAccount.getValue();
 		if(lov != null)
 		{
 			this.binder.getBean().setExpAccount(lov.getId());
 		}
-
+		
 	}
-
+	
 	private void loadTemplate(final int iKey)
 	{
 		final Expense line = this.binder.getBean();
-		
+
 		final ExpenseTemplateDAO dao = new ExpenseTemplateDAO();
 		final ExpenseTemplate    tpl = dao.findByKeyNumber(line.getPeriode().getCostAccount(), iKey);
-		
+
 		if(tpl == null)
 		{
 			return; // not found
 		}
-		
+
 		line.setExpAccount(tpl.getExtAccount());
 		line.setExpAmount(tpl.getExtAmount());
 		line.setExpFlagCostAccount(tpl.getExtFlagCostAccount());
@@ -290,13 +288,13 @@ public class ExpensePopup extends VerticalLayout
 		line.setExpUnit(tpl.getExtUnit());
 		line.setProject(tpl.getProject());
 		line.setVat(tpl.getVat());
-		
+
 		this.prepareProjectCombo(tpl.getProject());
 		this.setROFields();
-		
+
 		this.postLoadAccountAction(line);
 	}
-	
+
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdReset}.
 	 *
@@ -309,7 +307,7 @@ public class ExpensePopup extends VerticalLayout
 		this.binder.removeBean();
 		((Dialog)this.getParent().get()).close();
 	}
-	
+
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdSave}.
 	 *
@@ -324,11 +322,11 @@ public class ExpensePopup extends VerticalLayout
 		{
 			try
 			{
-				
+
 				final RowObjectManager man = new RowObjectManager();
 				man.updateObject(this.binder.getBean().getExpId(),
 					this.binder.getBean().getClass().getSimpleName());
-
+				
 				((Dialog)this.getParent().get()).close();
 				Notification.show("Daten wurden gespeichert", 5000, Notification.Position.BOTTOM_END);
 			}
@@ -337,9 +335,9 @@ public class ExpensePopup extends VerticalLayout
 				ExpensePopup.LOG.error("could not save ObjRoot", e);
 			}
 		}
-		
-	}
 
+	}
+	
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #btnSearch}.
 	 *
@@ -350,30 +348,30 @@ public class ExpensePopup extends VerticalLayout
 	{
 		this.popupProjectLookup();
 	}
-	
+
 	private void popupProjectLookup()
 	{
 		final Dialog win = ProjectLookupPopup.getPopupWindow();
-
+		
 		win.addDetachListener(new ComponentEventListener<DetachEvent>()
 		{
-
+			
 			@Override
 			public void onComponentEvent(final DetachEvent event)
 			{
 				final Long beanId = (Long)UI.getCurrent().getSession().getAttribute("beanId");
-
+				
 				if(beanId != null && beanId > 0)
 				{
 					final Project bean = new ProjectDAO().find(beanId);
 					ExpensePopup.this.cmbProject.setValue(bean);
-
+					
 				}
 			}
 		});
 		win.open();
 	}
-	
+
 	/**
 	 * Event handler delegate method for the {@link ComboBox} {@link #cmbPeriode}.
 	 *
@@ -383,7 +381,7 @@ public class ExpensePopup extends VerticalLayout
 	private void cmbPeriode_valueChanged(final ComponentValueChangeEvent<ComboBox<Periode>, Periode> event)
 	{
 	}
-
+	
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdDefault1}.
 	 *
@@ -394,7 +392,7 @@ public class ExpensePopup extends VerticalLayout
 	{
 		this.loadTemplate(1);
 	}
-	
+
 	/* WARNING: Do NOT edit!<br>The content of this method is always regenerated by the UI designer. */
 	// <generated-code name="initUI">
 	private void initUI()
@@ -448,7 +446,7 @@ public class ExpensePopup extends VerticalLayout
 		this.cmdReset              = new Button();
 		this.cmdDefault1           = new Button();
 		this.binder                = new BeanValidationBinder<>(Expense.class);
-
+		
 		this.label.setText("Spesen erfassen");
 		this.formLayout.setResponsiveSteps(
 			new FormLayout.ResponsiveStep("0px", 1, FormLayout.ResponsiveStep.LabelsPosition.TOP),
@@ -495,7 +493,7 @@ public class ExpensePopup extends VerticalLayout
 		this.cmdReset.setIcon(IronIcons.CANCEL.create());
 		this.cmdDefault1.setText("Def 1");
 		this.cmdDefault1.setIcon(VaadinIcon.BOOKMARK.create());
-
+		
 		this.binder.forField(this.cmbPeriode).bind("periode");
 		this.binder.forField(this.dateExpDate).withNullRepresentation(LocalDate.of(2020, Month.NOVEMBER, 26))
 			.withConverter(ConverterBuilder.LocalDateToUtilDate().systemDefaultZoneId().build()).bind("expDate");
@@ -512,7 +510,7 @@ public class ExpensePopup extends VerticalLayout
 			.withConverter(ConverterBuilder.StringToDouble().numberFormatBuilder(NumberFormatBuilder.Decimal()).build())
 			.bind("expQuantity");
 		this.binder.forField(this.comboBoxState).bind("expState");
-
+		
 		this.label.setSizeUndefined();
 		this.horizontalLayout.add(this.label);
 		this.horizontalLayout.setVerticalComponentAlignment(FlexComponent.Alignment.CENTER, this.label);
@@ -599,14 +597,14 @@ public class ExpensePopup extends VerticalLayout
 		this.verticalLayout.setSizeFull();
 		this.add(this.verticalLayout);
 		this.setSizeFull();
-
+		
 		this.cmbPeriode.addValueChangeListener(this::cmbPeriode_valueChanged);
 		this.btnSearch.addClickListener(this::btnSearch_onClick);
 		this.cmdSave.addClickListener(this::cmdSave_onClick);
 		this.cmdReset.addClickListener(this::cmdReset_onClick);
 		this.cmdDefault1.addClickListener(this::cmdDefault1_onClick);
 	} // </generated-code>
-
+	
 	// <generated-code name="variables">
 	private ComboBox<ExpUnit>             comboBoxUnit;
 	private ComboBox<Vat>                 cmbVat;
@@ -628,5 +626,5 @@ public class ExpensePopup extends VerticalLayout
 	private ComboBox<Project>             cmbProject;
 	private TextField                     txtExpText, txtExpAmount, txtExpQuantity;
 	// </generated-code>
-
+	
 }

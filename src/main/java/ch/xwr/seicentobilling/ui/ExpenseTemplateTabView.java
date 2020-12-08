@@ -1,11 +1,9 @@
 
 package ch.xwr.seicentobilling.ui;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.persistence.PersistenceException;
@@ -21,6 +19,8 @@ import com.rapidclipse.framework.server.ui.ItemLabelGeneratorFactory;
 import com.rapidclipse.framework.server.ui.StartsWithIgnoreCaseItemFilter;
 import com.rapidclipse.framework.server.ui.filter.FilterComponent;
 import com.rapidclipse.framework.server.ui.filter.FilterData;
+import com.rapidclipse.framework.server.ui.filter.FilterEntry;
+import com.rapidclipse.framework.server.ui.filter.FilterOperator;
 import com.rapidclipse.framework.server.ui.filter.GridFilterSubjectFactory;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.ComponentEvent;
@@ -86,12 +86,7 @@ public class ExpenseTemplateTabView extends VerticalLayout
 		
 		this.comboBoxGeneric.setItems(LovState.ExpType.values());
 		
-		// sort Table
-		/*
-		 * final Object[] properties2 = { "extKeyNumber", "extId"};
-		 * final boolean[] ordering2 = { true, false };
-		 * this.table.sort(properties2, ordering2);
-		 */
+		this.sortList();
 
 		this.setDefaultFilter();
 		this.binder.setBean(this.getNewDaoWithDefaults());
@@ -160,20 +155,24 @@ public class ExpenseTemplateTabView extends VerticalLayout
 	
 	private void setDefaultFilter()
 	{
-		/*
-		 * CostAccount bean = Seicento.getLoggedInCostAccount();
-		 * if (bean == null) {
-		 * bean = new CostAccountDAO().findAll().get(0); // Dev Mode
-		 * }
-		 *
-		 * final LovState.State[] valState = new LovState.State[]{LovState.State.active};
-		 * final CostAccount[] val2 = new CostAccount[]{bean};
-		 * final FilterData[] fd = new FilterData[]{new FilterData("costAccount", new FilterOperator.Is(), val2),
-		 * new FilterData("extState", new FilterOperator.Is(), valState)};
-		 *
-		 * this.containerFilterComponent.setFilterData(fd);
-		 */
+		final CostAccount bean = Seicento.getLoggedInCostAccount();
+
+		final FilterEntry pe =
+			new FilterEntry("extState", new FilterOperator.Is().key(), new LovState.State[]{LovState.State.active});
+		final FilterEntry ce =
+			new FilterEntry("costAccount", new FilterOperator.Is().key(), new CostAccount[]{bean});
+		this.containerFilterComponent.setValue(new FilterData("", new FilterEntry[]{ce, pe}));
 		
+	}
+	
+	private void sortList()
+	{
+		final GridSortOrder<ExpenseTemplate> sortCol1 =
+			new GridSortOrder<>(this.grid.getColumnByKey("extKeyNumber"), SortDirection.ASCENDING);
+		final GridSortOrder<ExpenseTemplate> sortCol2 =
+			new GridSortOrder<>(this.grid.getColumnByKey("extId"), SortDirection.DESCENDING);
+		this.grid.sort(Arrays.asList(sortCol1, sortCol2));
+
 	}
 
 	/**
@@ -225,28 +224,7 @@ public class ExpenseTemplateTabView extends VerticalLayout
 	 */
 	private void cmdReload_onClick(final ClickEvent<Button> event)
 	{
-
-		// save filter
-		final FilterData fd = this.containerFilterComponent.getValue();
-		this.containerFilterComponent.setValue(null);
-
-		// clear+reload List
-		this.grid.setDataProvider(DataProvider.ofCollection(new ExpenseTemplateDAO().findAll()));
-		this.grid.getDataProvider().refreshAll();
-
-		final List<GridSortOrder<ExpenseTemplate>> sort =
-			new ArrayList<>();
-		final GridSortOrder<ExpenseTemplate>       gs   =
-			new GridSortOrder<>(this.grid.getColumnByKey("prtKeyNumber"), SortDirection.ASCENDING);
-		sort.add(gs);
-		final GridSortOrder<ExpenseTemplate> gs2 =
-			new GridSortOrder<>(this.grid.getColumnByKey("prtWorkType"), SortDirection.DESCENDING);
-		sort.add(gs2);
-		// this.grid.sort(sort);
-
-		// reassign filter
-		this.containerFilterComponent.setValue(fd);
-		
+		this.reloadMainTable();
 	}
 
 	/**
@@ -286,25 +264,19 @@ public class ExpenseTemplateTabView extends VerticalLayout
 
 	private void reloadMainTable()
 	{
-		/*
-		 * //save filter
-		 * final FilterData[] fd = this.containerFilterComponent.getFilterData();
-		 * this.containerFilterComponent.setFilterData(null);
-		 *
-		 * //clear+reload List
-		 * this.table.removeAllItems();
-		 *
-		 * this.table.refreshRowCache();
-		 * this.table.getBeanContainerDataSource().addAll(new ExpenseTemplateDAO().findAll());
-		 *
-		 * //define sort
-		 * final Object[] properties2 = { "extKeyNumber", "extId"};
-		 * final boolean[] ordering2 = { true, false };
-		 * this.table.sort(properties2, ordering2);
-		 *
-		 * //reassign filter
-		 * this.containerFilterComponent.setFilterData(fd);
-		 */
+		// save filter
+		final FilterData fd = this.containerFilterComponent.getValue();
+		this.containerFilterComponent.setValue(null);
+
+		// clear+reload List
+		this.grid.setDataProvider(DataProvider.ofCollection(new ExpenseTemplateDAO().findAll()));
+		this.grid.getDataProvider().refreshAll();
+
+		this.sortList();
+
+		// reassign filter
+		this.containerFilterComponent.setValue(fd);
+
 	}
 	
 	private void preSaveAccountAction()

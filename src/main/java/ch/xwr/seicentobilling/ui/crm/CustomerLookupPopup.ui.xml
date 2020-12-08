@@ -30,7 +30,7 @@
             <x:dataProvider dataFetchMethod="findAll" />
             <x:columns>
                 <column property="shortname" header="Name" sortable="true" />
-                <column property="addresses" header="Adresse" />
+                <column property="cusAddress" header="Adresse" sortable="true" />
                 <column property="city.ctyZip" header="PLZ" sortable="true" />
                 <column property="city.ctyName" header="Ort" sortable="true" />
                 <column property="city.ctyCountry" header="Land" sortable="true" />
