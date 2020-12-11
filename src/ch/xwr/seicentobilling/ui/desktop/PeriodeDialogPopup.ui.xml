@@ -63,6 +63,9 @@
                     <XdevCheckBox caption="Zielperiode muss leer sein!" x:name="checkBoxEmpty" value="true">
                         <x:constraints gridx="2" gridy="4" weighty="0.0" weightx="0.1" width="0px" height="0px" />
                     </XdevCheckBox>
+                    <XdevCheckBox caption="Zieldatum berechnen" description="Das Datum in der Zielperiode wird berchnet, wenn dieses nicht mutiert wird." x:name="checkBoxTargetDate" value="true">
+                        <x:constraints gridx="2" gridy="5" top="28px" left="-1px" weighty="0.0" weightx="0.1" width="0px" height="0px" />
+                    </XdevCheckBox>
                 </XdevGridLayout>
                 <XdevHorizontalLayout x:name="horizontalLayoutButtons" margin="r">
                     <x:constraints weighty="0.0" width="0px" alignment="MIDDLE_LEFT" height="0px" />

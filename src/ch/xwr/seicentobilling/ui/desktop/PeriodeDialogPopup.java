@@ -35,6 +35,7 @@ import ch.xwr.seicentobilling.business.ExpenseHandler;
 import ch.xwr.seicentobilling.business.LovState;
 import ch.xwr.seicentobilling.dal.ExpenseDAO;
 import ch.xwr.seicentobilling.dal.PeriodeDAO;
+import ch.xwr.seicentobilling.entities.CostAccount;
 import ch.xwr.seicentobilling.entities.Expense;
 import ch.xwr.seicentobilling.entities.Periode;
 import ch.xwr.seicentobilling.entities.Periode_;
@@ -56,6 +57,7 @@ public class PeriodeDialogPopup extends XdevView {
 
 		final Periode fromBean = getBean(fromId);
 		final Periode toBean = getBean(toId);
+		fillComboBox(fromBean.getCostAccount());
 
 		if (fromBean != null) {
 			this.comboBoxFrom.select(fromBean);
@@ -64,6 +66,17 @@ public class PeriodeDialogPopup extends XdevView {
 			this.comboBoxTo.select(toBean);
 		}
 
+	}
+
+	private void fillComboBox(final CostAccount costAccount) {
+		final PeriodeDAO dao = new PeriodeDAO();
+
+		this.comboBoxFrom.removeAllItems();
+		this.comboBoxFrom.addItems(dao.findByCostAccount(costAccount));
+
+		this.comboBoxTo.removeAllItems();
+		this.comboBoxTo.addItems(dao.findByCostAccount(costAccount));
+		this.comboBoxFrom.setEnabled(false);
 	}
 
 	private Periode getBean(final Long recId) {
@@ -268,6 +281,7 @@ public class PeriodeDialogPopup extends XdevView {
 		final Periode perT = this.comboBoxTo.getSelectedItem().getBean();
 		final Periode perF = this.comboBoxFrom.getSelectedItem().getBean();
 		final boolean checkit = this.checkBoxEmpty.getValue().booleanValue();
+		final boolean guessDate = this.checkBoxTargetDate.getValue().booleanValue();
 		int icount = 0;
 
 		try {
@@ -281,7 +295,7 @@ public class PeriodeDialogPopup extends XdevView {
 					final XdevPopupDateField dfield = (XdevPopupDateField) item.getItemProperty("Datum").getValue();
 					final Date targetDate = dfield.getValue();
 
-					hdl.copyExpenseRecord(exp, perF, perT, checkit, targetDate);
+					hdl.copyExpenseRecord(exp, perF, perT, guessDate, targetDate);
 					icount++;
 				}
 	     	}
@@ -316,6 +330,7 @@ public class PeriodeDialogPopup extends XdevView {
 		this.label = new XdevLabel();
 		this.comboBoxTo = new XdevComboBox<>();
 		this.checkBoxEmpty = new XdevCheckBox();
+		this.checkBoxTargetDate = new XdevCheckBox();
 		this.horizontalLayoutButtons = new XdevHorizontalLayout();
 		this.cmdOk = new XdevButton();
 		this.cmdCancel = new XdevButton();
@@ -344,6 +359,10 @@ public class PeriodeDialogPopup extends XdevView {
 		this.comboBoxTo.setItemCaptionPropertyId(Periode_.perName.getName());
 		this.checkBoxEmpty.setCaption("Zielperiode muss leer sein!");
 		this.checkBoxEmpty.setValue(true);
+		this.checkBoxTargetDate.setCaption("Zieldatum berechnen");
+		this.checkBoxTargetDate
+				.setDescription("Das Datum in der Zielperiode wird berchnet, wenn dieses nicht mutiert wird.");
+		this.checkBoxTargetDate.setValue(true);
 		this.horizontalLayoutButtons.setMargin(new MarginInfo(false, true, false, false));
 		this.cmdOk.setCaption("Kopieren");
 		this.cmdOk.setClickShortcut(ShortcutAction.KeyCode.ENTER);
@@ -353,7 +372,7 @@ public class PeriodeDialogPopup extends XdevView {
 		this.verticalLayoutData.setMargin(new MarginInfo(false, false, true, false));
 
 		this.gridLayout.setColumns(2);
-		this.gridLayout.setRows(5);
+		this.gridLayout.setRows(6);
 		this.image.setWidth(60, Unit.PIXELS);
 		this.image.setHeight(60, Unit.PIXELS);
 		this.gridLayout.addComponent(this.image, 0, 0);
@@ -370,11 +389,13 @@ public class PeriodeDialogPopup extends XdevView {
 		this.gridLayout.addComponent(this.comboBoxTo, 1, 2);
 		this.checkBoxEmpty.setSizeUndefined();
 		this.gridLayout.addComponent(this.checkBoxEmpty, 1, 3);
+		this.checkBoxTargetDate.setSizeUndefined();
+		this.gridLayout.addComponent(this.checkBoxTargetDate, 1, 4);
 		this.gridLayout.setColumnExpandRatio(1, 10.0F);
 		final CustomComponent gridLayout_vSpacer = new CustomComponent();
 		gridLayout_vSpacer.setSizeFull();
-		this.gridLayout.addComponent(gridLayout_vSpacer, 0, 4, 1, 4);
-		this.gridLayout.setRowExpandRatio(4, 1.0F);
+		this.gridLayout.addComponent(gridLayout_vSpacer, 0, 5, 1, 5);
+		this.gridLayout.setRowExpandRatio(5, 1.0F);
 		this.cmdOk.setSizeUndefined();
 		this.horizontalLayoutButtons.addComponent(this.cmdOk);
 		this.horizontalLayoutButtons.setComponentAlignment(this.cmdOk, Alignment.MIDDLE_LEFT);
@@ -420,7 +441,7 @@ public class PeriodeDialogPopup extends XdevView {
 	private XdevImage image;
 	private XdevHorizontalLayout horizontalLayoutButtons;
 	private XdevPanel panel;
-	private XdevCheckBox checkBoxEmpty;
+	private XdevCheckBox checkBoxEmpty, checkBoxTargetDate;
 	private XdevTreeTable treeGrid;
 	private XdevGridLayout gridLayout;
 	private XdevVerticalLayout verticalLayout, verticalLayoutData;

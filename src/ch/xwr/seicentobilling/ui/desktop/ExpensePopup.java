@@ -220,12 +220,19 @@ public class ExpensePopup extends XdevView {
 				// This method gets called when the upload finished successfully
 				System.out.println("________________ UPLOAD SUCCEEDED 2");
 
-				ExpensePopup.this.urcv.uploadSucceeded(event);
-				Notification.show("Datei hochgeladen", "Name: " + ExpensePopup.this.urcv.getFiup().getName(),
-						Type.TRAY_NOTIFICATION);
-				//ExpensePopup.this.upload.setButtonCaption("* Uploaded");
-				ExpensePopup.this.upload.setEnabled(false);
-				ExpensePopup.this.upload.setVisible(false);
+        	    if (ExpensePopup.this.urcv.getFiup().length() >  (ExpensePopup.this.urcv.getMaxImageSize() * 2)) {
+	        	    final int ikb = ExpensePopup.this.urcv.getMaxImageSize() * 2 / 1024;
+	        		Notification.show("Datei ist zu gross", "Max Size: " + ikb + " KB " + ExpensePopup.this.urcv.getFiup().getName(),Type.TRAY_NOTIFICATION);
+	        		ExpensePopup.this.urcv.removeUploadedFile();
+
+        	    } else {
+					ExpensePopup.this.urcv.uploadSucceeded(event);
+					Notification.show("Datei hochgeladen", "Name: " + ExpensePopup.this.urcv.getFiup().getName(),
+							Type.TRAY_NOTIFICATION);
+					//ExpensePopup.this.upload.setButtonCaption("* Uploaded");
+					ExpensePopup.this.upload.setEnabled(false);
+					ExpensePopup.this.upload.setVisible(false);
+        	    }
 			}
 		});
 		// uploader

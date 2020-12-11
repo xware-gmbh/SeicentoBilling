@@ -52,18 +52,18 @@ public class ExpenseHandler {
 		for (final Iterator<Expense> iterator = lst.iterator(); iterator.hasNext();) {
 			final Expense expense = iterator.next();
 
-			copySingleRecord(dao, expense, toP, expense.getExpDate());
+			copySingleRecord(dao, expense, toP, true, expense.getExpDate());
 		}
 	}
 
-	private void copySingleRecord(final ExpenseDAO dao, final Expense expense, final Periode toP, final Date targetDate) {
+	private void copySingleRecord(final ExpenseDAO dao, final Expense expense, final Periode toP, final boolean guessDate, final Date targetDate) {
 		PersistenceUtils.getEntityManager(Expense.class).detach(expense);
 
 		expense.setExpId(new Long(0));
 		expense.setExpBooked(null);
 		expense.setPeriode(toP);
 
-		if (expense.getExpDate().compareTo(targetDate) == 0) {
+		if (expense.getExpDate().compareTo(targetDate) == 0 && guessDate) {
 			expense.setExpDate(calcNewDate(expense.getExpDate(), toP));
 		} else {
 			expense.setExpDate(targetDate);
@@ -112,8 +112,8 @@ public class ExpenseHandler {
 
 	}
 
-	public void copyExpenseRecord(final Expense exp, final Periode perF, final Periode perT, final boolean checkit, final Date targetDate) throws Exception {
-		copySingleRecord(new ExpenseDAO(), exp, perT, targetDate);
+	public void copyExpenseRecord(final Expense exp, final Periode perF, final Periode perT, final boolean guessDate, final Date targetDate) throws Exception {
+		copySingleRecord(new ExpenseDAO(), exp, perT, guessDate, targetDate);
 	}
 
 }
