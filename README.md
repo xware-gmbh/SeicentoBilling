@@ -24,9 +24,9 @@ Ein Docker Image kann von [Dockerhub](https://cloud.docker.com/repository/docker
 
 ## Toolstack
 Folgende technische Komponenten kommen zum Einsatz
-* [Rapidclipse IDE (Eclipse basiert)](http://rapidclipse.com) (Java, Vaadin, Hibernate ....)
+* [Rapidclipse X 10.2.2 IDE (Eclipse basiert)](http://rapidclipse.com) (Java, Vaadin Flow, Hibernate ....)
 * [Tomcat 9.0](https://tomcat.apache.org/download-80.cgi)
-* Microsoft SQL oder PostgreSQL als Datenbank
+* Microsoft SQL oder PostgreSQL 11 als Datenbank
 * [Jasperserver](https://community.jaspersoft.com/project/jasperreports-server)
 * [Docker](https://docker.com)
 * Azure AD (optional)
@@ -35,7 +35,7 @@ Folgende technische Komponenten kommen zum Einsatz
 ## Installation SeicentoBilling als Docker Image
 Folgende Voraussetzungen müssen erfüllt sein für die Installation:
 * Docker (auf lokaler Maschine mit Docker Desktop unter Windows - ab Version 18.x)
-* Verfügbarer DB Server (MSSQL oder PostgreSQL)
+* Verfügbarer DB Server (MSSQL oder PostgreSQL 11)
 
 ### Installation Steps
 1. Bereitstellen einer SQL DB ([Anleitung](https://github.com/xware-gmbh/SeicentoBilling-cmdline)) 
