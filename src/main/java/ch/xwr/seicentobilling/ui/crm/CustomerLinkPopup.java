@@ -54,9 +54,9 @@ public class CustomerLinkPopup extends VerticalLayout
 		this.initUI();
 		
 		// State
-		// this.comboBoxState.setItems(LovState.State.values());
-		// this.comboBoxType.setItems(LovCrm.LinkType.values());
-		// this.comboBoxDepartment.setItems(LovCrm.Department.values());
+		this.comboBoxState.setItems(LovState.State.values());
+		this.comboBoxType.setItems(LovCrm.LinkType.values());
+		this.comboBoxDepartment.setItems(LovCrm.Department.values());
 		
 		// get Parameter
 		final Long   beanId = (Long)UI.getCurrent().getSession().getAttribute("beanId");
@@ -170,12 +170,12 @@ public class CustomerLinkPopup extends VerticalLayout
 	}
 
 	/**
-	 * Event handler delegate method for the {@link ComboBox} {@link #comboBox}.
+	 * Event handler delegate method for the {@link ComboBox} {@link #comboBoxType}.
 	 *
 	 * @see HasValue.ValueChangeListener#valueChanged(HasValue.ValueChangeEvent)
 	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
 	 */
-	private void comboBox_valueChanged(final ComponentValueChangeEvent<ComboBox<Object>, Object> event)
+	private void comboBoxType_valueChanged(final ComponentValueChangeEvent<ComboBox<Object>, Object> event)
 	{
 		if(!this.binder.hasChanges())
 		{
@@ -217,7 +217,7 @@ public class CustomerLinkPopup extends VerticalLayout
 		this.txtCnkIndex        = new TextField();
 		this.formItem2          = new FormItem();
 		this.lblCnkType         = new Label();
-		this.comboBox           = new ComboBox<>();
+		this.comboBoxType       = new ComboBox<>();
 		this.formItem6          = new FormItem();
 		this.lblCnkDepartment   = new Label();
 		this.comboBoxDepartment = new ComboBox<>();
@@ -245,7 +245,7 @@ public class CustomerLinkPopup extends VerticalLayout
 			new FormLayout.ResponsiveStep("1000px", 3, FormLayout.ResponsiveStep.LabelsPosition.ASIDE));
 		this.lblCnkIndex.setText("Index");
 		this.lblCnkType.setText("Type");
-		this.comboBox.setItemLabelGenerator(ItemLabelGeneratorFactory.NonNull(CaptionUtils::resolveCaption));
+		this.comboBoxType.setItemLabelGenerator(ItemLabelGeneratorFactory.NonNull(CaptionUtils::resolveCaption));
 		this.lblCnkDepartment.setText("Bereich");
 		this.comboBoxDepartment.setItemLabelGenerator(ItemLabelGeneratorFactory.NonNull(CaptionUtils::resolveCaption));
 		this.lblCnkValidFrom.setText("ValidFrom");
@@ -261,7 +261,7 @@ public class CustomerLinkPopup extends VerticalLayout
 		this.binder.forField(this.txtCnkIndex).withNullRepresentation("")
 			.withConverter(ConverterBuilder.StringToShort().numberFormatBuilder(NumberFormatBuilder.Integer()).build())
 			.bind("cnkIndex");
-		this.binder.forField(this.comboBox).bind("cnkType");
+		this.binder.forField(this.comboBoxType).bind("cnkType");
 		this.binder.forField(this.comboBoxDepartment).bind("cnkDepartment");
 		this.binder.forField(this.dateCnkValidFrom)
 			.withConverter(ConverterBuilder.LocalDateToUtilDate().systemDefaultZoneId().build()).bind("cnkValidFrom");
@@ -279,9 +279,9 @@ public class CustomerLinkPopup extends VerticalLayout
 		this.formItem3.add(this.lblCnkIndex, this.txtCnkIndex);
 		this.lblCnkType.setSizeUndefined();
 		this.lblCnkType.getElement().setAttribute("slot", "label");
-		this.comboBox.setWidthFull();
-		this.comboBox.setHeight(null);
-		this.formItem2.add(this.lblCnkType, this.comboBox);
+		this.comboBoxType.setWidthFull();
+		this.comboBoxType.setHeight(null);
+		this.formItem2.add(this.lblCnkType, this.comboBoxType);
 		this.lblCnkDepartment.setSizeUndefined();
 		this.lblCnkDepartment.getElement().setAttribute("slot", "label");
 		this.comboBoxDepartment.setWidthFull();
@@ -323,7 +323,7 @@ public class CustomerLinkPopup extends VerticalLayout
 		this.add(this.verticalLayout);
 		this.setSizeFull();
 
-		this.comboBox.addValueChangeListener(this::comboBox_valueChanged);
+		this.comboBoxType.addValueChangeListener(this::comboBoxType_valueChanged);
 		this.cmdSave.addClickListener(this::cmdSave_onClick);
 		this.cmdReset.addClickListener(this::cmdReset_onClick);
 	} // </generated-code>
@@ -338,7 +338,7 @@ public class CustomerLinkPopup extends VerticalLayout
 	private HorizontalLayout                   horizontalLayout, horizontalLayout2;
 	private Label                              label, lblCnkIndex, lblCnkType, lblCnkDepartment, lblCnkValidFrom,
 		lblCnkLink, lblCnkRemark, lblCnkState;
-	private ComboBox<Object>                   comboBox;
+	private ComboBox<Object>                   comboBoxType;
 	private TextField                          txtCnkIndex, txtCnkLink, txtCnkRemark;
 	private FormItem                           formItem3, formItem2, formItem6, formItem, formItem5, formItem4,
 		formItem13;

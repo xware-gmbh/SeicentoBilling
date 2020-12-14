@@ -29,13 +29,13 @@
             <binding field="cmbCostAccount" property="costAccount" required="false" readOnly="false">
                 <validator type="Bean" />
             </binding>
-            <binding field="txtPrtKeyNumber" property="prtKeyNumber" required="false" nullRepresentation="" readOnly="false">
+            <binding field="txtPrtKeyNumber" property="prtKeyNumber" required="true" nullRepresentation="" readOnly="false">
                 <validator type="Bean" />
                 <converter TYPE="StringToInteger">
                     <numberFormat format="Integer" currency="default" locale="default" />
                 </converter>
             </binding>
-            <binding field="comboBoxProject" property="project" required="false" readOnly="false">
+            <binding field="comboBoxProject" property="project" required="true" readOnly="false">
                 <validator type="Bean" />
             </binding>
             <binding field="txtPrtText" property="prtText" required="false" nullRepresentation="" readOnly="false">

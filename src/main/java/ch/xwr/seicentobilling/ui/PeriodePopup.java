@@ -54,10 +54,10 @@ public class PeriodePopup extends VerticalLayout
 {
 	/** Logger initialized */
 	private static final Logger LOG = LoggerFactory.getLogger(PeriodePopup.class);
-	
+
 	private String  source  = "";
 	private boolean isAdmin = false;
-	
+
 	/**
 	 *
 	 */
@@ -65,26 +65,26 @@ public class PeriodePopup extends VerticalLayout
 	{
 		super();
 		this.initUI();
-
-		// this.setHeight(Seicento.calculateThemeHeight(Float.parseFloat(this.getHeight()), Lumo.DARK));
 		
+		// this.setHeight(Seicento.calculateThemeHeight(Float.parseFloat(this.getHeight()), Lumo.DARK));
+
 		// State
 		this.comboBoxState.setItems(LovState.State.values());
-		
+
 		this.comboBoxBookedExp.setItems(LovState.BookingType.values());
 		this.comboBoxBookedPro.setItems(LovState.BookingType.values());
 		this.comboBoxMonth.setItems(LovState.Month.values());
-		
+
 		this.lblAmtExpense.setText("");
 		// this.comboBoxWorktype.addItems((Object[])LovState.WorkType.values());
-		
+
 		// get Parameter
 		this.source = (String)UI.getCurrent().getSession().getAttribute("source");
 		final Long beanId = (Long)UI.getCurrent().getSession().getAttribute("beanId");
 		Periode    bean   = null;
-		
+
 		this.isAdmin = (boolean)UI.getCurrent().getSession().getAttribute("isAdmin");
-		
+
 		if(beanId == null)
 		{
 			bean = this.getNewDaoWithDefaults();
@@ -94,24 +94,24 @@ public class PeriodePopup extends VerticalLayout
 			final PeriodeDAO dao = new PeriodeDAO();
 			bean = dao.find(beanId.longValue());
 		}
-		
+
 		this.setBeanGui(bean);
 		this.setROFields();
 	}
-	
+
 	private void setBeanGui(final Periode bean)
 	{
 		// set Bean + Fields
 		this.binder.setBean(bean);
-
+		
 	}
-	
+
 	private void setROFields()
 	{
 		this.txtPerName.setEnabled(false);
 		this.comboBoxBookedExp.setEnabled(false);
 		this.comboBoxBookedPro.setEnabled(false);
-
+		
 		if("projectline".contentEquals(this.source))
 		{
 			this.cboSignOffExpense.setVisible(false);
@@ -120,40 +120,40 @@ public class PeriodePopup extends VerticalLayout
 		{
 			this.cboSignOffExpense.setVisible(true);
 		}
-
+		
 		if(this.isAdmin)
 		{
 			this.comboBoxBookedExp.setEnabled(true);
 			this.comboBoxBookedPro.setEnabled(true);
 		}
 	}
-	
+
 	private Periode getNewDaoWithDefaults()
 	{
 		final Periode dao = new Periode();
-		
+
 		dao.setPerState(LovState.State.active);
 		dao.setPerBookedExpense(LovState.BookingType.offen);
 		dao.setPerBookedProject(LovState.BookingType.offen);
 		dao.setPerSignOffExpense(false);
-		
+
 		// dao.setCostAccount(null);
-		
+
 		final Calendar now = Calendar.getInstance(); // Gets the current date
 														// and time
 		dao.setPerMonth(LovState.Month.fromId(now.get(Calendar.MONTH) + 1));
 		dao.setPerYear(now.get(Calendar.YEAR));
-		
+
 		CostAccount bean = Seicento.getLoggedInCostAccount();
 		if(bean == null)
 		{
 			bean = new CostAccountDAO().findAll().get(0); // Dev Mode
 		}
 		dao.setCostAccount(bean);
-		
+
 		return dao;
 	}
-
+	
 	public static Dialog getPopupWindow()
 	{
 		final Dialog win = new Dialog();
@@ -168,7 +168,7 @@ public class PeriodePopup extends VerticalLayout
 		win.add(cancelButton, new PeriodePopup());
 		return win;
 	}
-	
+
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdCancel}.
 	 *
@@ -181,7 +181,7 @@ public class PeriodePopup extends VerticalLayout
 		this.binder.removeBean();
 		((Dialog)this.getParent().get()).close();
 	}
-	
+
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdSave}.
 	 *
@@ -194,15 +194,15 @@ public class PeriodePopup extends VerticalLayout
 		{
 			try
 			{
-				
+
 				final RowObjectManager man = new RowObjectManager();
 				man.updateObject(this.binder.getBean().getPerId(),
 					this.binder.getBean().getClass().getSimpleName());
-
+				
 				UI.getCurrent().getSession().setAttribute(String.class, "cmdSave");
 				UI.getCurrent().getSession().setAttribute("beanId",
 					this.binder.getBean().getPerId());
-
+				
 				((Dialog)this.getParent().get()).close();
 				// Notification.show("Daten wurden gespeichert", 5000, Notification.Position.BOTTOM_END);
 			}
@@ -211,9 +211,9 @@ public class PeriodePopup extends VerticalLayout
 				PeriodePopup.LOG.error("could not save ObjRoot", e);
 			}
 		}
-		
-	}
 
+	}
+	
 	/**
 	 * Event handler delegate method for the {@link Checkbox} {@link #cboSignOffExpense}.
 	 *
@@ -223,19 +223,19 @@ public class PeriodePopup extends VerticalLayout
 	private void cboSignOffExpense_valueChanged(final ComponentValueChangeEvent<Checkbox, Boolean> event)
 	{
 		final Checkbox cbx = event.getSource();
-
+		
 		if(cbx.getValue().booleanValue())
 		{
 			final double total = new ExpenseDAO().sumAmount(this.binder.getBean());
-
+			
 			final DecimalFormat df        = new DecimalFormat("##,###.00");
 			final String        formatted = df.format(total);
-
+			
 			final String lbl = "Total CHF: " + formatted;
 			this.lblAmtExpense.setText(lbl);
 		}
 	}
-
+	
 	/* WARNING: Do NOT edit!<br>The content of this method is always regenerated by the UI designer. */
 	// <generated-code name="initUI">
 	private void initUI()
@@ -302,16 +302,16 @@ public class PeriodePopup extends VerticalLayout
 		this.cmdCancel.setText(StringResourceUtils.optLocalizeString("{$cmdCancel.caption}", this));
 		this.cmdCancel.setIcon(IronIcons.CANCEL.create());
 
-		this.binder.forField(this.cmbCostAccount).bind("costAccount");
+		this.binder.forField(this.cmbCostAccount).asRequired().bind("costAccount");
 		this.binder.forField(this.txtPerName).withNullRepresentation("").bind("perName");
-		this.binder.forField(this.comboBoxMonth).bind("perMonth");
+		this.binder.forField(this.comboBoxMonth).asRequired().bind("perMonth");
 		this.binder.forField(this.comboBoxBookedExp).bind("perBookedExpense");
 		this.binder.forField(this.cboSignOffExpense).withNullRepresentation(false).bind("perSignOffExpense");
 		this.binder.forField(this.comboBoxBookedPro).bind("perBookedProject");
 		this.binder.forField(this.comboBoxState).bind("perState");
-		this.binder.forField(this.textFieldYear).withNullRepresentation("").withConverter(
-			ConverterBuilder.StringToInteger().numberFormatBuilder(NumberFormatBuilder.Integer().pattern("####"))
-				.build())
+		this.binder
+			.forField(this.textFieldYear).asRequired().withNullRepresentation("").withConverter(ConverterBuilder
+				.StringToInteger().numberFormatBuilder(NumberFormatBuilder.Integer().pattern("####")).build())
 			.bind("perYear");
 
 		this.label.setSizeUndefined();
@@ -378,7 +378,7 @@ public class PeriodePopup extends VerticalLayout
 		this.cmdSave.addClickListener(this::cmdSave_onClick);
 		this.cmdCancel.addClickListener(this::cmdCancel_onClick);
 	} // </generated-code>
-	
+
 	// <generated-code name="variables">
 	private ComboBox<BookingType>         comboBoxBookedExp, comboBoxBookedPro;
 	private VerticalLayout                verticalLayout;
@@ -397,5 +397,5 @@ public class PeriodePopup extends VerticalLayout
 	private TextField                     txtPerName, textFieldYear;
 	private ComboBox<CostAccount>         cmbCostAccount;
 	// </generated-code>
-
+	
 }

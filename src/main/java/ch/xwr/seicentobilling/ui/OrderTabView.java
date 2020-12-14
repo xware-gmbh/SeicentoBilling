@@ -116,7 +116,7 @@ public class OrderTabView extends VerticalLayout
 			selectedPage.setVisible(true);
 		});
 
-		// this.sortList(true);
+		this.sortList(true);
 		
 		// set RO Fields
 		this.setROFields();
@@ -914,7 +914,6 @@ public class OrderTabView extends VerticalLayout
 			// event.getProperty().getValue();
 			final PaymentCondition bean = event.getValue();
 			
-			final Calendar  now        = Calendar.getInstance();                     // Gets the current date and time
 			final LocalDate billDate   = this.dateOrdBillDate.getValue();
 			final LocalDate dateOrdDue = billDate.plusMonths(bean.getPacNbrOfDays());
 			this.dateOrdDueDate.setValue(dateOrdDue);
@@ -1159,7 +1158,8 @@ public class OrderTabView extends VerticalLayout
 		this.grid
 			.addColumn(v -> Optional.ofNullable(v).map(Order::getCustomer).map(Customer::getCity).map(City::getCtyName)
 				.orElse(null))
-			.setKey("customer.city.ctyName").setHeader("Ort").setFrozen(true).setResizable(true).setSortable(true);
+			.setKey("customer.city.ctyName").setHeader("Ort").setFrozen(true).setResizable(true).setSortable(true)
+			.setVisible(false);
 		this.grid
 			.addColumn(new NumberRenderer<>(Order::getOrdAmountBrut,
 				NumberFormatBuilder.Currency().locale(Locale.forLanguageTag("de-CH")).build(), ""))
@@ -1167,21 +1167,17 @@ public class OrderTabView extends VerticalLayout
 		this.grid
 			.addColumn(new NumberRenderer<>(Order::getOrdAmountNet,
 				NumberFormatBuilder.Currency().locale(Locale.forLanguageTag("de-CH")).build(), ""))
-			.setKey("ordAmountNet").setHeader("Netto").setFrozen(true).setResizable(true).setSortable(true)
-			.setVisible(false);
+			.setKey("ordAmountNet").setHeader("Netto").setFrozen(true).setResizable(true).setSortable(true);
 		this.grid.addColumn(Order::getOrdBillDate).setKey("ordBillDate").setHeader("R-Datum").setResizable(true)
 			.setSortable(true).setAutoWidth(true).setVisible(false);
-		this.grid.addColumn(new CaptionRenderer<>(Order::getProject)).setKey("project").setHeader("Projekt")
-			.setSortable(false).setAutoWidth(true).setVisible(false);
-		this.grid.addColumn(new CaptionRenderer<>(Order::getPaymentCondition)).setKey("paymentCondition")
-			.setHeader("Frist")
-			.setSortable(false).setAutoWidth(true).setVisible(false);
 		this.grid.addColumn(Order::getOrdBookedOn).setKey("ordBookedOn").setHeader("Gebucht").setResizable(true)
 			.setSortable(true).setAutoWidth(true).setVisible(false);
 		this.grid.addColumn(Order::getOrdCreatedBy).setKey("ordCreatedBy").setHeader("Erstellt von").setResizable(true)
 			.setSortable(true).setAutoWidth(true).setVisible(false);
 		this.grid.addColumn(new CaptionRenderer<>(Order::getOrdState)).setKey("ordState").setHeader("Status")
 			.setResizable(true).setSortable(true).setAutoWidth(true);
+		this.grid.addColumn(Order::getOrdOrderDate).setKey("ordOrderDate")
+			.setHeader(CaptionUtils.resolveCaption(Order.class, "ordOrderDate")).setSortable(true).setVisible(false);
 		this.grid.setDataProvider(DataProvider.ofCollection(new OrderDAO().findAll()));
 		this.grid.setSelectionMode(Grid.SelectionMode.SINGLE);
 		this.verticalLayout2.setMinHeight("100%");
@@ -1293,10 +1289,10 @@ public class OrderTabView extends VerticalLayout
 			.withConverter(
 				ConverterBuilder.StringToInteger().numberFormatBuilder(NumberFormatBuilder.Integer()).build())
 			.bind("ordNumber");
-		this.binder.forField(this.cmbCustomer).bind("customer");
+		this.binder.forField(this.cmbCustomer).asRequired().bind("customer");
 		this.binder.forField(this.textArea).withNullRepresentation("").bind("ordText");
 		this.binder.forField(this.cmbProject).bind("project");
-		this.binder.forField(this.cmbPaymentCondition).bind("paymentCondition");
+		this.binder.forField(this.cmbPaymentCondition).asRequired().bind("paymentCondition");
 		this.binder.forField(this.txtOrdAmountBrut).withNullRepresentation("")
 			.withConverter(ConverterBuilder.StringToDouble().numberFormatBuilder(
 				NumberFormatBuilder.Currency().locale(Locale.forLanguageTag("de-CH"))

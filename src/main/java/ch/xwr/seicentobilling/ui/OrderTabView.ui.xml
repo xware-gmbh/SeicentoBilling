@@ -37,7 +37,7 @@
                     <numberFormat format="Integer" currency="default" locale="default" />
                 </converter>
             </binding>
-            <binding field="cmbCustomer" property="customer" required="false" readOnly="false">
+            <binding field="cmbCustomer" property="customer" required="true" readOnly="false">
                 <validator type="Bean" />
             </binding>
             <binding field="textArea" property="ordText" required="false" nullRepresentation="" readOnly="false">
@@ -46,7 +46,7 @@
             <binding field="cmbProject" property="project" required="false" readOnly="false">
                 <validator type="Bean" />
             </binding>
-            <binding field="cmbPaymentCondition" property="paymentCondition" required="false" readOnly="false">
+            <binding field="cmbPaymentCondition" property="paymentCondition" required="true" readOnly="false">
                 <validator type="Bean" />
             </binding>
             <binding field="txtOrdAmountBrut" property="ordAmountBrut" required="false" nullRepresentation="" readOnly="false">
@@ -156,23 +156,22 @@
                     <column property="ordNumber" header="Nummer" frozen="true" resizable="true" sortable="true" />
                     <column property="customer.cusName" header="K#" frozen="true" resizable="true" sortable="true" />
                     <column property="customer.shortname" header="Kunde" frozen="true" resizable="true" sortable="true" />
-                    <column property="customer.city.ctyName" header="Ort" frozen="true" resizable="true" sortable="true" />
+                    <column property="customer.city.ctyName" header="Ort" frozen="true" resizable="true" sortable="true" visible="false" />
                     <column property="ordAmountBrut" header="Brutto" frozen="true" resizable="true" sortable="true">
                         <renderer nullRepresentation="" type="NumberRenderer">
                             <numberFormat format="Currency" pattern="" currency="default" locale="de-CH" />
                         </renderer>
                     </column>
-                    <column property="ordAmountNet" header="Netto" frozen="true" resizable="true" sortable="true" visible="false">
+                    <column property="ordAmountNet" header="Netto" frozen="true" resizable="true" sortable="true">
                         <renderer nullRepresentation="" type="NumberRenderer">
                             <numberFormat format="Currency" pattern="" currency="default" locale="de-CH" />
                         </renderer>
                     </column>
                     <column property="ordBillDate" header="R-Datum" resizable="true" sortable="true" visible="false" autoWidth="true" />
-                    <column property="project" header="Projekt" visible="false" autoWidth="true" />
-                    <column property="paymentCondition" header="Frist" visible="false" autoWidth="true" />
                     <column property="ordBookedOn" header="Gebucht" resizable="true" sortable="true" visible="false" autoWidth="true" />
                     <column property="ordCreatedBy" header="Erstellt von" resizable="true" sortable="true" visible="false" autoWidth="true" />
                     <column property="ordState" header="Status" resizable="true" sortable="true" autoWidth="true" />
+                    <column property="ordOrderDate" sortable="true" visible="false" />
                 </x:columns>
                 <x:event>itemClick.onComponentEvent</x:event>
             </Grid>

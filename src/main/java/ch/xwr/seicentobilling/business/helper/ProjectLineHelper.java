@@ -2,6 +2,7 @@
 package ch.xwr.seicentobilling.business.helper;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
@@ -10,7 +11,7 @@ import java.util.Date;
 
 public class ProjectLineHelper
 {
-
+	
 	/**
 	 * return 5 minute rounded Time
 	 *
@@ -28,7 +29,7 @@ public class ProjectLineHelper
 		final Calendar c2 = Calendar.getInstance();
 		final Date     d2 = new Date();            // now
 		c2.setTime(d2);
-
+		
 		final int      iminutes = c2.get(Calendar.MINUTE);
 		final Calendar c3       = Calendar.getInstance();
 		c3.set(c1.get(Calendar.YEAR), c1.get(Calendar.MONTH), c1.get(Calendar.DAY_OF_MONTH),
@@ -37,10 +38,10 @@ public class ProjectLineHelper
 		c3.add(Calendar.MINUTE, iminutes == 0 ? -5 : -mod);
 		c3.set(Calendar.SECOND, 0);
 		c3.set(Calendar.MILLISECOND, 0);
-
+		
 		return c3.getTime();
 	}
-
+	
 	/*
 	 * get time bases of date of projectline date
 	 */
@@ -50,30 +51,30 @@ public class ProjectLineHelper
 		c1.setTime(d1);
 		final Calendar c2 = Calendar.getInstance();
 		c2.setTime(dateTm);
-
+		
 		c2.set(Calendar.YEAR, c1.get(Calendar.YEAR));
 		c2.set(Calendar.MONTH, c1.get(Calendar.MONTH));
 		c2.set(Calendar.DAY_OF_MONTH, c1.get(Calendar.DAY_OF_MONTH));
 		c2.set(Calendar.SECOND, 0);
 		c2.set(Calendar.MILLISECOND, 0);
-
+		
 		return c2.getTime();
 	}
-
+	
 	public double calcDurationFromTime(final Date fromHH, final Date toHH)
 	{
 		if(fromHH == null || toHH == null)
 		{
 			return 0;
 		}
-
+		
 		final Instant instant1 = fromHH.toInstant();
 		final Instant instant2 = toHH.toInstant();
 		final long    mins     = ChronoUnit.MINUTES.between(instant1, instant2);
 		double        hours    = ChronoUnit.HOURS.between(instant1, instant2);
-
+		
 		final int minutes = (int)(mins - (hours * 60));
-
+		
 		// convert to decimal
 		double dec = 0.;
 		if(minutes != 0)
@@ -84,18 +85,32 @@ public class ProjectLineHelper
 		return hours;
 	}
 
+	public Date localTimeToDate(LocalDate d1, final LocalTime localTime)
+	{
+		if(d1 == null)
+		{
+			d1 = LocalDate.now();
+		}
+		final Calendar calendar = Calendar.getInstance();
+		calendar.clear();
+		calendar.set(d1.getYear(), d1.getMonth().getValue(), d1.getDayOfMonth(), localTime.getHour(),
+			localTime.getMinute(),
+			localTime.getSecond());
+		return calendar.getTime();
+	}
+	
 	public double calcDurationFromTime(final LocalTime fromHH, final LocalTime toHH)
 	{
 		if(fromHH == null || toHH == null)
 		{
 			return 0;
 		}
-		
+
 		final long mins  = ChronoUnit.MINUTES.between(fromHH, toHH);
 		double     hours = ChronoUnit.HOURS.between(fromHH, toHH);
-
+		
 		final int minutes = (int)(mins - (hours * 60));
-
+		
 		// convert to decimal
 		double dec = 0.;
 		if(minutes != 0)
@@ -105,5 +120,5 @@ public class ProjectLineHelper
 		hours = hours + dec;
 		return hours;
 	}
-
+	
 }

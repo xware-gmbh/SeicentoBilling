@@ -31,6 +31,7 @@ import com.vaadin.flow.component.grid.ItemClickEvent;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
@@ -306,6 +307,7 @@ public class CityTabView extends VerticalLayout
 		this.cmdReset             = new Button();
 		this.binder               = new BeanValidationBinder<>(City.class);
 
+		this.setPadding(false);
 		this.horizontalLayout2.setMinHeight("");
 		this.horizontalLayout2.setMinWidth("100%");
 		this.cmdNew.setIcon(VaadinIcon.PLUS_CIRCLE.create());
@@ -327,21 +329,17 @@ public class CityTabView extends VerticalLayout
 		this.formLayout.setResponsiveSteps(
 			new FormLayout.ResponsiveStep("25em", 1, FormLayout.ResponsiveStep.LabelsPosition.TOP),
 			new FormLayout.ResponsiveStep("32em", 2, FormLayout.ResponsiveStep.LabelsPosition.TOP),
-			new FormLayout.ResponsiveStep("40em", 3, FormLayout.ResponsiveStep.LabelsPosition.TOP));
-		this.formItem2.getElement().setAttribute("colspan", "4");
+			new FormLayout.ResponsiveStep("40em", 2, FormLayout.ResponsiveStep.LabelsPosition.TOP));
 		this.lblCtyCountry.setMaxHeight("");
 		this.lblCtyCountry.setText(StringResourceUtils.optLocalizeString("{$lblCtyCountry.value}", this));
-		this.formItem.getElement().setAttribute("colspan", "4");
 		this.lblCtyName.setText(StringResourceUtils.optLocalizeString("{$lblCtyName.value}", this));
-		this.formItem3.getElement().setAttribute("colspan", "4");
 		this.lblCtyRegion.setText(StringResourceUtils.optLocalizeString("{$lblCtyRegion.value}", this));
-		this.formItem4.getElement().setAttribute("colspan", "4");
 		this.lblCtyGeoCoordinates.setText(StringResourceUtils.optLocalizeString("{$lblCtyGeoCoordinates.value}", this));
-		this.formItem5.getElement().setAttribute("colspan", "4");
 		this.lblCtyZip.setText(StringResourceUtils.optLocalizeString("{$lblCtyZip.value}", this));
-		this.formItem6.getElement().setAttribute("colspan", "4");
 		this.lblCtyState.setText(StringResourceUtils.optLocalizeString("{$lblCtyState.value}", this));
 		this.comboBoxState.setItemLabelGenerator(ItemLabelGeneratorFactory.NonNull(CaptionUtils::resolveCaption));
+		this.horizontalLayout3.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
+		this.horizontalLayout3.setAlignItems(FlexComponent.Alignment.CENTER);
 		this.cmdSave.setText(StringResourceUtils.optLocalizeString("{$cmdSave.caption}", this));
 		this.cmdSave.setIcon(IronIcons.SAVE.create());
 		this.cmdReset.setText(StringResourceUtils.optLocalizeString("{$cmdReset.caption}", this));
@@ -410,7 +408,7 @@ public class CityTabView extends VerticalLayout
 		this.cmdReset.setHeight(null);
 		this.horizontalLayout3.add(this.cmdSave, this.cmdReset);
 		this.horizontalLayout3.setWidthFull();
-		this.horizontalLayout3.setHeight("100px");
+		this.horizontalLayout3.setHeight(null);
 		this.formLayout.add(this.formItem2, this.formItem, this.formItem3, this.formItem4, this.formItem5,
 			this.formItem6,
 			this.formItem7, this.horizontalLayout3);
@@ -431,7 +429,7 @@ public class CityTabView extends VerticalLayout
 		this.cmdSave.addClickListener(this::cmdSave_onClick);
 		this.cmdReset.addClickListener(this::cmdReset_onClick);
 	} // </generated-code>
-	
+
 	// <generated-code name="variables">
 	private Grid<City>                 grid;
 	private NumberField                txtCtyZip;

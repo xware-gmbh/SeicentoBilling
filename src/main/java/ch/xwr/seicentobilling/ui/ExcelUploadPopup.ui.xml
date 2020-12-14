@@ -14,8 +14,8 @@
 <?import com.vaadin.flow.component.textfield.TextField?>
 <VerticalLayout xmlns:x="http://xml.xdev-software.com/xdevuiml" x:name="ExcelUploadPopup">
     <x:constraints zpos="0" width="100%" height="100%" />
-    <VerticalLayout spacing="false" x:name="verticalLayout">
-        <x:constraints width="90%" height="65%" flex-grow="0.0" />
+    <VerticalLayout x:name="verticalLayout" padding="false">
+        <x:constraints width="100%" height="100%" flex-grow="0.0" />
         <HorizontalLayout x:name="horizontalLayout">
             <x:constraints width="100%" height="30px" flex-grow="0.0" />
             <Icon x:icon="com.vaadin.flow.component.icon.VaadinIcon#FILE_TABLE" x:name="icon">
@@ -25,7 +25,7 @@
                 <x:constraints width="0px" alignment="CENTER" height="0px" flex-grow="0.0" />
             </Label>
         </HorizontalLayout>
-        <VerticalLayout x:name="verticalLayout2">
+        <VerticalLayout x:name="verticalLayout2" padding="false">
             <x:constraints width="100%" height="-1px" flex-grow="0.0" />
             <HorizontalLayout x:name="horizontalLayout6">
                 <x:constraints width="100%" height="100px" flex-grow="0.0" />
@@ -34,30 +34,22 @@
                 </TextArea>
             </HorizontalLayout>
         </VerticalLayout>
-        <FormLayout x:name="formLayout">
-            <x:responsiveSteps>
-                <entry minWidth="0px" columns="1" labelsPosition="TOP" />
-                <entry minWidth="500px" columns="1" labelsPosition="TOP" />
-                <entry minWidth="1000px" columns="1" labelsPosition="ASIDE" />
-            </x:responsiveSteps>
-            <x:constraints width="100%" height="-1px" flex-grow="0.0" />
-        </FormLayout>
         <HorizontalLayout x:name="horizontalLayoutUpload">
-            <x:constraints width="100%" height="200px" flex-grow="0.0" />
+            <x:constraints width="100%" height="-1px" flex-grow="0.0" />
             <FormLayout x:name="formLayout2">
                 <x:responsiveSteps>
                     <entry minWidth="0px" columns="1" labelsPosition="TOP" />
                     <entry minWidth="500px" columns="2" labelsPosition="TOP" />
                     <entry minWidth="1000px" columns="2" labelsPosition="ASIDE" />
                 </x:responsiveSteps>
-                <x:constraints width="100%" height="70%" flex-grow="0.0" />
-                <FormItem x:name="formItem" x:columnSpan="2">
+                <x:constraints width="100%" height="100%" flex-grow="0.0" />
+                <FormItem x:name="formItem">
                     <x:constraints width="0px" height="0px" />
                     <Label x:name="label" text="Arbeitsblatt">
-                        <x:constraints width="0px" label="true" height="0px" />
+                        <x:constraints zpos="0" width="0px" label="true" height="0px" />
                     </Label>
                     <TextField x:name="textFieldSheet">
-                        <x:constraints width="30%" height="0px" />
+                        <x:constraints zpos="0" width="30%" height="0px" />
                     </TextField>
                 </FormItem>
                 <FormItem x:name="formItem2" x:columnSpan="2">
@@ -75,7 +67,7 @@
                         <x:constraints width="0px" label="true" height="0px" />
                     </Label>
                     <Label x:name="lblFileName" text="Label">
-                        <x:constraints width="400px" height="0px" />
+                        <x:constraints width="367px" height="0px" />
                     </Label>
                 </FormItem>
                 <Label x:name="lblSize" text="Label">
@@ -93,7 +85,7 @@
             </FormLayout>
         </HorizontalLayout>
         <HorizontalLayout x:name="horizontalLayout2">
-            <x:constraints width="100%" height="-1px" flex-grow="0.0" />
+            <x:constraints width="100%" height="50px" flex-grow="0.0" />
             <Button x:name="cmdUpload" text="Datei...">
                 <x:icon src="com.vaadin.flow.component.icon.VaadinIcon#UPLOAD" />
                 <x:constraints width="0px" height="0px" flex-grow="0.0" />

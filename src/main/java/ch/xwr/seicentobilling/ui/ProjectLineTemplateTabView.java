@@ -62,7 +62,7 @@ public class ProjectLineTemplateTabView extends VerticalLayout
 {
 	/** Logger initialized */
 	private static final org.apache.log4j.Logger LOG = LogManager.getLogger(ProjectLineTemplateTabView.class);
-
+	
 	/**
 	 *
 	 */
@@ -73,13 +73,13 @@ public class ProjectLineTemplateTabView extends VerticalLayout
 		// State
 		this.comboBoxState.setItems(LovState.State.values());
 		this.comboBoxWorkType.setItems(LovState.WorkType.values());
-
-		this.sortList();
 		
+		this.sortList();
+
 		this.setROFields();
 		this.setDefaultFilter();
 	}
-
+	
 	private void setROFields()
 	{
 		if(Seicento.hasRole("BillingAdmin"))
@@ -91,19 +91,19 @@ public class ProjectLineTemplateTabView extends VerticalLayout
 			this.txtPrtText.setEnabled(false);
 		}
 	}
-
+	
 	private void setDefaultFilter()
 	{
 		final CostAccount bean = Seicento.getLoggedInCostAccount();
-
+		
 		final FilterEntry pe =
 			new FilterEntry("prtState", new FilterOperator.Is().key(), new LovState.State[]{LovState.State.active});
 		final FilterEntry ce =
 			new FilterEntry("costAccount", new FilterOperator.Is().key(), new CostAccount[]{bean});
 		this.containerFilterComponent.setValue(new FilterData("", new FilterEntry[]{ce, pe}));
-
+		
 	}
-	
+
 	/**
 	 * Event handler delegate method for the {@link Grid} {@link #grid}.
 	 *
@@ -120,7 +120,7 @@ public class ProjectLineTemplateTabView extends VerticalLayout
 			this.binder.setBean(projectLineBean);
 		}
 	}
-	
+
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdNew}.
 	 *
@@ -135,14 +135,14 @@ public class ProjectLineTemplateTabView extends VerticalLayout
 			bean1 = new CostAccountDAO().findAll().get(0); // Dev Mode
 		}
 		final ProjectLineTemplate bean = new ProjectLineTemplate();
-
+		
 		bean.setPrtState(LovState.State.active);
 		bean.setCostAccount(bean1);
 		this.binder.setBean(bean);
-		
+
 		// this.fieldGroup.setItemDataSource(bean);
 	}
-	
+
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdReload}.
 	 *
@@ -151,31 +151,29 @@ public class ProjectLineTemplateTabView extends VerticalLayout
 	 */
 	private void cmdReload_onClick(final ClickEvent<Button> event)
 	{
-		
+
 		// save filter
 		final FilterData fd = this.containerFilterComponent.getValue();
 		this.containerFilterComponent.setValue(null);
-		
+
 		// clear+reload List
 		this.grid.setDataProvider(DataProvider.ofCollection(new ProjectLineTemplateDAO().findAll()));
 		this.grid.getDataProvider().refreshAll();
-		
+
 		this.sortList();
-		
+
 		// reassign filter
 		this.containerFilterComponent.setValue(fd);
-
+		
 	}
-	
+
 	private void sortList()
 	{
 		final GridSortOrder<ProjectLineTemplate> prtKeyNumber =
 			new GridSortOrder<>(this.grid.getColumnByKey("prtKeyNumber"), SortDirection.ASCENDING);
-		final GridSortOrder<ProjectLineTemplate> prtWorkType  =
-			new GridSortOrder<>(this.grid.getColumnByKey("prtWorkType"), SortDirection.DESCENDING);
 		this.grid.sort(Arrays.asList(prtKeyNumber));
 	}
-	
+
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdSave}.
 	 *
@@ -184,7 +182,7 @@ public class ProjectLineTemplateTabView extends VerticalLayout
 	 */
 	private void cmdSave_onClick(final ClickEvent<Button> event)
 	{
-		
+
 		if(SeicentoCrud.doSave(this.binder, new ProjectLineTemplateDAO()))
 		{
 			try
@@ -199,11 +197,11 @@ public class ProjectLineTemplateTabView extends VerticalLayout
 			}
 		}
 		this.setROFields();
-		
+
 		this.cmdReload_onClick(null);
-
+		
 	}
-
+	
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdReset}.
 	 *
@@ -219,17 +217,17 @@ public class ProjectLineTemplateTabView extends VerticalLayout
 			this.binder.setBean(projectLineBean);
 		}
 	}
-
+	
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdInfo}.
 	 *
 	 * @see ComponentEventListener#onComponentEvent(ComponentEvent)
 	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
 	 */
-
+	
 	private void cmdInfo_onClick(final ClickEvent<Button> event)
 	{
-
+		
 		if(this.grid.getSelectedItems() != null)
 		{
 			final ProjectLineTemplate bean = this.grid.getSelectionModel().getFirstSelectedItem().get();
@@ -238,9 +236,9 @@ public class ProjectLineTemplateTabView extends VerticalLayout
 			win.add(new RowObjectView(bean.getPrtId(), bean.getClass().getSimpleName()));
 			win.open();
 		}
-
+		
 	}
-
+	
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdDelete}.
 	 *
@@ -255,44 +253,44 @@ public class ProjectLineTemplateTabView extends VerticalLayout
 				20, Notification.Position.BOTTOM_START);
 			return;
 		}
-		
-		ConfirmDialog.show(this.getUI().get(), "Datensatz löschen", "Wirklich löschen?");
-		
-		try
-		{
-			
-			final ProjectLineTemplate bean = this.grid.getSelectionModel().getFirstSelectedItem().get();
-			
-			// Delete Record
-			final RowObjectManager man = new RowObjectManager();
-			man.deleteObject(bean.getPrtId(), bean.getClass().getSimpleName());
-			
-			final ProjectLineTemplateDAO dao = new ProjectLineTemplateDAO();
-			dao.remove(bean);
-			dao.flush();
-			
-			this.binder.removeBean();
-			ProjectLineTemplateTabView.this.binder.setBean(new ProjectLineTemplate());
-			this.grid.setDataProvider(DataProvider.ofCollection(new ProjectLineTemplateDAO().findAll()));
-			ProjectLineTemplateTabView.this.grid.getDataProvider().refreshAll();
-			
-			Notification.show("Datensatz wurde gelöscht!",
-				20, Notification.Position.BOTTOM_START);
-			
-		}
-		catch(final PersistenceException cx)
-		{
-			final String msg = SeicentoCrud.getPerExceptionError(cx);
-			Notification.show(msg, 20, Notification.Position.BOTTOM_START);
-			cx.printStackTrace();
-		}
-		catch(final Exception e)
-		{
-			ProjectLineTemplateTabView.LOG.error("Error on delete", e);
-		}
-		
-	}
 
+		ConfirmDialog.show("Datensatz löschen", "Wirklich löschen?", okEvent -> {
+
+			try
+			{
+
+				final ProjectLineTemplate bean = this.grid.getSelectionModel().getFirstSelectedItem().get();
+
+				// Delete Record
+				final RowObjectManager man = new RowObjectManager();
+				man.deleteObject(bean.getPrtId(), bean.getClass().getSimpleName());
+
+				final ProjectLineTemplateDAO dao = new ProjectLineTemplateDAO();
+				dao.remove(bean);
+				dao.flush();
+
+				this.binder.removeBean();
+				ProjectLineTemplateTabView.this.binder.setBean(new ProjectLineTemplate());
+				this.grid.setDataProvider(DataProvider.ofCollection(new ProjectLineTemplateDAO().findAll()));
+				ProjectLineTemplateTabView.this.grid.getDataProvider().refreshAll();
+
+				Notification.show("Datensatz wurde gelöscht!",
+					20, Notification.Position.BOTTOM_START);
+
+			}
+			catch(final PersistenceException cx)
+			{
+				final String msg = SeicentoCrud.getPerExceptionError(cx);
+				Notification.show(msg, 20, Notification.Position.BOTTOM_START);
+				cx.printStackTrace();
+			}
+			catch(final Exception e)
+			{
+				ProjectLineTemplateTabView.LOG.error("Error on delete", e);
+			}
+		});
+	}
+	
 	/* WARNING: Do NOT edit!<br>The content of this method is always regenerated by the UI designer. */
 	// <generated-code name="initUI">
 	private void initUI()
@@ -335,7 +333,7 @@ public class ProjectLineTemplateTabView extends VerticalLayout
 		this.cmdSave                  = new Button();
 		this.cmdReset                 = new Button();
 		this.binder                   = new BeanValidationBinder<>(ProjectLineTemplate.class);
-		
+
 		this.horizontalLayout2.setMinHeight("");
 		this.horizontalLayout2.setMinWidth("100%");
 		this.cmdNew.setIcon(VaadinIcon.PLUS_CIRCLE.create());
@@ -394,13 +392,13 @@ public class ProjectLineTemplateTabView extends VerticalLayout
 		this.cmdReset.setText("Abbrechen");
 		this.cmdReset.setIcon(IronIcons.UNDO.create());
 		this.binder.setValidatorsDisabled(true);
-		
+
 		this.binder.forField(this.cmbCostAccount).bind("costAccount");
-		this.binder.forField(this.txtPrtKeyNumber).withNullRepresentation("")
+		this.binder.forField(this.txtPrtKeyNumber).asRequired().withNullRepresentation("")
 			.withConverter(
 				ConverterBuilder.StringToInteger().numberFormatBuilder(NumberFormatBuilder.Integer()).build())
 			.bind("prtKeyNumber");
-		this.binder.forField(this.comboBoxProject).bind("project");
+		this.binder.forField(this.comboBoxProject).asRequired().bind("project");
 		this.binder.forField(this.txtPrtText).withNullRepresentation("").bind("prtText");
 		this.binder.forField(this.txtPrtHours).withNullRepresentation("")
 			.withConverter(ConverterBuilder.StringToDouble().numberFormatBuilder(NumberFormatBuilder.Decimal()).build())
@@ -410,12 +408,12 @@ public class ProjectLineTemplateTabView extends VerticalLayout
 			.bind("prtRate");
 		this.binder.forField(this.comboBoxWorkType).bind("prtWorkType");
 		this.binder.forField(this.comboBoxState).bind("prtState");
-		
+
 		this.containerFilterComponent.connectWith(this.grid.getDataProvider());
 		this.containerFilterComponent.setFilterSubject(GridFilterSubjectFactory.CreateFilterSubject(this.grid,
 			Arrays.asList("costAccount.csaCode", "costAccount.csaName", "prtText"),
 			Arrays.asList("costAccount", "project", "prtRate", "prtState", "prtWorkType")));
-		
+
 		this.cmdNew.setSizeUndefined();
 		this.cmdDelete.setSizeUndefined();
 		this.cmdReload.setSizeUndefined();
@@ -482,7 +480,7 @@ public class ProjectLineTemplateTabView extends VerticalLayout
 		this.add(this.splitLayout);
 		this.setFlexGrow(1.0, this.splitLayout);
 		this.setSizeFull();
-		
+
 		this.cmdNew.addClickListener(this::cmdNew_onClick);
 		this.cmdDelete.addClickListener(this::cmdDelete_onClick);
 		this.cmdReload.addClickListener(this::cmdReload_onClick);
@@ -491,7 +489,7 @@ public class ProjectLineTemplateTabView extends VerticalLayout
 		this.cmdSave.addClickListener(this::cmdSave_onClick);
 		this.cmdReset.addClickListener(this::cmdReset_onClick);
 	} // </generated-code>
-	
+
 	// <generated-code name="variables">
 	private BeanValidationBinder<ProjectLineTemplate> binder;
 	private ComboBox<WorkType>                        comboBoxWorkType;
@@ -511,5 +509,5 @@ public class ProjectLineTemplateTabView extends VerticalLayout
 	private TextField                                 txtPrtKeyNumber, txtPrtText, txtPrtHours, txtPrtRate;
 	private ComboBox<CostAccount>                     cmbCostAccount;
 	// </generated-code>
-	
+
 }

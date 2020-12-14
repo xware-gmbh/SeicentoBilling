@@ -36,10 +36,10 @@
             <typeArgument type="Project" />
         </x:typeArguments>
         <x:bindings>
-            <binding field="txtProName" property="proName" required="false" nullRepresentation="" readOnly="false">
+            <binding field="txtProName" property="proName" required="true" nullRepresentation="" readOnly="false">
                 <validator type="Bean" />
             </binding>
-            <binding field="cmbCustomer" property="customer" required="false" readOnly="false">
+            <binding field="cmbCustomer" property="customer" required="true" readOnly="false">
                 <validator type="Bean" />
             </binding>
             <binding field="txtProExtReference" property="proExtReference" required="false" nullRepresentation="" readOnly="false">
@@ -48,13 +48,13 @@
             <binding field="txtProContact" property="proContact" required="false" nullRepresentation="" readOnly="false">
                 <validator type="Bean" />
             </binding>
-            <binding field="txtProHoursEffective" property="proHoursEffective" required="false" nullRepresentation="" readOnly="false">
+            <binding field="txtProHoursEffective" property="proHoursEffective" required="true" nullRepresentation="" readOnly="false">
                 <validator type="Bean" />
                 <converter TYPE="StringToDouble">
                     <numberFormat format="Decimal" currency="default" locale="default" />
                 </converter>
             </binding>
-            <binding field="txtProRate" property="proRate" required="false" nullRepresentation="" readOnly="false">
+            <binding field="txtProRate" property="proRate" required="true" nullRepresentation="" readOnly="false">
                 <validator type="Bean" />
                 <converter TYPE="StringToDouble">
                     <numberFormat format="Decimal" currency="default" locale="default" />
@@ -101,6 +101,18 @@
                 <converter TYPE="StringToInteger">
                     <numberFormat format="Integer" currency="default" locale="default" />
                 </converter>
+            </binding>
+            <binding field="dateProStartDate" property="proStartDate" required="true" readOnly="false">
+                <validator type="Bean" />
+                <converter zone="default" TYPE="LocalDateToUtilDate" />
+            </binding>
+            <binding field="dateProEndDate" property="proEndDate" required="false" readOnly="false">
+                <validator type="Bean" />
+                <converter zone="default" TYPE="LocalDateToUtilDate" />
+            </binding>
+            <binding field="dateProLastBill" property="proLastBill" required="false" readOnly="false">
+                <validator type="Bean" />
+                <converter zone="default" TYPE="LocalDateToUtilDate" />
             </binding>
         </x:bindings>
     </BeanValidationBinder>

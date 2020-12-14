@@ -6,6 +6,7 @@
 <?import ch.xwr.seicentobilling.business.LovState.ExpUnit?>
 <?import ch.xwr.seicentobilling.business.LovState.State?>
 <?import ch.xwr.seicentobilling.entities.Expense?>
+<?import ch.xwr.seicentobilling.entities.ExpenseTemplate?>
 <?import ch.xwr.seicentobilling.entities.LovAccount?>
 <?import ch.xwr.seicentobilling.entities.Periode?>
 <?import ch.xwr.seicentobilling.entities.Project?>
@@ -31,26 +32,26 @@
             <binding field="cmbPeriode" property="periode" required="false" readOnly="false">
                 <validator type="Bean" />
             </binding>
-            <binding field="dateExpDate" property="expDate" required="false" nullRepresentation="2020-11-26" readOnly="false">
+            <binding field="dateExpDate" property="expDate" required="true" readOnly="false">
                 <validator type="Bean" />
                 <converter zone="default" TYPE="LocalDateToUtilDate" />
             </binding>
             <binding field="txtExpText" property="expText" required="false" nullRepresentation="" readOnly="false">
                 <validator type="Bean" />
             </binding>
-            <binding field="txtExpAmount" property="expAmount" required="false" nullRepresentation="" readOnly="false">
+            <binding field="txtExpAmount" property="expAmount" required="true" nullRepresentation="" readOnly="false">
                 <validator type="Bean" />
                 <converter TYPE="StringToDouble">
                     <numberFormat format="Decimal" currency="default" locale="default" />
                 </converter>
             </binding>
-            <binding field="cmbVat" property="vat" required="false" readOnly="false">
+            <binding field="cmbVat" property="vat" required="true" readOnly="false">
                 <validator type="Bean" />
             </binding>
-            <binding field="cmbProject" property="project" required="false" readOnly="false">
+            <binding field="cmbProject" property="project" required="true" readOnly="false">
                 <validator type="Bean" />
             </binding>
-            <binding field="comboBoxGeneric" property="expFlagGeneric" required="false" readOnly="false">
+            <binding field="comboBoxGeneric" property="expFlagGeneric" required="true" readOnly="false">
                 <validator type="Bean" />
             </binding>
             <binding field="chkExpFlagCostAccount" property="expFlagCostAccount" required="false" nullRepresentation="false" readOnly="false">
@@ -68,9 +69,13 @@
             <binding field="comboBoxState" property="expState" required="false" readOnly="false">
                 <validator type="Bean" />
             </binding>
+            <binding field="dateExpBooked" property="expBooked" required="false" nullRepresentation="2020-12-10" readOnly="false">
+                <validator type="Bean" />
+                <converter zone="default" TYPE="LocalDateToUtilDate" />
+            </binding>
         </x:bindings>
     </BeanValidationBinder>
-    <VerticalLayout x:name="verticalLayout">
+    <VerticalLayout x:name="verticalLayout" padding="false">
         <x:constraints width="100%" height="100%" flex-grow="0.0" />
         <HorizontalLayout x:name="horizontalLayout">
             <x:constraints width="100%" height="30px" flex-grow="0.0" />
@@ -85,6 +90,34 @@
                 <entry minWidth="1000px" columns="3" labelsPosition="ASIDE" />
             </x:responsiveSteps>
             <x:constraints width="100%" height="100%" flex-grow="0.0" />
+            <FormItem x:name="formItem14">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="vorlageLabel" text="Vorlage">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <ComboBox x:name="vorLageComboBox">
+                    <x:typeArguments>
+                        <typeArgument type="ExpenseTemplate" />
+                    </x:typeArguments>
+                    <x:constraints width="100%" height="0px" />
+                    <x:itemLabel type="Property" data="extText" />
+                    <x:event>valueChange.valueChanged</x:event>
+                </ComboBox>
+            </FormItem>
+            <FormItem x:name="formItem15" x:columnSpan="2">
+                <x:constraints width="0px" height="0px" />
+                <Label x:name="label2" text="Text">
+                    <x:constraints width="0px" label="true" height="0px" />
+                </Label>
+                <ComboBox x:name="textComboBox">
+                    <x:typeArguments>
+                        <typeArgument type="Expense" />
+                    </x:typeArguments>
+                    <x:constraints width="40%" height="0px" />
+                    <x:itemLabel type="Property" data="expText" />
+                    <x:event>valueChange.valueChanged</x:event>
+                </ComboBox>
+            </FormItem>
             <FormItem x:name="formItem2">
                 <x:constraints width="0px" height="0px" />
                 <Label x:name="lblPeriode" text="{$lblPeriode.value}">
@@ -100,31 +133,31 @@
                     <x:event>valueChange.valueChanged</x:event>
                 </ComboBox>
             </FormItem>
-            <FormItem x:name="formItem">
+            <FormItem x:name="formItem" x:columnSpan="2">
                 <x:constraints width="0px" height="0px" />
                 <Label x:name="lblExpBooked" text="{$lblExpBooked.value}">
                     <x:constraints width="0px" label="true" height="0px" />
                 </Label>
                 <DatePicker x:name="dateExpBooked">
-                    <x:constraints width="100%" height="0px" />
+                    <x:constraints width="30%" height="0px" />
                 </DatePicker>
             </FormItem>
-            <FormItem x:name="formItem3">
+            <FormItem x:name="formItem3" x:columnSpan="3">
                 <x:constraints width="0px" height="0px" />
                 <Label x:name="lblExpDate" text="{$lblExpDate.value}">
                     <x:constraints width="0px" label="true" height="0px" />
                 </Label>
-                <DatePicker locale="de-CH" x:name="dateExpDate" value="2020-11-02">
-                    <x:constraints width="100%" height="0px" />
+                <DatePicker locale="de-CH" x:name="dateExpDate">
+                    <x:constraints width="20%" height="0px" />
                 </DatePicker>
             </FormItem>
-            <FormItem x:name="formItem4">
+            <FormItem x:name="formItem4" x:columnSpan="3">
                 <x:constraints width="0px" height="0px" />
                 <Label x:name="lblExpText" text="{$lblExpText.value}">
                     <x:constraints width="0px" label="true" height="0px" />
                 </Label>
                 <TextField x:name="txtExpText">
-                    <x:constraints width="100%" height="0px" />
+                    <x:constraints width="50%" height="0px" />
                 </TextField>
             </FormItem>
             <FormItem x:name="formItem5">
@@ -136,7 +169,7 @@
                     <x:constraints width="100%" height="0px" />
                 </TextField>
             </FormItem>
-            <FormItem x:name="formItem6">
+            <FormItem x:name="formItem6" x:columnSpan="2">
                 <x:constraints width="0px" height="0px" />
                 <Label x:name="lblVat" text="MwSt Incl">
                     <x:constraints width="0px" label="true" height="0px" />
@@ -145,12 +178,12 @@
                     <x:typeArguments>
                         <typeArgument type="Vat" />
                     </x:typeArguments>
-                    <x:constraints width="100%" height="0px" />
+                    <x:constraints width="40%" height="0px" />
                     <x:dataProvider dataFetchMethod="findAllInclusive" />
                     <x:itemLabel type="Property" data="fullName" />
                 </ComboBox>
             </FormItem>
-            <FormItem x:name="formItem7">
+            <FormItem x:name="formItem7" x:columnSpan="3">
                 <x:constraints width="0px" height="0px" />
                 <Label x:name="lblProject" text="{$lblProject.value}">
                     <x:constraints width="0px" label="true" height="0px" />
@@ -159,7 +192,7 @@
                     <x:typeArguments>
                         <typeArgument type="Project" />
                     </x:typeArguments>
-                    <x:constraints width="75%" height="0px" />
+                    <x:constraints width="45%" height="0px" />
                     <x:dataProvider dataFetchMethod="findAllActive" />
                     <x:itemLabel type="Property" data="proName" />
                 </ComboBox>
@@ -169,7 +202,7 @@
                     <x:event>click.onComponentEvent</x:event>
                 </Button>
             </FormItem>
-            <FormItem x:name="formItem8">
+            <FormItem x:name="formItem8" x:columnSpan="3">
                 <x:constraints width="0px" height="0px" />
                 <Label x:name="lblExpAccount" text="{$lblExpAccount.value}">
                     <x:constraints width="0px" label="true" height="0px" />
@@ -178,7 +211,7 @@
                     <x:typeArguments>
                         <typeArgument type="LovAccount" />
                     </x:typeArguments>
-                    <x:constraints width="100%" height="0px" />
+                    <x:constraints width="23%" height="0px" />
                     <x:dataProvider dataFetchMethod="findAllMine" />
                     <x:itemLabel type="Property" data="name" />
                 </ComboBox>
@@ -195,7 +228,7 @@
                     <x:constraints width="100%" height="0px" />
                 </ComboBox>
             </FormItem>
-            <FormItem x:name="formItem10">
+            <FormItem x:name="formItem10" x:columnSpan="2">
                 <x:constraints width="0px" height="0px" />
                 <Label x:name="lblExpFlagCostAccount" text=" ">
                     <x:constraints width="0px" label="true" height="0px" />
@@ -213,7 +246,7 @@
                     <x:typeArguments>
                         <typeArgument type="ExpUnit" />
                     </x:typeArguments>
-                    <x:constraints width="100%" height="0px" />
+                    <x:constraints width="38%" height="0px" />
                 </ComboBox>
             </FormItem>
             <FormItem x:name="formItem12">
@@ -225,7 +258,7 @@
                     <x:constraints width="100%" height="0px" />
                 </TextField>
             </FormItem>
-            <FormItem x:name="formItem13">
+            <FormItem x:name="formItem13" x:columnSpan="3">
                 <x:constraints width="0px" height="0px" />
                 <Label x:name="lblExpState" text="{$lblExpState.value}">
                     <x:constraints width="0px" label="true" height="0px" />
@@ -234,7 +267,7 @@
                     <x:typeArguments>
                         <typeArgument type="State" />
                     </x:typeArguments>
-                    <x:constraints width="100%" height="0px" />
+                    <x:constraints width="30%" height="0px" />
                 </ComboBox>
             </FormItem>
         </FormLayout>

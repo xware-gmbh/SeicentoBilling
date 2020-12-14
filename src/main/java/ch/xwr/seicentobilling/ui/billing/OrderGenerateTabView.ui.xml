@@ -2,7 +2,6 @@
 <!DOCTYPE xml>
 <?xdevuiml version="1.0"?>
 <?template NONE?>
-<?import ??>
 <?import ch.xwr.seicentobilling.entities.CostAccount?>
 <?import ch.xwr.seicentobilling.entities.Periode?>
 <?import com.vaadin.flow.component.button.Button?>
@@ -18,23 +17,24 @@
 <?import com.vaadin.flow.component.tabs.Tab?>
 <?import com.vaadin.flow.component.tabs.Tabs?>
 <?import com.vaadin.flow.component.textfield.TextField?>
-<?import com.vaadin.flow.component.treegrid.TreeGrid?>
 <VerticalLayout xmlns:x="http://xml.xdev-software.com/xdevuiml" spacing="false" x:name="OrderGenerateTabView" padding="false" x:route="ordergenerate">
     <x:constraints zpos="0" width="100%" height="100%" />
-    <SplitLayout x:splitterPosition="40.0" x:name="splitLayout">
+    <SplitLayout x:splitterPosition="35.0" x:name="splitLayout">
         <x:constraints width="100%" height="100%" flex-grow="1.0" />
-        <VerticalLayout spacing="false" x:name="verticalLayout">
+        <VerticalLayout spacing="false" x:name="verticalLayout" alignItems="com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment.START">
             <x:constraints splitlayout-position="PRIMARY" width="100%" height="100%" />
-            <x:event>click.onComponentEvent</x:event>
-            <Tabs minHeight="50px" x:name="tabs" selectedIndex="0">
+            <x:styles>
+                <entry name="overflow" value="inherit" />
+            </x:styles>
+            <Tabs minHeight="null" x:name="tabs" selectedIndex="0">
                 <x:constraints splitlayout-position="SECONDARY" width="100%" height="36px" flex-grow="0.0" />
                 <Tab x:name="tab" label="Main" />
                 <Tab x:name="tab2" label="Texte" />
                 <Tab x:name="tab3" label="Artikel" />
             </Tabs>
             <VerticalLayout minHeight="100%" spacing="false" x:name="verticalLayout2" padding="false">
-                <x:constraints splitlayout-position="SECONDARY" width="100%" height="100px" flex-grow="0.0" />
-                <FormLayout x:name="gridLayout" x:scrollbars="com.rapidclipse.vaadin.editor.model.ScrollbarsPolicy.VERTICAL" minWidth="1">
+                <x:constraints splitlayout-position="SECONDARY" width="100%" height="-1px" flex-grow="0.0" />
+                <FormLayout x:name="gridLayout" minWidth="1">
                     <x:responsiveSteps>
                         <entry minWidth="0px" columns="1" labelsPosition="TOP" />
                         <entry minWidth="320px" columns="2" labelsPosition="TOP" />
@@ -99,7 +99,7 @@
                         </Label>
                     </FormItem>
                 </FormLayout>
-                <FormLayout x:name="gridLayoutTexte" x:scrollbars="com.rapidclipse.vaadin.editor.model.ScrollbarsPolicy.VERTICAL">
+                <FormLayout x:name="gridLayoutTexte">
                     <x:responsiveSteps>
                         <entry minWidth="0px" columns="1" labelsPosition="TOP" />
                         <entry minWidth="320px" columns="2" labelsPosition="TOP" />
@@ -137,7 +137,7 @@
                         </Button>
                     </FormItem>
                 </FormLayout>
-                <FormLayout x:name="gridLayoutArtikel" x:scrollbars="com.rapidclipse.vaadin.editor.model.ScrollbarsPolicy.VERTICAL">
+                <FormLayout x:name="gridLayoutArtikel">
                     <x:responsiveSteps>
                         <entry minWidth="0px" columns="1" labelsPosition="TOP" />
                         <entry minWidth="320px" columns="2" labelsPosition="TOP" />
@@ -167,12 +167,6 @@
         </VerticalLayout>
         <VerticalLayout spacing="false" x:name="verticalLayoutRight" padding="false">
             <x:constraints splitlayout-position="SECONDARY" width="100%" height="100%" />
-            <TreeGrid x:name="treeGrid">
-                <x:typeArguments>
-                    <typeArgument type="?" />
-                </x:typeArguments>
-                <x:constraints width="100%" height="100%" flex-grow="1.0" />
-            </TreeGrid>
         </VerticalLayout>
     </SplitLayout>
 </VerticalLayout>

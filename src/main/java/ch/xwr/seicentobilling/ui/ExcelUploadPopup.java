@@ -54,7 +54,7 @@ public class ExcelUploadPopup extends VerticalLayout
 		this.setDefaultValue();
 		
 		this.labelStatus.setText("");
-		this.lblSize.setText("");
+		this.lblFileName.setText("");
 		this.lblSize.setText("");
 		this.lblCount.setText("");
 	}
@@ -78,7 +78,7 @@ public class ExcelUploadPopup extends VerticalLayout
 	public static Dialog getPopupWindow()
 	{
 		final Dialog win = new Dialog();
-		// win.setSizeFull();
+		win.setSizeFull();
 		win.setModal(true);
 		win.setResizable(true);
 		final Button cancelButton = new Button("", e -> {
@@ -215,7 +215,6 @@ public class ExcelUploadPopup extends VerticalLayout
 		this.verticalLayout2        = new VerticalLayout();
 		this.horizontalLayout6      = new HorizontalLayout();
 		this.textArea               = new TextArea();
-		this.formLayout             = new FormLayout();
 		this.horizontalLayoutUpload = new HorizontalLayout();
 		this.formLayout2            = new FormLayout();
 		this.formItem               = new FormItem();
@@ -241,19 +240,15 @@ public class ExcelUploadPopup extends VerticalLayout
 		this.horizontalLayout4      = new HorizontalLayout();
 		this.progressBar            = new ProgressBar();
 
-		this.verticalLayout.setSpacing(false);
+		this.verticalLayout.setPadding(false);
 		this.titlelabel.setText("Rapporte importieren (xls)");
+		this.verticalLayout2.setPadding(false);
 		this.textArea.setValue(
 			"Die Funktion ermöglicht es Rapporte von einem Excel File zu importieren. Das Format der Excel Datei ist definiert und darf nicht abweichen. EinTemplate ist vom Admin erhältlich. Die Reihenfolge der Sheets in Excel ist wie folgt: Stammdaten (0), Dezember Vorjahr (1), Januar (2), Februar.(3).... Mit dieser Reihenfolge ist der Wert im Feld Arbeitsblatt korrekt berechnet.");
-		this.formLayout.setResponsiveSteps(
-			new FormLayout.ResponsiveStep("0px", 1, FormLayout.ResponsiveStep.LabelsPosition.TOP),
-			new FormLayout.ResponsiveStep("500px", 1, FormLayout.ResponsiveStep.LabelsPosition.TOP),
-			new FormLayout.ResponsiveStep("1000px", 1, FormLayout.ResponsiveStep.LabelsPosition.ASIDE));
 		this.formLayout2.setResponsiveSteps(
 			new FormLayout.ResponsiveStep("0px", 1, FormLayout.ResponsiveStep.LabelsPosition.TOP),
 			new FormLayout.ResponsiveStep("500px", 2, FormLayout.ResponsiveStep.LabelsPosition.TOP),
 			new FormLayout.ResponsiveStep("1000px", 2, FormLayout.ResponsiveStep.LabelsPosition.ASIDE));
-		this.formItem.getElement().setAttribute("colspan", "2");
 		this.label.setText("Arbeitsblatt");
 		this.formItem2.getElement().setAttribute("colspan", "2");
 		this.label2.setText("Offset Zeile");
@@ -282,11 +277,6 @@ public class ExcelUploadPopup extends VerticalLayout
 		this.horizontalLayout6.setWidthFull();
 		this.horizontalLayout6.setHeight("100px");
 		this.verticalLayout2.add(this.horizontalLayout6);
-		this.label.setSizeUndefined();
-		this.label.getElement().setAttribute("slot", "label");
-		this.textFieldSheet.setWidth("30%");
-		this.textFieldSheet.setHeight(null);
-		this.formItem.add(this.label, this.textFieldSheet);
 		this.label2.setSizeUndefined();
 		this.label2.getElement().setAttribute("slot", "label");
 		this.textFieldRow.setWidth("30%");
@@ -294,7 +284,7 @@ public class ExcelUploadPopup extends VerticalLayout
 		this.formItem2.add(this.label2, this.textFieldRow);
 		this.label3.setSizeUndefined();
 		this.label3.getElement().setAttribute("slot", "label");
-		this.lblFileName.setWidth("400px");
+		this.lblFileName.setWidth("367px");
 		this.lblFileName.setHeight(null);
 		this.formItem3.add(this.label3, this.lblFileName);
 		this.label4.setSizeUndefined();
@@ -303,8 +293,7 @@ public class ExcelUploadPopup extends VerticalLayout
 		this.formItem4.add(this.label4, this.labelStatus);
 		this.lblSize.setSizeFull();
 		this.formLayout2.add(this.formItem, this.formItem2, this.formItem3, this.lblSize, this.formItem4);
-		this.formLayout2.setWidthFull();
-		this.formLayout2.setHeight("70%");
+		this.formLayout2.setSizeFull();
 		this.horizontalLayoutUpload.add(this.formLayout2);
 		this.cmdUpload.setSizeUndefined();
 		this.cmdProcess.setSizeUndefined();
@@ -323,19 +312,15 @@ public class ExcelUploadPopup extends VerticalLayout
 		this.horizontalLayout.setHeight("30px");
 		this.verticalLayout2.setWidthFull();
 		this.verticalLayout2.setHeight(null);
-		this.formLayout.setWidthFull();
-		this.formLayout.setHeight(null);
 		this.horizontalLayoutUpload.setWidthFull();
-		this.horizontalLayoutUpload.setHeight("200px");
+		this.horizontalLayoutUpload.setHeight(null);
 		this.horizontalLayout2.setWidthFull();
-		this.horizontalLayout2.setHeight(null);
+		this.horizontalLayout2.setHeight("50px");
 		this.horizontalLayoutFooter.setWidthFull();
 		this.horizontalLayoutFooter.setHeight("50px");
-		this.verticalLayout.add(this.horizontalLayout, this.verticalLayout2, this.formLayout,
-			this.horizontalLayoutUpload,
+		this.verticalLayout.add(this.horizontalLayout, this.verticalLayout2, this.horizontalLayoutUpload,
 			this.horizontalLayout2, this.horizontalLayoutFooter);
-		this.verticalLayout.setWidth("90%");
-		this.verticalLayout.setHeight("65%");
+		this.verticalLayout.setSizeFull();
 		this.add(this.verticalLayout);
 		this.setSizeFull();
 
@@ -346,7 +331,7 @@ public class ExcelUploadPopup extends VerticalLayout
 	} // </generated-code>
 
 	// <generated-code name="variables">
-	private FormLayout       formLayout, formLayout2;
+	private FormLayout       formLayout2;
 	private Button           cmdUpload, cmdProcess, cmdCancel;
 	private TextArea         textArea;
 	private ProgressBar      progressBar;

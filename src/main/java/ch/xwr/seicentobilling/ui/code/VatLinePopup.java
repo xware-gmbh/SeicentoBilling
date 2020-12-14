@@ -1,0 +1,287 @@
+
+package ch.xwr.seicentobilling.ui.code;
+
+import java.util.Date;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.flowingcode.vaadin.addons.ironicons.IronIcons;
+import com.rapidclipse.framework.server.data.converter.ConverterBuilder;
+import com.rapidclipse.framework.server.data.format.NumberFormatBuilder;
+import com.rapidclipse.framework.server.resources.CaptionUtils;
+import com.rapidclipse.framework.server.ui.ItemLabelGeneratorFactory;
+import com.rapidclipse.framework.server.ui.StartsWithIgnoreCaseItemFilter;
+import com.vaadin.flow.component.ClickEvent;
+import com.vaadin.flow.component.ComponentEvent;
+import com.vaadin.flow.component.ComponentEventListener;
+import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.datepicker.DatePicker;
+import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.formlayout.FormLayout.FormItem;
+import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.binder.BeanValidationBinder;
+import com.vaadin.flow.data.provider.DataProvider;
+
+import ch.xwr.seicentobilling.business.LovState;
+import ch.xwr.seicentobilling.business.LovState.State;
+import ch.xwr.seicentobilling.business.RowObjectManager;
+import ch.xwr.seicentobilling.business.helper.SeicentoCrud;
+import ch.xwr.seicentobilling.dal.VatDAO;
+import ch.xwr.seicentobilling.dal.VatLineDAO;
+import ch.xwr.seicentobilling.entities.Vat;
+import ch.xwr.seicentobilling.entities.VatLine;
+
+
+public class VatLinePopup extends VerticalLayout
+{
+	/** Logger initialized */
+	private static final Logger LOG = LoggerFactory.getLogger(VatLinePopup.class);
+	
+	/**
+	 *
+	 */
+	public VatLinePopup()
+	{
+		super();
+		this.initUI();
+
+		// this.setHeight(Seicento.calculateThemeHeight(Float.parseFloat(this.getHeight()), Lumo.DARK));
+		
+		// State
+		this.comboBoxState.setItems(LovState.State.values());
+		
+		// this.comboBoxWorktype.addItems((Object[])LovState.WorkType.values());
+		
+		// get Parameter
+		final Long beanId = (Long)UI.getCurrent().getSession().getAttribute("beanId");
+		final Long objId  = (Long)UI.getCurrent().getSession().getAttribute("objId");
+		VatLine    bean   = null;
+		Vat        obj    = null;
+		
+		if(beanId == null)
+		{
+			// new
+			final VatDAO objDao = new VatDAO();
+			obj = objDao.find(objId);
+			
+			bean = new VatLine();
+			bean.setVanState(LovState.State.active);
+			bean.setVanValidFrom(new Date());
+			bean.setVat(obj);
+			
+		}
+		else
+		{
+			final VatLineDAO dao = new VatLineDAO();
+			bean = dao.find(beanId.longValue());
+		}
+		
+		this.setBeanGui(bean);
+	}
+	
+	private void setBeanGui(final VatLine bean)
+	{
+		// set Bean + Fields
+		this.binder.setBean(bean);
+		this.setROFields();
+	}
+	
+	private void setROFields()
+	{
+	}
+
+	public static Dialog getPopupWindow()
+	{
+		final Dialog win = new Dialog();
+		win.setModal(true);
+		win.setResizable(true);
+		final Button cancelButton = new Button("", e -> {
+			win.close();
+		});
+		cancelButton.setIcon(VaadinIcon.CLOSE.create());
+		cancelButton.getStyle().set("float", "right");
+		win.add(cancelButton, new VatLinePopup());
+		return win;
+	}
+	
+	/**
+	 * Event handler delegate method for the {@link Button} {@link #cmdSave}.
+	 *
+	 * @see ComponentEventListener#onComponentEvent(ComponentEvent)
+	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
+	 */
+	private void cmdSave_onClick(final ClickEvent<Button> event)
+	{
+		if(SeicentoCrud.doSave(this.binder, new VatLineDAO()))
+		{
+			try
+			{
+				
+				final RowObjectManager man = new RowObjectManager();
+				man.updateObject(this.binder.getBean().getVanId(),
+					this.binder.getBean().getClass().getSimpleName());
+
+				UI.getCurrent().getSession().setAttribute(String.class, "cmdSave");
+				UI.getCurrent().getSession().setAttribute("beanId",
+					this.binder.getBean().getVanId());
+
+				((Dialog)this.getParent().get()).close();
+				// Notification.show("Daten wurden gespeichert", 5000, Notification.Position.BOTTOM_END);
+			}
+			catch(final Exception e)
+			{
+				VatLinePopup.LOG.error("could not save ObjRoot", e);
+			}
+		}
+		
+	}
+
+	/**
+	 * Event handler delegate method for the {@link Button} {@link #cmdReset}.
+	 *
+	 * @see ComponentEventListener#onComponentEvent(ComponentEvent)
+	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
+	 */
+	private void cmdReset_onClick(final ClickEvent<Button> event)
+	{
+		UI.getCurrent().getSession().setAttribute(String.class, "cmdCancel");
+		this.binder.removeBean();
+		((Dialog)this.getParent().get()).close();
+	}
+	
+	/* WARNING: Do NOT edit!<br>The content of this method is always regenerated by the UI designer. */
+	// <generated-code name="initUI">
+	private void initUI()
+	{
+		this.verticalLayout    = new VerticalLayout();
+		this.horizontalLayout  = new HorizontalLayout();
+		this.label             = new Label();
+		this.formLayout        = new FormLayout();
+		this.formItem          = new FormItem();
+		this.lblVanValidFrom   = new Label();
+		this.dateVanValidFrom  = new DatePicker();
+		this.formItem2         = new FormItem();
+		this.lblVanRate        = new Label();
+		this.txtVanRate        = new TextField();
+		this.formItem3         = new FormItem();
+		this.lblVanRemark      = new Label();
+		this.txtVanRemark      = new TextField();
+		this.formItem4         = new FormItem();
+		this.lblVat2           = new Label();
+		this.cmbVat2           = new ComboBox<>();
+		this.formItem5         = new FormItem();
+		this.lblVanState       = new Label();
+		this.comboBoxState     = new ComboBox<>();
+		this.horizontalLayout2 = new HorizontalLayout();
+		this.cmdSave           = new Button();
+		this.cmdReset          = new Button();
+		this.binder            = new BeanValidationBinder<>(VatLine.class);
+
+		this.verticalLayout.setPadding(false);
+		this.label.setText("MwSt Zeile");
+		this.formLayout.setResponsiveSteps(
+			new FormLayout.ResponsiveStep("0px", 1, FormLayout.ResponsiveStep.LabelsPosition.TOP),
+			new FormLayout.ResponsiveStep("500px", 1, FormLayout.ResponsiveStep.LabelsPosition.ASIDE),
+			new FormLayout.ResponsiveStep("1000px", 1, FormLayout.ResponsiveStep.LabelsPosition.ASIDE));
+		this.lblVanValidFrom.setText("Gültig ab");
+		this.lblVanRate.setText("Ansatz");
+		this.lblVanRemark.setText("Bemerkung");
+		this.lblVat2.setText("Vat");
+		this.cmbVat2.setDataProvider(StartsWithIgnoreCaseItemFilter.New(this.cmbVat2::getItemLabelGenerator),
+			DataProvider.ofCollection(new VatDAO().findAll()));
+		this.cmbVat2.setItemLabelGenerator(ItemLabelGeneratorFactory.NonNull(Vat::getVatName));
+		this.lblVanState.setText("State");
+		this.comboBoxState.setItemLabelGenerator(ItemLabelGeneratorFactory.NonNull(CaptionUtils::resolveCaption));
+		this.horizontalLayout2.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
+		this.horizontalLayout2.setAlignItems(FlexComponent.Alignment.CENTER);
+		this.cmdSave.setText("Speichern");
+		this.cmdSave.setIcon(IronIcons.SAVE.create());
+		this.cmdReset.setText("Schliessen");
+		this.cmdReset.setIcon(IronIcons.CANCEL.create());
+
+		this.binder.forField(this.dateVanValidFrom)
+			.withConverter(ConverterBuilder.LocalDateToUtilDate().systemDefaultZoneId().build()).bind("vanValidFrom");
+		this.binder.forField(this.txtVanRate).withNullRepresentation("")
+			.withConverter(ConverterBuilder.StringToDouble().numberFormatBuilder(NumberFormatBuilder.Decimal()).build())
+			.bind("vanRate");
+		this.binder.forField(this.txtVanRemark).withNullRepresentation("").bind("vanRemark");
+		this.binder.forField(this.cmbVat2).bind("vat");
+		this.binder.forField(this.comboBoxState).bind("vanState");
+
+		this.label.setSizeUndefined();
+		this.horizontalLayout.add(this.label);
+		this.horizontalLayout.setVerticalComponentAlignment(FlexComponent.Alignment.CENTER, this.label);
+		this.lblVanValidFrom.setSizeUndefined();
+		this.lblVanValidFrom.getElement().setAttribute("slot", "label");
+		this.dateVanValidFrom.setWidth("250px");
+		this.dateVanValidFrom.setHeight(null);
+		this.formItem.add(this.lblVanValidFrom, this.dateVanValidFrom);
+		this.lblVanRate.setSizeUndefined();
+		this.lblVanRate.getElement().setAttribute("slot", "label");
+		this.txtVanRate.setWidth("250px");
+		this.txtVanRate.setHeight(null);
+		this.formItem2.add(this.lblVanRate, this.txtVanRate);
+		this.lblVanRemark.setSizeUndefined();
+		this.lblVanRemark.getElement().setAttribute("slot", "label");
+		this.txtVanRemark.setWidth("250px");
+		this.txtVanRemark.setHeight(null);
+		this.formItem3.add(this.lblVanRemark, this.txtVanRemark);
+		this.lblVat2.setSizeUndefined();
+		this.lblVat2.getElement().setAttribute("slot", "label");
+		this.cmbVat2.setWidth("250px");
+		this.cmbVat2.setHeight(null);
+		this.formItem4.add(this.lblVat2, this.cmbVat2);
+		this.lblVanState.setSizeUndefined();
+		this.lblVanState.getElement().setAttribute("slot", "label");
+		this.comboBoxState.setWidth("250px");
+		this.comboBoxState.setHeight(null);
+		this.formItem5.add(this.lblVanState, this.comboBoxState);
+		this.formLayout.add(this.formItem, this.formItem2, this.formItem3, this.formItem4, this.formItem5);
+		this.cmdSave.setWidth("125px");
+		this.cmdSave.setHeight(null);
+		this.cmdReset.setWidth("135px");
+		this.cmdReset.setHeight(null);
+		this.horizontalLayout2.add(this.cmdSave, this.cmdReset);
+		this.horizontalLayout2.setVerticalComponentAlignment(FlexComponent.Alignment.STRETCH, this.cmdSave);
+		this.horizontalLayout2.setVerticalComponentAlignment(FlexComponent.Alignment.STRETCH, this.cmdReset);
+		this.horizontalLayout.setWidthFull();
+		this.horizontalLayout.setHeight("30px");
+		this.formLayout.setWidthFull();
+		this.formLayout.setHeight("250px");
+		this.horizontalLayout2.setWidthFull();
+		this.horizontalLayout2.setHeight("12%");
+		this.verticalLayout.add(this.horizontalLayout, this.formLayout, this.horizontalLayout2);
+		this.verticalLayout.setWidth("537px");
+		this.verticalLayout.setHeight("450px");
+		this.add(this.verticalLayout);
+		this.setWidth("800px");
+		this.setHeight("400px");
+
+		this.cmdSave.addClickListener(this::cmdSave_onClick);
+		this.cmdReset.addClickListener(this::cmdReset_onClick);
+	} // </generated-code>
+
+	// <generated-code name="variables">
+	private FormLayout                    formLayout;
+	private BeanValidationBinder<VatLine> binder;
+	private Button                        cmdSave, cmdReset;
+	private ComboBox<State>               comboBoxState;
+	private DatePicker                    dateVanValidFrom;
+	private ComboBox<Vat>                 cmbVat2;
+	private VerticalLayout                verticalLayout;
+	private HorizontalLayout              horizontalLayout, horizontalLayout2;
+	private Label                         label, lblVanValidFrom, lblVanRate, lblVanRemark, lblVat2, lblVanState;
+	private TextField                     txtVanRate, txtVanRemark;
+	private FormItem                      formItem, formItem2, formItem3, formItem4, formItem5;
+	// </generated-code>
+
+}

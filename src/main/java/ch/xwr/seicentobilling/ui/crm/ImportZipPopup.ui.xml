@@ -2,7 +2,6 @@
 <!DOCTYPE xml>
 <?xdevuiml version="1.0"?>
 <?template NONE?>
-<?import ch.xwr.seicentobilling.entities.Periode?>
 <?import com.vaadin.flow.component.button.Button?>
 <?import com.vaadin.flow.component.formlayout.FormLayout?>
 <?import com.vaadin.flow.component.html.Anchor?>
@@ -12,43 +11,8 @@
 <?import com.vaadin.flow.component.orderedlayout.VerticalLayout?>
 <?import com.vaadin.flow.component.progressbar.ProgressBar?>
 <?import com.vaadin.flow.component.textfield.TextArea?>
-<?import com.vaadin.flow.data.binder.BeanValidationBinder?>
 <VerticalLayout xmlns:x="http://xml.xdev-software.com/xdevuiml" x:name="ImportZipPopup">
     <x:constraints zpos="0" width="100%" height="100%" />
-    <BeanValidationBinder x:name="binder">
-        <x:typeArguments>
-            <typeArgument type="Periode" />
-        </x:typeArguments>
-        <x:bindings>
-            <binding field="cmbCostAccount" property="costAccount" required="false" readOnly="false">
-                <validator type="Bean" />
-            </binding>
-            <binding field="passwordField1" property="perName" required="false" nullRepresentation="" readOnly="false">
-                <validator type="Bean" />
-            </binding>
-            <binding field="comboBoxMonth" property="perMonth" required="false" readOnly="false">
-                <validator type="Bean" />
-            </binding>
-            <binding field="comboBoxBookedExp" property="perBookedExpense" required="false" readOnly="false">
-                <validator type="Bean" />
-            </binding>
-            <binding field="cboSignOffExpense" property="perSignOffExpense" required="false" nullRepresentation="false" readOnly="false">
-                <validator type="Bean" />
-            </binding>
-            <binding field="comboBoxBookedPro" property="perBookedProject" required="false" readOnly="false">
-                <validator type="Bean" />
-            </binding>
-            <binding field="comboBoxState" property="perState" required="false" readOnly="false">
-                <validator type="Bean" />
-            </binding>
-            <binding field="passwordField2" property="perYear" required="false" nullRepresentation="" readOnly="false">
-                <validator type="Bean" />
-                <converter TYPE="StringToInteger">
-                    <numberFormat format="Integer" pattern="####" currency="default" locale="default" patternLocalized="false" />
-                </converter>
-            </binding>
-        </x:bindings>
-    </BeanValidationBinder>
     <VerticalLayout spacing="false" x:name="verticalLayout" padding="false">
         <x:constraints width="90%" height="70%" flex-grow="0.0" />
         <HorizontalLayout x:name="horizontalLayout">

@@ -1,15 +1,13 @@
 
-package ch.xwr.seicentobilling.ui;
+package ch.xwr.seicentobilling.ui.billing;
 
-import java.text.DateFormat;
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Collection;
 import java.util.Date;
-import java.util.Iterator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +16,7 @@ import com.rapidclipse.framework.server.ui.ItemLabelGeneratorFactory;
 import com.rapidclipse.framework.server.ui.StartsWithIgnoreCaseItemFilter;
 import com.vaadin.flow.component.AbstractField.ComponentValueChangeEvent;
 import com.vaadin.flow.component.ClickEvent;
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.HasValue;
@@ -27,10 +26,11 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.formlayout.FormLayout.FormItem;
-import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.ColumnTextAlign;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.component.tabs.Tab;
@@ -45,15 +45,17 @@ import ch.xwr.seicentobilling.business.OrderGenerator;
 import ch.xwr.seicentobilling.business.Seicento;
 import ch.xwr.seicentobilling.business.helper.RowObjectAddonHandler;
 import ch.xwr.seicentobilling.business.model.billing.BillDto;
-import ch.xwr.seicentobilling.business.model.billing.BillLine;
 import ch.xwr.seicentobilling.business.model.billing.GuiGeneratorFields;
 import ch.xwr.seicentobilling.dal.CostAccountDAO;
 import ch.xwr.seicentobilling.dal.ItemDAO;
-import ch.xwr.seicentobilling.dal.OrderDAO;
 import ch.xwr.seicentobilling.dal.PeriodeDAO;
 import ch.xwr.seicentobilling.entities.CostAccount;
+import ch.xwr.seicentobilling.entities.Item;
 import ch.xwr.seicentobilling.entities.Order;
 import ch.xwr.seicentobilling.entities.Periode;
+import ch.xwr.seicentobilling.ui.OrderGenTreeItem;
+import ch.xwr.seicentobilling.ui.OrderGenTreeItemData;
+import ch.xwr.seicentobilling.ui.SeicentoNotification;
 
 
 @Route("ordergenerate")
@@ -64,7 +66,9 @@ public class OrderGenerateTabView extends VerticalLayout
 	
 	private final GuiGeneratorFields guifld = new GuiGeneratorFields();
 	private CostAccount              user   = null;
-
+	TreeGrid<OrderGenTreeItem>       treeGrid;
+	OrderGenTreeItemData             orderData;
+	
 	public OrderGenerateTabView()
 	{
 
@@ -76,6 +80,22 @@ public class OrderGenerateTabView extends VerticalLayout
 			this.cmdPropose.setEnabled(false);
 			SeicentoNotification.showError("Parameter konnten nicht geladen werden. Bitte Artikel + Texte überprüfen.");
 		}
+		
+		this.gridLayoutTexte.setVisible(false);
+		this.gridLayoutArtikel.setVisible(false);
+		this.treeGrid = new TreeGrid<>();
+
+		final Map<Tab, Component> tabsToPages = new HashMap<>();
+		tabsToPages.put(this.tab, this.gridLayout);
+		tabsToPages.put(this.tab2, this.gridLayoutTexte);
+		tabsToPages.put(this.tab3, this.gridLayoutArtikel);
+
+		this.tabs.addSelectedChangeListener(event -> {
+			tabsToPages.values().forEach(page -> page.setVisible(false));
+			final Component selectedPage = tabsToPages.get(this.tabs.getSelectedTab());
+			selectedPage.setVisible(true);
+		});
+		this.verticalLayoutRight.add(this.treeGrid);
 	}
 
 	private boolean loadParams()
@@ -97,13 +117,13 @@ public class OrderGenerateTabView extends VerticalLayout
 			this.textFieldJourneyLine.setValue(this.getTextParams(objman, objUsr, "lineTextJourney"));
 			
 			// items
-			final ch.xwr.seicentobilling.entities.Item itm1 = this.SearchItem(objman, "itemIdentProject");
+			final Item itm1 = this.SearchItem(objman, "itemIdentProject");
 			this.textFieldItemProject.setValue(itm1.getPrpShortName());
 			//
-			final ch.xwr.seicentobilling.entities.Item itm2 = this.SearchItem(objman, "itemIdentExpense");
+			final Item itm2 = this.SearchItem(objman, "itemIdentExpense");
 			this.textFieldItemExpense.setValue(itm2.getPrpShortName());
 			//
-			final ch.xwr.seicentobilling.entities.Item itm3 = this.SearchItem(objman, "itemIdentJourney");
+			final Item itm3 = this.SearchItem(objman, "itemIdentJourney");
 			this.textFieldItemJourney.setValue(itm3.getPrpShortName());
 			//
 			final String cbxValue = objUsr.getRowParameter("billing", "generator", "cbxLastText");
@@ -144,12 +164,12 @@ public class OrderGenerateTabView extends VerticalLayout
 		return txtValue;
 	}
 	
-	private ch.xwr.seicentobilling.entities.Item SearchItem(final RowObjectAddonHandler objman, final String key)
+	private Item SearchItem(final RowObjectAddonHandler objman, final String key)
 	{
 		final String value = objman.getRowParameter("billing", "generator", key);
 		
-		final ItemDAO                                    dao = new ItemDAO();
-		final List<ch.xwr.seicentobilling.entities.Item> lst = dao.findByIdent(value);
+		final ItemDAO    dao = new ItemDAO();
+		final List<Item> lst = dao.findByIdent(value);
 		if(lst != null && lst.size() > 0)
 		{
 			return lst.get(0);
@@ -179,83 +199,44 @@ public class OrderGenerateTabView extends VerticalLayout
 	private void InitTreeGrid(final List<BillDto> lst)
 	{
 
-	}
+		this.orderData = new OrderGenTreeItemData(lst);
+		this.treeGrid.removeAllColumns();
+		
+		this.treeGrid.setItems(this.orderData.getRootOrderItems(),
+			this.orderData::getChildOrderItems);
+		// this.treeGrid.addHierarchyColumn(OrderGenTreeItem::getCbo)
+		// .setHeader("");
+		this.treeGrid
+			.addComponentHierarchyColumn(
+				item -> this.createCheckBox(this.treeGrid, item))
+			.setHeader("").setResizable(true);
+		this.treeGrid.addColumn(OrderGenTreeItem::getCusName)
+			.setHeader("Kunde").setResizable(true);
+		this.treeGrid.addColumn(OrderGenTreeItem::getProName)
+			.setHeader("Projekt").setResizable(true);
+		this.treeGrid.addColumn(OrderGenTreeItem::getTotalAmount).setHeader("Betrag").setResizable(true)
+			.setTextAlign(ColumnTextAlign.END);
+		this.treeGrid.addColumn(OrderGenTreeItem::getLdate)
+			.setHeader("L-Rechnung").setResizable(true);
+		
+		this.treeGrid.setSizeFull();
 
-	private Object[] getParentLine(final BillDto billDto)
+	}
+	
+	public Checkbox createCheckBox(final TreeGrid<OrderGenTreeItem> grid, final OrderGenTreeItem bean)
 	{
-		final Checkbox cbo = new Checkbox();
-		cbo.setValue(true);
-		if(billDto.getProject().getInternal() == null || billDto.getProject().getInternal())
+		final Checkbox chkBox = new Checkbox();
+		chkBox.setValue(bean.getCbo());
+		if(bean.getChildItems().size() == 0)
 		{
-			cbo.setValue(false);
-			cbo.setEnabled(false);
+			chkBox.setVisible(false);
 		}
-		final String cusName = billDto.getCustomer().getFullname();
-		final String proName = billDto.getProject().getProName();
-		final String amount  = this.getAmtString(billDto.getTotalAmount(), true);
-		final String ldate   = this.getLastBillDate(billDto);
-
-		final Object[] retval = new Object[]{cbo, cusName, proName, amount, ldate, billDto};
-		return retval;
+		chkBox.addClickListener(ee -> {
+			bean.setCbo(ee.getSource().getValue());
+		});
+		return chkBox;
 	}
-
-	private String getLastBillDate(final BillDto billDto)
-	{
-		final String     pattern = "dd.MM.yyyy";
-		final DateFormat df      = new SimpleDateFormat(pattern);
-
-		final OrderDAO    dao = new OrderDAO();
-		final List<Order> lst = dao.findByCustomer(billDto.getCustomer());
-		for(final Iterator<Order> iterator = lst.iterator(); iterator.hasNext();)
-		{
-			final Order order = iterator.next();
-			if(order.getProject() != null)
-			{
-				if(order.getProject().getProId().equals(billDto.getProject().getProId()))
-				{
-					return df.format(order.getOrdBillDate());
-				}
-			}
-		}
-
-		return "";
-	}
-
-	private String getAmtString(final Double amount, final boolean currency)
-	{
-		final DecimalFormat decimalFormat  = new DecimalFormat("#,##0.00");
-		final String        numberAsString = "            " + decimalFormat.format(amount);
-		final int           ilen           = numberAsString.length();
-		final String        retval         = numberAsString.substring(ilen - 11);
-		if(currency)
-		{
-			return "CHF" + retval;
-		}
-		return retval;
-	}
-
-	private Object[] getDetailGridLine(final String text, final List<BillLine> list)
-	{
-		Double amt = new Double(0);
-		if(list != null && !list.isEmpty())
-		{
-			for(int i = 0; i < list.size(); i++)
-			{
-				final BillLine tmp = list.get(i);
-				amt = amt + tmp.getAmount();
-			}
-		}
-
-		if(amt > 0)
-		{
-			final String   samt   = this.getAmtString(amt, false);
-			final Object[] retval = new Object[]{null, null, text, samt, null, null};
-			return retval;
-		}
-
-		return null;
-	}
-
+	
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdSaveText}.
 	 *
@@ -264,6 +245,15 @@ public class OrderGenerateTabView extends VerticalLayout
 	 */
 	private void cmdSaveText_onClick(final ClickEvent<Button> event)
 	{
+		// save text to User
+		final RowObjectAddonHandler objman = new RowObjectAddonHandler(this.user.getCsaId(), "CostAccount");
+		
+		objman.putRowParameter("billing", "generator", "headerText", this.textFieldOrderText.getValue());
+		objman.putRowParameter("billing", "generator", "lineTextProject", this.textFieldProjectLine.getValue());
+		objman.putRowParameter("billing", "generator", "lineTextExpense", this.textFieldExpenseLine.getValue());
+		objman.putRowParameter("billing", "generator", "lineTextJourney", this.textFieldJourneyLine.getValue());
+		
+		objman.putRowParameter("billing", "generator", "cbxLastText", this.checkBoxTextLast.getValue().toString());
 	}
 
 	/**
@@ -302,6 +292,7 @@ public class OrderGenerateTabView extends VerticalLayout
 		{
 			this.cmdGenerate.setEnabled(false);
 		}
+		
 	}
 
 	/**
@@ -320,9 +311,13 @@ public class OrderGenerateTabView extends VerticalLayout
 			final CostAccount bean = this.comboBoxCostAccount.getValue();
 
 			// this.comboBoxPeriode.getContainerDataSource().removeAllItems();
-			
-			this.comboBoxPeriode.setItems(new PeriodeDAO().findByCostAccount(bean));
-
+			final List<Periode> periodList = new PeriodeDAO().findByCostAccount(bean);
+			this.comboBoxPeriode.setItems(periodList);
+			if(periodList.size() > 0)
+			{
+				final Periode beanp = periodList.get(0);
+				this.comboBoxPeriode.setValue(beanp);
+			}
 		}
 	}
 
@@ -334,28 +329,55 @@ public class OrderGenerateTabView extends VerticalLayout
 	 */
 	private void cmdGenerate_onClick(final ClickEvent<Button> event)
 	{
-		
+		if(this.isModelValid())
+		{
+			int                  icount   = 0;
+			String               billnbrs = "";
+			final OrderGenerator gen      = new OrderGenerator();
+			
+			for(final OrderGenTreeItem item : this.treeGrid.getTreeData().getRootItems())
+			{
+
+				final BillDto bill = item.getObject();
+				if(item.getCbo() && bill != null)
+				{
+					final Order newOrd = gen.createBill(bill, this.guifld);
+					// System.out.println("Order created " + newOrd.getOrdNumber());
+					icount++;
+
+					if(icount == 1)
+					{
+						billnbrs = "" + newOrd.getOrdNumber();
+					}
+					else
+					{
+						billnbrs = billnbrs + ", " + newOrd.getOrdNumber();
+					}
+					item.setCbo(false);
+					item.setLdate("Neu: " + newOrd.getOrdNumber());
+				}
+			}
+
+			SeicentoNotification.showInfo("Rechnungen erstellen ausgeführt");
+			if(icount > 0)
+			{
+				this.treeGrid.getDataProvider().refreshAll();
+				SeicentoNotification.showInfo("Rechnungen generieren",
+					"" + icount + " Rechnung(en) erstellt mit Nr: " + billnbrs + ".");
+			}
+
+			this.markPeriodeAsGenerated();
+
+		}
+		else
+		{
+			SeicentoNotification.showWarn("Rechnungen generieren",
+				"ungültige Parameter - Generierung kann nicht starten.");
+
+		}
+
 	}
 	
-	/**
-	 * Event handler delegate method for the {@link VerticalLayout} {@link #verticalLayout}.
-	 *
-	 * @see ComponentEventListener#onComponentEvent(ComponentEvent)
-	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
-	 */
-	private void verticalLayout_onClick(final ClickEvent<VerticalLayout> event)
-	{
-		// save text to User
-		final RowObjectAddonHandler objman = new RowObjectAddonHandler(this.user.getCsaId(), "CostAccount");
-
-		objman.putRowParameter("billing", "generator", "headerText", this.textFieldOrderText.getValue());
-		objman.putRowParameter("billing", "generator", "lineTextProject", this.textFieldProjectLine.getValue());
-		objman.putRowParameter("billing", "generator", "lineTextExpense", this.textFieldExpenseLine.getValue());
-		objman.putRowParameter("billing", "generator", "lineTextJourney", this.textFieldJourneyLine.getValue());
-
-		objman.putRowParameter("billing", "generator", "cbxLastText", this.checkBoxTextLast.getValue().toString());
-	}
-
 	private void markPeriodeAsGenerated()
 	{
 		final PeriodeDAO dao = new PeriodeDAO();
@@ -442,12 +464,13 @@ public class OrderGenerateTabView extends VerticalLayout
 		this.formItem22           = new FormItem();
 		this.textFieldItemJourney = new TextField();
 		this.verticalLayoutRight  = new VerticalLayout();
-		this.treeGrid             = new TreeGrid<>();
-		
+
 		this.setSpacing(false);
 		this.setPadding(false);
 		this.verticalLayout.setSpacing(false);
-		this.tabs.setMinHeight("50px");
+		this.verticalLayout.setAlignItems(FlexComponent.Alignment.START);
+		this.verticalLayout.getStyle().set("overflow", "inherit");
+		this.tabs.setMinHeight("null");
 		this.tab.setLabel("Main");
 		this.tab2.setLabel("Texte");
 		this.tab3.setLabel("Artikel");
@@ -455,8 +478,6 @@ public class OrderGenerateTabView extends VerticalLayout
 		this.verticalLayout2.setSpacing(false);
 		this.verticalLayout2.setPadding(false);
 		this.gridLayout.setMinWidth("1");
-		this.gridLayout.getStyle().set("overflow-x", "hidden");
-		this.gridLayout.getStyle().set("overflow-y", "auto");
 		this.gridLayout.setResponsiveSteps(
 			new FormLayout.ResponsiveStep("0px", 1, FormLayout.ResponsiveStep.LabelsPosition.TOP),
 			new FormLayout.ResponsiveStep("320px", 2, FormLayout.ResponsiveStep.LabelsPosition.TOP),
@@ -475,8 +496,6 @@ public class OrderGenerateTabView extends VerticalLayout
 		this.cmdGenerate.setText("Rechnungen erstellen");
 		this.formItem2.getElement().setAttribute("colspan", "2");
 		this.label4.setText("       MwSt-Ansatz wird für alle Positionen vom Projekt übernommen!");
-		this.gridLayoutTexte.getStyle().set("overflow-x", "hidden");
-		this.gridLayoutTexte.getStyle().set("overflow-y", "auto");
 		this.gridLayoutTexte.setResponsiveSteps(
 			new FormLayout.ResponsiveStep("0px", 1, FormLayout.ResponsiveStep.LabelsPosition.TOP),
 			new FormLayout.ResponsiveStep("320px", 2, FormLayout.ResponsiveStep.LabelsPosition.TOP),
@@ -486,8 +505,6 @@ public class OrderGenerateTabView extends VerticalLayout
 		this.textFieldExpenseLine.setLabel("Textzeile Spesen");
 		this.textFieldJourneyLine.setLabel("Textzeile Reisezeit");
 		this.cmdSaveText.setText("Texte speichern");
-		this.gridLayoutArtikel.getStyle().set("overflow-x", "hidden");
-		this.gridLayoutArtikel.getStyle().set("overflow-y", "auto");
 		this.gridLayoutArtikel.setResponsiveSteps(
 			new FormLayout.ResponsiveStep("0px", 1, FormLayout.ResponsiveStep.LabelsPosition.TOP),
 			new FormLayout.ResponsiveStep("320px", 2, FormLayout.ResponsiveStep.LabelsPosition.TOP),
@@ -497,8 +514,7 @@ public class OrderGenerateTabView extends VerticalLayout
 		this.textFieldItemJourney.setLabel("Artikel Reisezeit");
 		this.verticalLayoutRight.setSpacing(false);
 		this.verticalLayoutRight.setPadding(false);
-		this.treeGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
-		
+
 		this.tabs.add(this.tab, this.tab2, this.tab3);
 		this.comboBoxCostAccount.setWidthFull();
 		this.comboBoxCostAccount.setHeight(null);
@@ -554,22 +570,18 @@ public class OrderGenerateTabView extends VerticalLayout
 		this.tabs.setWidthFull();
 		this.tabs.setHeight("36px");
 		this.verticalLayout2.setWidthFull();
-		this.verticalLayout2.setHeight("100px");
+		this.verticalLayout2.setHeight(null);
 		this.verticalLayout.add(this.tabs, this.verticalLayout2);
-		this.treeGrid.setSizeFull();
-		this.verticalLayoutRight.add(this.treeGrid);
-		this.verticalLayoutRight.setFlexGrow(1.0, this.treeGrid);
 		this.splitLayout.addToPrimary(this.verticalLayout);
 		this.splitLayout.addToSecondary(this.verticalLayoutRight);
-		this.splitLayout.setSplitterPosition(40.0);
+		this.splitLayout.setSplitterPosition(35.0);
 		this.splitLayout.setSizeFull();
 		this.add(this.splitLayout);
 		this.setFlexGrow(1.0, this.splitLayout);
 		this.setSizeFull();
-		
+
 		this.tabs.setSelectedIndex(0);
-		
-		this.verticalLayout.addClickListener(this::verticalLayout_onClick);
+
 		this.comboBoxCostAccount.addValueChangeListener(this::comboBoxCostAccount_valueChanged);
 		this.cmdPropose.addClickListener(this::cmdPropose_onClick);
 		this.cmdGenerate.addClickListener(this::cmdGenerate_onClick);
@@ -586,7 +598,6 @@ public class OrderGenerateTabView extends VerticalLayout
 	private FormLayout            gridLayout, gridLayoutTexte, gridLayoutArtikel;
 	private Checkbox              checkBoxTextLast;
 	private Button                cmdPropose, cmdGenerate, cmdSaveText;
-	private TreeGrid<?>           treeGrid;
 	private SplitLayout           splitLayout;
 	private DatePicker            dateBilldate;
 	private ComboBox<Periode>     comboBoxPeriode;
@@ -595,77 +606,5 @@ public class OrderGenerateTabView extends VerticalLayout
 		textFieldItemProject, textFieldItemExpense, textFieldItemJourney;
 	private ComboBox<CostAccount> comboBoxCostAccount;
 	// </generated-code>
-	
-}
-
-
-class Parent
-{
-	private String  cusName;
-	private String  proName;
-	private String  amount;
-	private String  ldate;
-	private boolean cbo;
-	private Long    id;
-	
-	public String getCusName()
-	{
-		return this.cusName;
-	}
-	
-	public void setCusName(final String cusName)
-	{
-		this.cusName = cusName;
-	}
-	
-	public String getProName()
-	{
-		return this.proName;
-	}
-	
-	public void setProName(final String proName)
-	{
-		this.proName = proName;
-	}
-	
-	public String getAmount()
-	{
-		return this.amount;
-	}
-	
-	public void setAmount(final String amount)
-	{
-		this.amount = amount;
-	}
-	
-	public String getLdate()
-	{
-		return this.ldate;
-	}
-	
-	public void setLdate(final String ldate)
-	{
-		this.ldate = ldate;
-	}
-	
-	public boolean isCbo()
-	{
-		return this.cbo;
-	}
-	
-	public void setCbo(final boolean cbo)
-	{
-		this.cbo = cbo;
-	}
-	
-	public Long getId()
-	{
-		return this.id;
-	}
-	
-	public void setId(final Long id)
-	{
-		this.id = id;
-	}
 	
 }

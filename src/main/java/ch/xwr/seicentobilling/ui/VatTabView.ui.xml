@@ -4,6 +4,7 @@
 <?template NONE?>
 <?import ch.xwr.seicentobilling.business.LovState.State?>
 <?import ch.xwr.seicentobilling.entities.Vat?>
+<?import ch.xwr.seicentobilling.entities.VatLine?>
 <?import com.rapidclipse.framework.server.ui.filter.FilterComponent?>
 <?import com.vaadin.flow.component.button.Button?>
 <?import com.vaadin.flow.component.checkbox.Checkbox?>
@@ -89,86 +90,125 @@
                 <x:event>itemClick.onComponentEvent</x:event>
             </Grid>
         </VerticalLayout>
-        <FormLayout x:name="formLayout">
-            <x:responsiveSteps>
-                <entry minWidth="25em" columns="1" labelsPosition="TOP" />
-                <entry minWidth="32em" columns="2" labelsPosition="TOP" />
-                <entry minWidth="40em" columns="3" labelsPosition="TOP" />
-            </x:responsiveSteps>
-            <x:constraints splitlayout-position="SECONDARY" width="100%" height="100%" />
-            <x:styles>
-                <entry name="margin-left" value="10px" />
-            </x:styles>
-            <FormItem x:name="formItem2" x:columnSpan="4">
-                <x:constraints width="0px" height="0px" />
-                <Label x:name="lblVatName" maxHeight="" text="Name">
-                    <x:constraints width="0px" label="true" height="0px" />
-                </Label>
-                <TextField x:name="txtVatName">
-                    <x:constraints width="100%" height="0px" />
-                </TextField>
-            </FormItem>
-            <FormItem x:name="formItem" x:columnSpan="4">
-                <x:constraints width="0px" height="0px" />
-                <Label x:name="lblVatSign" text="Zeichen">
-                    <x:constraints width="0px" label="true" height="0px" />
-                </Label>
-                <TextField x:name="txtVatSign">
-                    <x:constraints width="100%" height="0px" />
-                </TextField>
-            </FormItem>
-            <FormItem x:name="formItem3" x:columnSpan="4">
-                <x:constraints width="0px" height="0px" />
-                <Label x:name="lblVatInclude" text="Inklusiv">
-                    <x:constraints width="0px" label="true" height="0px" />
-                </Label>
-                <Checkbox x:name="chkVatInclude">
-                    <x:constraints width="0px" height="0px" />
-                </Checkbox>
-            </FormItem>
-            <FormItem x:name="formItem4" x:columnSpan="4">
-                <x:constraints width="0px" height="0px" />
-                <Label x:name="lblVatExtRef" text="Ext Ref 1">
-                    <x:constraints width="0px" label="true" height="0px" />
-                </Label>
-                <TextField x:name="txtVatExtRef">
-                    <x:constraints width="100%" height="0px" />
-                </TextField>
-            </FormItem>
-            <FormItem x:name="formItem5">
-                <x:constraints width="0px" height="0px" />
-                <Label x:name="lblVatExtRef2" text="Ext Ref 2">
-                    <x:constraints width="0px" label="true" height="0px" />
-                </Label>
-                <TextField x:name="txtVatExtRef1">
-                    <x:constraints width="100%" height="0px" />
-                </TextField>
-            </FormItem>
-            <FormItem x:name="formItem6" x:columnSpan="4">
-                <x:constraints width="0px" height="0px" />
-                <Label x:name="lblVatState" text="Status">
-                    <x:constraints width="0px" label="true" height="0px" />
-                </Label>
-                <ComboBox x:name="comboBoxState">
+        <SplitLayout x:name="splitLayout2" orientation="com.vaadin.flow.component.splitlayout.SplitLayout.Orientation.VERTICAL">
+            <x:constraints splitlayout-position="SECONDARY" width="100%" alignment="AUTO" height="100%" flex-grow="1.0" />
+            <VerticalLayout x:name="verticalLayout3" padding="false">
+                <x:constraints splitlayout-position="PRIMARY" width="100%" height="100%" />
+                <FormLayout x:name="formLayout">
+                    <x:responsiveSteps>
+                        <entry minWidth="25em" columns="1" labelsPosition="TOP" />
+                        <entry minWidth="32em" columns="2" labelsPosition="TOP" />
+                        <entry minWidth="40em" columns="3" labelsPosition="ASIDE" />
+                    </x:responsiveSteps>
+                    <x:constraints splitlayout-position="SECONDARY" width="100%" height="100%" flex-grow="1.0" />
+                    <x:styles>
+                        <entry name="margin-left" value="10px" />
+                    </x:styles>
+                    <FormItem x:name="formItem2">
+                        <x:constraints width="0px" height="0px" />
+                        <Label x:name="lblVatName" maxHeight="" text="Name">
+                            <x:constraints width="0px" label="true" height="0px" />
+                        </Label>
+                        <TextField x:name="txtVatName">
+                            <x:constraints width="100%" height="0px" />
+                        </TextField>
+                    </FormItem>
+                    <FormItem x:name="formItem">
+                        <x:constraints width="0px" height="0px" />
+                        <Label x:name="lblVatSign" text="Zeichen">
+                            <x:constraints width="0px" label="true" height="0px" />
+                        </Label>
+                        <TextField x:name="txtVatSign">
+                            <x:constraints width="100%" height="0px" />
+                        </TextField>
+                    </FormItem>
+                    <FormItem x:name="formItem3">
+                        <x:constraints width="0px" height="0px" />
+                        <Label x:name="lblVatInclude" text="Inklusiv">
+                            <x:constraints width="0px" label="true" height="0px" />
+                        </Label>
+                        <Checkbox x:name="chkVatInclude">
+                            <x:constraints width="0px" height="0px" />
+                        </Checkbox>
+                    </FormItem>
+                    <FormItem x:name="formItem4">
+                        <x:constraints width="0px" height="0px" />
+                        <Label x:name="lblVatExtRef" text="Ext Ref 1">
+                            <x:constraints width="0px" label="true" height="0px" />
+                        </Label>
+                        <TextField x:name="txtVatExtRef">
+                            <x:constraints width="100%" height="0px" />
+                        </TextField>
+                    </FormItem>
+                    <FormItem x:name="formItem5">
+                        <x:constraints width="0px" height="0px" />
+                        <Label x:name="lblVatExtRef2" text="Ext Ref 2">
+                            <x:constraints width="0px" label="true" height="0px" />
+                        </Label>
+                        <TextField x:name="txtVatExtRef1">
+                            <x:constraints width="100%" height="0px" />
+                        </TextField>
+                    </FormItem>
+                    <FormItem x:name="formItem6">
+                        <x:constraints width="0px" height="0px" />
+                        <Label x:name="lblVatState" text="Status">
+                            <x:constraints width="0px" label="true" height="0px" />
+                        </Label>
+                        <ComboBox x:name="comboBoxState">
+                            <x:typeArguments>
+                                <typeArgument type="State" />
+                            </x:typeArguments>
+                            <x:constraints width="100%" height="0px" />
+                        </ComboBox>
+                    </FormItem>
+                </FormLayout>
+            </VerticalLayout>
+            <VerticalLayout x:name="verticalLayout2" padding="false">
+                <x:constraints splitlayout-position="SECONDARY" width="100%" height="100%" />
+                <HorizontalLayout x:name="horizontalLayout">
+                    <x:constraints width="100%" height="60px" flex-grow="0.0" />
+                    <Button x:name="cmdNewLine">
+                        <x:icon src="com.vaadin.flow.component.icon.VaadinIcon#PLUS_CIRCLE" />
+                        <x:constraints width="0px" height="0px" flex-grow="0.0" />
+                        <x:event>click.onComponentEvent</x:event>
+                    </Button>
+                    <Button x:name="cmdEditLine">
+                        <x:icon src="com.flowingcode.vaadin.addons.ironicons.ImageIcons#EDIT" />
+                        <x:constraints width="0px" height="0px" flex-grow="0.0" />
+                        <x:event>click.onComponentEvent</x:event>
+                    </Button>
+                    <Button x:name="cmdDeletLine">
+                        <x:icon src="com.vaadin.flow.component.icon.VaadinIcon#MINUS_CIRCLE" />
+                        <x:constraints width="0px" height="0px" flex-grow="0.0" />
+                        <x:event>click.onComponentEvent</x:event>
+                    </Button>
+                </HorizontalLayout>
+                <Grid x:name="tableVatLine">
                     <x:typeArguments>
-                        <typeArgument type="State" />
+                        <typeArgument type="VatLine" />
                     </x:typeArguments>
-                    <x:constraints width="100%" height="0px" />
-                </ComboBox>
-            </FormItem>
-            <HorizontalLayout x:name="horizontalLayout3">
-                <x:constraints width="100%" height="-1px" />
-                <Button x:name="cmdSave" text="Speichern">
-                    <x:icon src="com.flowingcode.vaadin.addons.ironicons.IronIcons#SAVE" />
-                    <x:constraints width="50%" height="0px" flex-grow="0.0" />
-                    <x:event>click.onComponentEvent</x:event>
-                </Button>
-                <Button x:name="cmdReset" text="Verwerfen">
-                    <x:icon src="com.flowingcode.vaadin.addons.ironicons.IronIcons#UNDO" />
-                    <x:constraints width="50%" height="0px" flex-grow="0.0" />
-                    <x:event>click.onComponentEvent</x:event>
-                </Button>
-            </HorizontalLayout>
-        </FormLayout>
+                    <x:constraints splitlayout-position="SECONDARY" width="100%" height="100%" flex-grow="1.0" />
+                    <x:columns>
+                        <column property="vanValidFrom" header="Gültig ab" sortable="true" />
+                        <column property="vanRate" header="Ansatz %" sortable="true" />
+                        <column property="vanRemark" header="Bemerkung" sortable="true" />
+                        <column property="vanState" header="Status" sortable="true" />
+                    </x:columns>
+                </Grid>
+                <HorizontalLayout x:name="horizontalLayout3" justifyContentMode="com.vaadin.flow.component.orderedlayout.FlexComponent.JustifyContentMode.CENTER">
+                    <x:constraints width="100%" height="0px" flex-grow="0.0" />
+                    <Button x:name="cmdSave" text="Speichern">
+                        <x:icon src="com.flowingcode.vaadin.addons.ironicons.IronIcons#SAVE" />
+                        <x:constraints width="130px" height="0px" flex-grow="0.0" />
+                        <x:event>click.onComponentEvent</x:event>
+                    </Button>
+                    <Button x:name="cmdReset" text="Verwerfen">
+                        <x:icon src="com.flowingcode.vaadin.addons.ironicons.IronIcons#UNDO" />
+                        <x:constraints width="130px" height="0px" flex-grow="0.0" />
+                        <x:event>click.onComponentEvent</x:event>
+                    </Button>
+                </HorizontalLayout>
+            </VerticalLayout>
+        </SplitLayout>
     </SplitLayout>
 </VerticalLayout>

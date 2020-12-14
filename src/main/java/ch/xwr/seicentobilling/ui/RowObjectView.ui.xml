@@ -4,14 +4,22 @@
 <?template NONE?>
 <?import ch.xwr.seicentobilling.business.LovState.State?>
 <?import ch.xwr.seicentobilling.entities.Entity?>
+<?import ch.xwr.seicentobilling.entities.RowImage?>
 <?import ch.xwr.seicentobilling.entities.RowObject?>
+<?import ch.xwr.seicentobilling.entities.RowParameter?>
+<?import ch.xwr.seicentobilling.entities.RowText?>
+<?import com.vaadin.flow.component.button.Button?>
 <?import com.vaadin.flow.component.combobox.ComboBox?>
 <?import com.vaadin.flow.component.datepicker.DatePicker?>
 <?import com.vaadin.flow.component.formlayout.FormLayout?>
 <?import com.vaadin.flow.component.formlayout.FormLayout.FormItem?>
+<?import com.vaadin.flow.component.grid.Grid?>
 <?import com.vaadin.flow.component.html.Label?>
+<?import com.vaadin.flow.component.orderedlayout.HorizontalLayout?>
 <?import com.vaadin.flow.component.orderedlayout.VerticalLayout?>
 <?import com.vaadin.flow.component.splitlayout.SplitLayout?>
+<?import com.vaadin.flow.component.tabs.Tab?>
+<?import com.vaadin.flow.component.tabs.Tabs?>
 <?import com.vaadin.flow.component.textfield.TextField?>
 <?import com.vaadin.flow.data.binder.Binder?>
 <VerticalLayout xmlns:x="http://xml.xdev-software.com/xdevuiml" x:name="RowObjectView">
@@ -185,5 +193,121 @@
                 </ComboBox>
             </FormItem>
         </FormLayout>
+        <VerticalLayout x:name="verticalLayout" padding="false">
+            <x:constraints splitlayout-position="SECONDARY" width="100%" height="100%" />
+            <Tabs x:name="tabs" selectedIndex="0">
+                <x:constraints width="100%" height="-1px" flex-grow="0.0" />
+                <Tab x:name="tab" label="Text" />
+                <Tab x:name="tab2" label="Dateien" />
+                <Tab x:name="tab3" label="Parameter" />
+            </Tabs>
+            <VerticalLayout x:name="verticalLayoutText" padding="false">
+                <x:constraints width="100%" height="100%" flex-grow="0.0" />
+                <HorizontalLayout x:name="horizontalLayout">
+                    <x:constraints width="100%" height="40px" flex-grow="0.0" />
+                    <Button x:name="cmdNewText" text="Neu">
+                        <x:icon src="com.vaadin.flow.component.icon.VaadinIcon#PLUS_CIRCLE" />
+                        <x:constraints width="0px" height="0px" flex-grow="0.0" />
+                        <x:event>click.onComponentEvent</x:event>
+                    </Button>
+                    <Button x:name="cmdDeleteText" text="{$cmdDeleteText.caption}">
+                        <x:icon src="com.vaadin.flow.component.icon.VaadinIcon#MINUS_CIRCLE" />
+                        <x:constraints width="0px" height="0px" flex-grow="0.0" />
+                        <x:event>click.onComponentEvent</x:event>
+                    </Button>
+                    <Button x:name="cmdUpdateText" text="{$cmdUpdateText.caption}">
+                        <x:icon src="com.flowingcode.vaadin.addons.ironicons.ImageIcons#EDIT" />
+                        <x:constraints width="0px" height="0px" flex-grow="0.0" />
+                        <x:event>click.onComponentEvent</x:event>
+                    </Button>
+                </HorizontalLayout>
+                <Grid x:name="tableText">
+                    <x:typeArguments>
+                        <typeArgument type="RowText" />
+                    </x:typeArguments>
+                    <x:constraints width="100%" height="100%" flex-grow="1.0" />
+                    <x:columns>
+                        <column property="txtNumber" header="Nbr" resizable="true" sortable="true" />
+                        <column property="txtFreetext" header="Text" resizable="true" sortable="true" />
+                        <column property="language" header="Sprache" resizable="true" />
+                        <column property="txtState" header="Status" resizable="true" sortable="true" />
+                    </x:columns>
+                    <x:event>itemDoubleClick.onComponentEvent</x:event>
+                </Grid>
+            </VerticalLayout>
+            <VerticalLayout x:name="verticalLayoutFile" padding="false">
+                <x:constraints width="100%" height="100%" flex-grow="0.0" />
+                <HorizontalLayout x:name="horizontalLayout2">
+                    <x:constraints width="100%" height="40px" flex-grow="0.0" />
+                    <Button x:name="cmdNewFile" text="{$cmdNewFile.caption}">
+                        <x:icon src="com.vaadin.flow.component.icon.VaadinIcon#PLUS_CIRCLE" />
+                        <x:constraints width="0px" height="0px" flex-grow="0.0" />
+                        <x:event>click.onComponentEvent</x:event>
+                    </Button>
+                    <Button x:name="cmdDeleteFile" text="{$cmdDeleteFile.caption}">
+                        <x:icon src="com.vaadin.flow.component.icon.VaadinIcon#MINUS_CIRCLE" />
+                        <x:constraints width="0px" height="0px" flex-grow="0.0" />
+                        <x:event>click.onComponentEvent</x:event>
+                    </Button>
+                    <Button x:name="cmdUpdateFile" text="{$cmdUpdateFile.caption}">
+                        <x:icon src="com.flowingcode.vaadin.addons.ironicons.ImageIcons#EDIT" />
+                        <x:constraints width="0px" height="0px" flex-grow="0.0" />
+                        <x:event>click.onComponentEvent</x:event>
+                    </Button>
+                </HorizontalLayout>
+                <Grid x:name="tableRowImage">
+                    <x:typeArguments>
+                        <typeArgument type="RowImage" />
+                    </x:typeArguments>
+                    <x:constraints width="100%" height="100%" flex-grow="1.0" />
+                    <x:columns>
+                        <column property="rimNumber" header="Nbr" resizable="true" sortable="true" />
+                        <column property="rimName" header="Name" resizable="true" sortable="true" />
+                        <column property="rimSize" header="Grösse" resizable="true" sortable="true" />
+                        <column property="rimType" header="Typ" resizable="true" sortable="true" />
+                        <column property="rimMimetype" header="Mime Typ" resizable="true" sortable="true" />
+                        <column property="rimState" header="Status" resizable="true" sortable="true" />
+                    </x:columns>
+                    <x:event>itemClick.onComponentEvent</x:event>
+                </Grid>
+            </VerticalLayout>
+            <VerticalLayout x:name="verticalLayoutParam" padding="false">
+                <x:constraints width="100%" height="100%" flex-grow="0.0" />
+                <HorizontalLayout x:name="horizontalLayout3">
+                    <x:constraints width="100%" height="40px" flex-grow="0.0" />
+                    <Button x:name="cmdNewParam" text="{$cmdNewFile.caption}">
+                        <x:icon src="com.vaadin.flow.component.icon.VaadinIcon#PLUS_CIRCLE" />
+                        <x:constraints width="0px" height="0px" flex-grow="0.0" />
+                        <x:event>click.onComponentEvent</x:event>
+                    </Button>
+                    <Button x:name="cmdDeleteParam" text="{$cmdDeleteFile.caption}">
+                        <x:icon src="com.vaadin.flow.component.icon.VaadinIcon#MINUS_CIRCLE" />
+                        <x:constraints width="0px" height="0px" flex-grow="0.0" />
+                        <x:event>click.onComponentEvent</x:event>
+                    </Button>
+                    <Button x:name="cmdUpdateParam" text="{$cmdUpdateFile.caption}">
+                        <x:icon src="com.flowingcode.vaadin.addons.ironicons.ImageIcons#EDIT" />
+                        <x:constraints width="0px" height="0px" flex-grow="0.0" />
+                        <x:event>click.onComponentEvent</x:event>
+                    </Button>
+                </HorizontalLayout>
+                <Grid x:name="tableRowParam">
+                    <x:typeArguments>
+                        <typeArgument type="RowParameter" />
+                    </x:typeArguments>
+                    <x:constraints width="100%" height="100%" flex-grow="1.0" />
+                    <x:columns>
+                        <column property="prmValue" header="Wert" sortable="true" />
+                        <column property="prmGroup" header="Gruppe" resizable="true" sortable="true" />
+                        <column property="prmSubGroup" header="Untergruppe" resizable="true" sortable="true" />
+                        <column property="prmKey" header="Schlüssel" resizable="true" sortable="true" />
+                        <column property="prmValueType" header="Type" resizable="true" sortable="true" visible="false" />
+                        <column property="prmState" header="Status" resizable="true" sortable="true" visible="false" />
+                        <column property="rowObject.entity.entName" header="Tabelle" resizable="true" sortable="true" visible="false" />
+                    </x:columns>
+                    <x:event>itemDoubleClick.onComponentEvent</x:event>
+                </Grid>
+            </VerticalLayout>
+        </VerticalLayout>
     </SplitLayout>
 </VerticalLayout>

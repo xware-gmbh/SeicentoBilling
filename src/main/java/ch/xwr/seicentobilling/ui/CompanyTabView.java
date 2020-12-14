@@ -3,6 +3,8 @@ package ch.xwr.seicentobilling.ui;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import javax.persistence.PersistenceException;
@@ -52,7 +54,7 @@ public class CompanyTabView extends VerticalLayout
 {
 	/** Logger initialized */
 	private static final org.apache.log4j.Logger LOG = LogManager.getLogger(CompanyTabView.class);
-
+	
 	/**
 	 *
 	 */
@@ -63,20 +65,71 @@ public class CompanyTabView extends VerticalLayout
 		this.gridLayoutNbr.setVisible(false);
 		this.gridLayoutJasper.setVisible(false);
 		this.gridLayoutIfc.setVisible(false);
-		
+
 		final Map<Tab, Component> tabsToPages = new HashMap<>();
 		tabsToPages.put(this.tab, this.gridLayout);
 		tabsToPages.put(this.tab2, this.gridLayoutNbr);
 		tabsToPages.put(this.tab3, this.gridLayoutJasper);
 		tabsToPages.put(this.tab4, this.gridLayoutIfc);
-		
+
 		this.tabs.addSelectedChangeListener(event -> {
 			tabsToPages.values().forEach(page -> page.setVisible(false));
 			final Component selectedPage = tabsToPages.get(this.tabs.getSelectedTab());
 			selectedPage.setVisible(true);
 		});
+		
+		this.grid.addComponentColumn(item -> this.createActiveButton(this.grid, item))
+			.setHeader("");
 	}
+	
+	private Button createActiveButton(final Grid<Company> grid, final Company bean)
+	{
+		final Button button = new Button("Aktivieren", clickEvent -> {
 
+			SeicentoNotification.showInfo("Clicked in line, id = " + bean.getCmpId());
+			if(bean.getCmpState().equals(LovState.State.active))
+			{
+				SeicentoNotification.showInfo("Konfiguration ist bereits aktiv");
+			}
+
+			// Delete Record
+			final CompanyDAO    cmpDao = new CompanyDAO();
+			final List<Company> slrs   = cmpDao.findAll();
+			
+			boolean activated = false;
+			for(final Iterator<Company> iterator = slrs.iterator(); iterator.hasNext();)
+			{
+				final Company cmp = iterator.next();
+				cmp.setCmpState(LovState.State.inactive);
+				if(cmp.getCmpId() == bean.getCmpId())
+				{
+					cmp.setCmpState(LovState.State.active);
+					activated = true;
+				}
+				cmpDao.save(cmp);
+			}
+			
+			if(!activated)
+			{
+				// should not happen
+				final Company fallback = slrs.get(0);
+				fallback.setCmpState(LovState.State.active);
+				cmpDao.save(fallback);
+			}
+			
+			grid.setDataProvider(DataProvider.ofCollection(cmpDao.findAll()));
+		});
+		if(bean.getCmpState().equals(LovState.State.active))
+		{
+			button.setVisible(false);
+		}
+		else
+		{
+			button.setVisible(true);
+		}
+		return button;
+	}
+	
 	/**
 	 * Event handler delegate method for the {@link Grid} {@link #grid}.
 	 *
@@ -93,7 +146,7 @@ public class CompanyTabView extends VerticalLayout
 			this.binder.setBean(CompanyBean);
 		}
 	}
-
+	
 	private boolean isNew()
 	{
 		if(this.binder.getBean() == null)
@@ -107,7 +160,7 @@ public class CompanyTabView extends VerticalLayout
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdNew}.
 	 *
@@ -119,10 +172,10 @@ public class CompanyTabView extends VerticalLayout
 		final Company bean = new Company();
 		bean.setCmpState(LovState.State.active);
 		this.binder.setBean(bean);
-		
+
 		// this.fieldGroup.setItemDataSource(bean);
 	}
-	
+
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdReload}.
 	 *
@@ -133,17 +186,17 @@ public class CompanyTabView extends VerticalLayout
 	{
 		this.grid.setDataProvider(DataProvider.ofCollection(new CompanyDAO().findAll()));
 	}
-	
+
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdInfo}.
 	 *
 	 * @see ComponentEventListener#onComponentEvent(ComponentEvent)
 	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
 	 */
-
+	
 	private void cmdInfo_onClick(final ClickEvent<Button> event)
 	{
-
+		
 		if(this.grid.getSelectedItems() != null)
 		{
 			final Company bean = this.grid.getSelectionModel().getFirstSelectedItem().get();
@@ -152,9 +205,9 @@ public class CompanyTabView extends VerticalLayout
 			win.add(new RowObjectView(bean.getCmpId(), bean.getClass().getSimpleName()));
 			win.open();
 		}
-
+		
 	}
-
+	
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdDelete}.
 	 *
@@ -170,43 +223,43 @@ public class CompanyTabView extends VerticalLayout
 			return;
 		}
 		
-		ConfirmDialog.show(this.getUI().get(), "Datensatz löschen", "Wirklich löschen?");
-		
-		try
-		{
+		ConfirmDialog.show("Datensatz löschen", "Wirklich löschen?", okEvent -> {
 			
-			final Company bean = this.grid.getSelectionModel().getFirstSelectedItem().get();
-			
-			// Delete Record
-			final RowObjectManager man = new RowObjectManager();
-			man.deleteObject(bean.getCmpId(), bean.getClass().getSimpleName());
-			
-			final CompanyDAO dao = new CompanyDAO();
-			dao.remove(bean);
-			dao.flush();
-			
-			this.binder.removeBean();
-			CompanyTabView.this.binder.setBean(new Company());
-			this.grid.setDataProvider(DataProvider.ofCollection(new CompanyDAO().findAll()));
-			CompanyTabView.this.grid.getDataProvider().refreshAll();
-			
-			Notification.show("Datensatz wurde gelöscht!",
-				20, Notification.Position.BOTTOM_START);
-			
-		}
-		catch(final PersistenceException cx)
-		{
-			final String msg = SeicentoCrud.getPerExceptionError(cx);
-			Notification.show(msg, 20, Notification.Position.BOTTOM_START);
-			cx.printStackTrace();
-		}
-		catch(final Exception e)
-		{
-			CompanyTabView.LOG.error("Error on delete", e);
-		}
-		
+			try
+			{
+				
+				final Company bean = this.grid.getSelectionModel().getFirstSelectedItem().get();
+				
+				// Delete Record
+				final RowObjectManager man = new RowObjectManager();
+				man.deleteObject(bean.getCmpId(), bean.getClass().getSimpleName());
+				
+				final CompanyDAO dao = new CompanyDAO();
+				dao.remove(bean);
+				dao.flush();
+				
+				this.binder.removeBean();
+				CompanyTabView.this.binder.setBean(new Company());
+				this.grid.setDataProvider(DataProvider.ofCollection(new CompanyDAO().findAll()));
+				CompanyTabView.this.grid.getDataProvider().refreshAll();
+				
+				Notification.show("Datensatz wurde gelöscht!",
+					20, Notification.Position.BOTTOM_START);
+				
+			}
+			catch(final PersistenceException cx)
+			{
+				final String msg = SeicentoCrud.getPerExceptionError(cx);
+				Notification.show(msg, 20, Notification.Position.BOTTOM_START);
+				cx.printStackTrace();
+			}
+			catch(final Exception e)
+			{
+				CompanyTabView.LOG.error("Error on delete", e);
+			}
+		});
 	}
-
+	
 	/**
 	 * Event handler delegate method for the {@link VerticalLayout} {@link #verticalLayout2}.
 	 *
@@ -216,7 +269,7 @@ public class CompanyTabView extends VerticalLayout
 	private void verticalLayout2_onClick(final ClickEvent<VerticalLayout> event)
 	{
 	}
-	
+
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdSave}.
 	 *
@@ -240,14 +293,14 @@ public class CompanyTabView extends VerticalLayout
 				CompanyTabView.LOG.error("could not save ObjRoot", e);
 			}
 		}
-		
+
 		if(isNew)
 		{
 			this.cmdReload_onClick(null);
 		}
-		
+
 	}
-	
+
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdReset}.
 	 *
@@ -263,7 +316,7 @@ public class CompanyTabView extends VerticalLayout
 			this.binder.setBean(cityBean);
 		}
 	}
-	
+
 	/* WARNING: Do NOT edit!<br>The content of this method is always regenerated by the UI designer. */
 	// <generated-code name="initUI">
 	private void initUI()
@@ -350,8 +403,10 @@ public class CompanyTabView extends VerticalLayout
 		this.cmdInfo.setIcon(VaadinIcon.INFO_CIRCLE.create());
 		this.grid.addColumn(Company::getCmpName).setKey("cmpName").setHeader("Name").setSortable(true);
 		this.grid.addColumn(Company::getCmpUid).setKey("cmpUid").setHeader("Uid").setSortable(true);
-		this.grid.addColumn(Company::getCmpBookingYear).setKey("cmpBookingYear").setHeader("BH Jahr").setSortable(true);
-		this.grid.addColumn(Company::getCmpMail).setKey("cmpMail").setHeader("Mail").setSortable(true);
+		this.grid.addColumn(Company::getCmpBookingYear).setKey("cmpBookingYear").setHeader("BH Jahr").setSortable(true)
+			.setVisible(false);
+		this.grid.addColumn(Company::getCmpMail).setKey("cmpMail").setHeader("Mail").setSortable(true)
+			.setVisible(false);
 		this.grid.addColumn(Company::getCmpPhone).setKey("cmpPhone").setHeader("Telefon").setSortable(true);
 		this.grid.setDataProvider(DataProvider.ofCollection(new CompanyDAO().findAll()));
 		this.grid.setSelectionMode(Grid.SelectionMode.SINGLE);
@@ -592,7 +647,7 @@ public class CompanyTabView extends VerticalLayout
 		this.cmdSave.addClickListener(this::cmdSave_onClick);
 		this.cmdReset.addClickListener(this::cmdReset_onClick);
 	} // </generated-code>
-	
+
 	// <generated-code name="variables">
 	private Tab                           tab, tab2, tab4, tab3;
 	private VerticalLayout                verticalLayout, verticalLayout2;
@@ -615,5 +670,5 @@ public class CompanyTabView extends VerticalLayout
 		txtCmpEndpointPay,
 		txtCmpEndpointCre, txtCmpEndpointCreDoc, txtCmpAbaUser, txtCmpAbaMandator;
 	// </generated-code>
-	
+
 }

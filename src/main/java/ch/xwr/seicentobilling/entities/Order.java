@@ -256,6 +256,11 @@ public class Order implements java.io.Serializable {
 		return (this.ordAmountNet - this.ordAmountBrut);
 	}
 
+	public void setOrdAmountVat(final Double ordAmountNet)
+	{
+
+	}
+
     /**
      * Is called within save. No DB Access allowed here!!!
      */

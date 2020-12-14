@@ -158,8 +158,8 @@
                 <x:columns>
                     <column property="cmpName" header="Name" sortable="true" />
                     <column property="cmpUid" header="Uid" sortable="true" />
-                    <column property="cmpBookingYear" header="BH Jahr" sortable="true" />
-                    <column property="cmpMail" header="Mail" sortable="true" />
+                    <column property="cmpBookingYear" header="BH Jahr" sortable="true" visible="false" />
+                    <column property="cmpMail" header="Mail" sortable="true" visible="false" />
                     <column property="cmpPhone" header="Telefon" sortable="true" />
                 </x:columns>
                 <x:event>itemClick.onComponentEvent</x:event>

@@ -25,13 +25,13 @@
             <typeArgument type="Periode" />
         </x:typeArguments>
         <x:bindings>
-            <binding field="cmbCostAccount" property="costAccount" required="false" readOnly="false">
+            <binding field="cmbCostAccount" property="costAccount" required="true" readOnly="false">
                 <validator type="Bean" />
             </binding>
             <binding field="txtPerName" property="perName" required="false" nullRepresentation="" readOnly="false">
                 <validator type="Bean" />
             </binding>
-            <binding field="comboBoxMonth" property="perMonth" required="false" readOnly="false">
+            <binding field="comboBoxMonth" property="perMonth" required="true" readOnly="false">
                 <validator type="Bean" />
             </binding>
             <binding field="comboBoxBookedExp" property="perBookedExpense" required="false" readOnly="false">
@@ -46,7 +46,7 @@
             <binding field="comboBoxState" property="perState" required="false" readOnly="false">
                 <validator type="Bean" />
             </binding>
-            <binding field="textFieldYear" property="perYear" required="false" nullRepresentation="" readOnly="false">
+            <binding field="textFieldYear" property="perYear" required="true" nullRepresentation="" readOnly="false">
                 <validator type="Bean" />
                 <converter TYPE="StringToInteger">
                     <numberFormat format="Integer" pattern="####" currency="default" locale="default" patternLocalized="false" />

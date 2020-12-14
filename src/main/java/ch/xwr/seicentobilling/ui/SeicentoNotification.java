@@ -18,11 +18,11 @@ public class SeicentoNotification
 		final Div content = new Div();
 		content.addClassName("my-style");
 		content.setText("This component is styled using global styles");
-		
+
 		final Notification notification = new Notification(content);
 		notification.setDuration(5000);
 		notification.setPosition(Notification.Position.BOTTOM_END);
-		
+
 		// @formatter:off
 		final String styles = ".my-style { "
 		        + "  color: red;"
@@ -51,6 +51,13 @@ public class SeicentoNotification
 	}
 
 	public static void showWarn(final String title, final String message)
+	{
+		final Notification notification = new Notification(title+":"+message,5000,Notification.Position.BOTTOM_END);
+		notification.open();
+
+	}
+
+	public static void showInfo(final String title, final String message)
 	{
 		final Notification notification = new Notification(title+":"+message,5000,Notification.Position.BOTTOM_END);
 		notification.open();

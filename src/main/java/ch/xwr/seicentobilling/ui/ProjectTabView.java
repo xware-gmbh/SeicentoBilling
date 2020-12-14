@@ -61,7 +61,6 @@ import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
-import com.vaadin.flow.data.binder.BinderValidationStatus;
 import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.data.provider.SortDirection;
 import com.vaadin.flow.router.Route;
@@ -513,14 +512,13 @@ public class ProjectTabView extends VerticalLayout
 
 	}
 	
-	@SuppressWarnings("unchecked")
 	private boolean areFieldsValid()
 	{
 		if(this.binder.isValid())
 		{
 			return true;
 		}
-		final BinderValidationStatus<Project> validation = this.binder.validate();
+		this.binder.validate();
 
 		return false;
 	}
@@ -876,14 +874,14 @@ public class ProjectTabView extends VerticalLayout
 		this.cmdReset.setText(StringResourceUtils.optLocalizeString("{$cmdReset.caption}", this));
 		this.cmdReset.setIcon(IronIcons.UNDO.create());
 		
-		this.binder.forField(this.txtProName).withNullRepresentation("").bind("proName");
-		this.binder.forField(this.cmbCustomer).bind("customer");
+		this.binder.forField(this.txtProName).asRequired().withNullRepresentation("").bind("proName");
+		this.binder.forField(this.cmbCustomer).asRequired().bind("customer");
 		this.binder.forField(this.txtProExtReference).withNullRepresentation("").bind("proExtReference");
 		this.binder.forField(this.txtProContact).withNullRepresentation("").bind("proContact");
-		this.binder.forField(this.txtProHoursEffective).withNullRepresentation("")
+		this.binder.forField(this.txtProHoursEffective).asRequired().withNullRepresentation("")
 			.withConverter(ConverterBuilder.StringToDouble().numberFormatBuilder(NumberFormatBuilder.Decimal()).build())
 			.bind("proHoursEffective");
-		this.binder.forField(this.txtProRate).withNullRepresentation("")
+		this.binder.forField(this.txtProRate).asRequired().withNullRepresentation("")
 			.withConverter(ConverterBuilder.StringToDouble().numberFormatBuilder(NumberFormatBuilder.Decimal()).build())
 			.bind("proRate");
 		this.binder.forField(this.txtProIntensityPercent).withNullRepresentation("")
@@ -904,6 +902,12 @@ public class ProjectTabView extends VerticalLayout
 			.withConverter(
 				ConverterBuilder.StringToInteger().numberFormatBuilder(NumberFormatBuilder.Integer()).build())
 			.bind("proHours");
+		this.binder.forField(this.dateProStartDate).asRequired()
+			.withConverter(ConverterBuilder.LocalDateToUtilDate().systemDefaultZoneId().build()).bind("proStartDate");
+		this.binder.forField(this.dateProEndDate)
+			.withConverter(ConverterBuilder.LocalDateToUtilDate().systemDefaultZoneId().build()).bind("proEndDate");
+		this.binder.forField(this.dateProLastBill)
+			.withConverter(ConverterBuilder.LocalDateToUtilDate().systemDefaultZoneId().build()).bind("proLastBill");
 		
 		this.containerFilterComponent.connectWith(this.grid.getDataProvider());
 		this.containerFilterComponent.setFilterSubject(GridFilterSubjectFactory.CreateFilterSubject(this.grid,

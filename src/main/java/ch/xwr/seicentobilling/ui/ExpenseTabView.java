@@ -75,9 +75,13 @@ public class ExpenseTabView extends VerticalLayout
 		this.setROFields();
 
 		this.setDefaultFilter();
+		this.tableLine
+			.addComponentColumn(
+				item -> new FunctionExpenseAttachmentDownload().createDownLoadButton(this.tableLine, item))
+			.setHeader("Beleg");
 		
 	}
-	
+
 	private void setROFields()
 	{
 		final boolean roFlag = this.isBooked();
@@ -125,9 +129,9 @@ public class ExpenseTabView extends VerticalLayout
 			new GridSortOrder<>(this.grid.getColumnByKey("perYear"), SortDirection.DESCENDING);
 		final GridSortOrder<Periode> sortCol2 =
 			new GridSortOrder<>(this.grid.getColumnByKey("perMonth"), SortDirection.DESCENDING);
-		final GridSortOrder<Periode> sortCol3 =
-			new GridSortOrder<>(this.grid.getColumnByKey("costaccount"), SortDirection.ASCENDING);
-		this.grid.sort(Arrays.asList(sortCol1, sortCol2, sortCol3));
+		// final GridSortOrder<Periode> sortCol3 =
+		// new GridSortOrder<>(this.grid.getColumnByKey("costaccount"), SortDirection.ASCENDING);
+		this.grid.sort(Arrays.asList(sortCol1, sortCol2));
 		
 		if(!all)
 		{
@@ -135,9 +139,9 @@ public class ExpenseTabView extends VerticalLayout
 		}
 		final GridSortOrder<Expense> sortCol11 =
 			new GridSortOrder<>(this.tableLine.getColumnByKey("expDate"), SortDirection.DESCENDING);
-		final GridSortOrder<Expense> sortCol21 =
-			new GridSortOrder<>(this.tableLine.getColumnByKey("expFlagGeneric"), SortDirection.ASCENDING);
-		this.tableLine.sort(Arrays.asList(sortCol11, sortCol21));
+		// final GridSortOrder<Expense> sortCol21 =
+		// new GridSortOrder<>(this.tableLine.getColumnByKey("expFlagGeneric"), SortDirection.ASCENDING);
+		this.tableLine.sort(Arrays.asList(sortCol11));
 	}
 
 	private boolean isBooked()
@@ -210,8 +214,8 @@ public class ExpenseTabView extends VerticalLayout
 			@Override
 			public void onComponentEvent(final DetachEvent event)
 			{
-				String       retval = UI.getCurrent().getSession().getAttribute(String.class);
-				final String reason = (String)UI.getCurrent().getSession().getAttribute("reason");
+				String retval = UI.getCurrent().getSession().getAttribute(String.class);
+				// final String reason = (String)UI.getCurrent().getSession().getAttribute("reason");
 
 				if(retval == null)
 				{
@@ -330,39 +334,40 @@ public class ExpenseTabView extends VerticalLayout
 			return;
 		}
 
-		ConfirmDialog.show(this.getUI().get(), "Datensatz löschen", "Wirklich löschen?");
-
-		try
-		{
-
-			final Expense bean = this.tableLine.getSelectionModel().getFirstSelectedItem().get();
-
-			// Delete Record
-			final RowObjectManager man = new RowObjectManager();
-			man.deleteObject(bean.getExpId(), bean.getClass().getSimpleName());
-
-			final ExpenseDAO dao = new ExpenseDAO();
-			dao.remove(bean);
-			dao.flush();
-
-			this.tableLine
-				.setDataProvider(DataProvider.ofCollection(new ExpenseDAO().findByPeriode(this.currentPeriode)));
-			ExpenseTabView.this.tableLine.getDataProvider().refreshAll();
-
-			Notification.show("Datensatz wurde gelöscht!",
-				20, Notification.Position.BOTTOM_START);
-
-		}
-		catch(final PersistenceException cx)
-		{
-			final String msg = SeicentoCrud.getPerExceptionError(cx);
-			Notification.show(msg, 20, Notification.Position.BOTTOM_START);
-			cx.printStackTrace();
-		}
-		catch(final Exception e)
-		{
-			ExpenseTabView.LOG.error("Error on delete", e);
-		}
+		ConfirmDialog.show("Datensatz löschen", "Wirklich löschen?", okEvent -> {
+			
+			try
+			{
+				
+				final Expense bean = this.tableLine.getSelectionModel().getFirstSelectedItem().get();
+				
+				// Delete Record
+				final RowObjectManager man = new RowObjectManager();
+				man.deleteObject(bean.getExpId(), bean.getClass().getSimpleName());
+				
+				final ExpenseDAO dao = new ExpenseDAO();
+				dao.remove(bean);
+				dao.flush();
+				
+				this.tableLine
+					.setDataProvider(DataProvider.ofCollection(new ExpenseDAO().findByPeriode(this.currentPeriode)));
+				ExpenseTabView.this.tableLine.getDataProvider().refreshAll();
+				
+				Notification.show("Datensatz wurde gelöscht!",
+					20, Notification.Position.BOTTOM_START);
+				
+			}
+			catch(final PersistenceException cx)
+			{
+				final String msg = SeicentoCrud.getPerExceptionError(cx);
+				Notification.show(msg, 20, Notification.Position.BOTTOM_START);
+				cx.printStackTrace();
+			}
+			catch(final Exception e)
+			{
+				ExpenseTabView.LOG.error("Error on delete", e);
+			}
+		});
 	}
 	
 	/**
@@ -401,38 +406,39 @@ public class ExpenseTabView extends VerticalLayout
 			return;
 		}
 
-		ConfirmDialog.show(this.getUI().get(), "Datensatz löschen", "Wirklich löschen?");
+		ConfirmDialog.show("Datensatz löschen", "Wirklich löschen?", okEvent -> {
 
-		try
-		{
+			try
+			{
 
-			final Periode bean = this.grid.getSelectionModel().getFirstSelectedItem().get();
+				final Periode bean = this.grid.getSelectionModel().getFirstSelectedItem().get();
 
-			// Delete Record
-			final RowObjectManager man = new RowObjectManager();
-			man.deleteObject(bean.getPerId(), bean.getClass().getSimpleName());
+				// Delete Record
+				final RowObjectManager man = new RowObjectManager();
+				man.deleteObject(bean.getPerId(), bean.getClass().getSimpleName());
 
-			final PeriodeDAO dao = new PeriodeDAO();
-			dao.remove(bean);
-			dao.flush();
+				final PeriodeDAO dao = new PeriodeDAO();
+				dao.remove(bean);
+				dao.flush();
 
-			this.grid.setDataProvider(DataProvider.ofCollection(new PeriodeDAO().findAll()));
-			ExpenseTabView.this.grid.getDataProvider().refreshAll();
+				this.grid.setDataProvider(DataProvider.ofCollection(new PeriodeDAO().findAll()));
+				ExpenseTabView.this.grid.getDataProvider().refreshAll();
 
-			Notification.show("Datensatz wurde gelöscht!",
-				20, Notification.Position.BOTTOM_START);
+				Notification.show("Datensatz wurde gelöscht!",
+					20, Notification.Position.BOTTOM_START);
 
-		}
-		catch(final PersistenceException cx)
-		{
-			final String msg = SeicentoCrud.getPerExceptionError(cx);
-			Notification.show(msg, 20, Notification.Position.BOTTOM_START);
-			cx.printStackTrace();
-		}
-		catch(final Exception e)
-		{
-			ExpenseTabView.LOG.error("Error on delete", e);
-		}
+			}
+			catch(final PersistenceException cx)
+			{
+				final String msg = SeicentoCrud.getPerExceptionError(cx);
+				Notification.show(msg, 20, Notification.Position.BOTTOM_START);
+				cx.printStackTrace();
+			}
+			catch(final Exception e)
+			{
+				ExpenseTabView.LOG.error("Error on delete", e);
+			}
+		});
 
 	}
 	
@@ -645,30 +651,29 @@ public class ExpenseTabView extends VerticalLayout
 		this.cmdUpdateExpense.setIcon(VaadinIcon.PENCIL.create());
 		this.cmdCopySingle.setIcon(VaadinIcon.COPY.create());
 		this.cmdInfoExpense.setIcon(VaadinIcon.INFO_CIRCLE.create());
-		this.tableLine.addColumn(Expense::getExpDate).setKey("expDate").setHeader("Datum").setSortable(true);
-		this.tableLine.addColumn(Expense::getExpAccount).setKey("expAccount").setHeader("Konto").setSortable(true)
-			.setVisible(false);
-		this.tableLine.addColumn(Expense::getExpFlagCostAccount).setKey("expFlagCostAccount").setHeader("KST")
+		this.tableLine.addColumn(Expense::getExpDate).setKey("expDate").setHeader("Datum").setResizable(true)
 			.setSortable(true);
-		this.tableLine.addColumn(new CaptionRenderer<>(Expense::getExpFlagGeneric)).setKey("expFlagGeneric")
-			.setHeader("Pauschal").setSortable(true);
-		this.tableLine.addColumn(Expense::getExpAmount).setKey("expAmount").setHeader("Betrag").setSortable(true);
+		this.tableLine.addColumn(Expense::getExpAccount).setKey("expAccount").setHeader("Konto").setResizable(true)
+			.setSortable(true).setVisible(false);
+		this.tableLine.addColumn(Expense::getExpFlagCostAccount).setKey("expFlagCostAccount").setHeader("KST")
+			.setResizable(true).setSortable(true);
+		this.tableLine.addColumn(Expense::getExpAmount).setKey("expAmount").setHeader("Betrag").setResizable(true)
+			.setSortable(true);
 		this.tableLine.addColumn(v -> Optional.ofNullable(v).map(Expense::getVat).map(Vat::getVatSign).orElse(null))
-			.setKey("vat.vatSign").setHeader("Mwst").setSortable(true);
+			.setKey("vat.vatSign").setHeader("Mwst").setResizable(true).setSortable(true);
 		this.tableLine.addColumn(v -> Optional.ofNullable(v).map(Expense::getVat).map(Vat::getVatName).orElse(null))
-			.setKey("vat.vatName").setHeader("Bezeichnung").setSortable(true).setVisible(false);
-		this.tableLine.addColumn(Expense::getExpText).setKey("expText").setHeader("Text").setSortable(true);
+			.setKey("vat.vatName").setHeader("Bezeichnung").setResizable(true).setSortable(true).setVisible(false);
+		this.tableLine.addColumn(Expense::getExpText).setKey("expText").setHeader("Text").setResizable(true)
+			.setSortable(true);
 		this.tableLine
 			.addColumn(v -> Optional.ofNullable(v).map(Expense::getProject).map(Project::getProName).orElse(null))
-			.setKey("project.proName").setHeader("Projekt").setSortable(true);
+			.setKey("project.proName").setHeader("Projekt").setResizable(true).setSortable(true);
 		this.tableLine.addColumn(new CaptionRenderer<>(Expense::getExpState)).setKey("expState").setHeader("Status")
-			.setSortable(true);
-		this.tableLine.addColumn(new CaptionRenderer<>(Expense::getExpUnit)).setKey("expUnit").setHeader("Einheit")
+			.setResizable(true).setSortable(true);
+		this.tableLine.addColumn(Expense::getExpQuantity).setKey("expQuantity").setHeader("Menge").setResizable(true)
 			.setSortable(true).setVisible(false);
-		this.tableLine.addColumn(Expense::getExpQuantity).setKey("expQuantity").setHeader("Menge").setSortable(true)
-			.setVisible(false);
-		this.tableLine.addColumn(Expense::getExpBooked).setKey("expBooked").setHeader("Gebucht").setSortable(true)
-			.setVisible(false);
+		this.tableLine.addColumn(Expense::getExpBooked).setKey("expBooked").setHeader("Gebucht").setResizable(true)
+			.setSortable(true).setVisible(false);
 		this.tableLine.setSelectionMode(Grid.SelectionMode.SINGLE);
 
 		this.containerFilterComponent.connectWith(this.grid.getDataProvider());

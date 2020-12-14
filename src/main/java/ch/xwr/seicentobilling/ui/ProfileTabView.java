@@ -258,10 +258,7 @@ public class ProfileTabView extends VerticalLayout
 		this.cmdApplyTheme      = new Button();
 		this.binder             = new BeanValidationBinder<>(AppUser.class);
 
-		this.setSpacing(false);
-		this.setPadding(false);
 		this.tab.setLabel("Benutzer");
-		this.gridLayoutProfile.setSpacing(false);
 		this.gridLayoutProfile.setPadding(false);
 		this.formLayout.setResponsiveSteps(
 			new FormLayout.ResponsiveStep("0px", 1, FormLayout.ResponsiveStep.LabelsPosition.TOP),
@@ -415,7 +412,7 @@ public class ProfileTabView extends VerticalLayout
 		this.add(this.tabs, this.gridLayoutProfile);
 		this.setSizeFull();
 
-		this.tabs.setSelectedIndex(-1);
+		this.tabs.setSelectedIndex(0);
 
 		this.gridLayoutProfile.addAttachListener(this::gridLayoutProfile_onAttach);
 		this.cmdSetPassword.addClickListener(this::cmdSetPassword_onClick);

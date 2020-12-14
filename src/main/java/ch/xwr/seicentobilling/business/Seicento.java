@@ -66,36 +66,33 @@ public class Seicento
 		// return true;
 		// }
 
-		/*
-		 * if(sub instanceof SeicentoUser)
-		 * {
-		 * final SeicentoUser usr = (SeicentoUser)sub;
-		 *
-		 * if(usr != null && usr.getClaimSet().getClaims() != null)
-		 * {
-		 *
-		 * @SuppressWarnings("unchecked")
-		 * final List<String> roleNames = (List<String>)usr.getClaimSet().getClaim("roles");
-		 * if(roleNames != null)
-		 * {
-		 * for(final String role : roleNames)
-		 * {
-		 * if(roleName.equalsIgnoreCase(role))
-		 * {
-		 * return true;
-		 * }
-		 * }
-		 * }
-		 * else
-		 * {
-		 * System.out.println("*** Azure User Roles are empty: ");
-		 * }
-		 * }
-		 *
-		 * }
-		 */
+		if(sub instanceof SeicentoUser)
+		{
+			final SeicentoUser usr = (SeicentoUser)sub;
 
-		return true;
+			if(usr != null && usr.getClaimSet().getClaims() != null)
+			{
+				@SuppressWarnings("unchecked")
+				final List<String> roleNames = (List<String>)usr.getClaimSet().getClaim("roles");
+				if(roleNames != null)
+				{
+					for(final String role : roleNames)
+					{
+						if(roleName.equalsIgnoreCase(role))
+						{
+							return true;
+						}
+					}
+				}
+				else
+				{
+					System.out.println("*** Azure User Roles are empty: ");
+				}
+			}
+
+		}
+
+		return false;
 	}
 
 	public static CostAccount getLoggedInCostAccount(final String name)
@@ -156,9 +153,10 @@ public class Seicento
 		return usedMB;
 	}
 
+	// TODO:to keep db login validation temp
 	public static String getLoginMethod()
 	{
-		// String lm = "azure";TODO:to keep db login validation temp
+		// String lm = "azure";
 		String lm = "local";
 		if(System.getenv("SEICENTO_LOGIN_METHOD") != null)
 		{

@@ -101,21 +101,20 @@ public class UploadReceiver implements Receiver
 		return fos;
 	}
 	
-	// @Override
-	// public void uploadSucceeded(final SucceededEvent event)
-	// {
-	// System.out.println("________________ UPLOAD SUCCEEDED 3: (Size: " + this.fiup.length() + ")");
-	//
-	// if(this.isImage() && this.isResizeImage() && this.fiup.length() > this.getMaxImageSize())
-	// {
-	// this.resizeImage(event);
-	// }
-	// else
-	// {
-	// this.RowImage.setRimSize(this.fiup.length() + " Bytes");
-	// // this.RowImage.setRimImage(this.baos.toByteArray());
-	// }
-	// }
+	public void uploadSucceeded(final SucceededEvent event)
+	{
+		System.out.println("________________ UPLOAD SUCCEEDED 3: (Size: " + this.fiup.length() + ")");
+
+		if(this.isImage() && this.isResizeImage() && this.fiup.length() > this.getMaxImageSize())
+		{
+			this.resizeImage(event);
+		}
+		else
+		{
+			this.RowImage.setRimSize(this.fiup.length() + " Bytes");
+			// this.RowImage.setRimImage(this.baos.toByteArray());
+		}
+	}
 
 	private boolean isImage()
 	{

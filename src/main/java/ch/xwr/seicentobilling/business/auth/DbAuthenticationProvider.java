@@ -1,12 +1,13 @@
 
 package ch.xwr.seicentobilling.business.auth;
 
-import ch.xwr.seicentobilling.entities.AppUser;
 import com.rapidclipse.framework.security.authentication.Authenticator;
 import com.rapidclipse.framework.security.authentication.AuthenticatorProvider;
 import com.rapidclipse.framework.security.authentication.CredentialsUsernamePassword;
 import com.rapidclipse.framework.security.util.PasswordHasher;
 import com.rapidclipse.framework.server.security.authentication.jpa.JPAAuthenticator;
+
+import ch.xwr.seicentobilling.entities.AppUser;
 
 
 public class DbAuthenticationProvider
@@ -35,7 +36,7 @@ public class DbAuthenticationProvider
 		if(this.authenticator == null)
 		{
 			this.authenticator = new JPAAuthenticator(AppUser.class);
-			this.authenticator.setPasswordHasher(getPasswordHasher());
+			this.authenticator.setPasswordHasher(this.getPasswordHasher());
 		}
 		
 		return this.authenticator;

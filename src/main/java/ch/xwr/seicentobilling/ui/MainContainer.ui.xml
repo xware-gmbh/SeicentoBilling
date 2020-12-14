@@ -2,29 +2,52 @@
 <!DOCTYPE xml>
 <?xdevuiml version="1.0"?>
 <?template NONE?>
-<?import com.vaadin.flow.component.html.Div?>
+<?import com.vaadin.flow.component.html.Image?>
+<?import com.vaadin.flow.component.html.Label?>
 <?import com.vaadin.flow.component.menubar.MenuBar?>
-<?import com.vaadin.flow.component.orderedlayout.FlexLayout?>
+<?import com.vaadin.flow.component.orderedlayout.HorizontalLayout?>
 <?import com.vaadin.flow.component.orderedlayout.VerticalLayout?>
 <?import com.vaadin.flow.component.tabs.Tabs?>
 <VerticalLayout xmlns:x="http://xml.xdev-software.com/xdevuiml" spacing="false" x:name="MainContainer" padding="false" defaultHorizontalComponentAlignment="com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment.STRETCH" x:route="" x:routerLayout="true">
     <x:constraints zpos="0" width="100%" height="100%" />
-    <MenuBar className="my-menubar" minHeight="48px" x:name="navMenuBar" maxWidth="" minWidth="">
-        <x:constraints width="-1px" height="21px" flex-grow="0.0" />
-        <x:styles>
-            <entry name="line-height" value="30px" />
-        </x:styles>
-    </MenuBar>
-    <FlexLayout minHeight="" x:name="contentContainer" maxWidth="">
-        <x:constraints width="100%" height="100%" flex-grow="1.0" />
-        <VerticalLayout minHeight="" spacing="false" x:name="verticalLayout" maxHeight="" maxWidth="" padding="false" minWidth="100%">
-            <x:constraints width="100%" height="100%" flex-grow="0.0" />
-            <Tabs minHeight="null" x:name="tabs" minWidth="100%">
-                <x:constraints splitlayout-position="PRIMARY" width="100%" height="30px" flex-grow="0.0" />
-            </Tabs>
-            <Div minHeight="" x:name="div" minWidth="">
-                <x:constraints width="100%" height="100%" flex-grow="1.0" />
-            </Div>
+    <HorizontalLayout x:name="horizontalLayout">
+        <x:constraints width="100%" height="40px" flex-grow="0.0" />
+        <Image x:src="images/Seicento_Billing.png" x:name="image">
+            <x:constraints width="-1px" height="-1px" flex-grow="1.0" />
+        </Image>
+        <MenuBar x:themeVariants="LUMO_LARGE" minHeight="" x:name="navMenuBar" maxWidth="" minWidth="">
+            <x:constraints width="90%" height="40px" flex-grow="0.0" />
+            <x:styles>
+                <entry name="line-height" value="30px" />
+            </x:styles>
+        </MenuBar>
+        <MenuBar x:name="profileMenubar">
+            <x:constraints width="100px" height="40px" flex-grow="0.0" />
+        </MenuBar>
+        <VerticalLayout spacing="false" x:name="verticalLayout" padding="false">
+            <x:constraints width="18%" height="40px" flex-grow="0.0" />
+            <Label x:name="lblCompany" text="Label">
+                <x:constraints width="100%" height="0px" flex-grow="0.0" />
+                <x:styles>
+                    <entry name="font-size" value="15px" />
+                    <entry name="text-align" value="right" />
+                </x:styles>
+            </Label>
+            <Label x:name="lblEnvironment" text="Label">
+                <x:constraints width="100%" height="0px" flex-grow="0.0" />
+                <x:styles>
+                    <entry name="text-align" value="right" />
+                </x:styles>
+            </Label>
         </VerticalLayout>
-    </FlexLayout>
+        <HorizontalLayout x:name="horizontalLayout2">
+            <x:constraints width="100px" height="20px" flex-grow="0.0" />
+        </HorizontalLayout>
+    </HorizontalLayout>
+    <VerticalLayout minHeight="" x:name="contentContainer" maxHeight="" maxWidth="" padding="false" minWidth="100%">
+        <x:constraints width="100%" height="100%" flex-grow="0.0" />
+        <Tabs x:themeVariants="LUMO_SMALL" minHeight="null" x:name="tabs" minWidth="null">
+            <x:constraints splitlayout-position="PRIMARY" width="100%" height="60px" flex-grow="0.0" />
+        </Tabs>
+    </VerticalLayout>
 </VerticalLayout>

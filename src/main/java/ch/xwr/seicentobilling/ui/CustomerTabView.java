@@ -22,10 +22,12 @@ import org.jfree.util.Log;
 import com.flowingcode.vaadin.addons.ironicons.FileIcons;
 import com.flowingcode.vaadin.addons.ironicons.ImageIcons;
 import com.flowingcode.vaadin.addons.ironicons.IronIcons;
+import com.flowingcode.vaadin.addons.ironicons.MapsIcons;
 import com.flowingcode.vaadin.addons.twincolgrid.TwinColGrid;
 import com.rapidclipse.framework.server.data.converter.ConverterBuilder;
 import com.rapidclipse.framework.server.data.format.NumberFormatBuilder;
 import com.rapidclipse.framework.server.data.renderer.CaptionRenderer;
+import com.rapidclipse.framework.server.data.renderer.RenderedComponent;
 import com.rapidclipse.framework.server.resources.CaptionUtils;
 import com.rapidclipse.framework.server.resources.StringResourceUtils;
 import com.rapidclipse.framework.server.ui.ItemLabelGeneratorFactory;
@@ -56,6 +58,7 @@ import com.vaadin.flow.component.grid.ItemDoubleClickEvent;
 import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.IronIcon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
@@ -66,7 +69,6 @@ import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
-import com.vaadin.flow.data.binder.BinderValidationStatus;
 import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.router.Route;
@@ -107,6 +109,8 @@ import ch.xwr.seicentobilling.ui.crm.ActivityPopup;
 import ch.xwr.seicentobilling.ui.crm.AddressPopup;
 import ch.xwr.seicentobilling.ui.crm.ContactRelationPopup;
 import ch.xwr.seicentobilling.ui.crm.CustomerLinkPopup;
+import ch.xwr.seicentobilling.ui.crm.FunctionAddressHyperlink;
+import ch.xwr.seicentobilling.ui.crm.FunctionLinkHyperlink;
 import ch.xwr.seicentobilling.ui.crm.VcardPopup;
 
 
@@ -179,6 +183,16 @@ public class CustomerTabView extends VerticalLayout
 			this.txtExtRef1.setEnabled(true);
 			this.txtExtRef2.setEnabled(true);
 		}
+		
+		// final Anchor anchorNew =
+		// new Anchor("");
+		// anchorNew.setTitle("Link to Google Maps");
+		// final Button linkMaps = new Button();
+		// linkMaps.setIcon(new Image("images/gmaps32.PNG", ""));
+		// linkMaps.addClassName("pointer");
+		// anchorNew.add(linkMaps);
+		// this.replace(this.linkMaps, anchorNew);
+		// this.linkMaps = anchorNew;
 	}
 
 	private void setROFields()
@@ -616,15 +630,14 @@ public class CustomerTabView extends VerticalLayout
 		}
 		
 	}
-
-	@SuppressWarnings("unchecked")
+	
 	private boolean AreFieldsValid()
 	{
 		if(this.binder.isValid())
 		{
 			return true;
 		}
-		final BinderValidationStatus<Customer> validation = this.binder.validate();
+		this.binder.validate();
 		
 		return false;
 	}
@@ -1271,6 +1284,7 @@ public class CustomerTabView extends VerticalLayout
 	 * @see HasValue.ValueChangeListener#valueChanged(HasValue.ValueChangeEvent)
 	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
 	 */
+	@SuppressWarnings("unchecked")
 	private void txtZip_valueChanged(final ComponentValueChangeEvent<TextField, String> event)
 	{
 		// System.out.println("value change");
@@ -1393,6 +1407,7 @@ public class CustomerTabView extends VerticalLayout
 		this.formItem7                      = new FormItem();
 		this.txtCusFirstName                = new TextField();
 		this.formItem101                    = new FormItem();
+		this.ironIcon                       = MapsIcons.PLACE.create();
 		this.linkMaps                       = new Anchor();
 		this.txtCusAddress                  = new TextField();
 		this.formItem11                     = new FormItem();
@@ -1589,6 +1604,8 @@ public class CustomerTabView extends VerticalLayout
 		this.tableAddress.addColumn(Address::getAdrLine0).setKey("adrLine0").setHeader("Adresse").setSortable(true);
 		this.tableAddress.addColumn(Address::getAdrZip).setKey("adrZip").setHeader("Plz").setSortable(true);
 		this.tableAddress.addColumn(Address::getAdrCity).setKey("adrCity").setHeader("Ort").setSortable(true);
+		this.tableAddress.addColumn(RenderedComponent.Renderer(FunctionAddressHyperlink::new)).setKey("renderer")
+			.setHeader("Maps").setSortable(false);
 		this.tableAddress.addColumn(Address::getAdrValidFrom).setKey("adrValidFrom").setHeader("Gültig ab")
 			.setSortable(true);
 		this.tableAddress.setSelectionMode(Grid.SelectionMode.SINGLE);
@@ -1604,6 +1621,8 @@ public class CustomerTabView extends VerticalLayout
 		this.tableLink.addColumn(new CaptionRenderer<>(CustomerLink::getCnkType)).setKey("cnkType").setHeader("Typ")
 			.setSortable(true);
 		this.tableLink.addColumn(CustomerLink::getCnkLink).setKey("cnkLink").setHeader("Wert").setSortable(true);
+		this.tableLink.addColumn(RenderedComponent.Renderer(FunctionLinkHyperlink::new)).setKey("renderer")
+			.setHeader("Link").setSortable(false);
 		this.tableLink.addColumn(new CaptionRenderer<>(CustomerLink::getCnkDepartment)).setKey("cnkDepartment")
 			.setHeader("Bereich").setSortable(true);
 		this.tableLink.addColumn(CustomerLink::getCnkRemark).setKey("cnkRemark").setHeader("Bemerkung")
@@ -1626,6 +1645,8 @@ public class CustomerTabView extends VerticalLayout
 		this.tableActivity.addColumn(new CaptionRenderer<>(Activity::getActType)).setKey("actType").setHeader("Typ")
 			.setSortable(true);
 		this.tableActivity.addColumn(Activity::getActText).setKey("actText").setHeader("Bemerkung").setSortable(true);
+		this.tableActivity.addColumn(RenderedComponent.Renderer(FunctionActHyperlink::new)).setKey("renderer")
+			.setSortable(false);
 		this.tableActivity.addColumn(new CaptionRenderer<>(Activity::getCostAccount)).setKey("costAccount")
 			.setHeader("Wer")
 			.setSortable(false);
@@ -1688,21 +1709,21 @@ public class CustomerTabView extends VerticalLayout
 		this.cmdReset.setIcon(IronIcons.UNDO.create());
 		this.cmdVcard.setText("Vcard...");
 
-		this.binder.forField(this.txtCusNumber).withNullRepresentation("")
+		this.binder.forField(this.txtCusNumber).asRequired().withNullRepresentation("")
 			.withConverter(
 				ConverterBuilder.StringToInteger().numberFormatBuilder(NumberFormatBuilder.Integer()).build())
 			.bind("cusNumber");
 		this.binder.forField(this.cbxAccountType).bind("cusAccountType");
 		this.binder.forField(this.cbxAccountSalutation).bind("cusSalutation");
 		this.binder.forField(this.txtCusCompany).withNullRepresentation("").bind("cusCompany");
-		this.binder.forField(this.txtCusFirstName).withNullRepresentation("").bind("cusFirstName");
+		this.binder.forField(this.txtCusFirstName).asRequired().withNullRepresentation("").bind("cusFirstName");
 		this.binder.forField(this.txtCusAddress).withNullRepresentation("").bind("cusAddress");
-		this.binder.forField(this.cmbCity).bind("city");
+		this.binder.forField(this.cmbCity).asRequired().bind("city");
 		this.binder.forField(this.datCusBirthdate)
 			.withConverter(ConverterBuilder.LocalDateToUtilDate().systemDefaultZoneId().build()).bind("cusBirthdate");
 		this.binder.forField(this.cbxState).bind("cusState");
 		this.binder.forField(this.txtCusInfo).withNullRepresentation("").bind("cusInfo");
-		this.binder.forField(this.cmbPaymentCondition).bind("paymentCondition");
+		this.binder.forField(this.cmbPaymentCondition).asRequired().bind("paymentCondition");
 		this.binder.forField(this.cbxAccountBillingType).bind("cusBillingTarget");
 		this.binder.forField(this.cbxAccountBillingReports).bind("cusBillingReport");
 		this.binder.forField(this.txtExtRef1).withNullRepresentation("").bind("cusExtRef1");
@@ -1755,10 +1776,11 @@ public class CustomerTabView extends VerticalLayout
 		this.txtCusFirstName.setWidthFull();
 		this.txtCusFirstName.setHeight(null);
 		this.formItem7.add(this.txtCusFirstName);
-		this.linkMaps.setSizeUndefined();
+		this.linkMaps.setWidthFull();
+		this.linkMaps.setHeight(null);
 		this.txtCusAddress.setWidthFull();
 		this.txtCusAddress.setHeight(null);
-		this.formItem101.add(this.linkMaps, this.txtCusAddress);
+		this.formItem101.add(this.ironIcon, this.linkMaps, this.txtCusAddress);
 		this.txtZip.setWidth("27%");
 		this.txtZip.setHeight(null);
 		this.cmbCity.setWidth("50%");
@@ -1995,6 +2017,7 @@ public class CustomerTabView extends VerticalLayout
 		txtZip,
 		txtAccountManager, txtCusInfo, txtExtRef1, txtExtRef2;
 	private Icon                           iconBeziehungen, icon;
+	private IronIcon                       ironIcon;
 	private Anchor                         linkMaps;
 	private ComboBox<City>                 cmbCity;
 	private Grid<Address>                  tableAddress;

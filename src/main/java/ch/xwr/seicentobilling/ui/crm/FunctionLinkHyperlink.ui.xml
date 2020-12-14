@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<?xdevuiml version="1.0"?>
+<?template NONE?>
+<?import com.vaadin.flow.component.html.Anchor?>
+<?import com.vaadin.flow.component.icon.IronIcon?>
+<?import com.vaadin.flow.component.orderedlayout.HorizontalLayout?>
+<HorizontalLayout xmlns:x="http://xml.xdev-software.com/xdevuiml" spacing="false" x:name="FunctionActHyperlink">
+    <x:constraints zpos="0" width="-1px" height="-1px" />
+    <IronIcon x:icon="com.flowingcode.vaadin.addons.ironicons.CommunicationIcons#MAIL_OUTLINE" x:name="ironIcon">
+        <x:constraints width="0px" height="0px" flex-grow="0.0" />
+    </IronIcon>
+    <Anchor x:name="link" text="Link">
+        <x:constraints width="0px" height="0px" flex-grow="0.0" />
+    </Anchor>
+</HorizontalLayout>

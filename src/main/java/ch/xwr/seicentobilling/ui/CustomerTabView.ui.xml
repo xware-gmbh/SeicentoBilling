@@ -29,6 +29,7 @@
 <?import com.vaadin.flow.component.html.Anchor?>
 <?import com.vaadin.flow.component.html.Label?>
 <?import com.vaadin.flow.component.icon.Icon?>
+<?import com.vaadin.flow.component.icon.IronIcon?>
 <?import com.vaadin.flow.component.orderedlayout.HorizontalLayout?>
 <?import com.vaadin.flow.component.orderedlayout.VerticalLayout?>
 <?import com.vaadin.flow.component.splitlayout.SplitLayout?>
@@ -43,7 +44,7 @@
             <typeArgument type="Customer" />
         </x:typeArguments>
         <x:bindings>
-            <binding field="txtCusNumber" property="cusNumber" required="false" nullRepresentation="" readOnly="false">
+            <binding field="txtCusNumber" property="cusNumber" required="true" nullRepresentation="" readOnly="false">
                 <validator type="Bean" />
                 <converter TYPE="StringToInteger">
                     <numberFormat format="Integer" currency="default" locale="default" />
@@ -58,13 +59,13 @@
             <binding field="txtCusCompany" property="cusCompany" required="false" nullRepresentation="" readOnly="false">
                 <validator type="Bean" />
             </binding>
-            <binding field="txtCusFirstName" property="cusFirstName" required="false" nullRepresentation="" readOnly="false">
+            <binding field="txtCusFirstName" property="cusFirstName" required="true" nullRepresentation="" readOnly="false">
                 <validator type="Bean" />
             </binding>
             <binding field="txtCusAddress" property="cusAddress" required="false" nullRepresentation="" readOnly="false">
                 <validator type="Bean" />
             </binding>
-            <binding field="cmbCity" property="city" required="false" readOnly="false">
+            <binding field="cmbCity" property="city" required="true" readOnly="false">
                 <validator type="Bean" />
             </binding>
             <binding field="datCusBirthdate" property="cusBirthdate" required="false" readOnly="false">
@@ -77,7 +78,7 @@
             <binding field="txtCusInfo" property="cusInfo" required="false" nullRepresentation="" readOnly="false">
                 <validator type="Bean" />
             </binding>
-            <binding field="cmbPaymentCondition" property="paymentCondition" required="false" readOnly="false">
+            <binding field="cmbPaymentCondition" property="paymentCondition" required="true" readOnly="false">
                 <validator type="Bean" />
             </binding>
             <binding field="cbxAccountBillingType" property="cusBillingTarget" required="false" readOnly="false">
@@ -223,8 +224,11 @@
                 </FormItem>
                 <FormItem x:name="formItem101" x:columnSpan="2">
                     <x:constraints width="0px" height="0px" />
-                    <Anchor x:name="linkMaps" text="Adresse">
+                    <IronIcon x:icon="com.flowingcode.vaadin.addons.ironicons.MapsIcons#PLACE" x:name="ironIcon">
                         <x:constraints width="0px" height="0px" />
+                    </IronIcon>
+                    <Anchor x:name="linkMaps" text="Adresse">
+                        <x:constraints width="100%" height="0px" />
                     </Anchor>
                     <TextField x:name="txtCusAddress" label="">
                         <x:constraints width="100%" height="0px" />
@@ -390,6 +394,9 @@
                             <column property="adrLine0" header="Adresse" sortable="true" />
                             <column property="adrZip" header="Plz" sortable="true" />
                             <column property="adrCity" header="Ort" sortable="true" />
+                            <column property="renderer" header="Maps">
+                                <renderer type="RenderedComponent" renderedComponent="ch.xwr.seicentobilling.ui.crm.FunctionAddressHyperlink" />
+                            </column>
                             <column property="adrValidFrom" header="Gültig ab" sortable="true" />
                         </x:columns>
                         <x:event>itemDoubleClick.onComponentEvent</x:event>
@@ -439,6 +446,9 @@
                         <x:columns>
                             <column property="cnkType" header="Typ" sortable="true" />
                             <column property="cnkLink" header="Wert" sortable="true" />
+                            <column property="renderer" header="Link">
+                                <renderer type="RenderedComponent" renderedComponent="ch.xwr.seicentobilling.ui.crm.FunctionLinkHyperlink" />
+                            </column>
                             <column property="cnkDepartment" header="Bereich" sortable="true" />
                             <column property="cnkRemark" header="Bemerkung" sortable="true" />
                             <column property="cnkValidFrom" header="Gültig ab" sortable="true" />
@@ -499,6 +509,9 @@
                         <column property="actDate" header="Datum" sortable="true" />
                         <column property="actType" header="Typ" sortable="true" />
                         <column property="actText" header="Bemerkung" sortable="true" />
+                        <column property="renderer">
+                            <renderer type="RenderedComponent" renderedComponent="ch.xwr.seicentobilling.ui.FunctionActHyperlink" />
+                        </column>
                         <column property="costAccount" header="Wer" />
                         <column property="actFollowingUpDate" header="Folgetermin" sortable="true" />
                     </x:columns>

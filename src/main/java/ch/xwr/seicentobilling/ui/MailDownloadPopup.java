@@ -23,7 +23,6 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.formlayout.FormLayout.FormItem;
-import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -215,7 +214,7 @@ public class MailDownloadPopup extends VerticalLayout
 		final StreamResource resource = new StreamResource(fname,
 			this::createExport);
 		
-		final Anchor downloadLink = new Anchor(resource, "Download");
+		// final Anchor downloadLink = new Anchor(resource, "Download");
 		// this.horizontalLayout2.add(downloadLink);
 		final StreamRegistration registration =
 			VaadinSession.getCurrent().getResourceRegistry().registerResource(resource);

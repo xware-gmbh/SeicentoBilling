@@ -237,7 +237,10 @@ public class ExpenseTemplateTabView extends VerticalLayout
 	{
 
 		this.preSaveAccountAction();
-		
+		// if(!this.binder.isValid())
+		// {
+		// return;
+		// }
 		if(SeicentoCrud.doSave(this.binder, new ExpenseTemplateDAO()))
 		{
 			try
@@ -341,40 +344,41 @@ public class ExpenseTemplateTabView extends VerticalLayout
 			return;
 		}
 
-		ConfirmDialog.show(this.getUI().get(), "Datensatz löschen", "Wirklich löschen?");
-
-		try
-		{
-
-			final ExpenseTemplate bean = this.grid.getSelectionModel().getFirstSelectedItem().get();
-
-			// Delete Record
-			final RowObjectManager man = new RowObjectManager();
-			man.deleteObject(bean.getExtId(), bean.getClass().getSimpleName());
-
-			final ExpenseTemplateDAO dao = new ExpenseTemplateDAO();
-			dao.remove(bean);
-			dao.flush();
-
-			this.binder.removeBean();
-			ExpenseTemplateTabView.this.binder.setBean(new ExpenseTemplate());
-			this.grid.setDataProvider(DataProvider.ofCollection(new ExpenseTemplateDAO().findAll()));
-			ExpenseTemplateTabView.this.grid.getDataProvider().refreshAll();
-
-			Notification.show("Datensatz wurde gelöscht!",
-				20, Notification.Position.BOTTOM_START);
-
-		}
-		catch(final PersistenceException cx)
-		{
-			final String msg = SeicentoCrud.getPerExceptionError(cx);
-			Notification.show(msg, 20, Notification.Position.BOTTOM_START);
-			cx.printStackTrace();
-		}
-		catch(final Exception e)
-		{
-			ExpenseTemplateTabView.LOG.error("Error on delete", e);
-		}
+		ConfirmDialog.show("Datensatz löschen", "Wirklich löschen?", okEvent -> {
+			
+			try
+			{
+				
+				final ExpenseTemplate bean = this.grid.getSelectionModel().getFirstSelectedItem().get();
+				
+				// Delete Record
+				final RowObjectManager man = new RowObjectManager();
+				man.deleteObject(bean.getExtId(), bean.getClass().getSimpleName());
+				
+				final ExpenseTemplateDAO dao = new ExpenseTemplateDAO();
+				dao.remove(bean);
+				dao.flush();
+				
+				this.binder.removeBean();
+				ExpenseTemplateTabView.this.binder.setBean(new ExpenseTemplate());
+				this.grid.setDataProvider(DataProvider.ofCollection(new ExpenseTemplateDAO().findAll()));
+				ExpenseTemplateTabView.this.grid.getDataProvider().refreshAll();
+				
+				Notification.show("Datensatz wurde gelöscht!",
+					20, Notification.Position.BOTTOM_START);
+				
+			}
+			catch(final PersistenceException cx)
+			{
+				final String msg = SeicentoCrud.getPerExceptionError(cx);
+				Notification.show(msg, 20, Notification.Position.BOTTOM_START);
+				cx.printStackTrace();
+			}
+			catch(final Exception e)
+			{
+				ExpenseTemplateTabView.LOG.error("Error on delete", e);
+			}
+		});
 
 	}
 	
@@ -428,6 +432,7 @@ public class ExpenseTemplateTabView extends VerticalLayout
 		this.formItem6                = new FormItem();
 		this.lblPrtState              = new Label();
 		this.comboBoxState            = new ComboBox<>();
+		this.formItem13               = new FormItem();
 		this.horizontalLayout3        = new HorizontalLayout();
 		this.cmdSave                  = new Button();
 		this.cmdReset                 = new Button();
@@ -450,6 +455,8 @@ public class ExpenseTemplateTabView extends VerticalLayout
 		this.grid.addColumn(ExpenseTemplate::getExtText).setKey("extText").setHeader("Text").setSortable(true);
 		this.grid.addColumn(new CaptionRenderer<>(ExpenseTemplate::getExtState)).setKey("extState").setHeader("Status")
 			.setSortable(true);
+		this.grid.addColumn(ExpenseTemplate::getExtId).setKey("extId")
+			.setHeader(CaptionUtils.resolveCaption(ExpenseTemplate.class, "extId")).setSortable(true).setVisible(false);
 		this.grid.setDataProvider(DataProvider.ofCollection(new ExpenseTemplateDAO().findAll()));
 		this.grid.setSelectionMode(Grid.SelectionMode.SINGLE);
 		this.formLayout.getStyle().set("margin-left", "10px");
@@ -498,26 +505,24 @@ public class ExpenseTemplateTabView extends VerticalLayout
 		this.lblPrtState.setText("Status");
 		this.comboBoxState.setTabIndex(15);
 		this.comboBoxState.setItemLabelGenerator(ItemLabelGeneratorFactory.NonNull(CaptionUtils::resolveCaption));
-		this.cmdSave.setTabIndex(16);
+		this.formItem13.getElement().setAttribute("colspan", "4");
 		this.cmdSave.setText("Speichern");
 		this.cmdSave.setIcon(IronIcons.SAVE.create());
-		this.cmdReset.setTabIndex(17);
 		this.cmdReset.setText("Abbrechen");
 		this.cmdReset.setIcon(IronIcons.UNDO.create());
-		this.binder.setValidatorsDisabled(true);
 
 		this.binder.forField(this.cmbCostAccount).bind("costAccount");
-		this.binder.forField(this.txtPrtKeyNumber).withNullRepresentation("")
+		this.binder.forField(this.txtPrtKeyNumber).asRequired("required").withNullRepresentation("")
 			.withConverter(
 				ConverterBuilder.StringToInteger().numberFormatBuilder(NumberFormatBuilder.Integer()).build())
 			.bind("extKeyNumber");
-		this.binder.forField(this.comboBoxProject).bind("project");
+		this.binder.forField(this.comboBoxProject).asRequired().bind("project");
 		this.binder.forField(this.txtPrtText).withNullRepresentation("").bind("extText");
-		this.binder.forField(this.txtExtAmount).withNullRepresentation("")
+		this.binder.forField(this.txtExtAmount).asRequired().withNullRepresentation("")
 			.withConverter(ConverterBuilder.StringToDouble().numberFormatBuilder(NumberFormatBuilder.Decimal()).build())
 			.bind("extAmount");
 		this.binder.forField(this.comboBoxVat).bind("vat");
-		this.binder.forField(this.comboBoxGeneric).bind("extFlagGeneric");
+		this.binder.forField(this.comboBoxGeneric).asRequired().bind("extFlagGeneric");
 		this.binder.forField(this.checkbox).withNullRepresentation(false).bind("extFlagCostAccount");
 		this.binder.forField(this.comboBoxUnit).bind("extUnit");
 		this.binder.forField(this.txtExtQuantity).withNullRepresentation("")
@@ -596,17 +601,16 @@ public class ExpenseTemplateTabView extends VerticalLayout
 		this.comboBoxState.setWidthFull();
 		this.comboBoxState.setHeight(null);
 		this.formItem6.add(this.lblPrtState, this.comboBoxState);
-		this.cmdSave.setWidth("50%");
-		this.cmdSave.setHeight(null);
-		this.cmdReset.setWidth("50%");
-		this.cmdReset.setHeight(null);
+		this.cmdSave.setSizeUndefined();
+		this.cmdReset.setSizeUndefined();
 		this.horizontalLayout3.add(this.cmdSave, this.cmdReset);
 		this.horizontalLayout3.setWidthFull();
 		this.horizontalLayout3.setHeight(null);
+		this.formItem13.add(this.horizontalLayout3);
 		this.formLayout.add(this.formItem2, this.formItem, this.formItem12, this.formItem4, this.formItem5,
 			this.formItem7,
 			this.formItem11, this.formItem10, this.formItem8, this.formItem3, this.formItem9, this.formItem6,
-			this.horizontalLayout3);
+			this.formItem13);
 		this.splitLayout.addToPrimary(this.verticalLayout);
 		this.splitLayout.addToSecondary(this.formLayout);
 		this.splitLayout.setSplitterPosition(50.0);
@@ -635,7 +639,7 @@ public class ExpenseTemplateTabView extends VerticalLayout
 	private FilterComponent                       containerFilterComponent;
 	private Grid<ExpenseTemplate>                 grid;
 	private FormItem                              formItem2, formItem, formItem12, formItem4, formItem5, formItem7,
-		formItem11, formItem10, formItem8, formItem3, formItem9, formItem6;
+		formItem11, formItem10, formItem8, formItem3, formItem9, formItem6, formItem13;
 	private FormLayout                            formLayout;
 	private Checkbox                              checkbox;
 	private Button                                cmdNew, cmdDelete, cmdReload, cmdInfo, cmdSave, cmdReset;

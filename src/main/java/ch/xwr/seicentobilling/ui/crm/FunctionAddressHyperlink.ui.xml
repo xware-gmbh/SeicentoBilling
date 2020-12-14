@@ -2,11 +2,11 @@
 <!DOCTYPE xml>
 <?xdevuiml version="1.0"?>
 <?template NONE?>
-<?import com.vaadin.flow.component.html.Image?>
-<?import com.vaadin.flow.component.orderedlayout.VerticalLayout?>
-<VerticalLayout xmlns:x="http://xml.xdev-software.com/xdevuiml" x:name="FunctionAddressHyperlink">
-    <x:constraints zpos="0" width="100%" height="100%" />
-    <Image x:src="images/gmaps32.PNG" x:name="linkMaps" text="Link to Google Maps">
-        <x:constraints width="-1px" height="-1px" flex-grow="0.0" />
-    </Image>
-</VerticalLayout>
+<?import com.vaadin.flow.component.html.Anchor?>
+<?import com.vaadin.flow.component.orderedlayout.HorizontalLayout?>
+<HorizontalLayout xmlns:x="http://xml.xdev-software.com/xdevuiml" spacing="false" x:name="FunctionActHyperlink">
+    <x:constraints zpos="0" width="-1px" height="-1px" />
+    <Anchor x:name="anchor" text="Link">
+        <x:constraints width="0px" height="0px" flex-grow="0.0" />
+    </Anchor>
+</HorizontalLayout>
