@@ -90,14 +90,17 @@ public class DesktopUI extends XdevUI {
 
 	}
 
-	public static Map<String, String> getQueryMap(final String query) {
-	    final String[] params = query.split("&");
+	private static Map<String, String> getQueryMap(final String query) {
 	    final Map<String, String> map = new HashMap<>();
 
-	    for (final String param : params) {
-	        final String name = param.split("=")[0];
-	        final String value = param.split("=")[1];
-	        map.put(name, value);
+	    if (query != null && !query.isEmpty()) {
+		    final String[] params = query.split("&");
+
+		    for (final String param : params) {
+		        final String name = param.split("=")[0];
+		        final String value = param.split("=")[1];
+		        map.put(name, value);
+		    }
 	    }
 	    return map;
 	}
