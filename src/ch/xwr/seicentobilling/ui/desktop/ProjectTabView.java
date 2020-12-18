@@ -118,6 +118,39 @@ public class ProjectTabView extends XdevView {
 		setROFields();
 
 		setDefaultFilter();
+		checkAutoLoad();
+	}
+
+	private void checkAutoLoad() {
+		final String proName = (String) UI.getCurrent().getSession().getAttribute("proName");
+		Long proId = new Long(0);
+		try {
+			proId = Long.parseLong((String) UI.getCurrent().getSession().getAttribute("proId"));
+		} catch (final Exception ignore) {
+		}
+		UI.getCurrent().getSession().setAttribute("proName",  "");
+		UI.getCurrent().getSession().setAttribute("proId",  "");
+
+		final ProjectDAO dao = new ProjectDAO();
+		Project pro = null;
+		if (proId.longValue() > 0) {
+			pro = dao.find(proId);
+		} else {
+			if (proName != null && !proName.isEmpty()) {
+				final List<Project> lst = dao.findByName(proName);
+				if (lst != null && lst.size() > 0) {
+					pro = lst.get(0);
+				}
+			}
+
+		}
+
+		if (pro != null) {
+			if (this.table.containsId(pro)) {
+				this.table.select(pro);
+			}
+			this.fieldGroup.setItemDataSource(pro);
+		}
 	}
 
 	private void setVatDefault() {

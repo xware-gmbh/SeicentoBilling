@@ -5,6 +5,7 @@
 <?template NONE?>
 <?import ch.xwr.seicentobilling.ui.desktop.AuthView?>
 <?import ch.xwr.seicentobilling.ui.desktop.MainView?>
+<?import ch.xwr.seicentobilling.ui.desktop.ProjectTabView?>
 <?import com.xdev.security.authentication.ui.XdevAuthenticationNavigator?>
 <?import com.xdev.ui.XdevHorizontalLayout?>
 <?import com.xdev.ui.XdevImage?>
@@ -129,6 +130,7 @@
         <x:views>
             <entry path="" class="AuthView" />
             <entry path="home" class="MainView" />
+            <entry path="project" class="ProjectTabView" />
         </x:views>
     </XdevAuthenticationNavigator>
 </XdevUI>

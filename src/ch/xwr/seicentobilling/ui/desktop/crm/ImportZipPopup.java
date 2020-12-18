@@ -177,35 +177,6 @@ public class ImportZipPopup extends XdevView implements ProgressListener {
 		((Window) this.getParent()).close();
 	}
 
-//	private void startV1() {
-//		// TODO remove after testing: also delete GuiThread / ZimpImporter2
-//        final GuiThread thread = new GuiThread(this.result.getUpfile(), this.progressBar, this.lblStatus);
-//        thread.start();
-//
-//        // Enable polling and set frequency to 0.5 seconds
-//        //UI.getCurrent().setPollInterval(1000);
-//
-//        // Disable the button until the work is done
-//        this.progressBar.setEnabled(true);
-//        //this.button.setEnabled(false);
-//
-//        this.lblCount.setValue("running...");
-//	}
-
-//	private void startV2() {
-//		// TODO: Delete after testing
-//        final ZipImporter2 thread = new ZipImporter2(this.result.getUpfile(), this.progressBar, this.lblCount);
-//        thread.start();
-//
-//        // Enable polling and set frequency to 0.5 seconds
-//        UI.getCurrent().setPollInterval(500);
-//
-//        // Disable the button until the work is done
-//        this.progressBar.setEnabled(true);
-//        //this.button.setEnabled(false);
-//
-//        this.lblCount.setValue("running...");
-//	}
 
 	/**
 	 * Event handler delegate method for the {@link XdevButton} {@link #cmdProcess}.
@@ -378,19 +349,3 @@ public class ImportZipPopup extends XdevView implements ProgressListener {
 
 }
 
-////TODO: remove Class after Testing (EntityManager closed)
-//class WorkThread extends Thread {
-//	private static final org.apache.log4j.Logger LOG = LogManager.getLogger(WorkThread.class);
-//	private FileUploadDto upDto = null;
-//
-//	public WorkThread(final FileUploadDto result) {
-//		this.upDto = result;
-//	}
-//
-//    @Override
-//    public void run() {
-//		final ZipImporter imp = new ZipImporter();
-//		//imp.addProgressListener(this);
-//		imp.readFile(this.upDto.getUpfile());
-//    }
-//}
