@@ -4,7 +4,6 @@ package ch.xwr.seicentobilling.ui;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.ZoneId;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
@@ -32,12 +31,14 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.formlayout.FormLayout.FormItem;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -64,6 +65,7 @@ import ch.xwr.seicentobilling.entities.ExpenseTemplate;
 import ch.xwr.seicentobilling.entities.LovAccount;
 import ch.xwr.seicentobilling.entities.Periode;
 import ch.xwr.seicentobilling.entities.Project;
+import ch.xwr.seicentobilling.entities.RowObject;
 import ch.xwr.seicentobilling.entities.Vat;
 import ch.xwr.seicentobilling.ui.project.ProjectLookupPopup;
 
@@ -72,37 +74,55 @@ public class ExpensePopup extends VerticalLayout
 {
 	/** Logger initialized */
 	private static final Logger LOG = LoggerFactory.getLogger(ExpensePopup.class);
-
+	private MenuItem            menuOption;
+	private MenuItem            mnuUpload;
+	private MenuItem            mnuDefaults;
+	private MenuItem            mnuTemplate1;
+	private MenuItem            mnuTemplate2;
+	private MenuItem            mnuTemplate3;
+	private MenuItem            mnuTemplate4;
+	private MenuItem            mnuTemplate5;
+	private MenuItem            mnuTemplate6;
+	private MenuItem            mnuTemplate7;
+	private MenuItem            mnuTemplate8;
+	private MenuItem            mnuTemplate9;
+	private MenuItem            mnuTemplate10;
+	private MenuItem            mnuCancel;
+	private MenuItem            menuText;
+	private MenuItem            mnuSaveItem;
+	
 	/**
-
+	
 	 */
 	public ExpensePopup()
 	{
 		super();
 		this.initUI();
-		
-		// this.setHeight(Seicento.calculateThemeHeight(Float.parseFloat(this.getHeight()), Lumo.DARK));
 
+		// this.setHeight(Seicento.calculateThemeHeight(Float.parseFloat(this.getHeight()), Lumo.DARK));
+		
 		// State
 		this.comboBoxState.setItems(LovState.State.values());
 		this.comboBoxUnit.setItems(LovState.ExpUnit.values());
 		this.comboBoxGeneric.setItems(LovState.ExpType.values());
-
+		
+		this.createMenu();
+		
 		// this.comboBoxAccount.addItems((Object[])LovState.Accounts.values());
 		// loadDummyCb();
-
+		
 		// get Parameter
 		final Long beanId = (Long)UI.getCurrent().getSession().getAttribute("beanId");
 		final Long objId  = (Long)UI.getCurrent().getSession().getAttribute("objId");
 		Expense    bean   = null;
 		Periode    obj    = null;
-
+		
 		if(beanId == null)
 		{
 			// new
 			final PeriodeDAO objDao = new PeriodeDAO();
 			obj = objDao.find(objId);
-
+			
 			bean = new Expense();
 			bean.setExpState(LovState.State.active);
 			// bean.setPrlWorkType(LovState.WorkType.project);
@@ -120,55 +140,157 @@ public class ExpensePopup extends VerticalLayout
 		{
 			final ExpenseDAO dao = new ExpenseDAO();
 			bean = dao.find(beanId.longValue());
-
+			
 			if(bean.getExpBooked() != null)
 			{
 				this.dateExpBooked.setValue(bean.getExpBooked().toInstant()
 					.atZone(ZoneId.systemDefault())
 					.toLocalDate());
 			}
-
+			
 			// this.prepareProjectCombo(bean.getProject());
 		}
-		this.setTextCombo(bean.getProject());
-
+		this.setTextList(bean.getProject());
+		
 		this.setBeanGui(bean);
 		this.checkTemplates();
-
+		
 		if(bean.getExpId() == null || bean.getExpId().floatValue() < 1)
 		{
-			// this.mnuUpload.setEnabled(false);
+			this.mnuUpload.setEnabled(false);
 		}
 	}
+	
+	private MenuItem getMnItem(final int icount)
+	{
 
+		switch(icount)
+		{
+			case 0:
+				return this.mnuTemplate10;
+			case 1:
+				return this.mnuTemplate1;
+			case 2:
+				return this.mnuTemplate2;
+			case 3:
+				return this.mnuTemplate3;
+			case 4:
+				return this.mnuTemplate4;
+			case 5:
+				return this.mnuTemplate5;
+			case 6:
+				return this.mnuTemplate6;
+			case 7:
+				return this.mnuTemplate7;
+			case 8:
+				return this.mnuTemplate8;
+			case 9:
+				return this.mnuTemplate9;
+			case 10:
+				return this.mnuTemplate10;
+		}
+
+		return null;
+	}
+	
+	private void createMenu()
+	{
+		this.menuOption = this.menuBar.addItem("Optionen", null);
+		this.mnuUpload  =
+			this.menuOption.getSubMenu().addItem("Belege verwalten...", e -> this.mnuUpload_menuSelected(e));
+		this.mnuUpload.setVisible(false);
+		this.mnuDefaults   = this.menuOption.getSubMenu().addItem("Vorlage", null);
+		this.mnuTemplate1  = this.mnuDefaults.getSubMenu().addItem("Spesen", e -> this.loadTemplate(1));
+		this.mnuTemplate2  = this.mnuDefaults.getSubMenu().addItem("Rapporte", e -> this.loadTemplate(2));
+		this.mnuTemplate3  =
+			this.mnuDefaults.getSubMenu().addItem("Vorlagen Rapport", e -> this.loadTemplate(3));
+		this.mnuTemplate4  = this.mnuDefaults.getSubMenu().addItem("Rapporte", e -> this.loadTemplate(4));
+		this.mnuTemplate5  = this.mnuDefaults.getSubMenu().addItem("Rapporte", e -> this.loadTemplate(5));
+		this.mnuTemplate6  = this.mnuDefaults.getSubMenu().addItem("Rapporte", e -> this.loadTemplate(6));
+		this.mnuTemplate7  = this.mnuDefaults.getSubMenu().addItem("Rapporte", e -> this.loadTemplate(7));
+		this.mnuTemplate8  = this.mnuDefaults.getSubMenu().addItem("Rapporte", e -> this.loadTemplate(8));
+		this.mnuTemplate9  = this.mnuDefaults.getSubMenu().addItem("Rapporte", e -> this.loadTemplate(9));
+		this.mnuTemplate10 = this.mnuDefaults.getSubMenu().addItem("Rapporte", e -> this.loadTemplate(10));
+		this.menuText      = this.menuOption.getSubMenu().addItem("Text...", null);
+		this.mnuCancel     =
+			this.menuOption.getSubMenu().addItem(StringResourceUtils.optLocalizeString("{$cmdReset.caption}", this),
+				e -> this.cmdReset_onClick(null));
+		this.mnuSaveItem   = this.menuOption.getSubMenu().addItem("Speichern", e -> this.cmdSave_onClick(null));
+		
+	}
+	
+	private void mnuUpload_menuSelected(final ClickEvent<MenuItem> e)
+	{
+		final Expense bean = this.binder.getBean();
+
+		if(bean.getExpId() == null)
+		{
+			return;
+		}
+
+		final RowObjectManager man = new RowObjectManager();
+		final RowObject        obj = man.getRowObject(bean.getClass().getSimpleName(), bean.getExpId());
+		UI.getCurrent().getSession().setAttribute("RowObject", obj);
+
+		this.popupAttachments();
+
+	}
+	
+	private void popupAttachments()
+	{
+		final Dialog win = AttachmentPopup.getPopupWindow();
+
+		win.addDetachListener(new ComponentEventListener<DetachEvent>()
+		{
+
+			@Override
+			public void onComponentEvent(final DetachEvent event)
+			{
+
+				String retval = UI.getCurrent().getSession().getAttribute(String.class);
+
+				if(retval == null)
+				{
+					retval = "cmdCancel";
+				}
+				if(retval.equals("cmdDone"))
+				{
+					// ExpenseView.this.txtExpText.setValue(reason);
+				}
+			}
+
+		});
+		win.open();
+	}
+	
 	private void prepareProjectCombo(final Project bean)
 	{
 		// ExpensePopup.this.cmbProject.getDataProvider().refreshItem(bean);
 		ExpensePopup.this.cmbProject.setValue(bean);
 	}
-
+	
 	private void setBeanGui(final Expense bean)
 	{
 		// set Bean + Fields
 		this.binder.setBean(bean);
-
-		this.setROFields();
 		
+		this.setROFields();
+
 		this.postLoadAccountAction(bean);
 		this.txtExpText.focus();
-		
-	}
 
+	}
+	
 	private void postLoadAccountAction(final Expense bean)
 	{
 		if(bean.getExpAccount() == null)
 		{
 			return;
 		}
-		
+
 		// final boolean exist = this.comboBoxAccount.containsId(lov);
 		// funktioniert auf keine Weise....
-		
+
 		final Collection<?> col1 =
 			this.comboBoxAccount.getDataProvider().fetch(new Query<>()).collect(Collectors.toList());
 		for(final Iterator<?> iterator = col1.iterator(); iterator.hasNext();)
@@ -180,27 +302,54 @@ public class ExpensePopup extends VerticalLayout
 				break;
 			}
 		}
-		
+
 	}
-	
+
 	private void checkTemplates()
 	{
 		final Expense line = this.binder.getBean();
-
+		
 		final ExpenseTemplateDAO    dao = new ExpenseTemplateDAO();
 		final List<ExpenseTemplate> lst = dao.findByCostAccount(line.getPeriode().getCostAccount());
+		for(int i = 1; i < 11; i++)
+		{
+			final MenuItem item = this.getMnItem(i);
+			item.setEnabled(false);
+			item.setVisible(false);
+		}
+		if(lst == null)
+		{
+			return; // not found
+		}
+		for(final Iterator<ExpenseTemplate> iterator = lst.iterator(); iterator.hasNext();)
+		{
+			final ExpenseTemplate tpl  = iterator.next();
+			final int             nbr  = tpl.getExtKeyNumber();
+			final MenuItem        item = this.getMnItem(nbr);
 
-		this.vorLageComboBox.setItems(lst);
-		
+			String value = "" + nbr + ": " + tpl.getProject().getProName();
+			if(tpl.getExtText() != null)
+			{
+				value = value + " - " + tpl.getExtText();
+				if(value.length() > 35)
+				{
+					value = value.substring(0, 35);
+				}
+			}
+			item.setEnabled(true);
+			item.setVisible(true);
+			item.setText(value);
+		}
+
 	}
-
+	
 	private void setROFields()
 	{
 		this.dateExpBooked.setEnabled(false);
 		this.cmbPeriode.setEnabled(false);
 		this.cmbProject.setEnabled(false);
 	}
-	
+
 	public static Dialog getPopupWindow()
 	{
 		final Dialog win = new Dialog();
@@ -215,7 +364,7 @@ public class ExpensePopup extends VerticalLayout
 		win.add(cancelButton, new ExpensePopup());
 		return win;
 	}
-
+	
 	private void preSaveAccountAction()
 	{
 		if(this.binder.getBean().getExpDate() == null)
@@ -227,43 +376,41 @@ public class ExpensePopup extends VerticalLayout
 			final Date date = Date.from(this.dateExpBooked.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
 			this.binder.getBean().setExpBooked(date);
 		}
-		
+
 		final LovAccount lov = this.comboBoxAccount.getValue();
 		if(lov != null)
 		{
 			this.binder.getBean().setExpAccount(lov.getId());
 		}
+
+	}
+	
+	private void setTextList(final Project project)
+	{
+		if(project != null)
+		{
+			final List<Expense> expenseList = new ExpenseDAO().findByProject(project);
+			for(final Expense ex : expenseList)
+			{
+				this.menuText.getSubMenu().addItem(ex.getExpText(),
+					e -> ExpensePopup.this.txtExpText.setValue(ex.getExpText()));
+			}
+		}
 		
 	}
 
-	private void setTextCombo(final Project project)
-	{
-		if(project == null)
-		{
-			final List<Expense> expenseList = new ArrayList<>();
-			this.textComboBox.setItems(expenseList);
-			
-		}
-		else
-		{
-			final List<Expense> expenseList = new ExpenseDAO().findByProject(project);
-			this.textComboBox.setItems(expenseList);
-		}
-		
-	}
-	
 	private void loadTemplate(final int iKey)
 	{
 		final Expense line = ExpensePopup.this.binder.getBean();
-
+		
 		final ExpenseTemplateDAO dao = new ExpenseTemplateDAO();
 		final ExpenseTemplate    tpl = dao.findByKeyNumber(line.getPeriode().getCostAccount(), iKey);
-
+		
 		if(tpl == null)
 		{
 			return; // not found
 		}
-
+		
 		line.setExpAccount(tpl.getExtAccount());
 		line.setExpAmount(tpl.getExtAmount());
 		line.setExpFlagCostAccount(tpl.getExtFlagCostAccount());
@@ -274,16 +421,15 @@ public class ExpensePopup extends VerticalLayout
 		line.setExpUnit(tpl.getExtUnit());
 		line.setProject(tpl.getProject());
 		line.setVat(tpl.getVat());
-
+		
 		this.prepareProjectCombo(tpl.getProject());
 		this.binder.removeBean();
 		this.binder.setBean(line);
 		this.setROFields();
-
+		
 		this.postLoadAccountAction(line);
-		this.vorLageComboBox.setValue(tpl);
 	}
-
+	
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdReset}.
 	 *
@@ -296,7 +442,7 @@ public class ExpensePopup extends VerticalLayout
 		this.binder.removeBean();
 		((Dialog)this.getParent().get()).close();
 	}
-
+	
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdSave}.
 	 *
@@ -311,11 +457,11 @@ public class ExpensePopup extends VerticalLayout
 		{
 			try
 			{
-
+				
 				final RowObjectManager man = new RowObjectManager();
 				man.updateObject(this.binder.getBean().getExpId(),
 					this.binder.getBean().getClass().getSimpleName());
-				
+
 				((Dialog)this.getParent().get()).close();
 				Notification.show("Daten wurden gespeichert", 5000, Notification.Position.BOTTOM_END);
 			}
@@ -324,9 +470,9 @@ public class ExpensePopup extends VerticalLayout
 				ExpensePopup.LOG.error("could not save ObjRoot", e);
 			}
 		}
-
+		
 	}
-	
+
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #btnSearch}.
 	 *
@@ -337,30 +483,30 @@ public class ExpensePopup extends VerticalLayout
 	{
 		this.popupProjectLookup();
 	}
-
+	
 	private void popupProjectLookup()
 	{
 		final Dialog win = ProjectLookupPopup.getPopupWindow();
-		
+
 		win.addDetachListener(new ComponentEventListener<DetachEvent>()
 		{
-			
+
 			@Override
 			public void onComponentEvent(final DetachEvent event)
 			{
 				final Long beanId = (Long)UI.getCurrent().getSession().getAttribute("beanId");
-				
+
 				if(beanId != null && beanId > 0)
 				{
 					final Project bean = new ProjectDAO().find(beanId);
 					ExpensePopup.this.cmbProject.setValue(bean);
-					ExpensePopup.this.setTextCombo(bean);
+					ExpensePopup.this.setTextList(bean);
 				}
 			}
 		});
 		win.open();
 	}
-
+	
 	/**
 	 * Event handler delegate method for the {@link ComboBox} {@link #cmbPeriode}.
 	 *
@@ -370,7 +516,7 @@ public class ExpensePopup extends VerticalLayout
 	private void cmbPeriode_valueChanged(final ComponentValueChangeEvent<ComboBox<Periode>, Periode> event)
 	{
 	}
-	
+
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdDefault1}.
 	 *
@@ -381,46 +527,6 @@ public class ExpensePopup extends VerticalLayout
 	{
 		this.loadTemplate(1);
 	}
-
-	/**
-	 * Event handler delegate method for the {@link ComboBox} {@link #vorLageComboBox}.
-	 *
-	 * @see HasValue.ValueChangeListener#valueChanged(HasValue.ValueChangeEvent)
-	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
-	 */
-	private void
-		vorLageComboBox_valueChanged(final ComponentValueChangeEvent<ComboBox<ExpenseTemplate>, ExpenseTemplate> event)
-	{
-		final ExpenseTemplate tpl  = event.getValue();
-		final Expense         line = this.binder.getBean();
-		line.setExpAccount(tpl.getExtAccount());
-		line.setExpAmount(tpl.getExtAmount());
-		line.setExpFlagCostAccount(tpl.getExtFlagCostAccount());
-		line.setExpFlagGeneric(tpl.getExtFlagGeneric());
-		line.setExpQuantity(tpl.getExtQuantity());
-		line.setExpState(tpl.getExtState());
-		line.setExpText(tpl.getExtText());
-		line.setExpUnit(tpl.getExtUnit());
-		line.setProject(tpl.getProject());
-		line.setVat(tpl.getVat());
-
-		this.prepareProjectCombo(tpl.getProject());
-		this.setROFields();
-		this.binder.removeBean();
-		this.binder.setBean(line);
-		this.postLoadAccountAction(line);
-	}
-
-	/**
-	 * Event handler delegate method for the {@link ComboBox} {@link #textComboBox}.
-	 *
-	 * @see HasValue.ValueChangeListener#valueChanged(HasValue.ValueChangeEvent)
-	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
-	 */
-	private void textComboBox_valueChanged(final ComponentValueChangeEvent<ComboBox<Expense>, Expense> event)
-	{
-		ExpensePopup.this.txtExpText.setValue(event.getValue().getExpText());
-	}
 	
 	/* WARNING: Do NOT edit!<br>The content of this method is always regenerated by the UI designer. */
 	// <generated-code name="initUI">
@@ -428,14 +534,9 @@ public class ExpensePopup extends VerticalLayout
 	{
 		this.verticalLayout        = new VerticalLayout();
 		this.horizontalLayout      = new HorizontalLayout();
+		this.menuBar               = new MenuBar();
 		this.label                 = new Label();
 		this.formLayout            = new FormLayout();
-		this.formItem14            = new FormItem();
-		this.vorlageLabel          = new Label();
-		this.vorLageComboBox       = new ComboBox<>();
-		this.formItem15            = new FormItem();
-		this.label2                = new Label();
-		this.textComboBox          = new ComboBox<>();
 		this.formItem2             = new FormItem();
 		this.lblPeriode            = new Label();
 		this.cmbPeriode            = new ComboBox<>();
@@ -482,17 +583,13 @@ public class ExpensePopup extends VerticalLayout
 		this.cmdDefault1           = new Button();
 		this.binder                = new BeanValidationBinder<>(Expense.class);
 
+		this.setPadding(false);
 		this.verticalLayout.setPadding(false);
 		this.label.setText("Spesen erfassen");
 		this.formLayout.setResponsiveSteps(
 			new FormLayout.ResponsiveStep("0px", 1, FormLayout.ResponsiveStep.LabelsPosition.TOP),
 			new FormLayout.ResponsiveStep("500px", 2, FormLayout.ResponsiveStep.LabelsPosition.TOP),
 			new FormLayout.ResponsiveStep("1000px", 3, FormLayout.ResponsiveStep.LabelsPosition.ASIDE));
-		this.vorlageLabel.setText("Vorlage");
-		this.vorLageComboBox.setItemLabelGenerator(ItemLabelGeneratorFactory.NonNull(ExpenseTemplate::getExtText));
-		this.formItem15.getElement().setAttribute("colspan", "2");
-		this.label2.setText("Text");
-		this.textComboBox.setItemLabelGenerator(ItemLabelGeneratorFactory.NonNull(Expense::getExpText));
 		this.lblPeriode.setText(StringResourceUtils.optLocalizeString("{$lblPeriode.value}", this));
 		this.cmbPeriode.setDataProvider(StartsWithIgnoreCaseItemFilter.New(this.cmbPeriode::getItemLabelGenerator),
 			DataProvider.ofCollection(new PeriodeDAO().findAll()));
@@ -561,19 +658,11 @@ public class ExpensePopup extends VerticalLayout
 		this.binder.forField(this.dateExpBooked).withNullRepresentation(LocalDate.of(2020, Month.DECEMBER, 10))
 			.withConverter(ConverterBuilder.LocalDateToUtilDate().systemDefaultZoneId().build()).bind("expBooked");
 
+		this.menuBar.setWidth("150px");
+		this.menuBar.setHeightFull();
 		this.label.setSizeUndefined();
-		this.horizontalLayout.add(this.label);
+		this.horizontalLayout.add(this.menuBar, this.label);
 		this.horizontalLayout.setVerticalComponentAlignment(FlexComponent.Alignment.CENTER, this.label);
-		this.vorlageLabel.setSizeUndefined();
-		this.vorlageLabel.getElement().setAttribute("slot", "label");
-		this.vorLageComboBox.setWidthFull();
-		this.vorLageComboBox.setHeight(null);
-		this.formItem14.add(this.vorlageLabel, this.vorLageComboBox);
-		this.label2.setSizeUndefined();
-		this.label2.getElement().setAttribute("slot", "label");
-		this.textComboBox.setWidth("40%");
-		this.textComboBox.setHeight(null);
-		this.formItem15.add(this.label2, this.textComboBox);
 		this.lblPeriode.setSizeUndefined();
 		this.lblPeriode.getElement().setAttribute("slot", "label");
 		this.cmbPeriode.setWidthFull();
@@ -640,10 +729,10 @@ public class ExpensePopup extends VerticalLayout
 		this.comboBoxState.setWidth("30%");
 		this.comboBoxState.setHeight(null);
 		this.formItem13.add(this.lblExpState, this.comboBoxState);
-		this.formLayout.add(this.formItem14, this.formItem15, this.formItem2, this.formItem, this.formItem3,
-			this.formItem4,
-			this.formItem5, this.formItem6, this.formItem7, this.formItem8, this.formItem9, this.formItem10,
-			this.formItem11, this.formItem12, this.formItem13);
+		this.formLayout.add(this.formItem2, this.formItem, this.formItem3, this.formItem4, this.formItem5,
+			this.formItem6,
+			this.formItem7, this.formItem8, this.formItem9, this.formItem10, this.formItem11, this.formItem12,
+			this.formItem13);
 		this.cmdSave.setSizeUndefined();
 		this.cmdReset.setSizeUndefined();
 		this.cmdDefault1.setSizeUndefined();
@@ -658,8 +747,6 @@ public class ExpensePopup extends VerticalLayout
 		this.add(this.verticalLayout);
 		this.setSizeFull();
 
-		this.vorLageComboBox.addValueChangeListener(this::vorLageComboBox_valueChanged);
-		this.textComboBox.addValueChangeListener(this::textComboBox_valueChanged);
 		this.cmbPeriode.addValueChangeListener(this::cmbPeriode_valueChanged);
 		this.btnSearch.addClickListener(this::btnSearch_onClick);
 		this.cmdSave.addClickListener(this::cmdSave_onClick);
@@ -669,17 +756,15 @@ public class ExpensePopup extends VerticalLayout
 	
 	// <generated-code name="variables">
 	private ComboBox<ExpUnit>             comboBoxUnit;
+	private MenuBar                       menuBar;
 	private ComboBox<Vat>                 cmbVat;
 	private VerticalLayout                verticalLayout;
 	private HorizontalLayout              horizontalLayout, horizontalLayout2;
-	private Label                         label, vorlageLabel, label2, lblPeriode, lblExpBooked, lblExpDate, lblExpText,
-		lblExpAmount, lblVat, lblProject, lblExpAccount, lblExpFlagGeneric, lblExpFlagCostAccount, lblExpUnit,
-		lblExpQuantity, lblExpState;
+	private Label                         label, lblPeriode, lblExpBooked, lblExpDate, lblExpText, lblExpAmount, lblVat,
+		lblProject, lblExpAccount, lblExpFlagGeneric, lblExpFlagCostAccount, lblExpUnit, lblExpQuantity, lblExpState;
 	private BeanValidationBinder<Expense> binder;
-	private ComboBox<ExpenseTemplate>     vorLageComboBox;
-	private ComboBox<Expense>             textComboBox;
-	private FormItem                      formItem14, formItem15, formItem2, formItem, formItem3, formItem4, formItem5,
-		formItem6, formItem7, formItem8, formItem9, formItem10, formItem11, formItem12, formItem13;
+	private FormItem                      formItem2, formItem, formItem3, formItem4, formItem5, formItem6, formItem7,
+		formItem8, formItem9, formItem10, formItem11, formItem12, formItem13;
 	private FormLayout                    formLayout;
 	private Checkbox                      chkExpFlagCostAccount;
 	private Button                        btnSearch, cmdSave, cmdReset, cmdDefault1;
@@ -691,5 +776,5 @@ public class ExpensePopup extends VerticalLayout
 	private ComboBox<Project>             cmbProject;
 	private TextField                     txtExpText, txtExpAmount, txtExpQuantity;
 	// </generated-code>
-	
+
 }
