@@ -613,6 +613,9 @@ public class ExpenseTabView extends VerticalLayout
 		this.cmdInfoExpense           = new Button();
 		this.tableLine                = new Grid<>(Expense.class, false);
 
+		this.setSpacing(false);
+		this.setPadding(false);
+		this.verticalLayout.setPadding(false);
 		this.horizontalLayout2.setMinHeight("");
 		this.horizontalLayout2.setMinWidth("100%");
 		this.cmdNew.setIcon(VaadinIcon.PLUS_CIRCLE.create());
@@ -641,6 +644,7 @@ public class ExpenseTabView extends VerticalLayout
 		this.grid.setSelectionMode(Grid.SelectionMode.SINGLE);
 		this.verticalLayout2.setMinHeight("100%");
 		this.verticalLayout2.setMaxWidth("");
+		this.verticalLayout2.setPadding(false);
 		this.verticalLayoutExpense
 			.setText(StringResourceUtils.optLocalizeString("{$verticalLayoutExpense.caption}", this));
 		this.cmdNewExpense.setText(StringResourceUtils.optLocalizeString("{$cmdNewExpense.caption}", this));

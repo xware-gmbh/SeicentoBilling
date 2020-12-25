@@ -395,6 +395,9 @@ public class CompanyTabView extends VerticalLayout
 		this.cmdReset              = new Button();
 		this.binder                = new BeanValidationBinder<>(Company.class);
 
+		this.setSpacing(false);
+		this.setPadding(false);
+		this.verticalLayout.setPadding(false);
 		this.horizontalLayout2.setMinHeight("");
 		this.horizontalLayout2.setMinWidth("100%");
 		this.cmdNew.setIcon(VaadinIcon.PLUS_CIRCLE.create());
@@ -411,6 +414,7 @@ public class CompanyTabView extends VerticalLayout
 		this.grid.setDataProvider(DataProvider.ofCollection(new CompanyDAO().findAll()));
 		this.grid.setSelectionMode(Grid.SelectionMode.SINGLE);
 		this.verticalLayout2.setMinHeight("100%");
+		this.verticalLayout2.setPadding(false);
 		this.tabs.setMinHeight("50px");
 		this.tab.setLabel(StringResourceUtils.optLocalizeString("{$gridLayout.caption}", this));
 		this.tab2.setLabel(StringResourceUtils.optLocalizeString("{$gridLayoutNbr.caption}", this));

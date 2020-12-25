@@ -106,7 +106,7 @@ public class RowObjectTabView extends VerticalLayout
 		this.verticalLayout           = new VerticalLayout();
 		this.containerFilterComponent = new FilterComponent();
 		this.grid                     = new Grid<>(RowObject.class, false);
-		
+
 		this.setSpacing(false);
 		this.setPadding(false);
 		this.verticalLayout.setPadding(false);
@@ -127,13 +127,13 @@ public class RowObjectTabView extends VerticalLayout
 			.setSortable(true);
 		this.grid.setDataProvider(DataProvider.ofCollection(new RowObjectDAO().findAll()));
 		this.grid.setSelectionMode(Grid.SelectionMode.SINGLE);
-		
+
 		this.containerFilterComponent.connectWith(this.grid.getDataProvider());
 		this.containerFilterComponent.setFilterSubject(GridFilterSubjectFactory.CreateFilterSubject(this.grid,
 			Arrays.asList("objAddedBy", "objChangedBy", "objDeletedBy"),
 			Arrays.asList("entity.entName", "objAdded", "objAddedBy", "objChanged", "objChangedBy", "objChngcnt",
 				"objDeleted", "objDeletedBy", "objRowId", "objState")));
-		
+
 		this.containerFilterComponent.setWidthFull();
 		this.containerFilterComponent.setHeight(null);
 		this.grid.setSizeFull();
@@ -142,7 +142,7 @@ public class RowObjectTabView extends VerticalLayout
 		this.verticalLayout.setSizeFull();
 		this.add(this.verticalLayout);
 		this.setSizeFull();
-		
+
 		this.grid.addItemClickListener(this::grid_onItemClick);
 		this.grid.addItemDoubleClickListener(this::grid_onItemDoubleClick);
 	} // </generated-code>

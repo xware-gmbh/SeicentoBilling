@@ -11,11 +11,11 @@
 <?import com.vaadin.flow.component.orderedlayout.HorizontalLayout?>
 <?import com.vaadin.flow.component.orderedlayout.VerticalLayout?>
 <?import com.vaadin.flow.component.splitlayout.SplitLayout?>
-<VerticalLayout xmlns:x="http://xml.xdev-software.com/xdevuiml" x:name="ExpenseTabView" x:route="expense">
+<VerticalLayout xmlns:x="http://xml.xdev-software.com/xdevuiml" spacing="false" x:name="ExpenseTabView" padding="false" x:route="expense">
     <x:constraints zpos="0" width="100%" height="100%" />
     <SplitLayout x:name="splitLayout">
         <x:constraints width="100%" height="100%" flex-grow="1.0" />
-        <VerticalLayout x:name="verticalLayout">
+        <VerticalLayout x:name="verticalLayout" padding="false">
             <x:constraints splitlayout-position="PRIMARY" width="100%" height="100%" />
             <FilterComponent x:searchableProperties="costAccount.csaCode,costAccount.csaName,perName" x:name="containerFilterComponent" x:filterableProperties="costAccount,costAccount.csaCode,costAccount.csaName,perBookedExpense,perBookedProject,perMonth,perSignOffExpense,perState,perYear" x:grid="grid">
                 <x:constraints width="100%" height="0%" flex-grow="0.0" />
@@ -68,7 +68,7 @@
                 <x:event>itemDoubleClick.onComponentEvent</x:event>
             </Grid>
         </VerticalLayout>
-        <VerticalLayout minHeight="100%" x:name="verticalLayout2" maxWidth="">
+        <VerticalLayout minHeight="100%" x:name="verticalLayout2" maxWidth="" padding="false">
             <x:constraints splitlayout-position="SECONDARY" width="100px" alignment="AUTO" height="100px" flex-grow="0.0" />
             <Label x:name="verticalLayoutExpense" text="{$verticalLayoutExpense.caption}">
                 <x:constraints width="100%" height="30px" flex-grow="0.0" />

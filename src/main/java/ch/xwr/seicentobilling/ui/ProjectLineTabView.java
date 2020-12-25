@@ -74,14 +74,14 @@ import ch.xwr.seicentobilling.entities.ProjectLine;
 public class ProjectLineTabView extends VerticalLayout
 {
 	/** Logger initialized */
-	
+
 	private static final Logger LOG            = LoggerFactory.getLogger(ProjectLineTabView.class);
 	private Periode             currentPeriode = null;
-
+	
 	private boolean                                 isAdmin = false;
 	private ProjectLineOverviewItemData             pld;
 	private final TreeGrid<ProjectLineOverviewItem> treeGrid, treeGrid2;
-	
+
 	/**
 	 *
 	 */
@@ -89,41 +89,41 @@ public class ProjectLineTabView extends VerticalLayout
 	{
 		super();
 		this.initUI();
-		
+
 		this.sortList();
 		// set RO Fields
 		this.setROFields();
-
+		
 		this.setDefaultFilter();
 		if(Seicento.hasRole("BillingAdmin"))
 		{
 			this.cmdAdmin.setEnabled(true);
 			this.cmdAdmin.setVisible(true);
 		}
-		
-		this.gridLayoutOverview.setVisible(false);
 
+		this.gridLayoutOverview.setVisible(false);
+		
 		final Map<Tab, Component> tabsToPages = new HashMap<>();
 		tabsToPages.put(this.tab, this.verticalLayoutReports);
 		tabsToPages.put(this.tab2, this.gridLayoutOverview);
-		
+
 		this.tabs.addSelectedChangeListener(event -> {
 			tabsToPages.values().forEach(page -> page.setVisible(false));
 			final Component selectedPage = tabsToPages.get(this.tabs.getSelectedTab());
 			selectedPage.setVisible(true);
 		});
 		this.tabs.setSelectedTab(this.tab);
-		
+
 		this.treeGrid  = new TreeGrid<>();
 		this.treeGrid2 = new TreeGrid<>();
 		this.treeGrid1VerticalLayout.add(this.treeGrid);
 		this.treeGrid2VerticalLayout.add(this.treeGrid2);
 	}
-	
+
 	private void setROFields()
 	{
 		final boolean roFlag = this.isBooked();
-		
+
 		this.cmdNewLine.setEnabled(!roFlag);
 		this.cmdUpdateLine.setEnabled(!roFlag);
 		this.cmdDeleteLine.setEnabled(!roFlag);
@@ -132,9 +132,9 @@ public class ProjectLineTabView extends VerticalLayout
 		this.cmdDelete.setEnabled(!roFlag);
 		this.cmdExcel.setEnabled(!roFlag);
 		this.cmdCopyLine.setEnabled(!roFlag);
-		
+
 	}
-	
+
 	private void setDefaultFilter()
 	{
 		CostAccount bean = Seicento.getLoggedInCostAccount();
@@ -142,18 +142,18 @@ public class ProjectLineTabView extends VerticalLayout
 		{
 			bean = new CostAccountDAO().findAll().get(0); // Dev Mode
 		}
-
+		
 		final Calendar cal   = Calendar.getInstance();
 		final int      iyear = cal.get(Calendar.YEAR);
-
+		
 		final FilterEntry ie =
 			new FilterEntry("perYear", new FilterOperator.Is().key(), new Integer[]{iyear});
 		final FilterEntry ce =
 			new FilterEntry("costAccount", new FilterOperator.Is().key(), new CostAccount[]{bean});
 		this.containerFilterComponent.setValue(new FilterData("", new FilterEntry[]{ie, ce}));
-
+		
 	}
-
+	
 	private void sortList()
 	{
 		final GridSortOrder<ProjectLine> sortCol1 =
@@ -174,7 +174,7 @@ public class ProjectLineTabView extends VerticalLayout
 		// new GridSortOrder<>(this.grid.getColumnByKey("costaccount"), SortDirection.ASCENDING);
 		this.grid.sort(Arrays.asList(sortCol11, sortCol21));
 	}
-
+	
 	private boolean isBooked()
 	{
 		if(!this.grid.getSelectionModel().getFirstSelectedItem().isPresent())
@@ -190,10 +190,10 @@ public class ProjectLineTabView extends VerticalLayout
 		{
 			return true;
 		}
-
+		
 		return false;
 	}
-
+	
 	/**
 	 * Event handler delegate method for the {@link Grid} {@link #grid}.
 	 *
@@ -214,11 +214,11 @@ public class ProjectLineTabView extends VerticalLayout
 		{
 			this.grid.getSelectionModel().select(this.currentPeriode);
 		}
-
+		
 		this.reloadTableLineList();
 		this.setROFields();
 	}
-	
+
 	private void calcOverview()
 	{
 		if(!this.grid.getSelectionModel().getFirstSelectedItem().isPresent())
@@ -230,14 +230,14 @@ public class ProjectLineTabView extends VerticalLayout
 		{
 			return;
 		}
-		
+
 		final Calendar  cal             = Calendar.getInstance();
 		final YearMonth yearMonthObject = YearMonth.of(per.getPerYear(), per.getPerMonth().getValue());
 		final int       daysInMonth     = yearMonthObject.lengthOfMonth();
-		
+
 		final double[] hours  = new double[32];
 		double         totalm = 0.;
-		
+
 		final List<ProjectLine> ls = new ProjectLineDAO().findByPeriode(per);
 		for(final ProjectLine pln : ls)
 		{
@@ -246,27 +246,27 @@ public class ProjectLineTabView extends VerticalLayout
 				// do not add expenses
 				cal.setTime(pln.getPrlReportDate());
 				final int iday = cal.get(Calendar.DAY_OF_MONTH);
-				
+
 				hours[iday] = hours[iday] + pln.getPrlHours();
 				totalm      = totalm + pln.getPrlHours();
 			}
 		}
-		
-		this.initOverviewGrids(totalm);
 
-		this.pld = new ProjectLineOverviewItemData(cal, daysInMonth, per, hours);
+		this.initOverviewGrids(totalm);
 		
+		this.pld = new ProjectLineOverviewItemData(cal, daysInMonth, per, hours);
+
 		// this.treeGrid.addHierarchyColumn(OrderGenTreeItem::getCbo)
 		// .setHeader("");
 		this.treeGrid.removeAllColumns();
 		this.treeGrid2.removeAllColumns();
-		
+
 		this.treeGrid.setItems(this.pld.getGrid1RootItems(),
 			this.pld::getChildItems);
-		
+
 		this.treeGrid2.setItems(this.pld.getGrid2RootItems(),
 			this.pld::getChildItems);
-
+		
 		this.treeGrid
 			.addComponentHierarchyColumn(
 				item -> this.createLabelDatum(this.treeGrid, item))
@@ -277,24 +277,24 @@ public class ProjectLineTabView extends VerticalLayout
 			.addComponentColumn(
 				item -> this.createLabelStunden(this.treeGrid, item))
 			.setHeader("Stunden").setResizable(true);
-		
+
 		this.treeGrid2
 			.addComponentHierarchyColumn(
 				item -> this.createLabelDatum(this.treeGrid2, item))
 			.setHeader("Datum").setResizable(true).setWidth("175px");
-
+		
 		// this.treeGrid2.addColumn(ProjectLineOverviewItem::getStunden)
 		// .setHeader("Stunden").setResizable(true);
 		this.treeGrid2
 			.addComponentColumn(
 				item -> this.createLabelStunden(this.treeGrid2, item))
 			.setHeader("Stunden").setResizable(true);
-
+		
 		this.treeGrid.getDataProvider().refreshAll();
 		this.treeGrid2.getDataProvider().refreshAll();
-
+		
 	}
-	
+
 	public Label createLabelDatum(final TreeGrid<ProjectLineOverviewItem> grid, final ProjectLineOverviewItem bean)
 	{
 		final Label obj = new Label();
@@ -306,12 +306,12 @@ public class ProjectLineTabView extends VerticalLayout
 		}
 		return obj;
 	}
-	
+
 	public Label createLabelStunden(final TreeGrid<ProjectLineOverviewItem> grid, final ProjectLineOverviewItem bean)
 	{
 		final Label obj = new Label();
 		obj.setText(bean.getStunden());
-
+		
 		if(!bean.getStundenStyle().isEmpty())
 		{
 			obj.getStyle().set("border-radius", "10px");
@@ -330,18 +330,18 @@ public class ProjectLineTabView extends VerticalLayout
 		}
 		return obj;
 	}
-
+	
 	private void initOverviewGrids(final double totalm)
 	{
 		this.lblTotalMonth.setText("");
-
+		
 		final Periode  per = this.grid.getSelectionModel().getFirstSelectedItem().get();
 		final Calendar cal = Calendar.getInstance();
 		cal.set(per.getPerYear(), per.getPerMonth().getValue() - 1, 1);
 		final SimpleDateFormat month_date = new SimpleDateFormat("MMMM yyyy");
 		final String           month_name = month_date.format(cal.getTime());
 		this.lblTotalMonth.setText(" " + month_name + "    Stunden: " + totalm);
-
+		
 		/*
 		 * // reset
 		 * this.treeGrid.removeAllItems();
@@ -361,7 +361,7 @@ public class ProjectLineTabView extends VerticalLayout
 		 * this.treeGrid2.addContainerProperty("Stunden", XdevLabel.class, null);
 		 */
 	}
-
+	
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdNew}.
 	 *
@@ -375,21 +375,21 @@ public class ProjectLineTabView extends VerticalLayout
 		UI.getCurrent().getSession().setAttribute("source", "expense");
 		UI.getCurrent().getSession().setAttribute("isAdmin", false);
 		this.popupPeriode();
-		
+
 	}
-	
+
 	private void popupPeriode()
 	{
 		final Dialog win = PeriodePopup.getPopupWindow();
-
+		
 		win.addDetachListener(new ComponentEventListener<DetachEvent>()
 		{
-			
+
 			@Override
 			public void onComponentEvent(final DetachEvent event)
 			{
 				String retval = UI.getCurrent().getSession().getAttribute(String.class);
-
+				
 				if(retval == null)
 				{
 					retval = "cmdCancel";
@@ -398,34 +398,34 @@ public class ProjectLineTabView extends VerticalLayout
 				{
 					final Long    beanId = (Long)UI.getCurrent().getSession().getAttribute("beanId");
 					final Periode bean   = new PeriodeDAO().find(beanId);
-
+					
 					ProjectLineTabView.this.grid.setDataProvider(DataProvider.ofCollection(new PeriodeDAO().findAll()));
 					ProjectLineTabView.this.reloadMainTable();
 					ProjectLineTabView.this.grid.select(bean);
 					ProjectLineTabView.this.grid.getDataProvider().refreshAll();
 				}
-				
+
 			}
 		});
 		win.open();
 	}
-	
+
 	private void reloadMainTable()
 	{
 		// save filter
 		final FilterData fd = this.containerFilterComponent.getValue();
 		this.containerFilterComponent.setValue(null);
-
+		
 		// clear+reload List
 		DataProvider.ofCollection(new PeriodeDAO().findAll());
 		this.grid.getDataProvider().refreshAll();
-
+		
 		this.sortList();
-
+		
 		// reassign filter
 		this.containerFilterComponent.setValue(fd);
 	}
-
+	
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdReload}.
 	 *
@@ -437,7 +437,7 @@ public class ProjectLineTabView extends VerticalLayout
 		this.grid.setDataProvider(DataProvider.ofCollection(new PeriodeDAO().findAll()));
 		this.reloadMainTable();
 	}
-
+	
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdNewLine}.
 	 *
@@ -452,39 +452,39 @@ public class ProjectLineTabView extends VerticalLayout
 			return;
 		}
 		final Long objId = this.grid.getSelectionModel().getFirstSelectedItem().get().getPerId();
-
+		
 		UI.getCurrent().getSession().setAttribute("beanId", beanId);
 		UI.getCurrent().getSession().setAttribute("objId", objId);
-
+		
 		this.popupProjectLine();
 	}
-
+	
 	private void popupProjectLine()
-
+	
 	{
 		final Dialog win = ProjectLinePopup.getPopupWindow();
-		
+
 		win.addDetachListener(new ComponentEventListener<DetachEvent>()
 		{
-			
+
 			@Override
 			public void onComponentEvent(final DetachEvent event)
 			{
-				
+
 				ProjectLineTabView.this.reloadTableLineList();
 			}
-			
+
 		});
 		win.open();
 	}
-	
+
 	private void reloadTableLineList()
 	{
 		if(!this.grid.getSelectionModel().getFirstSelectedItem().isPresent())
 		{
 			return;
 		}
-
+		
 		final Periode bean = this.grid.getSelectionModel().getFirstSelectedItem().get();
 		if(bean != null)
 		{
@@ -492,7 +492,7 @@ public class ProjectLineTabView extends VerticalLayout
 			this.containerFilterComponent2.connectWith(this.tableLine.getDataProvider());
 		}
 	}
-	
+
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdDeleteLine}.
 	 *
@@ -507,30 +507,30 @@ public class ProjectLineTabView extends VerticalLayout
 				20, Notification.Position.BOTTOM_START);
 			return;
 		}
-
+		
 		ConfirmDialog.show("Datensatz löschen", "Wirklich löschen?", okEvent -> {
-
+			
 			try
 			{
-
+				
 				final ProjectLine bean = this.tableLine.getSelectionModel().getFirstSelectedItem().get();
-
+				
 				// Delete Record
 				final RowObjectManager man = new RowObjectManager();
 				man.deleteObject(bean.getPrlId(), bean.getClass().getSimpleName());
-
+				
 				final ProjectLineDAO dao = new ProjectLineDAO();
 				dao.remove(bean);
 				dao.flush();
-
+				
 				this.tableLine
 					.setDataProvider(
 						DataProvider.ofCollection(new ProjectLineDAO().findByPeriode(this.currentPeriode)));
 				ProjectLineTabView.this.tableLine.getDataProvider().refreshAll();
-
+				
 				Notification.show("Datensatz wurde gelöscht!",
 					20, Notification.Position.BOTTOM_START);
-
+				
 			}
 			catch(final PersistenceException cx)
 			{
@@ -544,17 +544,17 @@ public class ProjectLineTabView extends VerticalLayout
 			}
 		});
 	}
-	
+
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdInfo}.
 	 *
 	 * @see ComponentEventListener#onComponentEvent(ComponentEvent)
 	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
 	 */
-	
+
 	private void cmdInfo_onClick(final ClickEvent<Button> event)
 	{
-		
+
 		if(this.grid.getSelectionModel().getFirstSelectedItem().isPresent())
 		{
 			final Periode bean = this.grid.getSelectionModel().getFirstSelectedItem().get();
@@ -563,9 +563,9 @@ public class ProjectLineTabView extends VerticalLayout
 			win.add(new RowObjectView(bean.getPerId(), bean.getClass().getSimpleName()));
 			win.open();
 		}
-		
+
 	}
-	
+
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdDelete}.
 	 *
@@ -580,28 +580,28 @@ public class ProjectLineTabView extends VerticalLayout
 				20, Notification.Position.BOTTOM_START);
 			return;
 		}
-
+		
 		ConfirmDialog.show("Datensatz löschen", "Wirklich löschen?", okEvent -> {
-			
+
 			try
 			{
-				
+
 				final Periode bean = this.grid.getSelectionModel().getFirstSelectedItem().get();
-				
+
 				// Delete Record
 				final RowObjectManager man = new RowObjectManager();
 				man.deleteObject(bean.getPerId(), bean.getClass().getSimpleName());
-				
+
 				final PeriodeDAO dao = new PeriodeDAO();
 				dao.remove(bean);
 				dao.flush();
-				
+
 				this.grid.setDataProvider(DataProvider.ofCollection(new PeriodeDAO().findAll()));
 				ProjectLineTabView.this.grid.getDataProvider().refreshAll();
-				
+
 				Notification.show("Datensatz wurde gelöscht!",
 					20, Notification.Position.BOTTOM_START);
-				
+
 			}
 			catch(final PersistenceException cx)
 			{
@@ -614,9 +614,9 @@ public class ProjectLineTabView extends VerticalLayout
 				ProjectLineTabView.LOG.error("Error on delete", e);
 			}
 		});
-
+		
 	}
-	
+
 	/**
 	 * Event handler delegate method for the {@link Grid} {@link #grid}.
 	 *
@@ -633,7 +633,7 @@ public class ProjectLineTabView extends VerticalLayout
 			}
 		}
 	}
-	
+
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdUpdate}.
 	 *
@@ -646,17 +646,17 @@ public class ProjectLineTabView extends VerticalLayout
 		{
 			return;
 		}
-
+		
 		final Long beanId = this.grid.getSelectionModel().getFirstSelectedItem().get().getPerId();
 		UI.getCurrent().getSession().setAttribute("beanId", beanId);
 		UI.getCurrent().getSession().setAttribute("reason", "update");
 		UI.getCurrent().getSession().setAttribute("source", "expense");
 		UI.getCurrent().getSession().setAttribute("isAdmin", false);
-
+		
 		this.popupPeriode();
-
+		
 	}
-
+	
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdUpdateLine}.
 	 *
@@ -669,16 +669,16 @@ public class ProjectLineTabView extends VerticalLayout
 		{
 			return;
 		}
-		
+
 		final Long beanId = this.tableLine.getSelectionModel().getFirstSelectedItem().get().getPrlId();
 		final Long objId  = null;
-		
+
 		UI.getCurrent().getSession().setAttribute("beanId", beanId);
 		UI.getCurrent().getSession().setAttribute("objId", objId);
-		
+
 		this.popupProjectLine();
 	}
-	
+
 	/**
 	 * Event handler delegate method for the {@link Grid} {@link #tableLine}.
 	 *
@@ -688,7 +688,7 @@ public class ProjectLineTabView extends VerticalLayout
 	private void tableLine_onItemClick(final ItemClickEvent<ProjectLine> event)
 	{
 	}
-	
+
 	/**
 	 * Event handler delegate method for the {@link Grid} {@link #tableLine}.
 	 *
@@ -708,7 +708,7 @@ public class ProjectLineTabView extends VerticalLayout
 			this.popupProjectLine();
 		}
 	}
-	
+
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdCopyLine}.
 	 *
@@ -721,23 +721,23 @@ public class ProjectLineTabView extends VerticalLayout
 		{
 			return;
 		}
-
+		
 		final ProjectLine bean = this.tableLine.getSelectionModel().getFirstSelectedItem().get();
-
+		
 		bean.setPrlId(new Long(0));
 		bean.setPrlText(bean.getPrlText() + " (Kopie)");
-
+		
 		final ProjectLineDAO dao     = new ProjectLineDAO();
 		final ProjectLine    newBean = dao.merge(bean);
 		dao.save(newBean);
-
+		
 		final RowObjectManager man = new RowObjectManager();
 		man.updateObject(newBean.getPrlId(), newBean.getClass().getSimpleName());
-
+		
 		this.reloadTableLineList();
-
+		
 	}
-
+	
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdInfoExpense}.
 	 *
@@ -754,9 +754,9 @@ public class ProjectLineTabView extends VerticalLayout
 			win.add(new RowObjectView(bean.getPrlId(), bean.getClass().getSimpleName()));
 			win.open();
 		}
-
+		
 	}
-
+	
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdAdmin}.
 	 *
@@ -767,19 +767,19 @@ public class ProjectLineTabView extends VerticalLayout
 	{
 		this.isAdmin = !this.isAdmin;
 		this.setROFields();
-
+		
 		if(this.isAdmin)
 		{
-
+			
 			this.cmdAdmin.setIcon(IronIcons.SETTINGS_APPLICATIONS.create());
 		}
 		else
 		{
 			this.cmdAdmin.setIcon(IronIcons.SETTINGS.create());
 		}
-		
-	}
 
+	}
+	
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdReport}.
 	 *
@@ -795,15 +795,15 @@ public class ProjectLineTabView extends VerticalLayout
 			return;
 		}
 		final Periode bean = this.grid.getSelectionModel().getFirstSelectedItem().get();
-		
+
 		final JasperManager jsp = new JasperManager();
 		jsp.addParameter("Param_Periode", "" + bean.getPerId());
 		// jsp.addParameter("Param_DateTo", sal.getSlrDate().toString());
-		
-		UI.getCurrent().getPage().open(jsp.getUri(JasperManager.ProjectLineReport1), "_blank");
-		
-	}
 
+		UI.getCurrent().getPage().open(jsp.getUri(JasperManager.ProjectLineReport1), "_blank");
+
+	}
+	
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdNew}.
 	 *
@@ -814,7 +814,7 @@ public class ProjectLineTabView extends VerticalLayout
 	{
 		this.reloadMainTable();
 	}
-
+	
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdExcel}.
 	 *
@@ -829,12 +829,12 @@ public class ProjectLineTabView extends VerticalLayout
 			return;
 		}
 		final Periode bean = this.grid.getSelectionModel().getFirstSelectedItem().get();
-		
+
 		UI.getCurrent().getSession().setAttribute("periodebean", bean);
-		
+
 		this.popupExcelUpload();
 	}
-
+	
 	private void popupExcelUpload()
 	{
 		final Dialog win = ExcelUploadPopup.getPopupWindow();
@@ -847,9 +847,9 @@ public class ProjectLineTabView extends VerticalLayout
 			}
 		});
 		win.open();
-		
+
 	}
-	
+
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdRefOverview}.
 	 *
@@ -860,7 +860,7 @@ public class ProjectLineTabView extends VerticalLayout
 	{
 		this.calcOverview();
 	}
-
+	
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdExport}.
 	 *
@@ -871,7 +871,7 @@ public class ProjectLineTabView extends VerticalLayout
 	{
 		GridExportDialog.open(this.tableLine);
 	}
-
+	
 	/* WARNING: Do NOT edit!<br>The content of this method is always regenerated by the UI designer. */
 	// <generated-code name="initUI">
 	private void initUI()
@@ -909,7 +909,9 @@ public class ProjectLineTabView extends VerticalLayout
 		this.lblTotalMonth             = new Label();
 		this.treeGrid2VerticalLayout   = new VerticalLayout();
 		this.cmdRefOverview            = new Button();
-		
+
+		this.setSpacing(false);
+		this.setPadding(false);
 		this.verticalLayout.setSpacing(false);
 		this.verticalLayout.setPadding(false);
 		this.horizontalLayout2.setMinHeight("");
@@ -987,7 +989,7 @@ public class ProjectLineTabView extends VerticalLayout
 		this.lblTotalMonth.setText("Label");
 		this.treeGrid2VerticalLayout.setPadding(false);
 		this.cmdRefOverview.setIcon(IronIcons.REFRESH.create());
-		
+
 		this.containerFilterComponent.connectWith(this.grid.getDataProvider());
 		this.containerFilterComponent.setFilterSubject(GridFilterSubjectFactory.CreateFilterSubject(this.grid,
 			Arrays.asList("costAccount.csaCode", "costAccount.csaName", "perName"),
@@ -996,7 +998,7 @@ public class ProjectLineTabView extends VerticalLayout
 		this.containerFilterComponent2.setFilterSubject(GridFilterSubjectFactory.CreateFilterSubject(this.tableLine,
 			Arrays.asList("prlText", "project.proExtReference", "project.proName"), Arrays.asList("prlHours", "prlRate",
 				"prlReportDate", "prlState", "prlText", "prlWorkType", "project", "project.proName")));
-		
+
 		this.cmdNew.setSizeUndefined();
 		this.cmdDelete.setSizeUndefined();
 		this.cmdUpdate.setSizeUndefined();
@@ -1052,9 +1054,9 @@ public class ProjectLineTabView extends VerticalLayout
 		this.add(this.splitLayout);
 		this.setFlexGrow(1.0, this.splitLayout);
 		this.setSizeFull();
-		
+
 		this.tabs.setSelectedIndex(-1);
-		
+
 		this.cmdNew.addClickListener(this::cmdNew_onClick);
 		this.cmdNew.addFocusListener(this::cmdNew_onFocus);
 		this.cmdDelete.addClickListener(this::cmdDelete_onClick);
@@ -1076,7 +1078,7 @@ public class ProjectLineTabView extends VerticalLayout
 		this.tableLine.addItemDoubleClickListener(this::tableLine_onItemDoubleClick);
 		this.cmdRefOverview.addClickListener(this::cmdRefOverview_onClick);
 	} // </generated-code>
-
+	
 	// <generated-code name="variables">
 	private Button            cmdNew, cmdDelete, cmdUpdate, cmdReload, cmdReport, cmdInfo, cmdAdmin, cmdNewLine,
 		cmdDeleteLine, cmdUpdateLine, cmdExcel, cmdCopyLine, cmdExport, cmdInfoExpense, cmdRefOverview;
@@ -1091,5 +1093,5 @@ public class ProjectLineTabView extends VerticalLayout
 	private Tabs              tabs;
 	private FilterComponent   containerFilterComponent, containerFilterComponent2;
 	// </generated-code>
-
+	
 }

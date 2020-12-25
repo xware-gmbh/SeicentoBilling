@@ -456,6 +456,9 @@ public class VatTabView extends VerticalLayout
 		this.cmdReset                 = new Button();
 		this.binder                   = new BeanValidationBinder<>(Vat.class);
 
+		this.setSpacing(false);
+		this.setPadding(false);
+		this.verticalLayout.setPadding(false);
 		this.horizontalLayout2.setMinHeight("");
 		this.horizontalLayout2.setMinWidth("100%");
 		this.cmdNew.setIcon(VaadinIcon.PLUS_CIRCLE.create());

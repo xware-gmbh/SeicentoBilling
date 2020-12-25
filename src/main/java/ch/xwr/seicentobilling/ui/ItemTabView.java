@@ -359,7 +359,10 @@ public class ItemTabView extends VerticalLayout
 		this.cmdSave           = new Button();
 		this.cmdReset          = new Button();
 		this.binder            = new BeanValidationBinder<>(Item.class);
-		
+
+		this.setSpacing(false);
+		this.setPadding(false);
+		this.verticalLayout.setPadding(false);
 		this.horizontalLayout2.setMinHeight("");
 		this.horizontalLayout2.setMinWidth("100%");
 		this.cmdNew.setIcon(VaadinIcon.PLUS_CIRCLE.create());
@@ -414,7 +417,7 @@ public class ItemTabView extends VerticalLayout
 		this.cmdSave.setIcon(IronIcons.SAVE.create());
 		this.cmdReset.setText(StringResourceUtils.optLocalizeString("{$cmdReset.caption}", this));
 		this.cmdReset.setIcon(IronIcons.UNDO.create());
-		
+
 		this.binder.forField(this.txtItmIdent).asRequired().withNullRepresentation("").bind("itmIdent");
 		this.binder.forField(this.txtItmName).asRequired().withNullRepresentation("").bind("itmName");
 		this.binder.forField(this.txtItmPrice1).asRequired().withNullRepresentation("")
@@ -432,13 +435,13 @@ public class ItemTabView extends VerticalLayout
 			.bind("itmAccount");
 		this.binder.forField(this.cmbItemGroup).bind("itemGroup");
 		this.binder.forField(this.cmbVat).asRequired().bind("vat");
-		
+
 		this.filterComponent.connectWith(this.grid.getDataProvider());
 		this.filterComponent.setFilterSubject(GridFilterSubjectFactory.CreateFilterSubject(this.grid,
 			Arrays.asList("itmIdent", "itmName"),
 			Arrays.asList("itemGroup.itgName", "itmIdent", "itmName", "itmPrice1", "itmState", "itmUnit",
 				"vat.fullName")));
-		
+
 		this.cmdNew.setSizeUndefined();
 		this.cmdDelete.setSizeUndefined();
 		this.cmdReload.setSizeUndefined();
@@ -513,7 +516,7 @@ public class ItemTabView extends VerticalLayout
 		this.add(this.splitLayout);
 		this.setFlexGrow(1.0, this.splitLayout);
 		this.setSizeFull();
-		
+
 		this.cmdNew.addClickListener(this::cmdNew_onClick);
 		this.cmdDelete.addClickListener(this::cmdDelete_onClick);
 		this.cmdReload.addClickListener(this::cmdReload_onClick);

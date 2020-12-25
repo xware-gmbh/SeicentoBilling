@@ -24,7 +24,7 @@
 <?import com.vaadin.flow.component.textfield.TextArea?>
 <?import com.vaadin.flow.component.textfield.TextField?>
 <?import com.vaadin.flow.data.binder.BeanValidationBinder?>
-<VerticalLayout xmlns:x="http://xml.xdev-software.com/xdevuiml" x:name="OrderTabView" x:route="order">
+<VerticalLayout xmlns:x="http://xml.xdev-software.com/xdevuiml" spacing="false" x:name="OrderTabView" padding="false" x:route="order">
     <x:constraints zpos="0" width="100%" height="100%" />
     <BeanValidationBinder x:name="binder" validatorsDisabled="true">
         <x:typeArguments>

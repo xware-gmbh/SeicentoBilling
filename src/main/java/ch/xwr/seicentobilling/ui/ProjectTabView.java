@@ -735,7 +735,7 @@ public class ProjectTabView extends VerticalLayout
 		this.cmdSave                  = new Button();
 		this.cmdReset                 = new Button();
 		this.binder                   = new BeanValidationBinder<>(Project.class);
-		
+
 		this.setSpacing(false);
 		this.setPadding(false);
 		this.verticalLayout.setSpacing(false);
@@ -873,7 +873,7 @@ public class ProjectTabView extends VerticalLayout
 		this.cmdSave.setIcon(IronIcons.SAVE.create());
 		this.cmdReset.setText(StringResourceUtils.optLocalizeString("{$cmdReset.caption}", this));
 		this.cmdReset.setIcon(IronIcons.UNDO.create());
-		
+
 		this.binder.forField(this.txtProName).asRequired().withNullRepresentation("").bind("proName");
 		this.binder.forField(this.cmbCustomer).asRequired().bind("customer");
 		this.binder.forField(this.txtProExtReference).withNullRepresentation("").bind("proExtReference");
@@ -908,7 +908,7 @@ public class ProjectTabView extends VerticalLayout
 			.withConverter(ConverterBuilder.LocalDateToUtilDate().systemDefaultZoneId().build()).bind("proEndDate");
 		this.binder.forField(this.dateProLastBill)
 			.withConverter(ConverterBuilder.LocalDateToUtilDate().systemDefaultZoneId().build()).bind("proLastBill");
-		
+
 		this.containerFilterComponent.connectWith(this.grid.getDataProvider());
 		this.containerFilterComponent.setFilterSubject(GridFilterSubjectFactory.CreateFilterSubject(this.grid,
 			Arrays.asList("costAccount.csaCode", "customer.cusCompany", "customer.cusName", "proExtReference",
@@ -916,7 +916,7 @@ public class ProjectTabView extends VerticalLayout
 			Arrays.asList("costAccount", "customer", "proEndDate", "proModel", "proName", "proProjectState",
 				"proStartDate",
 				"proState", "vat")));
-		
+
 		this.cmdNew.setSizeUndefined();
 		this.cmdDelete.setSizeUndefined();
 		this.cmdReload.setSizeUndefined();
@@ -1041,9 +1041,9 @@ public class ProjectTabView extends VerticalLayout
 		this.add(this.splitLayout);
 		this.setFlexGrow(1.0, this.splitLayout);
 		this.setSizeFull();
-		
+
 		this.tabs.setSelectedIndex(0);
-		
+
 		this.cmdNew.addClickListener(this::cmdNew_onClick);
 		this.cmdDelete.addClickListener(this::cmdDelete_onClick);
 		this.cmdReload.addClickListener(this::cmdReload_onClick);

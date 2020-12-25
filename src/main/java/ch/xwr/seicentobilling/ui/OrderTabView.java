@@ -92,10 +92,10 @@ public class OrderTabView extends VerticalLayout
 {
 	/** Logger initialized */
 	private static final org.apache.log4j.Logger LOG = LogManager.getLogger(OrderTabView.class);
-	
+
 	OrderCalculator CALC    = new OrderCalculator();
 	private boolean isAdmin = false;
-
+	
 	/**
 	 *
 	 */
@@ -105,30 +105,30 @@ public class OrderTabView extends VerticalLayout
 		this.initUI();
 		this.comboBoxState.setItems(LovState.State.values());
 		this.gridLayoutDetail.setVisible(false);
-		
+
 		final Map<Tab, Component> tabsToPages = new HashMap<>();
 		tabsToPages.put(this.gridLayoutHdrTab, this.gridLayoutHdr);
 		tabsToPages.put(this.gridLayoutDetailsTab, this.gridLayoutDetail);
-
+		
 		this.tabs.addSelectedChangeListener(event -> {
 			tabsToPages.values().forEach(page -> page.setVisible(false));
 			final Component selectedPage = tabsToPages.get(this.tabs.getSelectedTab());
 			selectedPage.setVisible(true);
 		});
-
-		this.sortList(true);
 		
+		this.sortList(true);
+
 		// set RO Fields
 		this.setROFields();
 		this.setDefaultFilter();
-		
+
 		if(Seicento.hasRole("BillingAdmin"))
 		{
 			this.cmdAdmin.setEnabled(true);
 			this.cmdAdmin.setVisible(true);
 		}
 	}
-	
+
 	private void sortList(final boolean sortAll)
 	{
 		final GridSortOrder<Order> sortCol1 =
@@ -136,35 +136,35 @@ public class OrderTabView extends VerticalLayout
 		final GridSortOrder<Order> sortCol2 =
 			new GridSortOrder<>(this.grid.getColumnByKey("ordOrderDate"), SortDirection.DESCENDING);
 		this.grid.sort(Arrays.asList(sortCol1, sortCol2));
-		
+
 		if(!sortAll)
 		{
 			return;
 		}
-		
+
 		final GridSortOrder<OrderLine> sortCol11 =
 			new GridSortOrder<>(this.grid2.getColumnByKey("odlNumber"), SortDirection.ASCENDING);
 		final GridSortOrder<OrderLine> sortCol21 =
 			new GridSortOrder<>(this.grid2.getColumnByKey("item"), SortDirection.DESCENDING);
 		this.grid2.sort(Arrays.asList(sortCol11, sortCol21));
-		
-	}
 
+	}
+	
 	private void setDefaultFilter()
 	{
 		final Calendar cal = Calendar.getInstance();
 		// final Date today = cal.getTime();
 		cal.add(Calendar.YEAR, -1); // to get previous year add -1
 		final Date prevYear = cal.getTime();
-
+		
 		final Date[] val = new Date[]{prevYear};
-
+		
 		final FilterEntry pe =
 			new FilterEntry("ordBillDate", new FilterOperator.Greater().key(), val);
 		this.containerFilterComponent.setValue(new FilterData("", new FilterEntry[]{pe}));
-
+		
 	}
-
+	
 	/**
 	 * Event handler delegate method for the {@link Grid} {@link #grid}.
 	 *
@@ -179,26 +179,26 @@ public class OrderTabView extends VerticalLayout
 			final Order    orderBean =
 				orderDao.find(this.grid.getSelectionModel().getFirstSelectedItem().get().getOrdId());
 			this.binder.setBean(orderBean);
-
+			
 			this.reloadTableLineList();
-
+			
 			this.prepareCustomerCombo(orderBean.getCustomer());
-
+			
 			this.setROFields();
 		}
 	}
-	
+
 	private void prepareCustomerCombo(final Customer bean)
 	{
 		if(bean != null)
 		{
 			this.binder.setReadOnly(false);
-
+			
 			// this.cmbCustomer.addItem(bean);
 			// this.cmbCustomer.setValue(bean);
 		}
 	}
-
+	
 	private void reloadTableLineList()
 	{
 		if(this.binder.getBean() == null)
@@ -207,13 +207,13 @@ public class OrderTabView extends VerticalLayout
 		}
 		final Order ord = this.binder.getBean();
 		// this.table.select(ord); //select main table
-		
-		this.grid2.setDataProvider(DataProvider.ofCollection(new OrderLineDAO().findByOrder(ord)));
-		
-		this.grid2.getDataProvider().refreshAll();
-		
-	}
 
+		this.grid2.setDataProvider(DataProvider.ofCollection(new OrderLineDAO().findByOrder(ord)));
+
+		this.grid2.getDataProvider().refreshAll();
+
+	}
+	
 	private boolean isNew()
 	{
 		if(this.binder.getBean() == null)
@@ -227,7 +227,7 @@ public class OrderTabView extends VerticalLayout
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdNew}.
 	 *
@@ -240,13 +240,13 @@ public class OrderTabView extends VerticalLayout
 		this.binder.setBean(this.getNewDaoWithDefaults());
 		this.checkOrderNumber(true, false);
 		this.setROFields();
-		
-		this.grid2.setDataProvider(DataProvider.ofCollection(new ArrayList<OrderLine>()));
-		
-		this.unselectOrderTable();
-		
-	}
 
+		this.grid2.setDataProvider(DataProvider.ofCollection(new ArrayList<OrderLine>()));
+
+		this.unselectOrderTable();
+
+	}
+	
 	private Order getNewDaoWithDefaults()
 	{
 		String usr = Seicento.getUserName();
@@ -254,22 +254,22 @@ public class OrderTabView extends VerticalLayout
 		{
 			usr = usr.substring(0, 20);
 		}
-		
+
 		final Order dao = new Order();
-		
+
 		dao.setOrdState(LovState.State.active);
 		dao.setOrdBillDate(new Date());
 		dao.setOrdOrderDate(new Date());
 		dao.setOrdAmountBrut(new Double(0.));
 		dao.setOrdAmountNet(new Double(0.));
-		
+
 		dao.setOrdCreated(new Date());
 		dao.setOrdCreatedBy(usr);
 		dao.setOrdText("");
-		
+
 		return dao;
 	}
-	
+
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdReload}.
 	 *
@@ -282,7 +282,7 @@ public class OrderTabView extends VerticalLayout
 		this.grid.getDataProvider().refreshAll();
 		this.grid.sort(this.grid.getSortOrder());
 	}
-	
+
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdSave}.
 	 *
@@ -295,17 +295,17 @@ public class OrderTabView extends VerticalLayout
 		{
 			return;
 		}
-
-		final boolean isNew = this.isNew(); // assign before save. is always false after save
 		
+		final boolean isNew = this.isNew(); // assign before save. is always false after save
+
 		if(!this.binder.validate().isOk())
 		{
 			return;
 		}
-		
+
 		try
 		{
-			
+
 			this.checkOrderNumber(isNew, false);
 			this.calculateHeader();
 			this.saveHeader(true);
@@ -322,13 +322,13 @@ public class OrderTabView extends VerticalLayout
 			Notification.show(e.getMessage(), 5000, Notification.Position.BOTTOM_END);
 			e.printStackTrace();
 		}
-		
+
 		// postSave
 		this.checkOrderNumber(isNew, true);
 		this.refreshList(isNew);
-		
-	}
 
+	}
+	
 	private void refreshList(final boolean isNew)
 	{
 		if(!isNew)
@@ -337,14 +337,14 @@ public class OrderTabView extends VerticalLayout
 		}
 		this.reloadTableOrderList();
 	}
-
+	
 	private void reloadTableOrderList()
 	{
 		final Order ord = this.binder.getBean();
 		this.cmdReload_onClick(null);
 		this.grid.getDataProvider().refreshAll();
 		this.grid.sort(this.grid.getSortOrder());
-		
+
 		if(ord != null && ord.getOrdId() != null)
 		{
 			this.grid.select(ord);
@@ -354,21 +354,21 @@ public class OrderTabView extends VerticalLayout
 			this.unselectOrderTable();
 		}
 	}
-
+	
 	private void unselectOrderTable()
 	{
 		if(this.grid.getSelectionModel().getFirstSelectedItem().isPresent())
 		{
 			return;
 		}
-		
+
 		final Order bean = this.grid.getSelectionModel().getFirstSelectedItem().get();
 		this.grid.getSelectionModel().deselect(bean);
 	}
-
+	
 	private void saveHeader(final boolean changeCount)
 	{
-		
+
 		if(SeicentoCrud.doSave(this.binder, new OrderDAO()))
 		{
 			try
@@ -387,9 +387,9 @@ public class OrderTabView extends VerticalLayout
 				OrderTabView.LOG.error("could not save ObjRoot", e);
 			}
 		}
-		
-	}
 
+	}
+	
 	private void setROFields()
 	{
 		if(this.isBooked())
@@ -397,34 +397,34 @@ public class OrderTabView extends VerticalLayout
 			this.cmdNewLine.setEnabled(false);
 			this.cmdEditLine.setEnabled(false);
 			this.cmdDeleteLine.setEnabled(false);
-			
+
 			this.cmdSave.setEnabled(false);
 			this.cmdDelete.setEnabled(false);
 			this.binder.setReadOnly(true);
-			
+
 		}
 		else
 		{
 			this.cmdNewLine.setEnabled(true);
 			this.cmdEditLine.setEnabled(true);
 			this.cmdDeleteLine.setEnabled(true);
-			
+
 			this.cmdDelete.setEnabled(true);
 			this.cmdSave.setEnabled(true);
 			this.binder.setReadOnly(false);
 		}
-		
+
 		this.txtOrdAmountBrut.setEnabled(false);
 		this.txtOrdAmountNet.setEnabled(false);
 		this.txtOrdAmountVat.setEnabled(false);
 		this.txtOrdNumber.setEnabled(false);
-		
+
 		this.dateOrdBookedOn.setEnabled(false);
 		this.dateOrdCreated.setEnabled(false);
 		this.dateOrdPayDate.setEnabled(false);
 		this.dateOrdDueDate.setEnabled(false);
 		this.cmbCustomer.setEnabled(false);
-		
+
 		boolean hasData = true;
 		if(this.binder.getBean() == null)
 		{
@@ -432,21 +432,21 @@ public class OrderTabView extends VerticalLayout
 			this.cmdSave.setEnabled(hasData);
 		}
 		this.gridLayoutHdr.setEnabled(hasData);
-		
+
 		if(this.isAdmin)
 		{
 			this.dateOrdBookedOn.setEnabled(true);
 		}
-		
+
 	}
-	
+
 	private void checkOrderNumber(final boolean isNew, final boolean commitNbr)
 	{
 		if(!isNew)
 		{
 			return;
 		}
-
+		
 		Integer nbr = null;
 		try
 		{
@@ -456,7 +456,7 @@ public class OrderTabView extends VerticalLayout
 		{
 			nbr = new Integer(0);
 		}
-
+		
 		if(!commitNbr)
 		{
 			this.txtOrdNumber.setEnabled(true);
@@ -467,21 +467,21 @@ public class OrderTabView extends VerticalLayout
 			this.CALC.getNewOrderNumber(true, nbr);
 		}
 	}
-	
+
 	private void calculateHeader()
 	{
 		if(this.isNew())
 		{
 			return; // Header wurde noch nie gespeichert
 		}
-
+		
 		// this.CALC.commitFields(this.fieldGroup);
 		final Order bean    = this.binder.getBean();
 		final Order newBean = this.CALC.calculateHeader(bean);
-
+		
 		this.binder.setBean(newBean);
 	}
-
+	
 	/**
 	 * Order Header is booked...
 	 *
@@ -493,7 +493,7 @@ public class OrderTabView extends VerticalLayout
 		{
 			return false;
 		}
-
+		
 		final Order bean = this.binder.getBean();
 		if(bean == null)
 		{
@@ -503,15 +503,15 @@ public class OrderTabView extends VerticalLayout
 		{
 			return false;
 		}
-
+		
 		if(bean.getOrdBookedOn() != null)
 		{
 			return true;
 		}
-
+		
 		return false;
 	}
-
+	
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdReset}.
 	 *
@@ -532,30 +532,30 @@ public class OrderTabView extends VerticalLayout
 		}
 		this.setROFields();
 	}
-
+	
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdInfo}.
 	 *
 	 * @see ComponentEventListener#onComponentEvent(ComponentEvent)
 	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
 	 */
-
+	
 	private void cmdInfo_onClick(final ClickEvent<Button> event)
 	{
 		if(!this.grid.getSelectionModel().getFirstSelectedItem().isPresent())
 		{
 			return;
 		}
-		
+
 		final Order  bean = this.grid.getSelectionModel().getFirstSelectedItem().get();
 		final Dialog win  = RowObjectView.getPopupWindow();
-		
+
 		// UI.getCurrent().getSession().setAttribute(String.class,
 		// bean.getClass().getSimpleName());
 		win.add(new RowObjectView(bean.getOrdId(), bean.getClass().getSimpleName()));
 		win.open();
 	}
-
+	
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdDelete}.
 	 *
@@ -570,24 +570,24 @@ public class OrderTabView extends VerticalLayout
 				20, Notification.Position.BOTTOM_START);
 			return;
 		}
-		
+
 		ConfirmDialog.show("Datensatz löschen", "Wirklich löschen?", okEvent -> {
 			try
 			{
-
+				
 				final Order bean = this.grid.getSelectionModel().getFirstSelectedItem().get();
-
+				
 				// Delete Lines
 				this.doDeleteLines(bean);
-				
+
 				// Delete Record
 				final RowObjectManager man = new RowObjectManager();
 				man.deleteObject(bean.getOrdId(), bean.getClass().getSimpleName());
-
+				
 				final OrderDAO dao = new OrderDAO();
 				dao.remove(bean);
 				dao.flush();
-
+				
 				this.binder.removeBean();
 				OrderTabView.this.binder.setBean(new Order());
 				this.grid.setDataProvider(DataProvider.ofCollection(new OrderDAO().findAll()));
@@ -604,7 +604,7 @@ public class OrderTabView extends VerticalLayout
 				Notification.show("Datensatz wurde gelöscht!",
 					20, Notification.Position.BOTTOM_START);
 				this.reloadTableOrderList();
-
+				
 			}
 			catch(final PersistenceException cx)
 			{
@@ -618,12 +618,12 @@ public class OrderTabView extends VerticalLayout
 			}
 		});
 	}
-	
+
 	private void doDeleteLines(final Order bean)
 	{
 		final OrderLineDAO    dao  = new OrderLineDAO();
 		final List<OrderLine> olst = dao.findByOrder(bean);
-		
+
 		final RowObjectManager man  = new RowObjectManager();
 		final OrderLineDAO     daoL = new OrderLineDAO();
 		for(final OrderLine orderLine : olst)
@@ -633,7 +633,7 @@ public class OrderTabView extends VerticalLayout
 			daoL.remove(orderLine);
 		}
 	}
-
+	
 	/**
 	 * Event handler delegate method for the {@link ComboBox} {@link #cmbCustomer}.
 	 *
@@ -652,33 +652,33 @@ public class OrderTabView extends VerticalLayout
 			this.cmbPaymentCondition.setValue(cus.getPaymentCondition());
 		}
 	}
-	
+
 	private void popupCustomerLookup()
 	{
-		
-		final Dialog win = CustomerLookupPopup.getPopupWindow();
 
+		final Dialog win = CustomerLookupPopup.getPopupWindow();
+		
 		win.addDetachListener(new ComponentEventListener<DetachEvent>()
 		{
-
+			
 			@Override
 			public void onComponentEvent(final DetachEvent event)
 			{
 				final Long beanId = (Long)UI.getCurrent().getSession().getAttribute("beanId");
-
+				
 				if(beanId != null && beanId > 0)
 				{
-					
+
 					final Customer bean = new CustomerDAO().find(beanId);
 					OrderTabView.this.cmbCustomer.setValue(bean);
-
+					
 				}
 			}
 		});
 		win.open();
-
+		
 	}
-	
+
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #btnSearch}.
 	 *
@@ -689,7 +689,7 @@ public class OrderTabView extends VerticalLayout
 	{
 		this.popupCustomerLookup();
 	}
-	
+
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdNewLine}.
 	 *
@@ -705,25 +705,25 @@ public class OrderTabView extends VerticalLayout
 			// return;
 			this.cmdSave.click();
 		}
-
+		
 		final Long beanId = null;
 		final Long objId  = this.binder.getBean().getOrdId();
-
+		
 		UI.getCurrent().getSession().setAttribute("beanId", beanId);
 		UI.getCurrent().getSession().setAttribute("objId", objId);
-
+		
 		this.popupOrderLine();
-
+		
 	}
-
+	
 	private void popupOrderLine()
 	{
-		
-		final Dialog win = OrderLinePopup.getPopupWindow();
 
+		final Dialog win = OrderLinePopup.getPopupWindow();
+		
 		win.addDetachListener(new ComponentEventListener<DetachEvent>()
 		{
-
+			
 			@Override
 			public void onComponentEvent(final DetachEvent event)
 			{
@@ -742,7 +742,7 @@ public class OrderTabView extends VerticalLayout
 		});
 		win.open();
 	}
-	
+
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdEditLine}.
 	 *
@@ -755,16 +755,16 @@ public class OrderTabView extends VerticalLayout
 		{
 			return;
 		}
-
+		
 		final Long beanId = this.grid2.getSelectionModel().getFirstSelectedItem().get().getOdlId();
 		final Long objId  = null;
-
+		
 		UI.getCurrent().getSession().setAttribute("beanId", beanId);
 		UI.getCurrent().getSession().setAttribute("objId", objId);
-
+		
 		this.popupOrderLine();
 	}
-
+	
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdInfoLine}.
 	 *
@@ -777,17 +777,17 @@ public class OrderTabView extends VerticalLayout
 		{
 			return;
 		}
-		
+
 		final OrderLine bean = this.grid2.getSelectionModel().getFirstSelectedItem().get();
 		final Dialog    win  = RowObjectView.getPopupWindow();
-		
+
 		// UI.getCurrent().getSession().setAttribute(String.class,
 		// bean.getClass().getSimpleName());
 		win.add(new RowObjectView(bean.getOdlId(), bean.getClass().getSimpleName()));
 		win.open();
-
+		
 	}
-	
+
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdReloadLine}.
 	 *
@@ -798,12 +798,12 @@ public class OrderTabView extends VerticalLayout
 	{
 		final Order ord = this.binder.getBean();
 		// this.table.select(ord); //select main table
-		
+
 		this.grid2.setDataProvider(DataProvider.ofCollection(new OrderLineDAO().findByOrder(ord)));
 		this.grid2.getDataProvider().refreshAll();
 		this.grid2.sort(this.grid2.getSortOrder());
 	}
-
+	
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdDeleteLine}.
 	 *
@@ -818,32 +818,32 @@ public class OrderTabView extends VerticalLayout
 				20, Notification.Position.BOTTOM_START);
 			return;
 		}
-		
+
 		ConfirmDialog.show("Datensatz löschen", "Wirklich löschen?", okEvent -> {
 			try
 			{
-
+				
 				final OrderLine bean = this.grid2.getSelectionModel().getFirstSelectedItem().get();
-
+				
 				// Delete Record
 				final RowObjectManager man = new RowObjectManager();
 				man.deleteObject(bean.getOdlId(), bean.getClass().getSimpleName());
-
+				
 				final OrderLineDAO dao = new OrderLineDAO();
 				dao.remove(bean);
 				dao.flush();
-
+				
 				final Order ord = this.binder.getBean();
 				// this.table.select(ord); //select main table
-				
+
 				this.grid2.setDataProvider(DataProvider.ofCollection(new OrderLineDAO().findByOrder(ord)));
-
+				
 				OrderTabView.this.grid2.getDataProvider().refreshAll();
-
+				
 				Notification.show("Datensatz wurde gelöscht!",
 					20, Notification.Position.BOTTOM_START);
 				this.reloadTableOrderList();
-
+				
 			}
 			catch(final PersistenceException cx)
 			{
@@ -857,7 +857,7 @@ public class OrderTabView extends VerticalLayout
 			}
 		});
 	}
-	
+
 	/**
 	 * Event handler delegate method for the {@link Grid} {@link #grid2}.
 	 *
@@ -866,9 +866,9 @@ public class OrderTabView extends VerticalLayout
 	 */
 	private void grid2_onItemClick(final ItemClickEvent<OrderLine> event)
 	{
-		
-	}
 
+	}
+	
 	/**
 	 * Event handler delegate method for the {@link Grid} {@link #grid2}.
 	 *
@@ -882,18 +882,18 @@ public class OrderTabView extends VerticalLayout
 			// Notification.show("Event Triggered ", Notification.Type.TRAY_NOTIFICATION);
 			final OrderLine obj = event.getItem();
 			this.grid2.select(obj); // reselect after double-click
-
+			
 			final Long beanId = obj.getOdlId(); // this.tableLine.getSelectedItem().getBean().getPrlId();
 			final Long objId  = null;
-
+			
 			UI.getCurrent().getSession().setAttribute("beanId", beanId);
 			UI.getCurrent().getSession().setAttribute("objId", objId);
-
+			
 			this.popupOrderLine();
 		}
-
+		
 	}
-
+	
 	/**
 	 * Event handler delegate method for the {@link ComboBox} {@link #cmbPaymentCondition}.
 	 *
@@ -913,14 +913,14 @@ public class OrderTabView extends VerticalLayout
 			// final PaymentCondition bean = (PaymentCondition)
 			// event.getProperty().getValue();
 			final PaymentCondition bean = event.getValue();
-			
+
 			final LocalDate billDate   = this.dateOrdBillDate.getValue();
 			final LocalDate dateOrdDue = billDate.plusMonths(bean.getPacNbrOfDays());
 			this.dateOrdDueDate.setValue(dateOrdDue);
-			
+
 		}
 	}
-	
+
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdCopy}.
 	 *
@@ -935,24 +935,24 @@ public class OrderTabView extends VerticalLayout
 				Notification.Position.BOTTOM_END);
 			return;
 		}
-
+		
 		ConfirmDialog.show("Rechnung kopieren", "Rechnung wirklich kopieren?", okEvent -> {
-
+			
 			final OrderTabView gui     = OrderTabView.this;
 			final Order        newBean = gui.CALC.copyOrder(gui.grid.getSelectionModel().getFirstSelectedItem().get());
 			gui.binder.setBean(newBean);
-
+			
 			this.reloadTableOrderList();
 			// TODO:gui.grid.sanitizeSelection();
-
+			
 			// this.table.addItem(newBean);
-
+			
 			Notification.show("Neuer Auftrag erstellt: " + newBean.getOrdNumber(), 5000,
 				Notification.Position.BOTTOM_END);
-
+			
 		});
 	}
-
+	
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdReport}.
 	 *
@@ -968,17 +968,17 @@ public class OrderTabView extends VerticalLayout
 			return;
 		}
 		final Order bean = this.grid.getSelectionModel().getFirstSelectedItem().get();
-		
+
 		if(this.isOrderValid(bean))
 		{
 			final JasperManager jsp = new JasperManager();
 			jsp.addParameter("OrderNummer", "" + bean.getOrdNumber());
 			// jsp.addParameter("Param_DateTo", sal.getSlrDate().toString());
-
+			
 			UI.getCurrent().getPage().open(jsp.getUri(JasperManager.BillReport1), "_blank");
 		}
 	}
-
+	
 	private boolean isOrderValid(final Order bean)
 	{
 		if(!this.CALC.isOrderValid(bean))
@@ -997,7 +997,7 @@ public class OrderTabView extends VerticalLayout
 		}
 		return true;
 	}
-
+	
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdPdfReport}.
 	 *
@@ -1013,22 +1013,22 @@ public class OrderTabView extends VerticalLayout
 				Notification.Position.BOTTOM_END);
 			return;
 		}
-
+		
 		final Order bean = this.grid.getSelectionModel().getFirstSelectedItem().get();
 		if(this.isOrderValid(bean))
 		{
 			UI.getCurrent().getSession().setAttribute("orderbean", bean);
-
+			
 			this.popupMailDownload();
 		}
 	}
-
+	
 	private void popupMailDownload()
 	{
 		final Dialog win = MailDownloadPopup.getPopupWindow();
 		win.open();
 	}
-	
+
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdAdmin}.
 	 *
@@ -1039,7 +1039,7 @@ public class OrderTabView extends VerticalLayout
 	{
 		this.isAdmin = !this.isAdmin;
 		this.setROFields();
-
+		
 		if(this.isAdmin)
 		{
 			this.dateOrdPayDate.setEnabled(true);
@@ -1050,7 +1050,7 @@ public class OrderTabView extends VerticalLayout
 			this.cmdAdmin.setIcon(IronIcons.SETTINGS.create());
 		}
 	}
-
+	
 	/* WARNING: Do NOT edit!<br>The content of this method is always regenerated by the UI designer. */
 	// <generated-code name="initUI">
 	private void initUI()
@@ -1134,7 +1134,9 @@ public class OrderTabView extends VerticalLayout
 		this.cmdSave                  = new Button();
 		this.cmdReset                 = new Button();
 		this.binder                   = new BeanValidationBinder<>(Order.class);
-		
+
+		this.setSpacing(false);
+		this.setPadding(false);
 		this.verticalLayout.setSpacing(false);
 		this.verticalLayout.setPadding(false);
 		this.horizontalLayout2.setMinHeight("");
@@ -1284,7 +1286,7 @@ public class OrderTabView extends VerticalLayout
 		this.cmdReset.setText(StringResourceUtils.optLocalizeString("{$cmdReset.caption}", this));
 		this.cmdReset.setIcon(IronIcons.UNDO.create());
 		this.binder.setValidatorsDisabled(true);
-		
+
 		this.binder.forField(this.txtOrdNumber).withNullRepresentation("")
 			.withConverter(
 				ConverterBuilder.StringToInteger().numberFormatBuilder(NumberFormatBuilder.Integer()).build())
@@ -1324,7 +1326,7 @@ public class OrderTabView extends VerticalLayout
 			.withConverter(ConverterBuilder.LocalDateToUtilDate().systemDefaultZoneId().build()).bind("ordDueDate");
 		this.binder.forField(this.dateOrdBookedOn)
 			.withConverter(ConverterBuilder.LocalDateToUtilDate().systemDefaultZoneId().build()).bind("ordBookedOn");
-		
+
 		this.containerFilterComponent.connectWith(this.grid.getDataProvider());
 		this.containerFilterComponent.setFilterSubject(GridFilterSubjectFactory.CreateFilterSubject(this.grid,
 			Arrays.asList("customer.cusCompany", "customer.cusName", "ordCreatedBy", "ordText",
@@ -1332,7 +1334,7 @@ public class OrderTabView extends VerticalLayout
 				"project.proName"),
 			Arrays.asList("customer.cusName", "customer.cusNumber", "ordAmountBrut", "ordAmountNet", "ordBillDate",
 				"ordNumber", "ordOrderDate", "ordPayDate", "ordState", "paymentCondition", "project")));
-		
+
 		this.cmdNew.setSizeUndefined();
 		this.cmdDelete.setSizeUndefined();
 		this.cmdReload.setSizeUndefined();
@@ -1468,9 +1470,9 @@ public class OrderTabView extends VerticalLayout
 		this.add(this.splitLayout);
 		this.setFlexGrow(1.0, this.splitLayout);
 		this.setSizeFull();
-		
+
 		this.tabs.setSelectedIndex(0);
-		
+
 		this.cmdNew.addClickListener(this::cmdNew_onClick);
 		this.cmdDelete.addClickListener(this::cmdDelete_onClick);
 		this.cmdReload.addClickListener(this::cmdReload_onClick);
@@ -1493,7 +1495,7 @@ public class OrderTabView extends VerticalLayout
 		this.cmdSave.addClickListener(this::cmdSave_onClick);
 		this.cmdReset.addClickListener(this::cmdReset_onClick);
 	} // </generated-code>
-
+	
 	// <generated-code name="variables">
 	private Tab                         gridLayoutHdrTab, gridLayoutDetailsTab;
 	private TextArea                    textArea;
@@ -1524,5 +1526,5 @@ public class OrderTabView extends VerticalLayout
 	private TextField                   txtOrdNumber, txtOrdAmountBrut, txtOrdAmountNet, txtOrdAmountVat;
 	private ComboBox<PaymentCondition>  cmbPaymentCondition;
 	// </generated-code>
-	
+
 }

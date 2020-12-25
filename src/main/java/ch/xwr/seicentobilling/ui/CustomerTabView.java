@@ -1494,7 +1494,7 @@ public class CustomerTabView extends VerticalLayout
 		this.cmdReset                       = new Button();
 		this.cmdVcard                       = new Button();
 		this.binder                         = new BeanValidationBinder<>(Customer.class);
-		
+
 		this.setSpacing(false);
 		this.setPadding(false);
 		this.verticalLayout.setSpacing(false);
@@ -1709,7 +1709,7 @@ public class CustomerTabView extends VerticalLayout
 		this.cmdReset.setText(StringResourceUtils.optLocalizeString("{$cmdReset.caption}", this));
 		this.cmdReset.setIcon(IronIcons.UNDO.create());
 		this.cmdVcard.setText("Vcard...");
-		
+
 		this.binder.forField(this.txtCusNumber).asRequired().withNullRepresentation("")
 			.withConverter(
 				ConverterBuilder.StringToInteger().numberFormatBuilder(NumberFormatBuilder.Integer()).build())
@@ -1731,7 +1731,7 @@ public class CustomerTabView extends VerticalLayout
 		this.binder.forField(this.txtExtRef2).withNullRepresentation("").bind("cusExtRef2");
 		this.binder.forField(this.cbxSinglePdf).withNullRepresentation(false).bind("cusSinglepdf");
 		this.binder.forField(this.txtCusName).withNullRepresentation("").bind("cusName");
-		
+
 		this.containerFilterComponent.connectWith(this.table.getDataProvider());
 		this.containerFilterComponent.setFilterSubject(GridFilterSubjectFactory.CreateFilterSubject(this.table,
 			Arrays.asList("city.ctyName", "cusCompany", "cusFirstName", "cusName"),
@@ -1741,7 +1741,7 @@ public class CustomerTabView extends VerticalLayout
 		this.containerFilterComponent2.setFilterSubject(
 			GridFilterSubjectFactory.CreateFilterSubject(this.tableActivity, Arrays.asList("actText"),
 				Arrays.asList()));
-		
+
 		this.cmdNew.setSizeUndefined();
 		this.cmdDelete.setSizeUndefined();
 		this.cmdReload.setSizeUndefined();
@@ -1954,9 +1954,9 @@ public class CustomerTabView extends VerticalLayout
 		this.add(this.splitLayout);
 		this.setFlexGrow(1.0, this.splitLayout);
 		this.setSizeFull();
-		
+
 		this.tabs.setSelectedIndex(0);
-		
+
 		this.cmdNew.addClickListener(this::cmdNew_onClick);
 		this.cmdDelete.addClickListener(this::cmdDelete_onClick);
 		this.cmdReload.addClickListener(this::cmdReload_onClick);
