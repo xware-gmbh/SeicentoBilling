@@ -17,6 +17,8 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.formlayout.FormLayout.FormItem;
 import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
@@ -111,6 +113,9 @@ public class ApplicationSettingsTabView extends VerticalLayout
 		this.tabs              = new Tabs();
 		this.tab2              = new Tab();
 		this.tab               = new Tab();
+		this.horizontalLayout2 = new HorizontalLayout();
+		this.icon              = new Icon(VaadinIcon.DASHBOARD);
+		this.applicationLabel  = new Label();
 		this.gridLayoutApp     = new VerticalLayout();
 		this.horizontalLayout  = new HorizontalLayout();
 		this.versionTitleLabel = new Label();
@@ -145,6 +150,7 @@ public class ApplicationSettingsTabView extends VerticalLayout
 
 		this.tab2.setLabel("User Claims");
 		this.tab.setLabel("Benutzer");
+		this.applicationLabel.setText("SeicentoBilling");
 		this.gridLayoutApp.setSpacing(false);
 		this.gridLayoutApp.setPadding(false);
 		this.versionTitleLabel.setText("Version");
@@ -172,6 +178,8 @@ public class ApplicationSettingsTabView extends VerticalLayout
 		this.LblOs.setText("Windows");
 
 		this.tabs.add(this.tab2, this.tab);
+		this.applicationLabel.setSizeUndefined();
+		this.horizontalLayout2.add(this.icon, this.applicationLabel);
 		this.versionTitleLabel.setSizeUndefined();
 		this.labelVersion.setSizeUndefined();
 		this.labelArtifact.setSizeUndefined();
@@ -218,10 +226,12 @@ public class ApplicationSettingsTabView extends VerticalLayout
 		this.gridLayoutApp.add(this.horizontalLayout, this.formLayout);
 		this.tabs.setWidthFull();
 		this.tabs.setHeight(null);
+		this.horizontalLayout2.setWidthFull();
+		this.horizontalLayout2.setHeight(null);
 		this.gridLayoutApp.setSizeFull();
 		this.gridLayoutUsr.setWidthFull();
 		this.gridLayoutUsr.setHeight("70%");
-		this.add(this.tabs, this.gridLayoutApp, this.gridLayoutUsr);
+		this.add(this.tabs, this.horizontalLayout2, this.gridLayoutApp, this.gridLayoutUsr);
 		this.setSizeFull();
 
 		this.tabs.setSelectedIndex(-1);
@@ -232,14 +242,13 @@ public class ApplicationSettingsTabView extends VerticalLayout
 	// <generated-code name="variables">
 	private FormLayout       formLayout;
 	private Tab              tab2, tab;
-	private HorizontalLayout horizontalLayout;
+	private HorizontalLayout horizontalLayout2, horizontalLayout;
 	private VerticalLayout   gridLayoutApp, gridLayoutUsr;
-	private Label            versionTitleLabel, labelVersion, labelArtifact, label98, labelUsername, label97,
-		labelLanguage,
-		label96, labelCountry, label94, labelTimeZone, label93, lblMemory, label92, lblSession, label91, lblJava,
-		label9,
-		LblOs;
+	private Label            applicationLabel, versionTitleLabel, labelVersion, labelArtifact, label98, labelUsername,
+		label97, labelLanguage, label96, labelCountry, label94, labelTimeZone, label93, lblMemory, label92, lblSession,
+		label91, lblJava, label9, LblOs;
 	private Tabs             tabs;
+	private Icon             icon;
 	private FormItem         formItem3, formItem4, formItem7, formItem8, formItem9, formItem10, formItem11, formItem12;
 	// </generated-code>
 	
