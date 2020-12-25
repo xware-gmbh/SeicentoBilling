@@ -7,7 +7,6 @@
 <?import com.rapidclipse.framework.server.ui.filter.FilterComponent?>
 <?import com.vaadin.flow.component.button.Button?>
 <?import com.vaadin.flow.component.grid.Grid?>
-<?import com.vaadin.flow.component.html.Anchor?>
 <?import com.vaadin.flow.component.html.Label?>
 <?import com.vaadin.flow.component.orderedlayout.HorizontalLayout?>
 <?import com.vaadin.flow.component.orderedlayout.VerticalLayout?>
@@ -120,10 +119,11 @@
                         <x:constraints width="0px" height="0px" flex-grow="0.0" />
                         <x:event>click.onComponentEvent</x:event>
                     </Button>
-                    <Anchor x:name="cmdExport" text="Export">
+                    <Button x:name="cmdExport">
+                        <x:icon src="com.vaadin.flow.component.icon.VaadinIcon#EXTERNAL_LINK" />
                         <x:constraints width="0px" height="0px" flex-grow="0.0" />
-                        <x:event>attach.onComponentEvent</x:event>
-                    </Anchor>
+                        <x:event>click.onComponentEvent</x:event>
+                    </Button>
                     <Button x:name="cmdInfoExpense">
                         <x:icon src="com.vaadin.flow.component.icon.VaadinIcon#INFO_CIRCLE" />
                         <x:constraints width="0px" height="0px" flex-grow="0.0" />
