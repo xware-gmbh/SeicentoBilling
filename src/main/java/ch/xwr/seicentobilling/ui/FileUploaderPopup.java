@@ -4,9 +4,11 @@ package ch.xwr.seicentobilling.ui;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 import javax.servlet.ServletContext;
 
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -220,35 +222,16 @@ public class FileUploaderPopup extends VerticalLayout
 		FileUploaderPopup.LOG.debug("receiveUpload file: " + filename + " typ: " + event.getMIMEType());
 		this.progressBar.setValue(0);
 		
-		FileOutputStream fos = null;
 		try
 		{
 			this.checkFileExtension(filename);
-			
-			// Get path to servlet's temp directory
-			final File directory = (File)VaadinServlet.getCurrent().getServletContext()
-				.getAttribute(ServletContext.TEMPDIR);
-			
-			if(!directory.exists() && directory.canWrite())
-			{
-				directory.createNewFile();
-			}
-			// Concatenate temporaryDirectory with filename and open the file
-			// for writing.
-			this.file = new File(directory, filename);
-			fos       = new FileOutputStream(this.file);
-			
-		}
-		catch(final java.io.FileNotFoundException e)
-		{
-			throw new RuntimeException(e);
+
 		}
 		catch(final IOException io)
 		{
 			throw new RuntimeException(io);
 		}
 		
-		FileUploaderPopup.LOG.debug("upload to: " + this.file.toString());
 		// return fos;
 	}
 	
@@ -283,6 +266,35 @@ public class FileUploaderPopup extends VerticalLayout
 		FileUploaderPopup.LOG.debug("uploadSucceeded");
 		SeicentoNotification.showInfo("Datei erfolgreich hochgeladen");
 		FileUploaderPopup.LOG.info("Datei erfolgreich hochgeladen " + event.getFileName());
+		final InputStream inputStream = this.buffer.getInputStream();
+		
+		FileOutputStream fos = null;
+		try
+		{
+			// Get path to servlet's temp directory
+			final File directory = (File)VaadinServlet.getCurrent().getServletContext()
+				.getAttribute(ServletContext.TEMPDIR);
+			
+			if(!directory.exists() && directory.canWrite())
+			{
+				directory.createNewFile();
+			}
+			// Concatenate temporaryDirectory with filename and open the file
+			// for writing.
+			this.file = new File(directory, this.buffer.getFileName());
+			fos       = new FileOutputStream(this.file);
+			IOUtils.copy(inputStream, fos);
+			FileUploaderPopup.LOG.debug("upload to: " + this.file.toString());
+			
+		}
+		catch(final java.io.FileNotFoundException e)
+		{
+			throw new RuntimeException(e);
+		}
+		catch(final IOException io)
+		{
+			throw new RuntimeException(io);
+		}
 		
 		this.dto.setUpfile(this.getFile());
 		this.dto.setSize(this.contentLength);

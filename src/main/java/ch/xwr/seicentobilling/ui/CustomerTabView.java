@@ -111,6 +111,7 @@ import ch.xwr.seicentobilling.ui.crm.ContactRelationPopup;
 import ch.xwr.seicentobilling.ui.crm.CustomerLinkPopup;
 import ch.xwr.seicentobilling.ui.crm.FunctionAddressHyperlink;
 import ch.xwr.seicentobilling.ui.crm.FunctionLinkHyperlink;
+import ch.xwr.seicentobilling.ui.crm.ImportContactsPopup;
 import ch.xwr.seicentobilling.ui.crm.VcardPopup;
 
 
@@ -119,10 +120,10 @@ public class CustomerTabView extends VerticalLayout
 {
 	/** Logger initialized */
 	private static final org.apache.log4j.Logger LOG = LogManager.getLogger(CustomerTabView.class);
-	
+
 	Map<Long, LabelDefinition> ldMap;
 	List<LabelDefinition>      labelList;
-	
+
 	/**
 	 *
 	 */
@@ -130,14 +131,14 @@ public class CustomerTabView extends VerticalLayout
 	{
 		super();
 		this.initUI();
-		
+
 		// Type
 		this.cbxState.setItems(LovState.State.values());
 		this.cbxAccountType.setItems(LovState.AccountType.values());
 		this.cbxAccountSalutation.setItems(LovCrm.Salutation.values());
 		this.cbxAccountBillingReports.setItems(LovCrm.BillReport.values());
 		this.cbxAccountBillingType.setItems(LovCrm.BillTarget.values());
-
+		
 		this.gridLayoutAddressSplitLayout.setVisible(false);
 		this.gridLayoutFlags.setVisible(false);
 		this.gridLayoutListActivityVertical.setVisible(false);
@@ -149,15 +150,15 @@ public class CustomerTabView extends VerticalLayout
 			.withRightColumnCaption("aktiv").withoutRemoveAllButton().withoutAddAllButton().withSizeFull()
 			.selectRowOnClick();
 		this.twinColSelect.setItems(new HashSet<>(this.labelList));
-		
+
 		this.ldMap = this.labelList.stream().collect(
 			Collectors.toMap(LabelDefinition::getCldId, x -> x));
-		
-		this.binder.bind(this.twinColSelect, Customer::getLabelDefinitions, Customer::setLabelDefinitions);
 
+		this.binder.bind(this.twinColSelect, Customer::getLabelDefinitions, Customer::setLabelDefinitions);
+		
 		// this.verticalSplitPanelAddress.setVisible(false);
 		// this.gridLayoutDesc.setVisible(false);
-
+		
 		final Map<Tab, Component> tabsToPages = new HashMap<>();
 		tabsToPages.put(this.gridLayoutContactTab, this.gridLayoutContact);
 		tabsToPages.put(this.gridLayoutFlagsTab, this.gridLayoutFlags);
@@ -165,25 +166,25 @@ public class CustomerTabView extends VerticalLayout
 		tabsToPages.put(this.gridLayoutListActivityTab, this.gridLayoutListActivityVertical);
 		tabsToPages.put(this.gridLayoutRelationTab, this.gridLayoutRelationVertical);
 		tabsToPages.put(this.gridLayoutListRefTab, this.gridLayoutListRef);
-
+		
 		this.tabs.addSelectedChangeListener(event -> {
 			tabsToPages.values().forEach(page -> page.setVisible(false));
 			final Component selectedPage = tabsToPages.get(this.tabs.getSelectedTab());
 			selectedPage.setVisible(true);
 		});
-
+		
 		this.setROFields();
-
+		
 		this.setDefaultFilter();
 		if(Seicento.hasRole("BillingAdmin"))
 		{
 			this.cmdImport.setEnabled(true);
 			this.cmdImport.setVisible(true);
-			
+
 			this.txtExtRef1.setEnabled(true);
 			this.txtExtRef2.setEnabled(true);
 		}
-		
+
 		// final Anchor anchorNew =
 		// new Anchor("");
 		// anchorNew.setTitle("Link to Google Maps");
@@ -194,7 +195,7 @@ public class CustomerTabView extends VerticalLayout
 		// this.replace(this.linkMaps, anchorNew);
 		// this.linkMaps = anchorNew;
 	}
-
+	
 	private void setROFields()
 	{
 		this.txtCusNumber.setEnabled(false);
@@ -203,13 +204,13 @@ public class CustomerTabView extends VerticalLayout
 		{
 			hasData = false;
 		}
-		
+
 		this.setROComponents(hasData);
-		
+
 		// this.dateProLastBill.setEnabled(false);
 		// this.txtProHoursEffective.setEnabled(false);
 	}
-	
+
 	private void setROComponents(final boolean state)
 	{
 		this.cmdSave.setEnabled(state);
@@ -217,7 +218,7 @@ public class CustomerTabView extends VerticalLayout
 		// this.cmdVcard.setEnabled(state);
 		this.tabs.setEnabled(state);
 		this.gridLayoutContact.setEnabled(state);
-
+		
 		if(Seicento.hasRole("BillingAdmin") && state)
 		{
 			this.txtExtRef1.setEnabled(true);
@@ -228,9 +229,9 @@ public class CustomerTabView extends VerticalLayout
 			this.txtExtRef1.setEnabled(false);
 			this.txtExtRef2.setEnabled(false);
 		}
-
+		
 	}
-	
+
 	private boolean isNew()
 	{
 		if(this.binder.getBean() == null)
@@ -244,24 +245,24 @@ public class CustomerTabView extends VerticalLayout
 		}
 		return false;
 	}
-	
+
 	private void setDefaultFilter()
 	{
-		
+
 		final FilterEntry cs =
 			new FilterEntry("cusState", new FilterOperator.Is().key(), new LovState.State[]{LovState.State.active});
-
+		
 		this.containerFilterComponent.setValue(new FilterData("", new FilterEntry[]{cs}));
-
+		
 	}
-	
+
 	private void checkCustomerNumber(final boolean isNew, final boolean commitNbr)
 	{
 		if(!isNew)
 		{
 			return;
 		}
-
+		
 		Integer nbr = null;
 		try
 		{
@@ -271,7 +272,7 @@ public class CustomerTabView extends VerticalLayout
 		{
 			nbr = new Integer(0);
 		}
-
+		
 		final NumberRangeHandler handler = new NumberRangeHandler();
 		if(!commitNbr)
 		{
@@ -286,17 +287,17 @@ public class CustomerTabView extends VerticalLayout
 			handler.getNewCustomerNumber(true, nbr);
 		}
 	}
-
+	
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdInfo}.
 	 *
 	 * @see ComponentEventListener#onComponentEvent(ComponentEvent)
 	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
 	 */
-	
+
 	private void cmdInfo_onClick(final ClickEvent<Button> event)
 	{
-		
+
 		if(this.table.getSelectedItems() != null)
 		{
 			final Customer bean = this.table.getSelectionModel().getFirstSelectedItem().get();
@@ -305,9 +306,9 @@ public class CustomerTabView extends VerticalLayout
 			win.add(new RowObjectView(bean.getCusId(), bean.getClass().getSimpleName()));
 			win.open();
 		}
-		
-	}
 
+	}
+	
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdReload}.
 	 *
@@ -318,9 +319,9 @@ public class CustomerTabView extends VerticalLayout
 	{
 		final FilterData fd = this.containerFilterComponent.getValue();
 		this.containerFilterComponent.setValue(null);
-		
-		this.table.setDataProvider(DataProvider.ofCollection(new CustomerDAO().findAllByNumberDesc()));
 
+		this.table.setDataProvider(DataProvider.ofCollection(new CustomerDAO().findAllByNumberDesc()));
+		
 		this.containerFilterComponent.setValue(fd);
 		final Customer bean = this.binder.getBean();
 		if(bean != null)
@@ -328,7 +329,7 @@ public class CustomerTabView extends VerticalLayout
 			this.table.getSelectionModel().select(bean);
 		}
 	}
-
+	
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdNew}.
 	 *
@@ -338,7 +339,7 @@ public class CustomerTabView extends VerticalLayout
 	private void cmdNew_onClick(final ClickEvent<Button> event)
 	{
 		this.table.select(null);
-
+		
 		final PaymentConditionDAO dao  = new PaymentConditionDAO();
 		final Customer            bean = new Customer();
 		bean.setCusState(LovState.State.active);
@@ -346,16 +347,16 @@ public class CustomerTabView extends VerticalLayout
 		bean.setCusBillingTarget(LovCrm.BillTarget.pdf);
 		bean.setCusBillingReport(LovCrm.BillReport.working);
 		bean.setCusAccountType(AccountType.juristisch);
-		
+
 		this.binder.setBean(bean);
 		this.checkCustomerNumber(true, false);
 		this.setROFields();
-
+		
 		this.txtZip.setValue("");
-
+		
 		// this.fieldGroup.setItemDataSource(bean);
 	}
-
+	
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdDelete}.
 	 *
@@ -370,30 +371,30 @@ public class CustomerTabView extends VerticalLayout
 				20, Notification.Position.BOTTOM_START);
 			return;
 		}
-
+		
 		ConfirmDialog.show("Datensatz löschen", "Wirklich löschen?", okEvent -> {
 			try
 			{
 				final Customer bean = this.table.getSelectionModel().getFirstSelectedItem().get();
-
+				
 				// Delete Record
 				final RowObjectManager man = new RowObjectManager();
 				man.deleteObject(bean.getCusId(), bean.getClass().getSimpleName());
-
+				
 				final CustomerDAO dao = new CustomerDAO();
 				dao.remove(bean);
 				dao.flush();
-
+				
 				this.binder.removeBean();
 				CustomerTabView.this.binder.setBean(new Customer());
 				this.table.setDataProvider(DataProvider.ofCollection(new CustomerDAO().findAllByNumberDesc()));
 				CustomerTabView.this.table.getDataProvider().refreshAll();
-				
-				this.setROComponents(false);
 
+				this.setROComponents(false);
+				
 				Notification.show("Datensatz wurde gelöscht!",
 					20, Notification.Position.BOTTOM_START);
-
+				
 			}
 			catch(final PersistenceException cx)
 			{
@@ -407,7 +408,7 @@ public class CustomerTabView extends VerticalLayout
 			}
 		});
 	}
-
+	
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdReport}.
 	 *
@@ -422,15 +423,15 @@ public class CustomerTabView extends VerticalLayout
 				Notification.Position.BOTTOM_END);
 			return;
 		}
-
+		
 		final Customer bean = this.table.getSelectionModel().getFirstSelectedItem().get();
-
+		
 		final JasperManager jsp = new JasperManager();
 		jsp.addParameter("CustomerId", "" + bean.getCusId());
-
+		
 		UI.getCurrent().getPage().open(jsp.getUri(JasperManager.ContactDetails1), "_blank");
 	}
-
+	
 	/**
 	 * Event handler delegate method for the {@link Grid} {@link #table}.
 	 *
@@ -440,15 +441,15 @@ public class CustomerTabView extends VerticalLayout
 	private void table_onItemClick(final ItemClickEvent<Customer> event)
 	{
 		if(this.table.getSelectedItems() != null)
-		
+
 		{
-			
+
 			final CustomerDAO CustomertDao = new CustomerDAO();
-
+			
 			final List<LabelDefinition> list = new ArrayList<>(this.labelList);
-
+			
 			final Customer bean =
-				
+
 				CustomertDao.find(this.table.getSelectionModel().getFirstSelectedItem().get().getCusId());
 			for(final LabelDefinition ld : bean.getLabelDefinitions())
 			{
@@ -456,45 +457,45 @@ public class CustomerTabView extends VerticalLayout
 			}
 			this.twinColSelect.setItems(list);
 			this.binder.setBean(bean);
-			
+
 			// this.twinColSelect.setValue(bean.getLabelDefinitions());
-			
+
 			this.displayChildTables();
-			
+
 			this.setGoogleLink(bean);
-
-			this.setROFields();
 			
+			this.setROFields();
+
 		}
-
-	}
-
-	private void displayChildTables()
-	{
-		final Customer bean = this.binder.getBean();
-
-		// Rechnungen
-		
-		this.tableOrder.setItems(new OrderDAO().findByCustomer(bean));
-		
-		// Projekte
-		this.tableProject.setItems(bean.getProjects());
-		
-		// Aktivitäten
-		this.tableActivity.setItems(new ActivityDAO().findByCustomer(bean));
-		this.containerFilterComponent2.connectWith(this.tableActivity.getDataProvider());
-		
-		// Adresen
-		this.tableAddress.setItems(bean.getAddresses());
-		
-		// CustomerLinks (Email + Phone)
-		this.tableLink.setItems(bean.getCustomerLinks());
-		
-		// Relations
-		this.reloadRelationList();
 		
 	}
 	
+	private void displayChildTables()
+	{
+		final Customer bean = this.binder.getBean();
+		
+		// Rechnungen
+
+		this.tableOrder.setItems(new OrderDAO().findByCustomer(bean));
+
+		// Projekte
+		this.tableProject.setItems(bean.getProjects());
+
+		// Aktivitäten
+		this.tableActivity.setItems(new ActivityDAO().findByCustomer(bean));
+		this.containerFilterComponent2.connectWith(this.tableActivity.getDataProvider());
+
+		// Adresen
+		this.tableAddress.setItems(bean.getAddresses());
+
+		// CustomerLinks (Email + Phone)
+		this.tableLink.setItems(bean.getCustomerLinks());
+
+		// Relations
+		this.reloadRelationList();
+
+	}
+
 	private void setGoogleLink(final Customer bean)
 	{
 		final String uripre = "https://www.google.com/maps/search/?api=1&query=";
@@ -507,7 +508,7 @@ public class CustomerTabView extends VerticalLayout
 		{
 			q = q + ", " + bean.getCusCompany().trim();
 		}
-		
+
 		try
 		{
 			q = URLEncoder.encode(q, "UTF-8");
@@ -519,7 +520,7 @@ public class CustomerTabView extends VerticalLayout
 			Log.error(e);
 		}
 	}
-
+	
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdSave}.
 	 *
@@ -548,11 +549,11 @@ public class CustomerTabView extends VerticalLayout
 				CustomerTabView.LOG.error("could not save ObjRoot", e);
 			}
 		}
-
+		
 		this.cmdReload_onClick(event);
-
+		
 	}
-	
+
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdReset}.
 	 *
@@ -574,7 +575,7 @@ public class CustomerTabView extends VerticalLayout
 		}
 		this.setROFields();
 	}
-	
+
 	/**
 	 * Event handler delegate method for the {@link XdevButton}
 	 * {@link #cmdNewActivity}.
@@ -590,32 +591,32 @@ public class CustomerTabView extends VerticalLayout
 		{
 			return;
 		}
-
+		
 		UI.getCurrent().getSession().setAttribute("beanId", beanId);
 		UI.getCurrent().getSession().setAttribute("objId", objId);
-
+		
 		this.popupActivity();
 	}
-
+	
 	private void popupActivity()
 	{
-		
+
 		final Dialog win = ActivityPopup.getPopupWindow();
-		
+
 		win.addDetachListener(new ComponentEventListener<DetachEvent>()
 		{
-			
+
 			@Override
 			public void onComponentEvent(final DetachEvent event)
 			{
 				CustomerTabView.this.reloadActivityList();
-				
+
 			}
 		});
 		win.open();
-		
-	}
 
+	}
+	
 	private void reloadActivityList()
 	{
 		Customer bean = null;
@@ -623,14 +624,14 @@ public class CustomerTabView extends VerticalLayout
 		{
 			bean = this.table.getSelectionModel().getFirstSelectedItem().get();
 		}
-		
+
 		if(bean != null)
 		{
 			this.tableActivity.setDataProvider(DataProvider.ofCollection(new ActivityDAO().findByCustomer(bean)));
 		}
-		
+
 	}
-	
+
 	private boolean AreFieldsValid()
 	{
 		if(this.binder.isValid())
@@ -638,10 +639,10 @@ public class CustomerTabView extends VerticalLayout
 			return true;
 		}
 		this.binder.validate();
-		
+
 		return false;
 	}
-
+	
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdEditActivity}.
 	 *
@@ -654,16 +655,16 @@ public class CustomerTabView extends VerticalLayout
 		{
 			return;
 		}
-
+		
 		final Long beanId = this.tableActivity.getSelectionModel().getFirstSelectedItem().get().getactId();
 		final Long objId  = null;
-
+		
 		UI.getCurrent().getSession().setAttribute("beanId", beanId);
 		UI.getCurrent().getSession().setAttribute("objId", objId);
-
+		
 		this.popupActivity();
 	}
-	
+
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdDeleteActivity}.
 	 *
@@ -678,25 +679,25 @@ public class CustomerTabView extends VerticalLayout
 				20, Notification.Position.BOTTOM_START);
 			return;
 		}
-
+		
 		ConfirmDialog.show("Datensatz löschen", "Wirklich löschen?", okEvent -> {
 			try
 			{
 				final Activity bean = this.tableActivity.getSelectionModel().getFirstSelectedItem().get();
-
+				
 				// Delete Record
 				final RowObjectManager man = new RowObjectManager();
 				man.deleteObject(bean.getactId(), bean.getClass().getSimpleName());
-
+				
 				final ActivityDAO dao = new ActivityDAO();
 				dao.remove(bean);
 				dao.flush();
-				
-				this.reloadActivityList();
 
+				this.reloadActivityList();
+				
 				Notification.show("Datensatz wurde gelöscht!",
 					20, Notification.Position.BOTTOM_START);
-
+				
 			}
 			catch(final PersistenceException cx)
 			{
@@ -710,7 +711,7 @@ public class CustomerTabView extends VerticalLayout
 			}
 		});
 	}
-	
+
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdReloadActivity}.
 	 *
@@ -721,7 +722,7 @@ public class CustomerTabView extends VerticalLayout
 	{
 		this.reloadActivityList();
 	}
-	
+
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdInfoActivity}.
 	 *
@@ -739,26 +740,26 @@ public class CustomerTabView extends VerticalLayout
 			win.open();
 		}
 	}
-	
+
 	private void popupAddress()
 	{
-
-		final Dialog win = AddressPopup.getPopupWindow();
 		
+		final Dialog win = AddressPopup.getPopupWindow();
+
 		win.addDetachListener(new ComponentEventListener<DetachEvent>()
 		{
-			
+
 			@Override
 			public void onComponentEvent(final DetachEvent event)
 			{
 				CustomerTabView.this.reloadAddressList();
-				
+
 			}
 		});
 		win.open();
-		
-	}
 
+	}
+	
 	private void reloadAddressList()
 	{
 		Customer bean = null;
@@ -766,34 +767,34 @@ public class CustomerTabView extends VerticalLayout
 		{
 			bean = this.table.getSelectionModel().getFirstSelectedItem().get();
 		}
-		
+
 		if(bean != null)
 		{
-			
+
 			this.tableAddress.setDataProvider(DataProvider.ofCollection(new AddressDAO().findByCustomer(bean)));
 		}
-		
-	}
 
+	}
+	
 	private void popupCustomerLink()
 	{
-
-		final Dialog win = CustomerLinkPopup.getPopupWindow();
 		
+		final Dialog win = CustomerLinkPopup.getPopupWindow();
+
 		win.addDetachListener(new ComponentEventListener<DetachEvent>()
 		{
-			
+
 			@Override
 			public void onComponentEvent(final DetachEvent event)
 			{
 				CustomerTabView.this.reloadCustomerLinkList();
-				
+
 			}
 		});
 		win.open();
-
+		
 	}
-
+	
 	private void reloadCustomerLinkList()
 	{
 		Customer bean = null;
@@ -801,33 +802,33 @@ public class CustomerTabView extends VerticalLayout
 		{
 			bean = this.table.getSelectionModel().getFirstSelectedItem().get();
 		}
-
+		
 		if(bean != null)
-
+		
 		{
 			this.tableLink.setDataProvider(DataProvider.ofCollection(new CustomerLinkDAO().findByCustomer(bean)));
 		}
-
+		
 	}
-	
+
 	private void reloadRelationList()
 	{
-		
+
 		Customer bean = null;
 		if(this.table.getSelectionModel().getFirstSelectedItem().isPresent())
 		{
 			bean = this.table.getSelectionModel().getFirstSelectedItem().get();
 		}
-
+		
 		if(bean != null)
-
+		
 		{
 			this.tableRelation
 				.setDataProvider(DataProvider.ofCollection(new ContactRelationDAO().findByCustomer(bean)));
 		}
-
+		
 	}
-	
+
 	/**
 	 * Event handler delegate method for the {@link Grid} {@link #tableActivity}.
 	 *
@@ -840,16 +841,16 @@ public class CustomerTabView extends VerticalLayout
 		// Notification.Type.TRAY_NOTIFICATION);
 		final Activity obj = event.getItem();
 		this.tableActivity.select(obj); // reselect after double-click
-		
+
 		final Long beanId = obj.getactId();
 		final Long objId  = null;
-		
+
 		UI.getCurrent().getSession().setAttribute("beanId", beanId);
 		UI.getCurrent().getSession().setAttribute("objId", objId);
-		
+
 		this.popupActivity();
 	}
-	
+
 	/**
 	 * Event handler delegate method for the {@link XdevButton}
 	 * {@link #cmdNewAddress}.
@@ -865,13 +866,13 @@ public class CustomerTabView extends VerticalLayout
 		{
 			return;
 		}
-		
+
 		UI.getCurrent().getSession().setAttribute("beanId", beanId);
 		UI.getCurrent().getSession().setAttribute("objId", objId);
-		
+
 		this.popupAddress();
 	}
-	
+
 	/**
 	 * Event handler delegate method for the {@link XdevButton}
 	 * {@link #cmdNewCustomerLink}.
@@ -887,13 +888,13 @@ public class CustomerTabView extends VerticalLayout
 		{
 			return;
 		}
-		
+
 		UI.getCurrent().getSession().setAttribute("beanId", beanId);
 		UI.getCurrent().getSession().setAttribute("objId", objId);
-		
+
 		this.popupCustomerLink();
 	}
-	
+
 	private Long getCurrentRecord()
 	{
 		if(this.binder.getBean() != null)
@@ -902,7 +903,7 @@ public class CustomerTabView extends VerticalLayout
 		}
 		return new Long(-1);
 	}
-
+	
 	/**
 	 * Event handler delegate method for the {@link XdevButton}
 	 * {@link #cmdDeleteAddress}.
@@ -912,32 +913,32 @@ public class CustomerTabView extends VerticalLayout
 	 */
 	private void cmdDeleteAddress_onClick(final ClickEvent<Button> event)
 	{
-
+		
 		if(this.tableAddress.getSelectedItems() == null)
 		{
 			com.vaadin.flow.component.notification.Notification.show("Es wurde keine Zeile selektiert in der Tabelle",
 				20, Notification.Position.BOTTOM_START);
 			return;
 		}
-
+		
 		ConfirmDialog.show("Datensatz löschen", "Wirklich löschen?", okEvent -> {
 			try
 			{
 				final Address bean = this.tableAddress.getSelectionModel().getFirstSelectedItem().get();
-
+				
 				// Delete Record
 				final RowObjectManager man = new RowObjectManager();
 				man.deleteObject(bean.getAdrId(), bean.getClass().getSimpleName());
-
+				
 				final AddressDAO dao = new AddressDAO();
 				dao.remove(bean);
 				dao.flush();
-
+				
 				this.reloadAddressList();
-
+				
 				Notification.show("Datensatz wurde gelöscht!",
 					20, Notification.Position.BOTTOM_START);
-
+				
 			}
 			catch(final PersistenceException cx)
 			{
@@ -950,9 +951,9 @@ public class CustomerTabView extends VerticalLayout
 				CustomerTabView.LOG.error("Error on delete", e);
 			}
 		});
-
+		
 	}
-
+	
 	/**
 	 * Event handler delegate method for the {@link XdevButton}
 	 * {@link #cmdDeleteCustomerLink}.
@@ -962,32 +963,32 @@ public class CustomerTabView extends VerticalLayout
 	 */
 	private void cmdDeleteCustomerLink_onClick(final ClickEvent<Button> event)
 	{
-
+		
 		if(this.tableLink.getSelectedItems() == null)
 		{
 			com.vaadin.flow.component.notification.Notification.show("Es wurde keine Zeile selektiert in der Tabelle",
 				20, Notification.Position.BOTTOM_START);
 			return;
 		}
-
+		
 		ConfirmDialog.show("Datensatz löschen", "Wirklich löschen?", okEvent -> {
 			try
 			{
 				final CustomerLink bean = this.tableLink.getSelectionModel().getFirstSelectedItem().get();
-
+				
 				// Delete Record
 				final RowObjectManager man = new RowObjectManager();
 				man.deleteObject(bean.getCnkId(), bean.getClass().getSimpleName());
-
+				
 				final CustomerLinkDAO dao = new CustomerLinkDAO();
 				dao.remove(bean);
 				dao.flush();
-
+				
 				this.reloadCustomerLinkList();
-
+				
 				Notification.show("Datensatz wurde gelöscht!",
 					20, Notification.Position.BOTTOM_START);
-
+				
 			}
 			catch(final PersistenceException cx)
 			{
@@ -1000,9 +1001,9 @@ public class CustomerTabView extends VerticalLayout
 				CustomerTabView.LOG.error("Error on delete", e);
 			}
 		});
-
+		
 	}
-
+	
 	/**
 	 * Event handler delegate method for the {@link XdevButton}
 	 * {@link #cmdEditAddress}.
@@ -1016,17 +1017,17 @@ public class CustomerTabView extends VerticalLayout
 		{
 			return;
 		}
-		
+
 		final Long beanId = this.tableAddress.getSelectionModel().getFirstSelectedItem().get().getAdrId();
 		final Long objId  = null;
-		
+
 		UI.getCurrent().getSession().setAttribute("beanId", beanId);
 		UI.getCurrent().getSession().setAttribute("objId", objId);
-		
+
 		this.popupAddress();
-		
+
 	}
-	
+
 	/**
 	 * Event handler delegate method for the {@link XdevButton}
 	 * {@link #cmdEditCustomerLink}.
@@ -1040,17 +1041,17 @@ public class CustomerTabView extends VerticalLayout
 		{
 			return;
 		}
-		
+
 		final Long beanId = this.tableLink.getSelectionModel().getFirstSelectedItem().get().getCnkId();
 		final Long objId  = null;
-		
+
 		UI.getCurrent().getSession().setAttribute("beanId", beanId);
 		UI.getCurrent().getSession().setAttribute("objId", objId);
-		
+
 		this.popupCustomerLink();
-
+		
 	}
-
+	
 	/**
 	 * Event handler delegate method for the {@link XdevButton}
 	 * {@link #cmdReloadAddress}.
@@ -1061,9 +1062,9 @@ public class CustomerTabView extends VerticalLayout
 	private void cmdReloadAddress_onClick(final ClickEvent<Button> event)
 	{
 		this.reloadAddressList();
-		
+
 	}
-	
+
 	/**
 	 * Event handler delegate method for the {@link XdevButton}
 	 * {@link #cmdReloadCustomerLink}.
@@ -1074,9 +1075,9 @@ public class CustomerTabView extends VerticalLayout
 	private void cmdReloadCustomerLink_onClick(final ClickEvent<Button> event)
 	{
 		this.reloadCustomerLinkList();
-
+		
 	}
-
+	
 	/**
 	 * Event handler delegate method for the {@link XdevButton}
 	 * {@link #cmdInfoCustomerLink}.
@@ -1086,7 +1087,7 @@ public class CustomerTabView extends VerticalLayout
 	 */
 	private void cmdInfoCustomerLink_onClick(final ClickEvent<Button> event)
 	{
-		
+
 		if(this.tableLink.getSelectedItems() != null)
 		{
 			final CustomerLink bean = this.tableLink.getSelectionModel().getFirstSelectedItem().get();
@@ -1095,9 +1096,9 @@ public class CustomerTabView extends VerticalLayout
 			win.add(new RowObjectView(bean.getCnkId(), bean.getClass().getSimpleName()));
 			win.open();
 		}
-		
+
 	}
-	
+
 	/**
 	 * Event handler delegate method for the {@link XdevButton}
 	 * {@link #cmdInfoAddress}.
@@ -1115,9 +1116,9 @@ public class CustomerTabView extends VerticalLayout
 			win.add(new RowObjectView(bean.getAdrId(), bean.getClass().getSimpleName()));
 			win.open();
 		}
-
+		
 	}
-	
+
 	/**
 	 * Event handler delegate method for the {@link Grid} {@link #tableAddress}.
 	 *
@@ -1130,16 +1131,16 @@ public class CustomerTabView extends VerticalLayout
 		// Notification.Type.TRAY_NOTIFICATION);
 		final Address obj = event.getItem();
 		this.tableAddress.select(obj); // reselect after double-click
-		
+
 		final Long beanId = obj.getAdrId();
 		final Long objId  = null;
-		
+
 		UI.getCurrent().getSession().setAttribute("beanId", beanId);
 		UI.getCurrent().getSession().setAttribute("objId", objId);
-		
+
 		this.popupAddress();
 	}
-
+	
 	/**
 	 * Event handler delegate method for the {@link XdevTable} {@link #tableLink}.
 	 *
@@ -1148,20 +1149,20 @@ public class CustomerTabView extends VerticalLayout
 	 */
 	private void tableLink_onItemDoubleClick(final ItemDoubleClickEvent<CustomerLink> event)
 	{
-
+		
 		final CustomerLink obj = event.getItem();
 		this.tableLink.select(obj); // reselect after double-click
-		
+
 		final Long beanId = obj.getCnkId();
 		final Long objId  = null;
-		
+
 		UI.getCurrent().getSession().setAttribute("beanId", beanId);
 		UI.getCurrent().getSession().setAttribute("objId", objId);
-		
+
 		this.popupCustomerLink();
-		
+
 	}
-	
+
 	/**
 	 * Event handler delegate method for the {@link XdevButton}
 	 * {@link #cmdDeleteRelation}.
@@ -1171,32 +1172,32 @@ public class CustomerTabView extends VerticalLayout
 	 */
 	private void cmdDeleteRelation_onClick(final ClickEvent<Button> event)
 	{
-
+		
 		if(this.tableRelation.getSelectedItems() == null)
 		{
 			com.vaadin.flow.component.notification.Notification.show("Es wurde keine Zeile selektiert in der Tabelle",
 				20, Notification.Position.BOTTOM_START);
 			return;
 		}
-
+		
 		ConfirmDialog.show("Datensatz löschen", "Wirklich löschen?", okEvent -> {
 			try
 			{
 				final ContactRelation bean = this.tableRelation.getSelectionModel().getFirstSelectedItem().get();
-
+				
 				// Delete Record
 				final RowObjectManager man = new RowObjectManager();
 				man.deleteObject(bean.getCorId(), bean.getClass().getSimpleName());
-
+				
 				final ContactRelationDAO dao = new ContactRelationDAO();
 				dao.remove(bean);
 				dao.flush();
-				
-				this.reloadRelationList();
 
+				this.reloadRelationList();
+				
 				Notification.show("Datensatz wurde gelöscht!",
 					20, Notification.Position.BOTTOM_START);
-
+				
 			}
 			catch(final PersistenceException cx)
 			{
@@ -1209,9 +1210,9 @@ public class CustomerTabView extends VerticalLayout
 				CustomerTabView.LOG.error("Error on delete", e);
 			}
 		});
-
+		
 	}
-	
+
 	/**
 	 * Event handler delegate method for the {@link XdevButton}
 	 * {@link #cmdNewRelation}.
@@ -1227,33 +1228,33 @@ public class CustomerTabView extends VerticalLayout
 		{
 			return;
 		}
-
+		
 		UI.getCurrent().getSession().setAttribute("beanId", beanId);
 		UI.getCurrent().getSession().setAttribute("objId", objId);
-
+		
 		this.popupContactRelation();
-
+		
 	}
-	
+
 	private void popupContactRelation()
 	{
-
-		final Dialog win = ContactRelationPopup.getPopupWindow();
 		
+		final Dialog win = ContactRelationPopup.getPopupWindow();
+
 		win.addDetachListener(new ComponentEventListener<DetachEvent>()
 		{
-			
+
 			@Override
 			public void onComponentEvent(final DetachEvent event)
 			{
 				CustomerTabView.this.reloadRelationList();
-				
+
 			}
 		});
 		win.open();
-		
+
 	}
-	
+
 	/**
 	 * Event handler delegate method for the {@link XdevButton} {@link #cmdImport}.
 	 *
@@ -1262,22 +1263,22 @@ public class CustomerTabView extends VerticalLayout
 	 */
 	private void cmdImport_onClick(final ClickEvent<Button> event)
 	{
-		// final Dialog win = ImportContactsPopup.getPopupWindow();
-		//
-		// win.addDetachListener(new ComponentEventListener<DetachEvent>()
-		// {
-		//
-		// @Override
-		// public void onComponentEvent(final DetachEvent event)
-		// {
-		// CustomerTabView.this.reloadCustomerLinkList();
-		//
-		// }
-		// });
-		// win.open();
-
+		final Dialog win = ImportContactsPopup.getPopupWindow();
+		
+		win.addDetachListener(new ComponentEventListener<DetachEvent>()
+		{
+			
+			@Override
+			public void onComponentEvent(final DetachEvent event)
+			{
+				CustomerTabView.this.reloadCustomerLinkList();
+				
+			}
+		});
+		win.open();
+		
 	}
-	
+
 	/**
 	 * Event handler delegate method for the {@link TextField} {@link #txtZip}.
 	 *
@@ -1303,10 +1304,10 @@ public class CustomerTabView extends VerticalLayout
 				if(ls != null && ls.size() > 0)
 				{
 					final City b2 = ls.get(0);
-
+					
 					final ListDataProvider<City> dataProvider = (ListDataProvider<City>)this.cmbCity.getDataProvider();
 					final Collection<City>       xx           = dataProvider.getItems();
-
+					
 					for(final Iterator<?> iterator = xx.iterator(); iterator.hasNext();)
 					{
 						final City object = (City)iterator.next();
@@ -1321,10 +1322,10 @@ public class CustomerTabView extends VerticalLayout
 					this.cmbCity.clear();
 				}
 			}
-
+			
 		}
 	}
-
+	
 	/**
 	 * Event handler delegate method for the {@link ComboBox} {@link #cmbCity}.
 	 *
@@ -1344,7 +1345,7 @@ public class CustomerTabView extends VerticalLayout
 			this.lblCountry.setText(cty.getCtyCountry());
 		}
 	}
-	
+
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdVcard}.
 	 *
@@ -1357,19 +1358,19 @@ public class CustomerTabView extends VerticalLayout
 		{
 			return;
 		}
-
+		
 		UI.getCurrent().getSession().setAttribute("cusbeanId", this.binder.getBean().getCusId());
 		this.popupVcard();
 	}
-
+	
 	private void popupVcard()
 	{
 		final Dialog win = VcardPopup.getPopupWindow();
-		
-		win.open();
-		
-	}
 
+		win.open();
+
+	}
+	
 	/* WARNING: Do NOT edit!<br>The content of this method is always regenerated by the UI designer. */
 	// <generated-code name="initUI">
 	private void initUI()
@@ -1493,7 +1494,7 @@ public class CustomerTabView extends VerticalLayout
 		this.cmdReset                       = new Button();
 		this.cmdVcard                       = new Button();
 		this.binder                         = new BeanValidationBinder<>(Customer.class);
-
+		
 		this.setSpacing(false);
 		this.setPadding(false);
 		this.verticalLayout.setSpacing(false);
@@ -1708,7 +1709,7 @@ public class CustomerTabView extends VerticalLayout
 		this.cmdReset.setText(StringResourceUtils.optLocalizeString("{$cmdReset.caption}", this));
 		this.cmdReset.setIcon(IronIcons.UNDO.create());
 		this.cmdVcard.setText("Vcard...");
-
+		
 		this.binder.forField(this.txtCusNumber).asRequired().withNullRepresentation("")
 			.withConverter(
 				ConverterBuilder.StringToInteger().numberFormatBuilder(NumberFormatBuilder.Integer()).build())
@@ -1730,7 +1731,7 @@ public class CustomerTabView extends VerticalLayout
 		this.binder.forField(this.txtExtRef2).withNullRepresentation("").bind("cusExtRef2");
 		this.binder.forField(this.cbxSinglePdf).withNullRepresentation(false).bind("cusSinglepdf");
 		this.binder.forField(this.txtCusName).withNullRepresentation("").bind("cusName");
-
+		
 		this.containerFilterComponent.connectWith(this.table.getDataProvider());
 		this.containerFilterComponent.setFilterSubject(GridFilterSubjectFactory.CreateFilterSubject(this.table,
 			Arrays.asList("city.ctyName", "cusCompany", "cusFirstName", "cusName"),
@@ -1740,7 +1741,7 @@ public class CustomerTabView extends VerticalLayout
 		this.containerFilterComponent2.setFilterSubject(
 			GridFilterSubjectFactory.CreateFilterSubject(this.tableActivity, Arrays.asList("actText"),
 				Arrays.asList()));
-
+		
 		this.cmdNew.setSizeUndefined();
 		this.cmdDelete.setSizeUndefined();
 		this.cmdReload.setSizeUndefined();
@@ -1953,9 +1954,9 @@ public class CustomerTabView extends VerticalLayout
 		this.add(this.splitLayout);
 		this.setFlexGrow(1.0, this.splitLayout);
 		this.setSizeFull();
-
+		
 		this.tabs.setSelectedIndex(0);
-
+		
 		this.cmdNew.addClickListener(this::cmdNew_onClick);
 		this.cmdDelete.addClickListener(this::cmdDelete_onClick);
 		this.cmdReload.addClickListener(this::cmdReload_onClick);
@@ -1989,7 +1990,7 @@ public class CustomerTabView extends VerticalLayout
 		this.cmdReset.addClickListener(this::cmdReset_onClick);
 		this.cmdVcard.addClickListener(this::cmdVcard_onClick);
 	} // </generated-code>
-
+	
 	// <generated-code name="variables">
 	private Grid<Customer>                 table;
 	private BeanValidationBinder<Customer> binder;
@@ -2039,5 +2040,5 @@ public class CustomerTabView extends VerticalLayout
 	private ComboBox<PaymentCondition>     cmbPaymentCondition;
 	private Grid<Project>                  tableProject;
 	// </generated-code>
-
+	
 }

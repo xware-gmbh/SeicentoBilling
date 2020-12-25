@@ -5,9 +5,9 @@ import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -22,6 +22,7 @@ import com.rapidclipse.framework.server.ui.ItemLabelGeneratorFactory;
 import com.rapidclipse.framework.server.ui.StartsWithIgnoreCaseItemFilter;
 import com.vaadin.flow.component.AbstractField.ComponentValueChangeEvent;
 import com.vaadin.flow.component.ClickEvent;
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.DetachEvent;
@@ -29,13 +30,15 @@ import com.vaadin.flow.component.HasValue;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.formlayout.FormLayout.FormItem;
+import com.vaadin.flow.component.html.Hr;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -65,90 +68,138 @@ public class ProjectLinePopup extends VerticalLayout
 {
 	/** Logger initialized */
 	private static final Logger LOG = LoggerFactory.getLogger(ProjectLinePopup.class);
+	private MenuItem            menuOption;
+	private MenuItem            mnuDefaults;
+	private MenuItem            mnuTemplate1;
+	private MenuItem            mnuTemplate2;
+	private MenuItem            mnuTemplate3;
+	private MenuItem            mnuTemplate4;
+	private MenuItem            mnuTemplate5;
+	private MenuItem            mnuTemplate6;
+	private MenuItem            mnuTemplate7;
+	private MenuItem            mnuTemplate8;
+	private MenuItem            mnuTemplate9;
+	private MenuItem            mnuTemplate10;
+	private MenuItem            mnuCancel;
+	private MenuItem            menuText;
+	private MenuItem            mnuSaveItem;
+	private MenuItem            mnuStartStop;
 	
 	/**
-	
+
 	 */
 	public ProjectLinePopup()
 	{
 		super();
 		this.initUI();
-
+		
 		// this.setHeight(Seicento.calculateThemeHeight(Float.parseFloat(this.getHeight()), Lumo.DARK));
-
+		
 		// State
 		this.comboBoxState.setItems(LovState.State.values());
 		this.comboBoxWorktype.setItems(LovState.WorkType.values());
-		
+		this.createMenu();
 		// get Parameter
 		final Long  beanId = (Long)UI.getCurrent().getSession().getAttribute("beanId"); // projectline
 		final Long  objId  = (Long)UI.getCurrent().getSession().getAttribute("objId");  // Periode
 		ProjectLine bean   = null;
 		Periode     obj    = null;
-		
+
 		if(beanId == null)
 		{
 			// new
 			final PeriodeDAO objDao = new PeriodeDAO();
 			obj = objDao.find(objId);
-			
+
 			bean = new ProjectLine();
 			bean.setPrlState(LovState.State.active);
 			bean.setPrlWorkType(LovState.WorkType.project);
 			bean.setPrlReportDate(new Date());
 			bean.setPeriode(obj);
-			
+
 		}
 		else
 		{
 			final ProjectLineDAO dao = new ProjectLineDAO();
 			bean = dao.find(beanId.longValue());
-			
+
 			this.prepareProjectCombo(bean.getProject());
 		}
-		
-		this.setBeanGui(bean);
-		this.setTextCombo(bean.getProject());
-		this.checkTemplates();
 
+		this.setBeanGui(bean);
+		this.setTextList(bean.getProject());
+		this.checkTemplates();
+		
 		if(beanId != null)
 		{
 			this.setDateToLocalTime(bean.getPrlTimeFrom(), this.datePrlReportDateFrom);
 			this.setDateToLocalTime(bean.getPrlTimeTo(), this.datePrlReportDateTo);
 		}
 	}
-
+	
 	private void checkTemplates()
 	{
 		final ProjectLine line = this.binder.getBean();
-
+		
 		final ProjectLineTemplateDAO    dao = new ProjectLineTemplateDAO();
 		final List<ProjectLineTemplate> lst = dao.findByCostAccount(line.getPeriode().getCostAccount());
+
+		MenuItem item = null;
+
+		for(int i = 1; i < 11; i++)
+		{
+			item = this.getMnItem(i);
+			item.setEnabled(false);
+			item.setVisible(false);
+		}
+
+		if(lst == null)
+		{
+			return; // not found
+		}
+
+		for(final Iterator<ProjectLineTemplate> iterator = lst.iterator(); iterator.hasNext();)
+		{
+			final ProjectLineTemplate tpl = iterator.next();
+			final int                 nbr = tpl.getPrtKeyNumber();
+			item = this.getMnItem(nbr);
+
+			item.setEnabled(true);
+			item.setVisible(true);
+
+			if(tpl.getProject() != null)
+			{
+				item.setText("" + nbr + ": " + tpl.getProject().getProName());
+			}
+			else
+			{
+				item.setText("" + nbr + ": n/a");
+			}
+		}
 		
-		this.vorLageComboBox.setItems(lst);
 	}
-	
+
 	private void setBeanGui(final ProjectLine bean)
 	{
 		// set Bean + Fields
 		this.binder.setBean(bean);
 		// this.fieldGroupProject.setItemDataSource(bean.getProject());
 		// this.lookupField.setCon
-		
+
 		this.setROFields();
-		
+
 		// focus
 		this.datePrlReportDate.focus();
 	}
-	
+
 	private void setROFields()
 	{
 		// Readonly
 		this.cmbPeriode.setEnabled(false);
 		this.cmbProject.setEnabled(false);
-		
+
 	}
-	
+
 	public static Dialog getPopupWindow()
 	{
 		final Dialog win = new Dialog();
@@ -163,7 +214,7 @@ public class ProjectLinePopup extends VerticalLayout
 		win.add(cancelButton, new ProjectLinePopup());
 		return win;
 	}
-	
+
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdCancel}.
 	 *
@@ -176,7 +227,7 @@ public class ProjectLinePopup extends VerticalLayout
 		this.binder.removeBean();
 		((Dialog)this.getParent().get()).close();
 	}
-	
+
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdSave}.
 	 *
@@ -189,7 +240,7 @@ public class ProjectLinePopup extends VerticalLayout
 		{
 			return;
 		}
-
+		
 		UI.getCurrent().getSession().setAttribute(String.class, "cmdSave");
 		if(SeicentoCrud.doSave(this.binder, new ProjectLineDAO()))
 		{
@@ -198,18 +249,18 @@ public class ProjectLinePopup extends VerticalLayout
 				final RowObjectManager man = new RowObjectManager();
 				man.updateObject(this.binder.getBean().getPrlId(),
 					this.binder.getBean().getClass().getSimpleName());
-
+				
 				((Dialog)this.getParent().get()).close();
-				Notification.show("Daten wurden gespeichert", 5000, Notification.Position.BOTTOM_END);
+				// Notification.show("Daten wurden gespeichert", 5000, Notification.Position.BOTTOM_END);
 			}
 			catch(final Exception e)
 			{
 				ProjectLinePopup.LOG.error("could not save ObjRoot", e);
 			}
 		}
-		
-	}
 
+	}
+	
 	private boolean areFieldsValid()
 	{
 		if(this.binder.isValid())
@@ -217,45 +268,42 @@ public class ProjectLinePopup extends VerticalLayout
 			return true;
 		}
 		this.binder.validate();
-		
+
 		return false;
 	}
-
-	private void setTextCombo(final Project project)
+	
+	private void setTextList(final Project project)
 	{
-		if(project == null)
-		{
-			final List<ProjectLine> projectList = new ArrayList<>();
-			this.textComboBox.setItems(projectList);
-			
-		}
-		else
+		if(project != null)
 		{
 			final List<ProjectLine> projectList = new ProjectLineDAO().findByProject(project);
-			
-			this.textComboBox.setItems(projectList);
+			for(final ProjectLine pr : projectList)
+			{
+				this.menuText.getSubMenu().addItem(pr.getPrlText(),
+					e -> ProjectLinePopup.this.txtPrlText.setValue(pr.getPrlText()));
+			}
 		}
-		
+
 	}
-	
+
 	private void loadTemplate(final int iKey)
 	{
 		final ProjectLine line = this.binder.getBean();
-
+		
 		final ProjectLineTemplateDAO dao = new ProjectLineTemplateDAO();
 		final ProjectLineTemplate    tpl = dao.findByKeyNumber(line.getPeriode().getCostAccount(), iKey);
-
+		
 		if(tpl == null)
 		{
 			return; // not found
 		}
-		
+
 		final LocalDate dar = this.datePrlReportDate.getValue();
 		if(dar != null)
 		{
 			line.setPrlReportDate(Date.from(dar.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
 		}
-
+		
 		line.setPrlHours(tpl.getPrtHours());
 		line.setPrlRate(tpl.getPrtRate());
 		line.setPrlText(tpl.getprtText());
@@ -264,21 +312,20 @@ public class ProjectLinePopup extends VerticalLayout
 		line.setPrlState(tpl.getPrtState());
 		this.datePrlReportDateFrom.setValue(null);
 		this.datePrlReportDateTo.setValue(null);
-
+		
 		this.prepareProjectCombo(tpl.getProject());
 		this.binder.removeBean();
 		this.binder.setBean(line);
-
-		this.setROFields();
-		this.vorLageComboBox.setValue(tpl);
 		
+		this.setROFields();
+
 	}
-	
+
 	private void prepareProjectCombo(final Project bean)
 	{
 		ProjectLinePopup.this.cmbProject.setValue(bean);
 	}
-
+	
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #btnSearch}.
 	 *
@@ -289,30 +336,31 @@ public class ProjectLinePopup extends VerticalLayout
 	{
 		this.popupProjectLookup();
 	}
-	
+
 	private void popupProjectLookup()
 	{
 		final Dialog win = ProjectLookupPopup.getPopupWindow();
-
+		
 		win.addDetachListener(new ComponentEventListener<DetachEvent>()
 		{
-
+			
 			@Override
 			public void onComponentEvent(final DetachEvent event)
 			{
 				final Long beanId = (Long)UI.getCurrent().getSession().getAttribute("beanId");
-
+				
 				if(beanId != null && beanId > 0)
 				{
 					final Project bean = new ProjectDAO().find(beanId);
 					ProjectLinePopup.this.cmbProject.setValue(bean);
+					ProjectLinePopup.this.setTextList(bean);
 
 				}
 			}
 		});
 		win.open();
 	}
-	
+
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdDefault1}.
 	 *
@@ -323,19 +371,19 @@ public class ProjectLinePopup extends VerticalLayout
 	{
 		this.loadTemplate(1);
 	}
-	
+
 	private void validateTimeFromTo()
 	{
 		LocalDate               d1       = this.datePrlReportDate.getValue();
 		final LocalTime         dateFrom = this.datePrlReportDateFrom.getValue();
 		LocalTime               dateTo   = this.datePrlReportDateTo.getValue();
 		final ProjectLineHelper hlp      = new ProjectLineHelper();
-		
+
 		if(d1 == null)
 		{
 			d1 = LocalDate.now();
 		}
-		
+
 		if(dateFrom != null)
 		{
 			final Date df = hlp.localTimeToDate(d1, dateFrom);
@@ -346,7 +394,7 @@ public class ProjectLinePopup extends VerticalLayout
 			final Date df = hlp.localTimeToDate(d1, dateFrom);
 			final Date dt = hlp.localTimeToDate(d1, dateTo);
 			this.binder.getBean().setPrlTimeFrom(dt);
-
+			
 			if(dateFrom != null && dateTo.isBefore(dateFrom))
 			{
 				dateTo = dateFrom;
@@ -355,34 +403,34 @@ public class ProjectLinePopup extends VerticalLayout
 			}
 		}
 	}
-
+	
 	public Date localDateToDate(final LocalDate ld)
 	{
 		return Date.from(ld.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
 	}
-
+	
 	public LocalDate dateToLocalDate(final Date date)
 	{
 		return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 	}
-	
+
 	private void calcDurationFromTime()
 	{
 		final LocalTime fromHH = this.datePrlReportDateFrom.getValue();
 		final LocalTime toHH   = this.datePrlReportDateTo.getValue();
-		
+
 		if(fromHH == null || toHH == null)
 		{
 			return;
 		}
-		
+
 		final ProjectLineHelper hlp   = new ProjectLineHelper();
 		final double            hours =
 			hlp.calcDurationFromTime(fromHH, toHH);
-		
+
 		this.txtPrlHours.setValue(new DecimalFormat("####.##").format(hours));
 	}
-	
+
 	private void handleStartStop()
 	{
 		final LocalDate d1 = this.datePrlReportDate.getValue();
@@ -390,14 +438,14 @@ public class ProjectLinePopup extends VerticalLayout
 		{
 			return;
 		}
-
+		
 		final ProjectLineHelper hlp     = new ProjectLineHelper();
 		final Date              retDate = hlp.getStartStopTime(this.localDateToDate(d1));
-
+		
 		if(this.datePrlReportDateFrom.getValue() == null)
 		{
 			this.setDateToLocalTime(retDate, this.datePrlReportDateFrom);
-
+			
 		}
 		else
 		{
@@ -407,7 +455,7 @@ public class ProjectLinePopup extends VerticalLayout
 			}
 		}
 	}
-	
+
 	private void setDateToLocalTime(final Date retDate, final TimePicker timePicker)
 	{
 		if(retDate == null)
@@ -419,7 +467,7 @@ public class ProjectLinePopup extends VerticalLayout
 		timePicker
 			.setValue(LocalTime.of(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE)));
 	}
-
+	
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdStartStop}.
 	 *
@@ -430,7 +478,7 @@ public class ProjectLinePopup extends VerticalLayout
 	{
 		this.handleStartStop();
 	}
-	
+
 	/**
 	 * Event handler delegate method for the {@link TimePicker} {@link #datePrlReportDateFrom}.
 	 *
@@ -442,57 +490,7 @@ public class ProjectLinePopup extends VerticalLayout
 		this.validateTimeFromTo();
 		this.calcDurationFromTime();
 	}
-	
-	/**
-	 * Event handler delegate method for the {@link ComboBox} {@link #vorLageComboBox}.
-	 *
-	 * @see HasValue.ValueChangeListener#valueChanged(HasValue.ValueChangeEvent)
-	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
-	 */
-	private void vorLageComboBox_valueChanged(
-		final ComponentValueChangeEvent<ComboBox<ProjectLineTemplate>, ProjectLineTemplate> event)
-	{
 
-		final ProjectLineTemplate tpl  = event.getValue();
-		final ProjectLine         line = this.binder.getBean();
-		if(tpl == null)
-		{
-			return; // not found
-		}
-		
-		final LocalDate dar = this.datePrlReportDate.getValue();
-		if(dar != null)
-		{
-			line.setPrlReportDate(Date.from(dar.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
-		}
-
-		line.setPrlHours(tpl.getPrtHours());
-		line.setPrlRate(tpl.getPrtRate());
-		line.setPrlText(tpl.getprtText());
-		line.setPrlWorkType(tpl.getprtWorkType());
-		line.setProject(tpl.getProject());
-		line.setPrlState(tpl.getPrtState());
-		this.datePrlReportDateFrom.setValue(null);
-		this.datePrlReportDateTo.setValue(null);
-		
-		this.prepareProjectCombo(tpl.getProject());
-		this.setROFields();
-		this.binder.removeBean();
-		this.binder.setBean(line);
-		
-	}
-
-	/**
-	 * Event handler delegate method for the {@link ComboBox} {@link #textComboBox}.
-	 *
-	 * @see HasValue.ValueChangeListener#valueChanged(HasValue.ValueChangeEvent)
-	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
-	 */
-	private void textComboBox_valueChanged(final ComponentValueChangeEvent<ComboBox<ProjectLine>, ProjectLine> event)
-	{
-		ProjectLinePopup.this.txtPrlText.setValue(event.getValue().getPrlText());
-	}
-	
 	/**
 	 * Event handler delegate method for the {@link TimePicker} {@link #datePrlReportDateTo}.
 	 *
@@ -505,20 +503,99 @@ public class ProjectLinePopup extends VerticalLayout
 		this.calcDurationFromTime();
 	}
 	
+	private MenuItem getMnItem(final int icount)
+	{
+		
+		switch(icount)
+		{
+			case 1:
+				return this.mnuTemplate1;
+			case 2:
+				return this.mnuTemplate2;
+			case 3:
+				return this.mnuTemplate3;
+			case 4:
+				return this.mnuTemplate4;
+			case 5:
+				return this.mnuTemplate5;
+			case 6:
+				return this.mnuTemplate6;
+			case 7:
+				return this.mnuTemplate7;
+			case 8:
+				return this.mnuTemplate8;
+			case 9:
+				return this.mnuTemplate9;
+			case 10:
+				return this.mnuTemplate10;
+		}
+		
+		return null;
+	}
+
+	private void createMenu()
+	{
+		this.menuOption = this.menuBar.addItem(VaadinIcon.MENU.create(), null);
+		this.menuOption.add(new Label("Optionen"));
+		this.mnuStartStop =
+			this.createSubMenuWithIcon(this.menuOption, "Start/Stop", e -> this.handleStartStop(),
+				VaadinIcon.CLOCK.create());
+		this.menuOption.getSubMenu().add(new Hr());
+		this.mnuDefaults =
+			this.createSubMenuWithIcon(this.menuOption, "Vorlage", null, VaadinIcon.BOOKMARK.create());
+		
+		this.mnuTemplate1  = this.mnuDefaults.getSubMenu().addItem("Spesen", e -> this.loadTemplate(1));
+		this.mnuTemplate2  = this.mnuDefaults.getSubMenu().addItem("Rapporte", e -> this.loadTemplate(2));
+		this.mnuTemplate3  =
+			this.mnuDefaults.getSubMenu().addItem("Vorlagen Rapport", e -> this.loadTemplate(3));
+		this.mnuTemplate4  = this.mnuDefaults.getSubMenu().addItem("Rapporte", e -> this.loadTemplate(4));
+		this.mnuTemplate5  = this.mnuDefaults.getSubMenu().addItem("Rapporte", e -> this.loadTemplate(5));
+		this.mnuTemplate6  = this.mnuDefaults.getSubMenu().addItem("Rapporte", e -> this.loadTemplate(6));
+		this.mnuTemplate7  = this.mnuDefaults.getSubMenu().addItem("Rapporte", e -> this.loadTemplate(7));
+		this.mnuTemplate8  = this.mnuDefaults.getSubMenu().addItem("Rapporte", e -> this.loadTemplate(8));
+		this.mnuTemplate9  = this.mnuDefaults.getSubMenu().addItem("Rapporte", e -> this.loadTemplate(9));
+		this.mnuTemplate10 = this.mnuDefaults.getSubMenu().addItem("Rapporte", e -> this.loadTemplate(10));
+		this.menuText      =
+			this.createSubMenuWithIcon(this.menuOption, "Text...", null, VaadinIcon.MODAL_LIST.create());
+		this.menuOption.getSubMenu().add(new Hr());
+		this.mnuCancel = this.createSubMenuWithIcon(this.menuOption, "Abbrechen", e -> this.cmdCancel_onClick(null),
+			VaadinIcon.CLOSE_SMALL.create());
+
+		this.mnuSaveItem =
+			this.createSubMenuWithIcon(this.menuOption, "Speichern", e -> this.cmdSave_onClick(null),
+				IronIcons.SAVE.create());
+
+	}
+	
+	private MenuItem createSubMenuWithIcon(
+		final MenuItem parentMenu,
+		final String menuTitle,
+		final ComponentEventListener<ClickEvent<MenuItem>> clickListener,
+		final Component menuIcon)
+	{
+		MenuItem menuItem;
+		if(menuIcon != null)
+		{
+			menuItem = parentMenu.getSubMenu().addItem(menuIcon, clickListener);
+			menuItem.add(new Label(" " + menuTitle));
+		}
+		else
+		{
+			menuItem = parentMenu.getSubMenu().addItem(menuTitle, clickListener);
+			
+		}
+		return menuItem;
+	}
+	
 	/* WARNING: Do NOT edit!<br>The content of this method is always regenerated by the UI designer. */
 	// <generated-code name="initUI">
 	private void initUI()
 	{
 		this.verticalLayout        = new VerticalLayout();
 		this.horizontalLayout      = new HorizontalLayout();
+		this.menuBar               = new MenuBar();
 		this.label                 = new Label();
 		this.formLayout            = new FormLayout();
-		this.formItem14            = new FormItem();
-		this.vorlageLabel          = new Label();
-		this.vorLageComboBox       = new ComboBox<>();
-		this.formItem15            = new FormItem();
-		this.label2                = new Label();
-		this.textComboBox          = new ComboBox<>();
 		this.formItem2             = new FormItem();
 		this.lblPeriode            = new Label();
 		this.cmbPeriode            = new ComboBox<>();
@@ -561,11 +638,6 @@ public class ProjectLinePopup extends VerticalLayout
 			new FormLayout.ResponsiveStep("0px", 1, FormLayout.ResponsiveStep.LabelsPosition.TOP),
 			new FormLayout.ResponsiveStep("500px", 2, FormLayout.ResponsiveStep.LabelsPosition.TOP),
 			new FormLayout.ResponsiveStep("1000px", 3, FormLayout.ResponsiveStep.LabelsPosition.ASIDE));
-		this.vorlageLabel.setText("Vorlage");
-		this.vorLageComboBox.setItemLabelGenerator(ItemLabelGeneratorFactory.NonNull(ProjectLineTemplate::getprtText));
-		this.formItem15.getElement().setAttribute("colspan", "2");
-		this.label2.setText("Text");
-		this.textComboBox.setItemLabelGenerator(ItemLabelGeneratorFactory.NonNull(ProjectLine::getPrlText));
 		this.formItem2.getElement().setAttribute("colspan", "3");
 		this.lblPeriode.setText(StringResourceUtils.optLocalizeString("{$lblPeriode.value}", this));
 		this.cmbPeriode.setDataProvider(StartsWithIgnoreCaseItemFilter.New(this.cmbPeriode::getItemLabelGenerator),
@@ -613,19 +685,11 @@ public class ProjectLinePopup extends VerticalLayout
 		this.binder.forField(this.comboBoxWorktype).bind("prlWorkType");
 		this.binder.forField(this.comboBoxState).bind("prlState");
 		
+		this.menuBar.setWidth("150px");
+		this.menuBar.setHeightFull();
 		this.label.setSizeUndefined();
-		this.horizontalLayout.add(this.label);
+		this.horizontalLayout.add(this.menuBar, this.label);
 		this.horizontalLayout.setVerticalComponentAlignment(FlexComponent.Alignment.CENTER, this.label);
-		this.vorlageLabel.setSizeUndefined();
-		this.vorlageLabel.getElement().setAttribute("slot", "label");
-		this.vorLageComboBox.setWidthFull();
-		this.vorLageComboBox.setHeight(null);
-		this.formItem14.add(this.vorlageLabel, this.vorLageComboBox);
-		this.label2.setSizeUndefined();
-		this.label2.getElement().setAttribute("slot", "label");
-		this.textComboBox.setWidth("40%");
-		this.textComboBox.setHeight(null);
-		this.formItem15.add(this.label2, this.textComboBox);
 		this.lblPeriode.setSizeUndefined();
 		this.lblPeriode.getElement().setAttribute("slot", "label");
 		this.cmbPeriode.setWidth("30%");
@@ -672,9 +736,9 @@ public class ProjectLinePopup extends VerticalLayout
 		this.comboBoxState.setWidthFull();
 		this.comboBoxState.setHeight(null);
 		this.formItem13.add(this.lblPrlState, this.comboBoxState);
-		this.formLayout.add(this.formItem14, this.formItem15, this.formItem2, this.formItem, this.formItem3,
-			this.formItem7,
-			this.formItem8, this.formItem9, this.formItem11, this.formItem12, this.formItem13);
+		this.formLayout.add(this.formItem2, this.formItem, this.formItem3, this.formItem7, this.formItem8,
+			this.formItem9,
+			this.formItem11, this.formItem12, this.formItem13);
 		this.cmdSave.setSizeUndefined();
 		this.cmdCancel.setSizeUndefined();
 		this.cmdStartStop.setSizeUndefined();
@@ -690,8 +754,6 @@ public class ProjectLinePopup extends VerticalLayout
 		this.add(this.verticalLayout);
 		this.setSizeFull();
 		
-		this.vorLageComboBox.addValueChangeListener(this::vorLageComboBox_valueChanged);
-		this.textComboBox.addValueChangeListener(this::textComboBox_valueChanged);
 		this.datePrlReportDateFrom.addValueChangeListener(this::datePrlReportDateFrom_valueChanged);
 		this.datePrlReportDateTo.addValueChangeListener(this::datePrlReportDateTo_valueChanged);
 		this.btnSearch.addClickListener(this::btnSearch_onClick);
@@ -702,17 +764,17 @@ public class ProjectLinePopup extends VerticalLayout
 	} // </generated-code>
 
 	// <generated-code name="variables">
-	private ComboBox<ProjectLineTemplate>     vorLageComboBox;
+	private MenuBar                           menuBar;
 	private ComboBox<WorkType>                comboBoxWorktype;
 	private VerticalLayout                    verticalLayout;
 	private HorizontalLayout                  horizontalLayout, horizontalLayout2;
-	private Label                             label, vorlageLabel, label2, lblPeriode, lblPrlReportDate, lblPrlFromTo,
-		lblProject, lblPrlHours, lblPrlRate, lblPrlText, lblPrlWorkType, lblPrlState;
+	private Label                             label, lblPeriode, lblPrlReportDate, lblPrlFromTo, lblProject,
+		lblPrlHours,
+		lblPrlRate, lblPrlText, lblPrlWorkType, lblPrlState;
 	private TimePicker                        datePrlReportDateFrom, datePrlReportDateTo;
-	private ComboBox<ProjectLine>             textComboBox;
-	private FormItem                          formItem14, formItem15, formItem2, formItem, formItem3, formItem7,
-		formItem8,
-		formItem9, formItem11, formItem12, formItem13;
+	private FormItem                          formItem2, formItem, formItem3, formItem7, formItem8, formItem9,
+		formItem11,
+		formItem12, formItem13;
 	private FormLayout                        formLayout;
 	private Button                            btnSearch, cmdSave, cmdCancel, cmdStartStop, cmdDefault1;
 	private BeanValidationBinder<ProjectLine> binder;
@@ -722,5 +784,5 @@ public class ProjectLinePopup extends VerticalLayout
 	private ComboBox<Project>                 cmbProject;
 	private TextField                         txtPrlHours, txtPrlRate, txtPrlText;
 	// </generated-code>
-
+	
 }
