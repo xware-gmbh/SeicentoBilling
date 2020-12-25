@@ -23,7 +23,7 @@
 <?import com.vaadin.flow.component.splitlayout.SplitLayout?>
 <?import com.vaadin.flow.component.textfield.TextField?>
 <?import com.vaadin.flow.data.binder.BeanValidationBinder?>
-<VerticalLayout xmlns:x="http://xml.xdev-software.com/xdevuiml" x:name="ExpenseTemplateTabView" x:route="expensetemplate">
+<VerticalLayout xmlns:x="http://xml.xdev-software.com/xdevuiml" spacing="false" x:name="ExpenseTemplateTabView" padding="false" x:route="expensetemplate">
     <x:constraints zpos="0" width="100%" height="100%" />
     <BeanValidationBinder x:name="binder">
         <x:typeArguments>
@@ -33,7 +33,7 @@
             <binding field="cmbCostAccount" property="costAccount" required="false" readOnly="false">
                 <validator type="Bean" />
             </binding>
-            <binding field="txtPrtKeyNumber" property="extKeyNumber" required="true" errorMessage="required" nullRepresentation="" readOnly="false">
+            <binding field="txtPrtKeyNumber" property="extKeyNumber" required="true" nullRepresentation="" readOnly="false">
                 <validator type="Bean" />
                 <converter TYPE="StringToInteger">
                     <numberFormat format="Integer" currency="default" locale="default" />
@@ -76,7 +76,7 @@
     </BeanValidationBinder>
     <SplitLayout x:name="splitLayout">
         <x:constraints width="100%" height="100%" flex-grow="1.0" />
-        <VerticalLayout x:name="verticalLayout">
+        <VerticalLayout x:name="verticalLayout" padding="false">
             <x:constraints splitlayout-position="PRIMARY" width="100%" height="100%" />
             <FilterComponent x:searchableProperties="costAccount.csaCode,costAccount.csaName" x:name="containerFilterComponent" x:filterableProperties="costAccount,extState,project" x:grid="grid">
                 <x:constraints width="100%" height="0%" flex-grow="0.0" />

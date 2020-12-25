@@ -152,7 +152,6 @@ public class MainContainer extends VerticalLayout implements PageConfigurator, R
 	{
 		Locale.setDefault(new Locale("de", "CH"));
 		TimeZone.setDefault(TimeZone.getTimeZone("Europe/Zurich"));
-
 	}
 
 	// only for local testing with preview
@@ -291,6 +290,7 @@ public class MainContainer extends VerticalLayout implements PageConfigurator, R
 			// MainContainer.LOG.info("User logged in " + this.currentUser.name());
 			// this.menuItemUser.setCaption(this.currentUser.name());
 			this.setLocale();
+			VaadinSession.getCurrent().setLocale(new Locale("de", "CH"));
 		}
 		else
 		{

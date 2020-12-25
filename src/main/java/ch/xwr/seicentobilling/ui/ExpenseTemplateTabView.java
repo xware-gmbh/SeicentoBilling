@@ -72,7 +72,7 @@ public class ExpenseTemplateTabView extends VerticalLayout
 {
 	/** Logger initialized */
 	private static final org.apache.log4j.Logger LOG = LogManager.getLogger(ExpenseTemplateTabView.class);
-	
+
 	/**
 	 *
 	 */
@@ -83,27 +83,27 @@ public class ExpenseTemplateTabView extends VerticalLayout
 		// State
 		this.comboBoxState.setItems(LovState.State.values());
 		this.comboBoxUnit.setItems(LovState.ExpUnit.values());
-		
-		this.comboBoxGeneric.setItems(LovState.ExpType.values());
-		
-		this.sortList();
 
+		this.comboBoxGeneric.setItems(LovState.ExpType.values());
+
+		this.sortList();
+		
 		this.setDefaultFilter();
 		this.binder.setBean(this.getNewDaoWithDefaults());
 		this.setROFields();
 		this.postLoadAccountAction(this.binder.getBean());
 	}
-	
+
 	private void postLoadAccountAction(final ExpenseTemplate bean)
 	{
 		if(bean.getExtAccount() == null)
 		{
 			return;
 		}
-		
+
 		// final boolean exist = this.comboBoxAccount.containsId(lov);
 		// funktioniert auf keine Weise....
-		
+
 		final Collection<LovAccount> col1 =
 			this.comboBoxAccount.getDataProvider().fetch(new Query<>()).collect(Collectors.toList());
 		for(final Iterator<LovAccount> iterator = col1.iterator(); iterator.hasNext();)
@@ -115,9 +115,9 @@ public class ExpenseTemplateTabView extends VerticalLayout
 				break;
 			}
 		}
-		
+
 	}
-	
+
 	private ExpenseTemplate getNewDaoWithDefaults()
 	{
 		CostAccount bean = Seicento.getLoggedInCostAccount();
@@ -125,46 +125,46 @@ public class ExpenseTemplateTabView extends VerticalLayout
 		{
 			bean = new CostAccountDAO().findAll().get(0); // Dev Mode
 		}
-
+		
 		final ExpenseTemplate dao = new ExpenseTemplate();
 		dao.setExtState(LovState.State.active);
 		dao.setCostAccount(bean);
-
+		
 		return dao;
 	}
-	
+
 	private void setROFields()
 	{
 		this.cmbCostAccount.setEnabled(false);
-
+		
 		boolean hasData = true;
 		if(this.binder.getBean() == null)
 		{
 			hasData = false;
 		}
 		this.setROComponents(hasData);
-
+		
 	}
-	
+
 	private void setROComponents(final boolean state)
 	{
 		this.cmdSave.setEnabled(state);
 		this.cmdReset.setEnabled(state);
 		// this.formLayout.setEnabled(state);
 	}
-	
+
 	private void setDefaultFilter()
 	{
 		final CostAccount bean = Seicento.getLoggedInCostAccount();
-
+		
 		final FilterEntry pe =
 			new FilterEntry("extState", new FilterOperator.Is().key(), new LovState.State[]{LovState.State.active});
 		final FilterEntry ce =
 			new FilterEntry("costAccount", new FilterOperator.Is().key(), new CostAccount[]{bean});
 		this.containerFilterComponent.setValue(new FilterData("", new FilterEntry[]{ce, pe}));
-		
+
 	}
-	
+
 	private void sortList()
 	{
 		final GridSortOrder<ExpenseTemplate> sortCol1 =
@@ -172,9 +172,9 @@ public class ExpenseTemplateTabView extends VerticalLayout
 		final GridSortOrder<ExpenseTemplate> sortCol2 =
 			new GridSortOrder<>(this.grid.getColumnByKey("extId"), SortDirection.DESCENDING);
 		this.grid.sort(Arrays.asList(sortCol1, sortCol2));
-
+		
 	}
-
+	
 	/**
 	 * Event handler delegate method for the {@link Grid} {@link #grid}.
 	 *
@@ -193,7 +193,7 @@ public class ExpenseTemplateTabView extends VerticalLayout
 			this.setROFields();
 		}
 	}
-
+	
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdNew}.
 	 *
@@ -208,14 +208,14 @@ public class ExpenseTemplateTabView extends VerticalLayout
 			bean1 = new CostAccountDAO().findAll().get(0); // Dev Mode
 		}
 		final ExpenseTemplate bean = new ExpenseTemplate();
-		
+
 		bean.setExtState(LovState.State.active);
 		bean.setCostAccount(bean1);
 		this.binder.setBean(bean);
-
+		
 		// this.fieldGroup.setItemDataSource(bean);
 	}
-
+	
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdReload}.
 	 *
@@ -226,7 +226,7 @@ public class ExpenseTemplateTabView extends VerticalLayout
 	{
 		this.reloadMainTable();
 	}
-
+	
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdSave}.
 	 *
@@ -235,7 +235,7 @@ public class ExpenseTemplateTabView extends VerticalLayout
 	 */
 	private void cmdSave_onClick(final ClickEvent<Button> event)
 	{
-
+		
 		this.preSaveAccountAction();
 		// if(!this.binder.isValid())
 		// {
@@ -260,28 +260,28 @@ public class ExpenseTemplateTabView extends VerticalLayout
 			}
 		}
 		this.setROFields();
-
-		this.cmdReload_onClick(null);
 		
-	}
+		this.cmdReload_onClick(null);
 
+	}
+	
 	private void reloadMainTable()
 	{
 		// save filter
 		final FilterData fd = this.containerFilterComponent.getValue();
 		this.containerFilterComponent.setValue(null);
-
+		
 		// clear+reload List
 		this.grid.setDataProvider(DataProvider.ofCollection(new ExpenseTemplateDAO().findAll()));
 		this.grid.getDataProvider().refreshAll();
-
+		
 		this.sortList();
-
+		
 		// reassign filter
 		this.containerFilterComponent.setValue(fd);
-
+		
 	}
-	
+
 	private void preSaveAccountAction()
 	{
 		final LovAccount lov = this.comboBoxAccount.getValue();
@@ -289,9 +289,9 @@ public class ExpenseTemplateTabView extends VerticalLayout
 		{
 			this.binder.getBean().setExtAccount(lov.getId());
 		}
-
+		
 	}
-	
+
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdReset}.
 	 *
@@ -307,17 +307,17 @@ public class ExpenseTemplateTabView extends VerticalLayout
 			this.binder.setBean(projectLineBean);
 		}
 	}
-	
+
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdInfo}.
 	 *
 	 * @see ComponentEventListener#onComponentEvent(ComponentEvent)
 	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
 	 */
-	
+
 	private void cmdInfo_onClick(final ClickEvent<Button> event)
 	{
-		
+
 		if(this.grid.getSelectedItems() != null)
 		{
 			final ExpenseTemplate bean = this.grid.getSelectionModel().getFirstSelectedItem().get();
@@ -326,9 +326,9 @@ public class ExpenseTemplateTabView extends VerticalLayout
 			win.add(new RowObjectView(bean.getExtId(), bean.getClass().getSimpleName()));
 			win.open();
 		}
-		
+
 	}
-	
+
 	/**
 	 * Event handler delegate method for the {@link Button} {@link #cmdDelete}.
 	 *
@@ -343,30 +343,30 @@ public class ExpenseTemplateTabView extends VerticalLayout
 				20, Notification.Position.BOTTOM_START);
 			return;
 		}
-
+		
 		ConfirmDialog.show("Datensatz löschen", "Wirklich löschen?", okEvent -> {
-			
+
 			try
 			{
-				
+
 				final ExpenseTemplate bean = this.grid.getSelectionModel().getFirstSelectedItem().get();
-				
+
 				// Delete Record
 				final RowObjectManager man = new RowObjectManager();
 				man.deleteObject(bean.getExtId(), bean.getClass().getSimpleName());
-				
+
 				final ExpenseTemplateDAO dao = new ExpenseTemplateDAO();
 				dao.remove(bean);
 				dao.flush();
-				
+
 				this.binder.removeBean();
 				ExpenseTemplateTabView.this.binder.setBean(new ExpenseTemplate());
 				this.grid.setDataProvider(DataProvider.ofCollection(new ExpenseTemplateDAO().findAll()));
 				ExpenseTemplateTabView.this.grid.getDataProvider().refreshAll();
-				
+
 				Notification.show("Datensatz wurde gelöscht!",
 					20, Notification.Position.BOTTOM_START);
-				
+
 			}
 			catch(final PersistenceException cx)
 			{
@@ -379,9 +379,9 @@ public class ExpenseTemplateTabView extends VerticalLayout
 				ExpenseTemplateTabView.LOG.error("Error on delete", e);
 			}
 		});
-
+		
 	}
-	
+
 	/* WARNING: Do NOT edit!<br>The content of this method is always regenerated by the UI designer. */
 	// <generated-code name="initUI">
 	private void initUI()
@@ -438,6 +438,9 @@ public class ExpenseTemplateTabView extends VerticalLayout
 		this.cmdReset                 = new Button();
 		this.binder                   = new BeanValidationBinder<>(ExpenseTemplate.class);
 
+		this.setSpacing(false);
+		this.setPadding(false);
+		this.verticalLayout.setPadding(false);
 		this.horizontalLayout2.setMinHeight("");
 		this.horizontalLayout2.setMinWidth("100%");
 		this.cmdNew.setTabIndex(1);
@@ -512,7 +515,7 @@ public class ExpenseTemplateTabView extends VerticalLayout
 		this.cmdReset.setIcon(IronIcons.UNDO.create());
 
 		this.binder.forField(this.cmbCostAccount).bind("costAccount");
-		this.binder.forField(this.txtPrtKeyNumber).asRequired("required").withNullRepresentation("")
+		this.binder.forField(this.txtPrtKeyNumber).asRequired().withNullRepresentation("")
 			.withConverter(
 				ConverterBuilder.StringToInteger().numberFormatBuilder(NumberFormatBuilder.Integer()).build())
 			.bind("extKeyNumber");
@@ -627,7 +630,7 @@ public class ExpenseTemplateTabView extends VerticalLayout
 		this.cmdSave.addClickListener(this::cmdSave_onClick);
 		this.cmdReset.addClickListener(this::cmdReset_onClick);
 	} // </generated-code>
-	
+
 	// <generated-code name="variables">
 	private ComboBox<ExpUnit>                     comboBoxUnit;
 	private ComboBox<Vat>                         comboBoxVat;
@@ -651,5 +654,5 @@ public class ExpenseTemplateTabView extends VerticalLayout
 	private TextField                             txtPrtKeyNumber, txtPrtText, txtExtAmount, txtExtQuantity;
 	private ComboBox<CostAccount>                 cmbCostAccount;
 	// </generated-code>
-
+	
 }
