@@ -150,6 +150,7 @@ public class MainContainer extends VerticalLayout implements PageConfigurator, R
 	
 	private void setLocale()
 	{
+		UI.getCurrent().setLocale(new Locale("de", "CH"));
 		Locale.setDefault(new Locale("de", "CH"));
 		TimeZone.setDefault(TimeZone.getTimeZone("Europe/Zurich"));
 	}
