@@ -3,8 +3,10 @@ package ch.xwr.seicentobilling.ui.desktop;
 
 import java.lang.reflect.Constructor;
 import java.net.URI;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
+import java.util.Map;
 import java.util.TimeZone;
 
 import com.vaadin.annotations.Push;
@@ -18,6 +20,7 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.TabSheet;
+import com.vaadin.ui.UI;
 import com.xdev.res.ApplicationResource;
 import com.xdev.security.authentication.ui.XdevAuthenticationNavigator;
 import com.xdev.server.aa.openid.helper.DiscoveryHelper;
@@ -71,6 +74,37 @@ public class DesktopUI extends XdevUI {
 
 	}
 
+	private void autoRoute() {
+		final URI loc = this.getPage().getLocation();
+		final String path = loc.getPath();
+
+		if (!path.isEmpty() && path.contains("/project")) {
+			LOG.debug("found direct path in URL: " + path);
+			final Map<String, String> map = getQueryMap(loc.getQuery());
+			for (final Map.Entry<String, String> entry : map.entrySet()) {
+				UI.getCurrent().getSession().setAttribute(entry.getKey(),  entry.getValue());
+			}
+
+			loadTab(ProjectTabView.class, "Project");
+		}
+
+	}
+
+	private static Map<String, String> getQueryMap(final String query) {
+	    final Map<String, String> map = new HashMap<>();
+
+	    if (query != null && !query.isEmpty()) {
+		    final String[] params = query.split("&");
+
+		    for (final String param : params) {
+		        final String name = param.split("=")[0];
+		        final String value = param.split("=")[1];
+		        map.put(name, value);
+		    }
+	    }
+	    return map;
+	}
+
 	//only for local testing with preview
 	private void checkLocalDevEnv() {
 		if (isLocalDevEnv()) {
@@ -92,7 +126,7 @@ public class DesktopUI extends XdevUI {
 		final URI loc = this.getPage().getLocation();
 		final String path = loc.getPath();
 
-		if (path == null || path.length() < 3)
+		if (path == null || path.length() < 3 || loc.getPort() > 40000)
 		 {
 			return true;  //Jetty
 		}
@@ -128,7 +162,9 @@ public class DesktopUI extends XdevUI {
 			LOG.info("User logged in " + this.currentUser.name());
 			this.menuItemUser.setCaption(this.currentUser.name());
 			setLocale();
-		} else {
+
+			autoRoute();
+	} else {
 			//getSession().close();   //leads to Session expired
 			LOG.info("User logged out " + this.currentUser.name());
 			this.menuItemUser.setCaption("");
@@ -494,6 +530,7 @@ public class DesktopUI extends XdevUI {
 		this.navigator.setRedirectViewName("home");
 		this.navigator.addView("", AuthView.class);
 		this.navigator.addView("home", MainView.class);
+		this.navigator.addView("project", ProjectTabView.class);
 
 		this.lblCompany.setSizeUndefined();
 		this.verticalLayout3.addComponent(this.lblCompany);

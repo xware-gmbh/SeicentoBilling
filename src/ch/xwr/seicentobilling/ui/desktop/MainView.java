@@ -66,9 +66,10 @@ public class MainView extends XdevView {
 			return;
 		}
 		final LovState.Theme th = this.currentUser.getDbUser().getUsrThemeDesktop();
-		if (th == null) {
+		if (th == null || this.getUI() == null) {
 			return;
 		}
+
 		if (th.equals(LovState.Theme.dark)) {
 			this.getUI().setTheme("Darksb");
 		}

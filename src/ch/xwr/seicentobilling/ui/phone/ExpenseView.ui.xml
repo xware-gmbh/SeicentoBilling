@@ -19,6 +19,7 @@
 <?import com.xdev.ui.XdevPanel?>
 <?import com.xdev.ui.XdevPopupDateField?>
 <?import com.xdev.ui.XdevTextField?>
+<?import com.xdev.ui.XdevUpload?>
 <?import com.xdev.ui.XdevVerticalLayout?>
 <?import com.xdev.ui.XdevView?>
 <?import com.xdev.ui.entitycomponent.combobox.XdevComboBox?>
@@ -215,10 +216,9 @@
                         <x:constraints weightx="0.0" width="0px" alignment="MIDDLE_LEFT" height="0px" />
                         <x:event>click.buttonClick</x:event>
                     </XdevButton>
-                    <XdevButton icon="FontAwesome.REMOVE" caption="{$cmdReset.caption}" tabIndex="13" x:name="cmdReset">
-                        <x:constraints weightx="0.0" width="0px" alignment="MIDDLE_LEFT" height="0px" />
-                        <x:event>click.buttonClick</x:event>
-                    </XdevButton>
+                    <XdevUpload buttonCaption="Upload..." x:name="upload" immediate="true">
+                        <x:constraints weightx="0.0" width="0px" height="0px" />
+                    </XdevUpload>
                     <XdevButton icon="FontAwesome.BOOKMARK" caption="Def 1" x:name="cmdDefault1" x:shortcut="CTRL+NUM1">
                         <x:constraints top="93px" left="-1px" weightx="0.0" width="0px" height="0px" />
                         <x:event>click.buttonClick</x:event>

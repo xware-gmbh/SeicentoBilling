@@ -40,7 +40,7 @@
             </XdevImage>
             <XdevVerticalLayout x:name="verticalLayoutBtn" margin="trb">
                 <x:constraints weightx="0.15" width="100%" height="-1px" />
-                <XdevButton icon="FontAwesome.ARROW_CIRCLE_LEFT" caption="Zurück" x:name="cmdCloseImage" x:shortcut="ESCAPE">
+                <XdevButton icon="FontAwesome.ARROW_CIRCLE_LEFT" caption="Zurück" x:name="cmdCloseImage" x:shortcut="BACKSPACE">
                     <x:constraints weighty="0.0" weightx="0.0" width="0px" alignment="MIDDLE_LEFT" height="0px" />
                     <x:event>click.buttonClick</x:event>
                 </XdevButton>
@@ -51,7 +51,7 @@
                 <XdevLabel x:name="label">
                     <x:constraints weighty="0.1" width="68px" height="0px" />
                 </XdevLabel>
-                <XdevButton icon="FontAwesome.EXPAND" caption="Viewer" x:name="cmdToggleViewer" visible="false">
+                <XdevButton icon="FontAwesome.EXPAND" caption="Viewer" x:name="cmdToggleViewer" visible="false" x:shortcut="PAGE_DOWN">
                     <x:constraints weighty="0.0" weightx="0.0" width="0px" alignment="MIDDLE_LEFT" height="0px" />
                     <x:event>click.buttonClick</x:event>
                 </XdevButton>

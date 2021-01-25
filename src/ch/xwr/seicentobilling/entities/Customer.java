@@ -36,7 +36,7 @@ import ch.xwr.seicentobilling.dal.CustomerDAO;
  * Customer
  */
 @DAO(daoClass = CustomerDAO.class)
-@Caption("{%cusName}")
+@Caption("{%cusCompany} {%cusName}")
 @Entity
 @Table(name = "Customer", schema = "dbo", uniqueConstraints = @UniqueConstraint(columnNames = "cusNumber"))
 public class Customer implements java.io.Serializable {

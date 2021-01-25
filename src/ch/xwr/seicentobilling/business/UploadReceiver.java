@@ -167,4 +167,10 @@ public class UploadReceiver implements Receiver, SucceededListener  {
 		this.mimeType = mimeType;
 	}
 
+	public void removeUploadedFile() {
+		if (getFiup() != null) {
+			this.fiup.delete();
+			this.fiup = null;
+		}
+	}
 }

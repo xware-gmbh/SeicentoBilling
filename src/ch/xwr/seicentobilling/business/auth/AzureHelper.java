@@ -19,8 +19,10 @@ public class AzureHelper {
 		if (page.getPort() > 0) {
 			cbs = cbs + ":" +  page.getPort();
 		}
-		cbs = cbs + page.getPath();
-		cbs = cbs.replace("#!", "");
+
+//		cbs = cbs + page.getPath();
+//		cbs = cbs.replace("#!", "");
+		cbs = cbs + "/SeicentoBilling";
 
 		context.setAttribute(CALLBACK_URI, cbs);
 		//context.setAttribute(CALLBACK_URI, this.getPage().getLocation().toString());

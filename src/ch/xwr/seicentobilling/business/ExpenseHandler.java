@@ -17,21 +17,25 @@ public class ExpenseHandler {
 
 
 	public void copyExpensePeriode(final Periode from, final Periode toP) throws Exception {
+		validateInput(from, toP, true);
+
+		LOG.info("Start kopiere Spesen von Periode: " + from.getPerName());
+		startLoop(from, toP);
+	}
+
+	public void validateInput(final Periode from, final Periode toP, final boolean checkIt) throws Exception {
 		if (from == null || toP == null) {
 			throw new Exception("Ungültige Periode(n) für das Kopieren!");
 		}
 		if (LovState.BookingType.gebucht.equals(toP.getPerBookedExpense())) {
 			throw new Exception("Die Zielperiode ist bereits verbucht!");
 		}
-		if (targetCount(toP) > 0) {
+		if (checkIt && targetCount(toP) > 0) {
 			throw new Exception("Die Zielperiode enthält bereits Daten!");
 		}
 		if (targetCount(from) < 1) {
 			throw new Exception("Die Ausgangsperiode enthält keine Daten!");
 		}
-
-		LOG.info("Start kopiere Spesen von Periode: " + from.getPerName());
-		startLoop(from, toP);
 	}
 
 	private int targetCount(final Periode toP) {
@@ -48,17 +52,22 @@ public class ExpenseHandler {
 		for (final Iterator<Expense> iterator = lst.iterator(); iterator.hasNext();) {
 			final Expense expense = iterator.next();
 
-			copySingleRecord(dao, expense, toP);
+			copySingleRecord(dao, expense, toP, true, expense.getExpDate());
 		}
 	}
 
-	private void copySingleRecord(final ExpenseDAO dao, final Expense expense, final Periode toP) {
+	private void copySingleRecord(final ExpenseDAO dao, final Expense expense, final Periode toP, final boolean guessDate, final Date targetDate) {
 		PersistenceUtils.getEntityManager(Expense.class).detach(expense);
 
 		expense.setExpId(new Long(0));
 		expense.setExpBooked(null);
 		expense.setPeriode(toP);
-		expense.setExpDate(calcNewDate(expense.getExpDate(), toP));
+
+		if (expense.getExpDate().compareTo(targetDate) == 0 && guessDate) {
+			expense.setExpDate(calcNewDate(expense.getExpDate(), toP));
+		} else {
+			expense.setExpDate(targetDate);
+		}
 
 		final Expense newBean = dao.merge(expense);
 		dao.save(newBean);
@@ -101,6 +110,10 @@ public class ExpenseHandler {
 		}
 		return cal.getTime();
 
+	}
+
+	public void copyExpenseRecord(final Expense exp, final Periode perF, final Periode perT, final boolean guessDate, final Date targetDate) throws Exception {
+		copySingleRecord(new ExpenseDAO(), exp, perT, guessDate, targetDate);
 	}
 
 }

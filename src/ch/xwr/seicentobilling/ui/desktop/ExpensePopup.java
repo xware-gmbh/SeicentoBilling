@@ -1,9 +1,12 @@
 package ch.xwr.seicentobilling.ui.desktop;
 
+import java.io.File;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+
+import javax.persistence.PersistenceException;
 
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.server.FontAwesome;
@@ -12,7 +15,11 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.MenuBar;
+import com.vaadin.ui.Notification;
+import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.UI;
+import com.vaadin.ui.Upload;
+import com.vaadin.ui.Upload.SucceededEvent;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.CloseEvent;
 import com.vaadin.ui.Window.CloseListener;
@@ -28,6 +35,7 @@ import com.xdev.ui.XdevMenuBar;
 import com.xdev.ui.XdevMenuBar.XdevMenuItem;
 import com.xdev.ui.XdevPopupDateField;
 import com.xdev.ui.XdevTextField;
+import com.xdev.ui.XdevUpload;
 import com.xdev.ui.XdevVerticalLayout;
 import com.xdev.ui.XdevView;
 import com.xdev.ui.entitycomponent.combobox.XdevComboBox;
@@ -35,7 +43,9 @@ import com.xdev.ui.entitycomponent.combobox.XdevComboBox;
 import ch.xwr.seicentobilling.business.LovState;
 import ch.xwr.seicentobilling.business.RowObjectManager;
 import ch.xwr.seicentobilling.business.Seicento;
+import ch.xwr.seicentobilling.business.UploadReceiver;
 import ch.xwr.seicentobilling.business.helper.SeicentoCrud;
+import ch.xwr.seicentobilling.business.svc.SaveFileToDb;
 import ch.xwr.seicentobilling.dal.ExpenseDAO;
 import ch.xwr.seicentobilling.dal.ExpenseTemplateDAO;
 import ch.xwr.seicentobilling.dal.LovAccountDAO;
@@ -50,6 +60,7 @@ import ch.xwr.seicentobilling.entities.Periode;
 import ch.xwr.seicentobilling.entities.Periode_;
 import ch.xwr.seicentobilling.entities.Project;
 import ch.xwr.seicentobilling.entities.Project_;
+import ch.xwr.seicentobilling.entities.RowImage;
 import ch.xwr.seicentobilling.entities.RowObject;
 import ch.xwr.seicentobilling.entities.Vat;
 import ch.xwr.seicentobilling.ui.desktop.project.ProjectLookupPopup;
@@ -57,6 +68,7 @@ import ch.xwr.seicentobilling.ui.phone.AttachmentPopup;
 import ch.xwr.seicentobilling.ui.phone.TextListPopup;
 
 public class ExpensePopup extends XdevView {
+	private UploadReceiver urcv = null;
 
 	/**
 	 *
@@ -65,8 +77,8 @@ public class ExpensePopup extends XdevView {
 		super();
 		this.initUI();
 
-		this.setHeight(Seicento.calculateThemeHeight(this.getHeight(),UI.getCurrent().getTheme()));
-		this.horizontalLayoutShortcut.setWidth("2");  //active but not visible
+		this.setHeight(Seicento.calculateThemeHeight(this.getHeight(), UI.getCurrent().getTheme()));
+		this.horizontalLayoutShortcut.setWidth("2"); // active but not visible
 
 		// State
 		this.comboBoxState.addItems((Object[]) LovState.State.values());
@@ -110,6 +122,8 @@ public class ExpensePopup extends XdevView {
 		if (bean.getExpId() == null || bean.getExpId().floatValue() < 1) {
 			this.mnuUpload.setEnabled(false);
 		}
+
+		setupUploader(new RowImage());
 
 	}
 
@@ -163,9 +177,8 @@ public class ExpensePopup extends XdevView {
 			item.setVisible(false);
 		}
 
-		if (lst == null)
-		{
-			return;	//not found
+		if (lst == null) {
+			return; // not found
 		}
 
 		for (final Iterator<ExpenseTemplate> iterator = lst.iterator(); iterator.hasNext();) {
@@ -173,7 +186,7 @@ public class ExpensePopup extends XdevView {
 			final int nbr = tpl.getExtKeyNumber();
 			item = getMnItem(nbr);
 
-			//#358
+			// #358
 			String value = "" + nbr + ": " + tpl.getProject().getProName();
 			if (tpl.getExtText() != null) {
 				if (value.length() > 25) {
@@ -193,20 +206,63 @@ public class ExpensePopup extends XdevView {
 
 	}
 
+	private void setupUploader(final RowImage bean) {
+		this.upload.setVisible(true);
+		this.upload.setEnabled(true);
+
+		this.urcv = new UploadReceiver(bean);
+		this.urcv.setResizeImage(true);
+		this.upload.setReceiver(this.urcv);
+
+		this.upload.addSucceededListener(new Upload.SucceededListener() {
+			@Override
+			public void uploadSucceeded(final SucceededEvent event) {
+				// This method gets called when the upload finished successfully
+				System.out.println("________________ UPLOAD SUCCEEDED 2");
+
+        	    if (ExpensePopup.this.urcv.getFiup().length() >  (ExpensePopup.this.urcv.getMaxImageSize() * 2)) {
+	        	    final int ikb = ExpensePopup.this.urcv.getMaxImageSize() * 2 / 1024;
+	        		Notification.show("Datei ist zu gross", "Max Size: " + ikb + " KB " + ExpensePopup.this.urcv.getFiup().getName(),Type.TRAY_NOTIFICATION);
+	        		ExpensePopup.this.urcv.removeUploadedFile();
+
+        	    } else {
+					ExpensePopup.this.urcv.uploadSucceeded(event);
+					Notification.show("Datei hochgeladen", "Name: " + ExpensePopup.this.urcv.getFiup().getName(),
+							Type.TRAY_NOTIFICATION);
+					//ExpensePopup.this.upload.setButtonCaption("* Uploaded");
+					ExpensePopup.this.upload.setEnabled(false);
+					ExpensePopup.this.upload.setVisible(false);
+        	    }
+			}
+		});
+		// uploader
+	}
+
 	private XdevMenuItem getMnItem(final int icount) {
 
 		switch (icount) {
-			case 0: return this.mnuTemplate10;
-			case 1: return this.mnuTemplate1;
-			case 2: return this.mnuTemplate2;
-			case 3: return this.mnuTemplate3;
-			case 4: return this.mnuTemplate4;
-			case 5: return this.mnuTemplate5;
-			case 6: return this.mnuTemplate6;
-			case 7: return this.mnuTemplate7;
-			case 8: return this.mnuTemplate8;
-			case 9: return this.mnuTemplate9;
-			case 10: return this.mnuTemplate10;
+		case 0:
+			return this.mnuTemplate10;
+		case 1:
+			return this.mnuTemplate1;
+		case 2:
+			return this.mnuTemplate2;
+		case 3:
+			return this.mnuTemplate3;
+		case 4:
+			return this.mnuTemplate4;
+		case 5:
+			return this.mnuTemplate5;
+		case 6:
+			return this.mnuTemplate6;
+		case 7:
+			return this.mnuTemplate7;
+		case 8:
+			return this.mnuTemplate8;
+		case 9:
+			return this.mnuTemplate9;
+		case 10:
+			return this.mnuTemplate10;
 		}
 
 		return null;
@@ -214,8 +270,8 @@ public class ExpensePopup extends XdevView {
 
 	public static Window getPopupWindow() {
 		final Window win = new Window();
-		//win.setWidth("720");
-		//win.setHeight("660");
+		// win.setWidth("720");
+		// win.setHeight("660");
 		win.center();
 		win.setModal(true);
 		win.setContent(new ExpensePopup());
@@ -224,11 +280,12 @@ public class ExpensePopup extends XdevView {
 	}
 
 	private void preSaveAccountAction() {
-		final LovAccount lov = this.comboBoxAccount.getSelectedItem().getBean();
-		if (lov != null) {
-			this.fieldGroup.getItemDataSource().getBean().setExpAccount(lov.getId());
+		if (this.comboBoxAccount.getSelectedItem() != null) {
+			final LovAccount lov = this.comboBoxAccount.getSelectedItem().getBean();
+			if (lov != null) {
+				this.fieldGroup.getItemDataSource().getBean().setExpAccount(lov.getId());
+			}
 		}
-
 	}
 
 	private void loadTemplate(final int iKey) {
@@ -237,9 +294,8 @@ public class ExpensePopup extends XdevView {
 		final ExpenseTemplateDAO dao = new ExpenseTemplateDAO();
 		final ExpenseTemplate tpl = dao.findByKeyNumber(line.getPeriode().getCostAccount(), iKey);
 
-		if (tpl == null)
-		 {
-			return;	//not found
+		if (tpl == null) {
+			return; // not found
 		}
 
 		line.setExpAccount(tpl.getExtAccount());
@@ -417,13 +473,30 @@ public class ExpensePopup extends XdevView {
 				final RowObjectManager man = new RowObjectManager();
 				man.updateObject(this.fieldGroup.getItemDataSource().getBean().getExpId(),
 						this.fieldGroup.getItemDataSource().getBean().getClass().getSimpleName());
+				postSave();
 				((Window) this.getParent()).close();
+			} catch (final PersistenceException cx) {
+				final String msg = SeicentoCrud.getPerExceptionError(cx);
+				Notification.show("Fehler beim Speichern", msg, Notification.Type.ERROR_MESSAGE);
+				cx.printStackTrace();
 			} catch (final Exception e) {
+				Notification.show("Fehler beim Speichern", e.getMessage(), Notification.Type.ERROR_MESSAGE);
 				e.printStackTrace();
 			}
 
 		}
+	}
 
+	private void postSave() {
+		if (this.urcv != null && this.urcv.getFiup() != null) {
+			final RowObjectManager man = new RowObjectManager();
+			final RowObject rowobj = man.getRowObject(this.fieldGroup.getItemDataSource().getBean().getClass().getSimpleName(), this.fieldGroup.getItemDataSource().getBean().getExpId());
+
+
+			final File fio = this.urcv.getFiup();
+			final SaveFileToDb upsave = new SaveFileToDb(fio.getAbsolutePath(), this.urcv.getMimeType(), rowobj.getObjId());
+			upsave.importFile();
+		}
 	}
 
 	/**
@@ -467,6 +540,7 @@ public class ExpensePopup extends XdevView {
 		popupTextTemplate();
 
 	}
+
 	private void popupTextTemplate() {
 		final Window win = TextListPopup.getPopupWindow();
 
@@ -596,18 +670,26 @@ public class ExpensePopup extends XdevView {
 	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
 	 */
 	private void mnuUpload_menuSelected(final MenuBar.MenuItem selectedItem) {
-		final Expense bean = this.fieldGroup.getItemDataSource().getBean();
-
-		if (bean.getExpId() == null) {
+		final RowObject obj = getRowObject();
+		if (obj == null) {
 			return;
 		}
-
-		final RowObjectManager man = new RowObjectManager();
-		final RowObject obj = man.getRowObject(bean.getClass().getSimpleName(), bean.getExpId());
 		UI.getCurrent().getSession().setAttribute("RowObject", obj);
 
 		popupAttachments();
 
+	}
+
+	private RowObject getRowObject() {
+		final Expense bean = this.fieldGroup.getItemDataSource().getBean();
+
+		if (bean.getExpId() == null) {
+			return null;
+		}
+
+		final RowObjectManager man = new RowObjectManager();
+		final RowObject obj = man.getRowObject(bean.getClass().getSimpleName(), bean.getExpId());
+		return obj;
 	}
 
 	private void popupAttachments() {
@@ -622,7 +704,7 @@ public class ExpensePopup extends XdevView {
 					retval = "cmdCancel";
 				}
 				if (retval.equals("cmdDone")) {
-					//ExpenseView.this.txtExpText.setValue(reason);
+					// ExpenseView.this.txtExpText.setValue(reason);
 				}
 
 			}
@@ -727,6 +809,7 @@ public class ExpensePopup extends XdevView {
 		this.horizontalLayout = new XdevHorizontalLayout();
 		this.cmdSave = new XdevButton();
 		this.cmdReset = new XdevButton();
+		this.upload = new XdevUpload();
 		this.label2 = new XdevLabel();
 		this.cmdDefault1 = new XdevButton();
 		this.horizontalLayoutShortcut = new XdevHorizontalLayout();
@@ -809,6 +892,8 @@ public class ExpensePopup extends XdevView {
 		this.cmdReset.setIcon(FontAwesome.CLOSE);
 		this.cmdReset.setCaption(StringResourceUtils.optLocalizeString("{$cmdReset.caption}", this));
 		this.cmdReset.setClickShortcut(ShortcutAction.KeyCode.ESCAPE);
+		this.upload.setButtonCaption("Beleg...");
+		this.upload.setImmediate(true);
 		this.label2.setValue("            ");
 		this.cmdDefault1.setIcon(FontAwesome.BOOKMARK);
 		this.cmdDefault1.setCaption("Def 1");
@@ -935,6 +1020,9 @@ public class ExpensePopup extends XdevView {
 		this.cmdReset.setSizeUndefined();
 		this.horizontalLayout.addComponent(this.cmdReset);
 		this.horizontalLayout.setComponentAlignment(this.cmdReset, Alignment.MIDDLE_RIGHT);
+		this.upload.setSizeUndefined();
+		this.horizontalLayout.addComponent(this.upload);
+		this.horizontalLayout.setComponentAlignment(this.upload, Alignment.MIDDLE_CENTER);
 		this.label2.setWidth(100, Unit.PIXELS);
 		this.label2.setHeight(-1, Unit.PIXELS);
 		this.horizontalLayout.addComponent(this.label2);
@@ -1034,6 +1122,7 @@ public class ExpensePopup extends XdevView {
 	private XdevGridLayout form;
 	private XdevComboBox<Project> cmbProject;
 	private XdevComboBox<Periode> cmbPeriode;
+	private XdevUpload upload;
 	private XdevHorizontalLayout horizontalLayout3, horizontalLayoutProject, horizontalLayout, horizontalLayoutShortcut;
 	private XdevComboBox<Vat> cmbVat;
 	private XdevPopupDateField dateExpBooked, dateExpDate;

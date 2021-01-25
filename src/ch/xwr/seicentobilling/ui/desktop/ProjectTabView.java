@@ -1,7 +1,13 @@
 package ch.xwr.seicentobilling.ui.desktop;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.List;
 
@@ -9,6 +15,7 @@ import javax.persistence.PersistenceException;
 
 import org.apache.poi.ss.formula.functions.T;
 
+import com.google.common.collect.Lists;
 import com.vaadin.data.Property;
 import com.vaadin.data.validator.IntegerRangeValidator;
 import com.vaadin.event.ItemClickEvent;
@@ -111,6 +118,39 @@ public class ProjectTabView extends XdevView {
 		setROFields();
 
 		setDefaultFilter();
+		checkAutoLoad();
+	}
+
+	private void checkAutoLoad() {
+		final String proName = (String) UI.getCurrent().getSession().getAttribute("proName");
+		Long proId = new Long(0);
+		try {
+			proId = Long.parseLong((String) UI.getCurrent().getSession().getAttribute("proId"));
+		} catch (final Exception ignore) {
+		}
+		UI.getCurrent().getSession().setAttribute("proName",  "");
+		UI.getCurrent().getSession().setAttribute("proId",  "");
+
+		final ProjectDAO dao = new ProjectDAO();
+		Project pro = null;
+		if (proId.longValue() > 0) {
+			pro = dao.find(proId);
+		} else {
+			if (proName != null && !proName.isEmpty()) {
+				final List<Project> lst = dao.findByName(proName);
+				if (lst != null && lst.size() > 0) {
+					pro = lst.get(0);
+				}
+			}
+
+		}
+
+		if (pro != null) {
+			if (this.table.containsId(pro)) {
+				this.table.select(pro);
+			}
+			this.fieldGroup.setItemDataSource(pro);
+		}
 	}
 
 	private void setVatDefault() {
@@ -174,14 +214,20 @@ public class ProjectTabView extends XdevView {
 	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
 	 */
 	private void cmdNew_buttonClick(final Button.ClickEvent event) {
+		final Calendar cal=Calendar.getInstance();
+		cal.setTime(new Date());
+		cal.add(Calendar.YEAR, 1);
+
 		final Project bean = new Project();
 		bean.setProState(LovState.State.active);
 		bean.setProStartDate(new Date());
+		bean.setProEndDate(cal.getTime());
 		bean.setProProjectState(LovState.ProState.grün);
 		bean.setProRate(150);
 		bean.setProRemark("");
 		bean.setProDescription("");
 		bean.setProHoursEffective(new Double(0.));
+		bean.setProIntensityPercent(new Integer(80));
 		bean.setProModel(LovState.ProModel.undefined);
 
 		if (this.vatdefault != null) {
@@ -196,6 +242,8 @@ public class ProjectTabView extends XdevView {
 
 		this.fieldGroup.setItemDataSource(bean);
 		setROFields();
+
+		calculateTargetHours();
 	}
 
 	/**
@@ -559,6 +607,83 @@ public class ProjectTabView extends XdevView {
 		ProjectTabView.this.cmbCustomer.setValue(bean);
 	}
 
+	private void calculateTargetHours() {
+		if (this.dateProStartDate.isValid() && this.dateProEndDate.isValid()) {
+			final long days = getBusinessDaysDifference(this.dateProStartDate.getValue(), this.dateProEndDate.getValue());
+			int ihours = (int) (days * 8);
+
+			int ipercent= 0;
+			try {
+				ipercent = Integer.parseInt(this.txtProIntensityPercent.getValue());
+			} catch (final Exception e) {
+				//ignore
+			}
+
+			if (ipercent > 0) {
+				ihours = ihours * ipercent / 100;
+			}
+			if (ihours < 1) {
+				ihours = 1;
+			}
+
+			this.txtProHours.setValue("" + ihours);
+			System.out.println("set hours: " + ihours);
+		}
+	}
+
+	private long getBusinessDaysDifference(final Date dFrom, final Date dTo) {
+
+		final LocalDate startDate = convertToLocalDateViaInstant(dFrom);
+		final LocalDate endDate = convertToLocalDateViaInstant(dTo);
+
+	    final EnumSet<DayOfWeek> weekend = EnumSet.of(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY);
+	    final List<LocalDate> list = Lists.newArrayList();
+
+	    LocalDate start = startDate;
+	    while (start.isBefore(endDate)) {
+	        list.add(start);
+	        start = start.plus(1, ChronoUnit.DAYS);
+	    }
+
+	    final long numberOfDays = list.stream().filter(d -> !weekend.contains(d.getDayOfWeek())).count();
+
+	    return numberOfDays;
+	}
+
+	public LocalDate convertToLocalDateViaInstant(final Date dateToConvert) {
+		final java.util.Date utilDate = new java.util.Date(dateToConvert.getTime());
+	    return utilDate.toInstant()
+	      .atZone(ZoneId.systemDefault())
+	      .toLocalDate();
+	}
+
+	/**
+	 * Event handler delegate method for the {@link XdevPopupDateField}
+	 * {@link #dateProEndDate}.
+	 *
+	 * @see Property.ValueChangeListener#valueChange(Property.ValueChangeEvent)
+	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
+	 */
+	private void dateProEndDate_valueChange(final Property.ValueChangeEvent event) {
+		if (this.dateProEndDate.isModified()) {
+			calculateTargetHours();
+		}
+
+	}
+
+	/**
+	 * Event handler delegate method for the {@link XdevTextField}
+	 * {@link #txtProIntensityPercent}.
+	 *
+	 * @see Property.ValueChangeListener#valueChange(Property.ValueChangeEvent)
+	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
+	 */
+	private void txtProIntensityPercent_valueChange(final Property.ValueChangeEvent event) {
+		if (this.txtProIntensityPercent.isModified()) {
+			calculateTargetHours();
+		}
+	}
+
 	/*
 	 * WARNING: Do NOT edit!<br>The content of this method is always regenerated by
 	 * the UI designer.
@@ -593,14 +718,15 @@ public class ProjectTabView extends XdevView {
 		this.dateProStartDate = new XdevPopupDateField();
 		this.lblProEndDate = new XdevLabel();
 		this.dateProEndDate = new XdevPopupDateField();
+		this.lblProIntensityPercent = new XdevLabel();
+		this.txtProIntensityPercent = new XdevTextField();
+		this.label4 = new XdevLabel();
 		this.lblProHours = new XdevLabel();
 		this.txtProHours = new XdevTextField();
 		this.lblProHoursEffective = new XdevLabel();
 		this.txtProHoursEffective = new XdevTextField();
 		this.lblProRate = new XdevLabel();
 		this.txtProRate = new XdevTextField();
-		this.lblProIntensityPercent = new XdevLabel();
-		this.txtProIntensityPercent = new XdevTextField();
 		this.lblVat = new XdevLabel();
 		this.cmbVat = new XdevComboBox<>();
 		this.lblCostAccount = new XdevLabel();
@@ -713,6 +839,11 @@ public class ProjectTabView extends XdevView {
 		this.lblProStartDate.setValue(StringResourceUtils.optLocalizeString("{$lblProStartDate.value}", this));
 		this.dateProStartDate.setRequired(true);
 		this.lblProEndDate.setValue("Ende");
+		this.dateProEndDate.setRequired(true);
+		this.lblProIntensityPercent
+				.setValue(StringResourceUtils.optLocalizeString("{$lblProIntensityPercent.value}", this));
+		this.label4.setIcon(FontAwesome.INFO_CIRCLE);
+		this.label4.setDescription("Stunden Soll wird vorgeschlagen, sobald Datum oder Intensität verändert wird.");
 		this.lblProHours.setValue("Stunden Soll");
 		this.txtProHours
 				.setConverter(ConverterBuilder.stringToDouble().minimumFractionDigits(2).maximumFractionDigits(2).build());
@@ -725,8 +856,6 @@ public class ProjectTabView extends XdevView {
 		this.txtProRate
 				.setConverter(ConverterBuilder.stringToDouble().minimumFractionDigits(2).maximumFractionDigits(2).build());
 		this.txtProRate.setRequired(true);
-		this.lblProIntensityPercent
-				.setValue(StringResourceUtils.optLocalizeString("{$lblProIntensityPercent.value}", this));
 		this.lblVat.setValue(StringResourceUtils.optLocalizeString("{$lblVat.value}", this));
 		this.cmbVat.setRequired(true);
 		this.cmbVat.setItemCaptionFromAnnotation(false);
@@ -884,22 +1013,25 @@ public class ProjectTabView extends XdevView {
 		this.gridLayout.addComponent(this.lblProEndDate, 2, 3);
 		this.dateProEndDate.setSizeUndefined();
 		this.gridLayout.addComponent(this.dateProEndDate, 3, 3);
-		this.lblProHours.setSizeUndefined();
-		this.gridLayout.addComponent(this.lblProHours, 0, 4);
-		this.txtProHours.setSizeUndefined();
-		this.gridLayout.addComponent(this.txtProHours, 1, 4);
-		this.lblProHoursEffective.setSizeUndefined();
-		this.gridLayout.addComponent(this.lblProHoursEffective, 2, 4);
-		this.txtProHoursEffective.setSizeUndefined();
-		this.gridLayout.addComponent(this.txtProHoursEffective, 3, 4);
-		this.lblProRate.setSizeUndefined();
-		this.gridLayout.addComponent(this.lblProRate, 0, 5);
-		this.txtProRate.setSizeUndefined();
-		this.gridLayout.addComponent(this.txtProRate, 1, 5);
 		this.lblProIntensityPercent.setSizeUndefined();
-		this.gridLayout.addComponent(this.lblProIntensityPercent, 0, 6);
+		this.gridLayout.addComponent(this.lblProIntensityPercent, 0, 4);
 		this.txtProIntensityPercent.setSizeUndefined();
-		this.gridLayout.addComponent(this.txtProIntensityPercent, 1, 6);
+		this.gridLayout.addComponent(this.txtProIntensityPercent, 1, 4);
+		this.label4.setWidth(100, Unit.PERCENTAGE);
+		this.label4.setHeight(-1, Unit.PIXELS);
+		this.gridLayout.addComponent(this.label4, 2, 4);
+		this.lblProHours.setSizeUndefined();
+		this.gridLayout.addComponent(this.lblProHours, 0, 5);
+		this.txtProHours.setSizeUndefined();
+		this.gridLayout.addComponent(this.txtProHours, 1, 5);
+		this.lblProHoursEffective.setSizeUndefined();
+		this.gridLayout.addComponent(this.lblProHoursEffective, 2, 5);
+		this.txtProHoursEffective.setSizeUndefined();
+		this.gridLayout.addComponent(this.txtProHoursEffective, 3, 5);
+		this.lblProRate.setSizeUndefined();
+		this.gridLayout.addComponent(this.lblProRate, 0, 6);
+		this.txtProRate.setSizeUndefined();
+		this.gridLayout.addComponent(this.txtProRate, 1, 6);
 		this.lblVat.setSizeUndefined();
 		this.gridLayout.addComponent(this.lblVat, 2, 6);
 		this.cmbVat.setWidth(100, Unit.PERCENTAGE);
@@ -1021,36 +1153,38 @@ public class ProjectTabView extends XdevView {
 		this.table.addItemClickListener(event -> this.table_itemClick(event));
 		this.cmbCustomer.addValueChangeListener(event -> this.cmbCustomer_valueChange(event));
 		this.btnSearch.addClickListener(event -> this.btnSearch_buttonClick(event));
+		this.dateProEndDate.addValueChangeListener(event -> this.dateProEndDate_valueChange(event));
+		this.txtProIntensityPercent.addValueChangeListener(event -> this.txtProIntensityPercent_valueChange(event));
 		this.cmdSave.addClickListener(event -> this.cmdSave_buttonClick(event));
 		this.cmdReset.addClickListener(event -> this.cmdReset_buttonClick(event));
 	} // </generated-code>
 
 	// <generated-code name="variables">
 	private XdevButton cmdNew, cmdDelete, cmdReload, cmdPlan, cmdReport, cmdInfo, btnSearch, cmdSave, cmdReset;
-	private XdevLabel lblCustomer, lblProName, lblProExtReference, lblProContact, lblProStartDate, lblProEndDate,
-			lblProHours, lblProHoursEffective, lblProRate, lblProIntensityPercent, lblVat, lblCostAccount,
-			lblBillingAddress, lblProState, lblProModel, lblProject, lblProDescription, lblProRemark, lblProProjectState,
-			lblProLastBill;
+	private XdevLabel lblProModel, lblProject, lblProDescription, lblProRemark, lblProProjectState, lblProLastBill,
+			lblCustomer, lblProName, lblProExtReference, lblProContact, lblProStartDate, lblProEndDate,
+			lblProIntensityPercent, label4, lblProHours, lblProHoursEffective, lblProRate, lblVat, lblCostAccount,
+			lblBillingAddress, lblProState;
 	private XdevComboBox<CostAccount> cmbCostAccount;
 	private XdevFieldGroup<Project> fieldGroup;
 	private XdevComboBox<Address> cmbBillingAddress;
 	private XdevTabSheet tabSheet;
-	private XdevGridLayout gridLayoutData, gridLayout, gridLayoutDesc, gridLayoutRef;
+	private XdevGridLayout gridLayoutData, gridLayoutDesc, gridLayoutRef, gridLayout;
 	private XdevComboBox<Project> cmbProject;
 	private XdevHorizontalSplitPanel horizontalSplitPanel;
 	private XdevContainerFilterComponent containerFilterComponent;
 	private XdevHorizontalLayout actionLayout, horizontalLayoutCus, horizontalLayout;
-	private XdevComboBox<Vat> cmbVat;
 	private XdevVerticalSplitPanel verticalSplitPanel;
-	private XdevPopupDateField dateProStartDate, dateProEndDate, dateProLastBill;
+	private XdevComboBox<Vat> cmbVat;
 	private XdevTextArea textArea, textAreaRem;
+	private XdevPopupDateField dateProLastBill, dateProStartDate, dateProEndDate;
 	private XdevTable<Project> table, tableProject;
-	private XdevComboBox<?> cbxState, cbxProModel, cbxProState;
-	private XdevComboBox<Customer> cmbCustomer;
+	private XdevComboBox<?> cbxProModel, cbxProState, cbxState;
 	private XdevCheckBox cbxInternal;
 	private XdevTable<Order> tableOrder;
-	private XdevTextField txtProName, txtProExtReference, txtProContact, txtProHours, txtProHoursEffective, txtProRate,
-			txtProIntensityPercent;
+	private XdevComboBox<Customer> cmbCustomer;
+	private XdevTextField txtProName, txtProExtReference, txtProContact, txtProIntensityPercent, txtProHours,
+			txtProHoursEffective, txtProRate;
 	private XdevVerticalLayout verticalLayout, verticalLayoutBill, verticalLayoutSubProject;
 	// </generated-code>
 

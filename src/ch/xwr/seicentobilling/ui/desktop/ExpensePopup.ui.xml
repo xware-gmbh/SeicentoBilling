@@ -19,6 +19,7 @@
 <?import com.xdev.ui.XdevMenuBar.XdevMenuItem?>
 <?import com.xdev.ui.XdevPopupDateField?>
 <?import com.xdev.ui.XdevTextField?>
+<?import com.xdev.ui.XdevUpload?>
 <?import com.xdev.ui.XdevVerticalLayout?>
 <?import com.xdev.ui.XdevView?>
 <?import com.xdev.ui.entitycomponent.combobox.XdevComboBox?>
@@ -249,6 +250,9 @@
                 <x:constraints weightx="0.0" width="0px" alignment="MIDDLE_RIGHT" height="0px" />
                 <x:event>click.buttonClick</x:event>
             </XdevButton>
+            <XdevUpload buttonCaption="Beleg..." x:name="upload" immediate="true">
+                <x:constraints weightx="0.0" width="0px" height="0px" />
+            </XdevUpload>
             <XdevLabel x:name="label2" value="            ">
                 <x:constraints weightx="0.0" width="100px" height="0px" />
             </XdevLabel>

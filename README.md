@@ -26,7 +26,7 @@ Ein Docker Image kann von [Dockerhub](https://cloud.docker.com/repository/docker
 Folgende technische Komponenten kommen zum Einsatz
 * [Rapidclipse IDE (Eclipse basiert)](http://rapidclipse.com) (Java, Vaadin, Hibernate ....)
 * [Tomcat 9.0](https://tomcat.apache.org/download-80.cgi)
-* Microsoft SQL oder PostgreSQL als Datenbank
+* Microsoft SQL oder PostgreSQL(beta) als Datenbank
 * [Jasperserver](https://community.jaspersoft.com/project/jasperreports-server)
 * [Docker](https://docker.com)
 * Azure AD (optional)
