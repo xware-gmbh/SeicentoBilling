@@ -139,7 +139,7 @@ public class AttachmentPopup extends XdevView {
 		        	    AttachmentPopup.this.upload.setEnabled(true);
 		        	    AttachmentPopup.this.labelStatus.setValue("Datei ist zu gross!");
 
-		        	    final int ikb = rec.getMaxImageSize() * 2 / 1024;
+		        	    final int ikb = rec.getMaxImageSize() * 4 / 1024;
 		        		Notification.show("Datei ist zu gross", "Max Size: " + ikb + " KB " + rec.getFiup().getName(),Type.TRAY_NOTIFICATION);
 
 	        	    } else {
