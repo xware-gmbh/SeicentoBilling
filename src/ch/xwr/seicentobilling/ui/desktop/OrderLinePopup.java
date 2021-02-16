@@ -84,6 +84,12 @@ public class OrderLinePopup extends XdevView {
 			bean.setOdlQuantity(1);
 			bean.setOdlNumber(this.CALC.getNextLineNumber(obj));
 
+			if (obj.getProject() != null) {
+				if (obj.getProject().getProRate() > 0) {
+					bean.setOdlPrice(new Double(obj.getProject().getProRate()));
+				}
+			}
+
 		} else {
 			final OrderLineDAO dao = new OrderLineDAO();
 			bean = dao.find(beanId.longValue());
@@ -187,7 +193,9 @@ public class OrderLinePopup extends XdevView {
 		final Item itm = (Item) event.getProperty().getValue();
 
 		if (itm.getItmPrice1() != null) {
-			this.txtOdlPrice.setValue(itm.getItmPrice1().toString());
+			if (this.fieldGroup.getItemDataSource().getBean().getOrderhdr().getProject() == null) {
+				this.txtOdlPrice.setValue(itm.getItmPrice1().toString());
+			}
 		}
 		if (itm.getVat() != null) {
 			this.cmbVat.setValue(itm.getVat());
