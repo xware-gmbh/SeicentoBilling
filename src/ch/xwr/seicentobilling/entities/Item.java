@@ -158,7 +158,7 @@ public class Item implements java.io.Serializable {
 	@Transient
 	public String getPrpShortName() {
 		final StringBuffer bf = new StringBuffer("");
-		bf.append(this.itmIdent).append(" ").append(this.itmName);
+		bf.append(this.itmName).append(" - ").append(this.itmIdent);
 		return bf.toString();
 	}
 

@@ -5,3 +5,15 @@ findByIdent(String ident)
 	select * from Item where itmIdent = :ident
 	//select * from Company where cmpId = 1
 }
+
+findAllSortedByName()
+{
+	select * from Item order by itmName asc
+	//select * from Company where cmpId = 1
+}
+
+findAllActiveSortedByName()
+{
+	select * from Item where itmState = 1 order by itmName asc
+	//select * from Company where cmpId = 1
+}

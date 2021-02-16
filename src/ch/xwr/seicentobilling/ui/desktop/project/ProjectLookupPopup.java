@@ -30,6 +30,7 @@ import ch.xwr.seicentobilling.entities.Project_;
 
 public class ProjectLookupPopup extends XdevView {
 	private Project _proBean = null;
+	private boolean allowNullSelection = false;
 
 	/**
 	 *
@@ -93,6 +94,13 @@ public class ProjectLookupPopup extends XdevView {
 			UI.getCurrent().getSession().setAttribute("beanId", beanId.getProId());
 
 			((Window) this.getParent()).close();
+		} else {
+			if (isAllowNullSelection()) {
+				UI.getCurrent().getSession().setAttribute("beanId", -1L);
+
+				((Window) this.getParent()).close();
+
+			}
 		}
 	}
 
@@ -103,6 +111,7 @@ public class ProjectLookupPopup extends XdevView {
 	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
 	 */
 	private void btnCancel_buttonClick(final Button.ClickEvent event) {
+		UI.getCurrent().getSession().setAttribute("beanId", 0L);
 		((Window) this.getParent()).close();
 	}
 
@@ -208,6 +217,14 @@ public class ProjectLookupPopup extends XdevView {
 		this.btnSelect.addClickListener(event -> this.btnSelect_buttonClick(event));
 		this.btnCancel.addClickListener(event -> this.btnCancel_buttonClick(event));
 	} // </generated-code>
+
+	public boolean isAllowNullSelection() {
+		return this.allowNullSelection;
+	}
+
+	public void setAllowNullSelection(final boolean allowNullSelection) {
+		this.allowNullSelection = allowNullSelection;
+	}
 
 	// <generated-code name="variables">
 	private XdevButton btnSelect, btnCancel;

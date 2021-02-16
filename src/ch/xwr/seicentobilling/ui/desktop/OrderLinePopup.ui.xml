@@ -70,7 +70,7 @@
         <XdevLabel x:name="lblItem" value="{$lblItem.value}">
             <x:constraints gridx="1" gridy="3" weighty="0.0" weightx="0.0" width="0px" height="0px" />
         </XdevLabel>
-        <XdevComboBox tabIndex="3" required="true" itemCaptionFromAnnotation="false" x:name="cmbItem" x:entity="Item">
+        <XdevComboBox tabIndex="3" required="true" itemCaptionFromAnnotation="false" x:name="cmbItem" x:entity="Item" x:autoQuery="false">
             <x:constraints gridx="2" gridy="3" weighty="0.0" weightx="1.0" width="100%" height="0px" />
             <x:entityProperty>
                 <entry type="String" property="prpShortName" />
@@ -78,7 +78,6 @@
             <x:typeArguments>
                 <typeArgument type="Item" />
             </x:typeArguments>
-            <x:data methodName="findAll" />
             <x:event>valueChange.valueChange</x:event>
         </XdevComboBox>
         <XdevLabel x:name="lblVat" value="{$lblVat.value}">
@@ -121,7 +120,7 @@
         <XdevLabel x:name="lblCostAccount" value="{$lblCostAccount.value}">
             <x:constraints gridx="1" gridy="6" weighty="0.0" weightx="0.0" width="0px" height="0px" />
         </XdevLabel>
-        <XdevComboBox tabIndex="8" required="true" itemCaptionFromAnnotation="false" x:name="cmbCostAccount" x:entity="CostAccount">
+        <XdevComboBox tabIndex="8" required="true" itemCaptionFromAnnotation="false" x:name="cmbCostAccount" x:entity="CostAccount" x:autoQuery="false">
             <x:constraints gridx="2" gridy="6" weighty="0.0" weightx="1.0" width="100%" height="0px" />
             <x:entityProperty>
                 <entry type="String" property="csaName" />
@@ -129,7 +128,6 @@
             <x:typeArguments>
                 <typeArgument type="CostAccount" />
             </x:typeArguments>
-            <x:data methodName="findAll" />
         </XdevComboBox>
         <XdevLabel x:name="lblOdlAmountBrut" value="{$lblOdlAmountBrut.value}">
             <x:constraints gridx="1" gridy="7" weighty="0.0" weightx="0.0" width="0px" height="0px" />

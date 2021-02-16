@@ -1,5 +1,7 @@
 package ch.xwr.seicentobilling.ui.desktop;
 
+import java.util.List;
+
 import javax.persistence.PersistenceException;
 
 import com.vaadin.data.Property;
@@ -106,6 +108,9 @@ public class ItemTabView extends XdevView {
 
 		Notification.show("Save clicked", "Daten wurden gespeichert", Notification.Type.TRAY_NOTIFICATION);
 
+		if (isNew) {
+			cmdReload_buttonClick(event);
+		}
 	}
 
 	private void checkItemNumber(final boolean isNew, final boolean commitNbr) {
@@ -241,9 +246,11 @@ public class ItemTabView extends XdevView {
 	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
 	 */
 	private void cmdReload_buttonClick(final Button.ClickEvent event) {
+		this.table.removeAllItems();
+
 		this.table.refreshRowCache();
-		this.table.getBeanContainerDataSource().refresh();
-		this.table.sort();
+		final List<Item> lst = new ItemDAO().findAllSortedByName();
+		this.table.getBeanContainerDataSource().addAll(lst);
 	}
 
 	/**
