@@ -220,7 +220,7 @@ public class ExpensePopup extends XdevView {
 				// This method gets called when the upload finished successfully
 				System.out.println("________________ UPLOAD SUCCEEDED 2");
 
-        	    if (ExpensePopup.this.urcv.getFiup().length() >  (ExpensePopup.this.urcv.getMaxImageSize() * 2)) {
+        	    if (ExpensePopup.this.urcv.getFiup().length() >  (ExpensePopup.this.urcv.getMaxImageSize() * 4)) {
 	        	    final int ikb = ExpensePopup.this.urcv.getMaxImageSize() * 4 / 1024;
 	        		Notification.show("Datei ist zu gross", "Max Size: " + ikb + " KB " + ExpensePopup.this.urcv.getFiup().getName(),Type.TRAY_NOTIFICATION);
 	        		ExpensePopup.this.urcv.removeUploadedFile();

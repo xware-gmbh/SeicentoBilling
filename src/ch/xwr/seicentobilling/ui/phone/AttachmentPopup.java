@@ -135,7 +135,7 @@ public class AttachmentPopup extends XdevView {
 	        	    AttachmentPopup.this.fio = rec.getFiup();
 	        	    AttachmentPopup.this.mimeType = rec.getMimeType();
 
-	        	    if (rec.getFiup().length() >  (rec.getMaxImageSize() * 2)) {
+	        	    if (rec.getFiup().length() >  (rec.getMaxImageSize() * 4)) {
 		        	    AttachmentPopup.this.upload.setEnabled(true);
 		        	    AttachmentPopup.this.labelStatus.setValue("Datei ist zu gross!");
 
