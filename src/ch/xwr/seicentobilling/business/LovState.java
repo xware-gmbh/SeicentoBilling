@@ -99,4 +99,9 @@ public class LovState {
 //			return null;
 //		}
 //	}
+
+	public static enum itmPriceLevel {
+		item, project
+	}
+
 }

@@ -45,6 +45,7 @@ public class Item implements java.io.Serializable {
 	@SuppressWarnings("unused")
 	private String prpShortName;
 	private Double itmAccount;
+	private LovState.itmPriceLevel itmPriceLevel;
 
 	public Item() {
 	}
@@ -174,6 +175,16 @@ public class Item implements java.io.Serializable {
 
 	public void setItmAccount(final Double noname) {
 		this.itmAccount = noname;
+	}
+
+	@Caption("Preis Level")
+	@Column(name = "itmPriceLevel", columnDefinition = "smallint")
+	public LovState.itmPriceLevel getItmPriceLevel() {
+		return this.itmPriceLevel;
+	}
+
+	public void setItmPriceLevel(final LovState.itmPriceLevel itmPriceLevel) {
+		this.itmPriceLevel = itmPriceLevel;
 	}
 
 }

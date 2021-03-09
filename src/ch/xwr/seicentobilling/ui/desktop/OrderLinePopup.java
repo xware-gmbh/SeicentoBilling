@@ -43,6 +43,7 @@ import ch.xwr.seicentobilling.entities.Order;
 import ch.xwr.seicentobilling.entities.OrderLine;
 import ch.xwr.seicentobilling.entities.OrderLine_;
 import ch.xwr.seicentobilling.entities.Order_;
+import ch.xwr.seicentobilling.entities.Project;
 import ch.xwr.seicentobilling.entities.Vat;
 import ch.xwr.seicentobilling.entities.VatLine;
 
@@ -83,12 +84,6 @@ public class OrderLinePopup extends XdevView {
 			bean.setOdlState(LovState.State.active);
 			bean.setOdlQuantity(1);
 			bean.setOdlNumber(this.CALC.getNextLineNumber(obj));
-
-			if (obj.getProject() != null) {
-				if (obj.getProject().getProRate() > 0) {
-					bean.setOdlPrice(new Double(obj.getProject().getProRate()));
-				}
-			}
 
 		} else {
 			final OrderLineDAO dao = new OrderLineDAO();
@@ -192,16 +187,22 @@ public class OrderLinePopup extends XdevView {
 		// if (event.getProperty().)
 		final Item itm = (Item) event.getProperty().getValue();
 
-		if (itm.getItmPrice1() != null) {
-			if (this.fieldGroup.getItemDataSource().getBean().getOrderhdr().getProject() == null) {
+		final Project proj = this.fieldGroup.getItemDataSource().getBean().getOrderhdr().getProject();
+		if (itm.getItmPriceLevel() == LovState.itmPriceLevel.project && proj != null ) {
+			if (proj.getProRate() > 0) {
+				this.txtOdlPrice.setValue("" + proj.getProRate());
+			}
+			if (proj.getVat() != null) {
+				this.cmbVat.setValue(proj.getVat());
+			}
+		} else {
+			if (itm.getItmPrice1() != null) {
 				this.txtOdlPrice.setValue(itm.getItmPrice1().toString());
 			}
+			if (itm.getVat() != null) {
+				this.cmbVat.setValue(itm.getVat());
+			}
 		}
-		if (itm.getVat() != null) {
-			this.cmbVat.setValue(itm.getVat());
-		}
-
-		// loadDataFromEmp(emp);
 	}
 
 	/**
