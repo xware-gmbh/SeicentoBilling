@@ -117,17 +117,21 @@ public class ProjectTabView extends XdevView {
 		// set RO Fields
 		setROFields();
 
-		setDefaultFilter();
-		checkAutoLoad();
+		if (checkAutoLoad()) {
+
+		} else {
+			setDefaultFilter();
+		}
 	}
 
-	private void checkAutoLoad() {
+	private boolean checkAutoLoad() {
 		final String proName = (String) UI.getCurrent().getSession().getAttribute("proName");
 		Long proId = new Long(0);
 		try {
 			proId = Long.parseLong((String) UI.getCurrent().getSession().getAttribute("proId"));
 		} catch (final Exception ignore) {
 		}
+
 		UI.getCurrent().getSession().setAttribute("proName",  "");
 		UI.getCurrent().getSession().setAttribute("proId",  "");
 
@@ -146,11 +150,16 @@ public class ProjectTabView extends XdevView {
 		}
 
 		if (pro != null) {
+			this.table.removeAllItems();
+			this.table.addItem(pro);
+
 			if (this.table.containsId(pro)) {
 				this.table.select(pro);
 			}
 			this.fieldGroup.setItemDataSource(pro);
+			return true;
 		}
+		return false;
 	}
 
 	private void setVatDefault() {
