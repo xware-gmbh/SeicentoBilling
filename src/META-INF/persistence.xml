@@ -44,6 +44,7 @@
 		<class>ch.xwr.seicentobilling.entities.ContactRelation</class>
 		<class>ch.xwr.seicentobilling.entities.Conversion</class>
 		<class>ch.xwr.seicentobilling.entities.AppUser</class>
+		<class>ch.xwr.seicentobilling.entities.ProjectAllocation</class>
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
 		<properties>
 			<property name="hibernate.hbm2ddl.auto" value="" />

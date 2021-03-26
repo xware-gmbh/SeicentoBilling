@@ -51,6 +51,7 @@ import com.xdev.ui.XdevTextField;
 import com.xdev.ui.XdevVerticalLayout;
 import com.xdev.ui.XdevVerticalSplitPanel;
 import com.xdev.ui.XdevView;
+import com.xdev.ui.entitycomponent.XdevBeanContainer;
 import com.xdev.ui.entitycomponent.combobox.XdevComboBox;
 import com.xdev.ui.entitycomponent.table.XdevTable;
 import com.xdev.ui.filter.FilterData;
@@ -72,6 +73,7 @@ import ch.xwr.seicentobilling.dal.AddressDAO;
 import ch.xwr.seicentobilling.dal.CostAccountDAO;
 import ch.xwr.seicentobilling.dal.CustomerDAO;
 import ch.xwr.seicentobilling.dal.OrderDAO;
+import ch.xwr.seicentobilling.dal.ProjectAllocationDAO;
 import ch.xwr.seicentobilling.dal.ProjectDAO;
 import ch.xwr.seicentobilling.dal.VatDAO;
 import ch.xwr.seicentobilling.entities.Address;
@@ -81,9 +83,12 @@ import ch.xwr.seicentobilling.entities.Customer;
 import ch.xwr.seicentobilling.entities.Order;
 import ch.xwr.seicentobilling.entities.Order_;
 import ch.xwr.seicentobilling.entities.Project;
+import ch.xwr.seicentobilling.entities.ProjectAllocation;
+import ch.xwr.seicentobilling.entities.ProjectAllocation_;
 import ch.xwr.seicentobilling.entities.Project_;
 import ch.xwr.seicentobilling.entities.Vat;
 import ch.xwr.seicentobilling.ui.desktop.crm.CustomerLookupPopup;
+import ch.xwr.seicentobilling.ui.desktop.project.ProjectAllocationPopup;
 
 public class ProjectTabView extends XdevView {
 	/** Logger initialized */
@@ -106,6 +111,7 @@ public class ProjectTabView extends XdevView {
 		this.cbxState.addItems((Object[]) LovState.State.values());
 		this.cbxProModel.addItems((Object[]) LovState.ProModel.values());
 		this.cbxProState.addItems((Object[]) LovState.ProState.values());
+		this.cbxProOrderStrategy.addItems((Object[]) LovState.ProOrderStrategy.values());
 
 		// sort Table
 		final Object[] properties = { "proStartDate", "proEndDate" };
@@ -432,6 +438,9 @@ public class ProjectTabView extends XdevView {
 			this.tableProject.removeAllItems();
 			this.tableProject.addItems(new ProjectDAO().findAllChildren(npro.getProId()));
 
+			this.tableProjectAllocation.clear();
+			this.tableProjectAllocation.removeAllItems();
+			this.tableProjectAllocation.addItems(new ProjectAllocationDAO().findByProject(npro));
 		}
 
 	}
@@ -636,7 +645,7 @@ public class ProjectTabView extends XdevView {
 			}
 
 			this.txtProHours.setValue("" + ihours);
-			System.out.println("set hours: " + ihours);
+			//System.out.println("set hours: " + ihours);
 		}
 	}
 
@@ -674,8 +683,22 @@ public class ProjectTabView extends XdevView {
 	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
 	 */
 	private void dateProEndDate_valueChange(final Property.ValueChangeEvent event) {
+		validateDateFromTo();
+
 		if (this.dateProEndDate.isModified()) {
 			calculateTargetHours();
+		}
+
+	}
+
+	private void validateDateFromTo() {
+		final Date dateFrom = this.dateProStartDate.getValue();
+		final Date dateTo = this.dateProEndDate.getValue();
+
+		if (dateTo != null) {
+			if (dateFrom != null && dateTo.before(dateFrom)) {
+				this.dateProEndDate.setValue(dateFrom);
+			}
 		}
 
 	}
@@ -691,6 +714,186 @@ public class ProjectTabView extends XdevView {
 		if (this.txtProIntensityPercent.isModified()) {
 			calculateTargetHours();
 		}
+	}
+
+	/**
+	 * Event handler delegate method for the {@link XdevButton}
+	 * {@link #cmdInfoAddress}.
+	 *
+	 * @see Button.ClickListener#buttonClick(Button.ClickEvent)
+	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
+	 */
+	private void cmdInfoAddress_buttonClick(final Button.ClickEvent event) {
+		final ProjectAllocation bean = this.tableProjectAllocation.getSelectedItem().getBean();
+
+		final Window win = RowObjectView.getPopupWindow();
+
+		// UI.getCurrent().getSession().setAttribute(String.class,
+		// bean.getClass().getSimpleName());
+		win.setContent(new RowObjectView(bean.getPraId(), bean.getClass().getSimpleName()));
+		this.getUI().addWindow(win);
+
+	}
+
+	/**
+	 * Event handler delegate method for the {@link XdevButton}
+	 * {@link #cmdReloadAddress}.
+	 *
+	 * @see Button.ClickListener#buttonClick(Button.ClickEvent)
+	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
+	 */
+	private void cmdReloadAddress_buttonClick(final Button.ClickEvent event) {
+		this.tableProjectAllocation.refreshRowCache();
+		this.tableProjectAllocation.getBeanContainerDataSource().refresh();
+		this.tableProjectAllocation.sort();
+
+	}
+
+	/**
+	 * Event handler delegate method for the {@link XdevButton}
+	 * {@link #cmdDeleteAddress}.
+	 *
+	 * @see Button.ClickListener#buttonClick(Button.ClickEvent)
+	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
+	 */
+	private void cmdDeleteAddress_buttonClick(final Button.ClickEvent event) {
+		if (this.tableProjectAllocation.getSelectedItem() == null) {
+			Notification.show("Datensatz löschen", "Es wurde keine Zeile selektiert in der Tabelle",
+					Notification.Type.WARNING_MESSAGE);
+			return;
+		}
+
+		ConfirmDialog.show(getUI(), "Datensatz löschen", "Wirklich löschen?", new CloseListener() {
+			@Override
+			public void windowClose(final CloseEvent e) {
+				String retval = UI.getCurrent().getSession().getAttribute(String.class);
+				if (retval == null) {
+					retval = "cmdCancel";
+				}
+
+				if (retval.equals("cmdOk")) {
+					doDelete();
+				}
+			}
+
+			private void doDelete() {
+				final ProjectAllocation bean = ProjectTabView.this.tableProjectAllocation.getSelectedItem().getBean();
+				// Delete Record
+				final RowObjectManager man = new RowObjectManager();
+				man.deleteObject(bean.getPraId(), bean.getClass().getSimpleName());
+
+				final ProjectAllocationDAO dao = new ProjectAllocationDAO();
+				dao.remove(bean);
+				//ProjectTabView.this.fieldGroup.getItemDataSource().getBean().getProjectAllocations().remove(bean); //Works on Customer/Address??
+				ProjectTabView.this.tableProjectAllocation.removeItem(bean);
+
+				try {
+					ProjectTabView.this.tableProjectAllocation
+							.select(ProjectTabView.this.tableProjectAllocation.getCurrentPageFirstItemId());
+				} catch (final Exception e) {
+					// ignore
+					// CustomerTabView.this.fieldGroupActivity.setItemDataSource(new Activity());
+				}
+				Notification.show("Datensatz löschen", "Datensatz wurde gelöscht!",
+						Notification.Type.TRAY_NOTIFICATION);
+			}
+
+		});
+
+	}
+
+	/**
+	 * Event handler delegate method for the {@link XdevButton}
+	 * {@link #cmdNewAddress}.
+	 *
+	 * @see Button.ClickListener#buttonClick(Button.ClickEvent)
+	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
+	 */
+	private void cmdNewAddress_buttonClick(final Button.ClickEvent event) {
+		final Long beanId = null;
+		final Long objId = getCurrentRecord();
+		if (objId < 0) {
+			return;
+		}
+
+		UI.getCurrent().getSession().setAttribute("beanId", beanId);
+		UI.getCurrent().getSession().setAttribute("objId", objId);
+
+		popupProjectAllocation();
+
+	}
+
+	private void popupProjectAllocation() {
+		final Window win = ProjectAllocationPopup.getPopupWindow(); //ProjectAllocationPopup
+
+		win.addCloseListener(new CloseListener() {
+			@Override
+			public void windowClose(final CloseEvent e) {
+				reloadProjectAllocationList();
+			}
+
+		});
+		this.getUI().addWindow(win);
+
+
+	}
+
+	private void reloadProjectAllocationList() {
+		Project bean = null;
+		if (this.table.getSelectedItem() != null) {
+			bean = this.table.getSelectedItem().getBean();
+		}
+
+		final XdevBeanContainer<ProjectAllocation> myCustomerList = this.tableProjectAllocation.getBeanContainerDataSource();
+		myCustomerList.removeAll();
+		myCustomerList.addAll(new ProjectAllocationDAO().findByProject(bean));
+
+		if (bean != null) {
+			this.tableProjectAllocation.refreshRowCache();
+			this.tableProjectAllocation.getBeanContainerDataSource().refresh();
+		}
+
+	}
+
+	private Long getCurrentRecord() {
+		if (this.fieldGroup.getItemDataSource().getBean() != null) {
+			return this.fieldGroup.getItemDataSource().getBean().getProId();
+		}
+		return new Long(-1);
+	}
+
+
+	/**
+	 * Event handler delegate method for the {@link XdevButton}
+	 * {@link #cmdEditAddress}.
+	 *
+	 * @see Button.ClickListener#buttonClick(Button.ClickEvent)
+	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
+	 */
+	private void cmdEditAddress_buttonClick(final Button.ClickEvent event) {
+		if (this.tableProjectAllocation.getSelectedItem() == null) {
+			return;
+		}
+
+		final Long beanId = this.tableProjectAllocation.getSelectedItem().getBean().getPraId();
+		final Long objId = null;
+
+		UI.getCurrent().getSession().setAttribute("beanId", beanId);
+		UI.getCurrent().getSession().setAttribute("objId", objId);
+
+		popupProjectAllocation();
+
+	}
+
+	/**
+	 * Event handler delegate method for the {@link XdevPopupDateField}
+	 * {@link #dateProStartDate}.
+	 *
+	 * @see Property.ValueChangeListener#valueChange(Property.ValueChangeEvent)
+	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
+	 */
+	private void dateProStartDate_valueChange(final Property.ValueChangeEvent event) {
+		validateDateFromTo();
 	}
 
 	/*
@@ -748,6 +951,8 @@ public class ProjectTabView extends XdevView {
 		this.lblProModel = new XdevLabel();
 		this.cbxProModel = new XdevComboBox<>();
 		this.cbxInternal = new XdevCheckBox();
+		this.lblProOrderStrategy = new XdevLabel();
+		this.cbxProOrderStrategy = new XdevComboBox<>();
 		this.lblProject = new XdevLabel();
 		this.cmbProject = new XdevComboBox<>();
 		this.lblProDescription = new XdevLabel();
@@ -758,6 +963,15 @@ public class ProjectTabView extends XdevView {
 		this.cbxProState = new XdevComboBox<>();
 		this.lblProLastBill = new XdevLabel();
 		this.dateProLastBill = new XdevPopupDateField();
+		this.gridLayoutRess = new XdevGridLayout();
+		this.verticalLayoutRess = new XdevVerticalLayout();
+		this.horizontalLayoutRess = new XdevHorizontalLayout();
+		this.cmdNewAddress = new XdevButton();
+		this.cmdDeleteAddress = new XdevButton();
+		this.cmdEditAddress = new XdevButton();
+		this.cmdReloadAddress = new XdevButton();
+		this.cmdInfoAddress = new XdevButton();
+		this.tableProjectAllocation = new XdevTable<>();
 		this.gridLayoutRef = new XdevGridLayout();
 		this.verticalSplitPanel = new XdevVerticalSplitPanel();
 		this.verticalLayoutBill = new XdevVerticalLayout();
@@ -881,6 +1095,8 @@ public class ProjectTabView extends XdevView {
 		this.lblProState.setValue(StringResourceUtils.optLocalizeString("{$lblProState.value}", this));
 		this.lblProModel.setValue(StringResourceUtils.optLocalizeString("{$lblProModel.value}", this));
 		this.cbxInternal.setCaption("Internes Projekt");
+		this.lblProOrderStrategy.setValue("Rechnungsstrategie");
+		this.cbxProOrderStrategy.setRequired(true);
 		this.lblProject.setValue(StringResourceUtils.optLocalizeString("{$lblProject.value}", this));
 		this.cmbProject.setContainerDataSource(Project.class, DAOs.get(ProjectDAO.class).findAllActive());
 		this.cmbProject.setItemCaptionPropertyId(Project_.proName.getName());
@@ -890,6 +1106,34 @@ public class ProjectTabView extends XdevView {
 		this.textAreaRem.setRows(2);
 		this.lblProProjectState.setValue(StringResourceUtils.optLocalizeString("{$lblProProjectState.value}", this));
 		this.lblProLastBill.setValue(StringResourceUtils.optLocalizeString("{$lblProLastBill.value}", this));
+		this.gridLayoutRess.setMargin(new MarginInfo(false));
+		this.verticalLayoutRess.setMargin(new MarginInfo(false));
+		this.horizontalLayoutRess.setSpacing(false);
+		this.horizontalLayoutRess.setMargin(new MarginInfo(false));
+		this.cmdNewAddress.setIcon(FontAwesome.PLUS_CIRCLE);
+		this.cmdNewAddress.setDescription(StringResourceUtils.optLocalizeString("{$cmdNew.description}", this));
+		this.cmdDeleteAddress.setIcon(FontAwesome.MINUS_CIRCLE);
+		this.cmdEditAddress.setIcon(FontAwesome.PENCIL);
+		this.cmdReloadAddress.setIcon(FontAwesome.REFRESH);
+		this.cmdInfoAddress.setIcon(FontAwesome.INFO_CIRCLE);
+		this.tableProjectAllocation.setColumnReorderingAllowed(true);
+		this.tableProjectAllocation.setCaption("Projekt Ressourcen");
+		this.tableProjectAllocation.setColumnCollapsingAllowed(true);
+		this.tableProjectAllocation.setContainerDataSource(ProjectAllocation.class, false);
+		this.tableProjectAllocation.setVisibleColumns(ProjectAllocation_.costAccount.getName(),
+				ProjectAllocation_.praStartDate.getName(), ProjectAllocation_.praEndDate.getName(),
+				ProjectAllocation_.praHours.getName(), ProjectAllocation_.praIntensityPercent.getName(),
+				ProjectAllocation_.praRate.getName(), ProjectAllocation_.praRemark.getName(),
+				ProjectAllocation_.praState.getName());
+		this.tableProjectAllocation.setConverter("praStartDate", ConverterBuilder.stringToDate().dateOnly().build());
+		this.tableProjectAllocation.setConverter("praEndDate", ConverterBuilder.stringToDate().dateOnly().build());
+		this.tableProjectAllocation.setColumnAlignment("praHours", Table.Align.RIGHT);
+		this.tableProjectAllocation.setConverter("praHours", ConverterBuilder.stringToDouble().build());
+		this.tableProjectAllocation.setColumnAlignment("praIntensityPercent", Table.Align.RIGHT);
+		this.tableProjectAllocation.setConverter("praIntensityPercent", ConverterBuilder.stringToDouble().build());
+		this.tableProjectAllocation.setColumnAlignment("praRate", Table.Align.RIGHT);
+		this.tableProjectAllocation.setConverter("praRate", ConverterBuilder.stringToDouble().currency().build());
+		this.tableProjectAllocation.setColumnCollapsed("praState", true);
 		this.gridLayoutRef.setMargin(new MarginInfo(false));
 		this.verticalSplitPanel.setStyleName("large");
 		this.verticalSplitPanel.setSplitPosition(60.0F, Unit.PERCENTAGE);
@@ -945,6 +1189,7 @@ public class ProjectTabView extends XdevView {
 		this.fieldGroup.bind(this.txtProContact, Project_.proContact.getName());
 		this.fieldGroup.bind(this.cmbBillingAddress, Project_.address.getName());
 		this.fieldGroup.bind(this.cbxInternal, Project_.internal.getName());
+		this.fieldGroup.bind(this.cbxProOrderStrategy, Project_.proOrdergenerationStrategy.getName());
 
 		this.containerFilterComponent.setContainer(this.table.getBeanContainerDataSource(), "proName", "costAccount",
 				"customer", "proStartDate", "proEndDate", "vat", "proProjectState", "proModel", "proState");
@@ -1066,43 +1311,83 @@ public class ProjectTabView extends XdevView {
 		this.gridLayout.addComponent(gridLayout_vSpacer, 0, 10, 3, 10);
 		this.gridLayout.setRowExpandRatio(10, 1.0F);
 		this.gridLayoutDesc.setColumns(3);
-		this.gridLayoutDesc.setRows(7);
+		this.gridLayoutDesc.setRows(8);
 		this.lblProModel.setSizeUndefined();
 		this.gridLayoutDesc.addComponent(this.lblProModel, 0, 0);
 		this.cbxProModel.setSizeUndefined();
 		this.gridLayoutDesc.addComponent(this.cbxProModel, 1, 0);
 		this.cbxInternal.setSizeUndefined();
 		this.gridLayoutDesc.addComponent(this.cbxInternal, 2, 0);
+		this.lblProOrderStrategy.setSizeUndefined();
+		this.gridLayoutDesc.addComponent(this.lblProOrderStrategy, 0, 1);
+		this.cbxProOrderStrategy.setSizeUndefined();
+		this.gridLayoutDesc.addComponent(this.cbxProOrderStrategy, 1, 1);
 		this.lblProject.setSizeUndefined();
-		this.gridLayoutDesc.addComponent(this.lblProject, 0, 1);
+		this.gridLayoutDesc.addComponent(this.lblProject, 0, 2);
 		this.cmbProject.setWidth(100, Unit.PERCENTAGE);
 		this.cmbProject.setHeight(-1, Unit.PIXELS);
-		this.gridLayoutDesc.addComponent(this.cmbProject, 1, 1, 2, 1);
+		this.gridLayoutDesc.addComponent(this.cmbProject, 1, 2, 2, 2);
 		this.lblProDescription.setSizeUndefined();
-		this.gridLayoutDesc.addComponent(this.lblProDescription, 0, 2);
+		this.gridLayoutDesc.addComponent(this.lblProDescription, 0, 3);
 		this.textArea.setWidth(100, Unit.PERCENTAGE);
 		this.textArea.setHeight(-1, Unit.PIXELS);
-		this.gridLayoutDesc.addComponent(this.textArea, 1, 2, 2, 2);
+		this.gridLayoutDesc.addComponent(this.textArea, 1, 3, 2, 3);
 		this.lblProRemark.setSizeUndefined();
-		this.gridLayoutDesc.addComponent(this.lblProRemark, 0, 3);
+		this.gridLayoutDesc.addComponent(this.lblProRemark, 0, 4);
 		this.textAreaRem.setWidth(100, Unit.PERCENTAGE);
 		this.textAreaRem.setHeight(-1, Unit.PIXELS);
-		this.gridLayoutDesc.addComponent(this.textAreaRem, 1, 3, 2, 3);
+		this.gridLayoutDesc.addComponent(this.textAreaRem, 1, 4, 2, 4);
 		this.lblProProjectState.setSizeUndefined();
-		this.gridLayoutDesc.addComponent(this.lblProProjectState, 0, 4);
+		this.gridLayoutDesc.addComponent(this.lblProProjectState, 0, 5);
 		this.cbxProState.setSizeUndefined();
-		this.gridLayoutDesc.addComponent(this.cbxProState, 1, 4);
+		this.gridLayoutDesc.addComponent(this.cbxProState, 1, 5);
 		this.lblProLastBill.setSizeUndefined();
-		this.gridLayoutDesc.addComponent(this.lblProLastBill, 0, 5);
+		this.gridLayoutDesc.addComponent(this.lblProLastBill, 0, 6);
 		this.dateProLastBill.setWidth(100, Unit.PERCENTAGE);
 		this.dateProLastBill.setHeight(-1, Unit.PIXELS);
-		this.gridLayoutDesc.addComponent(this.dateProLastBill, 1, 5);
+		this.gridLayoutDesc.addComponent(this.dateProLastBill, 1, 6);
 		this.gridLayoutDesc.setColumnExpandRatio(1, 100.0F);
 		this.gridLayoutDesc.setColumnExpandRatio(2, 100.0F);
 		final CustomComponent gridLayoutDesc_vSpacer = new CustomComponent();
 		gridLayoutDesc_vSpacer.setSizeFull();
-		this.gridLayoutDesc.addComponent(gridLayoutDesc_vSpacer, 0, 6, 2, 6);
-		this.gridLayoutDesc.setRowExpandRatio(6, 1.0F);
+		this.gridLayoutDesc.addComponent(gridLayoutDesc_vSpacer, 0, 7, 2, 7);
+		this.gridLayoutDesc.setRowExpandRatio(7, 1.0F);
+		this.cmdNewAddress.setSizeUndefined();
+		this.horizontalLayoutRess.addComponent(this.cmdNewAddress);
+		this.horizontalLayoutRess.setComponentAlignment(this.cmdNewAddress, Alignment.MIDDLE_CENTER);
+		this.cmdDeleteAddress.setSizeUndefined();
+		this.horizontalLayoutRess.addComponent(this.cmdDeleteAddress);
+		this.horizontalLayoutRess.setComponentAlignment(this.cmdDeleteAddress, Alignment.MIDDLE_CENTER);
+		this.cmdEditAddress.setSizeUndefined();
+		this.horizontalLayoutRess.addComponent(this.cmdEditAddress);
+		this.horizontalLayoutRess.setComponentAlignment(this.cmdEditAddress, Alignment.MIDDLE_CENTER);
+		this.cmdReloadAddress.setSizeUndefined();
+		this.horizontalLayoutRess.addComponent(this.cmdReloadAddress);
+		this.horizontalLayoutRess.setComponentAlignment(this.cmdReloadAddress, Alignment.MIDDLE_CENTER);
+		this.cmdInfoAddress.setSizeUndefined();
+		this.horizontalLayoutRess.addComponent(this.cmdInfoAddress);
+		this.horizontalLayoutRess.setComponentAlignment(this.cmdInfoAddress, Alignment.MIDDLE_CENTER);
+		final CustomComponent horizontalLayoutRess_spacer = new CustomComponent();
+		horizontalLayoutRess_spacer.setSizeFull();
+		this.horizontalLayoutRess.addComponent(horizontalLayoutRess_spacer);
+		this.horizontalLayoutRess.setExpandRatio(horizontalLayoutRess_spacer, 1.0F);
+		this.horizontalLayoutRess.setWidth(100, Unit.PERCENTAGE);
+		this.horizontalLayoutRess.setHeight(-1, Unit.PIXELS);
+		this.verticalLayoutRess.addComponent(this.horizontalLayoutRess);
+		this.verticalLayoutRess.setComponentAlignment(this.horizontalLayoutRess, Alignment.MIDDLE_CENTER);
+		this.tableProjectAllocation.setWidth(100, Unit.PERCENTAGE);
+		this.tableProjectAllocation.setHeight(-1, Unit.PIXELS);
+		this.verticalLayoutRess.addComponent(this.tableProjectAllocation);
+		final CustomComponent verticalLayoutRess_spacer = new CustomComponent();
+		verticalLayoutRess_spacer.setSizeFull();
+		this.verticalLayoutRess.addComponent(verticalLayoutRess_spacer);
+		this.verticalLayoutRess.setExpandRatio(verticalLayoutRess_spacer, 1.0F);
+		this.gridLayoutRess.setColumns(1);
+		this.gridLayoutRess.setRows(2);
+		this.verticalLayoutRess.setSizeFull();
+		this.gridLayoutRess.addComponent(this.verticalLayoutRess, 0, 1);
+		this.gridLayoutRess.setColumnExpandRatio(0, 10.0F);
+		this.gridLayoutRess.setRowExpandRatio(1, 10.0F);
 		this.tableOrder.setSizeFull();
 		this.verticalLayoutBill.addComponent(this.tableOrder);
 		this.verticalLayoutBill.setComponentAlignment(this.tableOrder, Alignment.MIDDLE_CENTER);
@@ -1125,6 +1410,8 @@ public class ProjectTabView extends XdevView {
 		this.gridLayoutDesc.setSizeFull();
 		this.tabSheet.addTab(this.gridLayoutDesc, StringResourceUtils.optLocalizeString("{$gridLayout2.caption}", this),
 				null);
+		this.gridLayoutRess.setSizeFull();
+		this.tabSheet.addTab(this.gridLayoutRess, "Ressourcen", null);
 		this.gridLayoutRef.setSizeFull();
 		this.tabSheet.addTab(this.gridLayoutRef, "Referenzen", null);
 		this.tabSheet.setSelectedTab(this.gridLayout);
@@ -1162,39 +1449,47 @@ public class ProjectTabView extends XdevView {
 		this.table.addItemClickListener(event -> this.table_itemClick(event));
 		this.cmbCustomer.addValueChangeListener(event -> this.cmbCustomer_valueChange(event));
 		this.btnSearch.addClickListener(event -> this.btnSearch_buttonClick(event));
+		this.dateProStartDate.addValueChangeListener(event -> this.dateProStartDate_valueChange(event));
 		this.dateProEndDate.addValueChangeListener(event -> this.dateProEndDate_valueChange(event));
 		this.txtProIntensityPercent.addValueChangeListener(event -> this.txtProIntensityPercent_valueChange(event));
+		this.cmdNewAddress.addClickListener(event -> this.cmdNewAddress_buttonClick(event));
+		this.cmdDeleteAddress.addClickListener(event -> this.cmdDeleteAddress_buttonClick(event));
+		this.cmdEditAddress.addClickListener(event -> this.cmdEditAddress_buttonClick(event));
+		this.cmdReloadAddress.addClickListener(event -> this.cmdReloadAddress_buttonClick(event));
+		this.cmdInfoAddress.addClickListener(event -> this.cmdInfoAddress_buttonClick(event));
 		this.cmdSave.addClickListener(event -> this.cmdSave_buttonClick(event));
 		this.cmdReset.addClickListener(event -> this.cmdReset_buttonClick(event));
 	} // </generated-code>
 
 	// <generated-code name="variables">
-	private XdevButton cmdNew, cmdDelete, cmdReload, cmdPlan, cmdReport, cmdInfo, btnSearch, cmdSave, cmdReset;
-	private XdevLabel lblProModel, lblProject, lblProDescription, lblProRemark, lblProProjectState, lblProLastBill,
-			lblCustomer, lblProName, lblProExtReference, lblProContact, lblProStartDate, lblProEndDate,
+	private XdevButton cmdNew, cmdDelete, cmdReload, cmdPlan, cmdReport, cmdInfo, btnSearch, cmdNewAddress,
+			cmdDeleteAddress, cmdEditAddress, cmdReloadAddress, cmdInfoAddress, cmdSave, cmdReset;
+	private XdevLabel lblCustomer, lblProName, lblProExtReference, lblProContact, lblProStartDate, lblProEndDate,
 			lblProIntensityPercent, label4, lblProHours, lblProHoursEffective, lblProRate, lblVat, lblCostAccount,
-			lblBillingAddress, lblProState;
+			lblBillingAddress, lblProState, lblProModel, lblProOrderStrategy, lblProject, lblProDescription, lblProRemark,
+			lblProProjectState, lblProLastBill;
 	private XdevComboBox<CostAccount> cmbCostAccount;
 	private XdevFieldGroup<Project> fieldGroup;
 	private XdevComboBox<Address> cmbBillingAddress;
 	private XdevTabSheet tabSheet;
-	private XdevGridLayout gridLayoutData, gridLayoutDesc, gridLayoutRef, gridLayout;
+	private XdevGridLayout gridLayoutData, gridLayout, gridLayoutDesc, gridLayoutRess, gridLayoutRef;
 	private XdevComboBox<Project> cmbProject;
 	private XdevHorizontalSplitPanel horizontalSplitPanel;
 	private XdevContainerFilterComponent containerFilterComponent;
-	private XdevHorizontalLayout actionLayout, horizontalLayoutCus, horizontalLayout;
-	private XdevVerticalSplitPanel verticalSplitPanel;
+	private XdevTable<ProjectAllocation> tableProjectAllocation;
+	private XdevHorizontalLayout actionLayout, horizontalLayoutCus, horizontalLayoutRess, horizontalLayout;
 	private XdevComboBox<Vat> cmbVat;
+	private XdevVerticalSplitPanel verticalSplitPanel;
+	private XdevPopupDateField dateProStartDate, dateProEndDate, dateProLastBill;
 	private XdevTextArea textArea, textAreaRem;
-	private XdevPopupDateField dateProLastBill, dateProStartDate, dateProEndDate;
 	private XdevTable<Project> table, tableProject;
-	private XdevComboBox<?> cbxProModel, cbxProState, cbxState;
+	private XdevComboBox<?> cbxState, cbxProModel, cbxProOrderStrategy, cbxProState;
+	private XdevComboBox<Customer> cmbCustomer;
 	private XdevCheckBox cbxInternal;
 	private XdevTable<Order> tableOrder;
-	private XdevComboBox<Customer> cmbCustomer;
 	private XdevTextField txtProName, txtProExtReference, txtProContact, txtProIntensityPercent, txtProHours,
 			txtProHoursEffective, txtProRate;
-	private XdevVerticalLayout verticalLayout, verticalLayoutBill, verticalLayoutSubProject;
+	private XdevVerticalLayout verticalLayout, verticalLayoutRess, verticalLayoutBill, verticalLayoutSubProject;
 	// </generated-code>
 
 }

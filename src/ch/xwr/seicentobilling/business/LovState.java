@@ -17,6 +17,10 @@ public class LovState {
 		undefined, fix, variable
 	}
 
+	public static enum ProOrderStrategy {
+		exklusiv, zusammenziehen
+	}
+
 	public static enum ExpUnit {
 		kilometer, währung, stück
 	}
