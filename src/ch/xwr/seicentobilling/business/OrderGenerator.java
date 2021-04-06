@@ -5,16 +5,23 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import ch.xwr.seicentobilling.business.model.billing.BillDto;
 import ch.xwr.seicentobilling.business.model.billing.BillLine;
 import ch.xwr.seicentobilling.business.model.billing.GuiGeneratorFields;
 import ch.xwr.seicentobilling.dal.OrderDAO;
 import ch.xwr.seicentobilling.dal.OrderLineDAO;
+import ch.xwr.seicentobilling.dal.PeriodeDAO;
+import ch.xwr.seicentobilling.dal.ProjectDAO;
 import ch.xwr.seicentobilling.dal.ProjectLineDAO;
+import ch.xwr.seicentobilling.entities.CostAccount;
+import ch.xwr.seicentobilling.entities.Item;
 import ch.xwr.seicentobilling.entities.Order;
 import ch.xwr.seicentobilling.entities.OrderLine;
 import ch.xwr.seicentobilling.entities.Periode;
+import ch.xwr.seicentobilling.entities.Project;
+import ch.xwr.seicentobilling.entities.ProjectAllocation;
 import ch.xwr.seicentobilling.entities.ProjectLine;
 
 public class OrderGenerator {
@@ -25,43 +32,111 @@ public class OrderGenerator {
 	private static final org.apache.log4j.Logger _logger = org.apache.log4j.Logger.getLogger(OrderGenerator.class);
 
 
-	public List<BillDto> proposeDraft(final Periode inp) {
+	public List<BillDto> proposeDraft(final Periode inp, final GuiGeneratorFields guifld) {
+		this._guifld = guifld;
 		final ProjectLineDAO dao = new ProjectLineDAO();
 		final List<ProjectLine> list = dao.findByPeriode(inp);
+		BillDto bill = null;
 
+		//Loop 1 collect ProjectLines of current Periode
 		for (final Iterator<ProjectLine> iterator = list.iterator(); iterator.hasNext();) {
 			final ProjectLine pln = iterator.next();
-			final int cusnbr = pln.getProject().getCustomer().getCusNumber();
-			final long proId = pln.getProject().getProId();
-			BillDto bill = null;
-			if (! this._billMap.containsKey(proId)) {
-				bill = new BillDto();
-				bill.setCustomerNbr(cusnbr);
-				bill.setCustomer(pln.getProject().getCustomer());
-				bill.setProject(pln.getProject());
-				bill.setCostaccount(pln.getPeriode().getCostAccount());
-				bill.setPeriode(inp);
-				this._billMap.put(proId, bill);
-			} else {
-				bill = this._billMap.get(proId);
-			}
 
+			bill = getBillDto(pln, inp);
 			cumulateLine(bill, pln);
 		}
 
+		//Loop 2 check additonal Ressources
+		lookupProjectForStrategy(inp);
+
 		final List<BillDto> rlist = calculateTotalHeader2List();
 		return rlist;
+	}
+
+	private void lookupProjectForStrategy(final Periode inp) {
+		final ProjectDAO proDao = new ProjectDAO();
+		final List<Project> list = proDao.findByCostAccountActive(inp.getCostAccount());
+		for (final Iterator<Project> iterator = list.iterator(); iterator.hasNext();) {
+			final Project pro = iterator.next();
+
+			if (pro.getProOrdergenerationStrategy() == LovState.ProOrderStrategy.zusammenziehen) {
+				//this project should have more costaccounts for billing lookup
+				final Set<ProjectAllocation> lst = pro.getProjectAllocations();
+				for (final Iterator<ProjectAllocation> itr = lst.iterator(); itr.hasNext();) {
+					final ProjectAllocation pra = itr.next();
+					if (!pra.getCostAccount().getCsaId().equals(inp.getCostAccount().getCsaId())) { //prevent own double
+						final Periode per = getValidPeriodForCst(inp, pra);
+						//now we have the periode and the project
+						if (per != null) {
+							lookupProjectLinesForProject(per, pro);
+						}
+					}
+				}
+
+			}
+
+		}
+
+	}
+
+	private Periode getValidPeriodForCst(final Periode inp, final ProjectAllocation pra) {
+		final PeriodeDAO pd = new PeriodeDAO();
+		final List<Periode> lsper = pd.findByCostAccountTop(pra.getCostAccount(), 5);
+		for (final Iterator<Periode> itrP = lsper.iterator(); itrP.hasNext();) {
+			final Periode per = itrP.next();
+
+			if (per.getPerMonth().getValue() == inp.getPerMonth().getValue() && per.getPerYear().equals(inp.getPerYear())) {
+				return per;
+			}
+		}
+
+		return null;  //no Periode found
+	}
+
+	private void lookupProjectLinesForProject(final Periode per, final Project pro) {
+		final ProjectLineDAO dao = new ProjectLineDAO();
+		BillDto bill = null;
+
+		final List<ProjectLine> lstPl = dao.findByPeriode(per);
+		for (final Iterator<ProjectLine> itrPl = lstPl.iterator(); itrPl.hasNext();) {
+			//here we have the project line of the periode from the ProjectAllocation
+			final ProjectLine pln = itrPl.next();
+
+			if (pln.getProject().getProId().equals(pro.getProId())) {
+				//only take same projects
+				bill = getBillDto(pln, per);
+				cumulateLine(bill, pln);
+			}
+		}
+
+	}
+
+	private BillDto getBillDto(final ProjectLine pln, final Periode per) {
+		final int cusnbr = pln.getProject().getCustomer().getCusNumber();
+		final long proId = pln.getProject().getProId();
+		//final long perId = per.getPerId();
+		BillDto bill = null;
+
+		if (! this._billMap.containsKey(proId)) {
+			bill = new BillDto();
+			bill.setCustomerNbr(cusnbr);
+			bill.setCustomer(pln.getProject().getCustomer());
+			bill.setProject(pln.getProject());
+			bill.setCostaccount(per.getCostAccount());
+			bill.setPeriode(per);
+			this._billMap.put(proId, bill);
+		} else {
+			bill = this._billMap.get(proId);
+		}
+		return bill;
 	}
 
 	private List<BillDto> calculateTotalHeader2List() {
 		final List<BillDto> rlist = new ArrayList<>(this._billMap.values());
 
 		for (final BillDto billDto : rlist) {
-			final Double amt1 = getAmountFromLine(billDto.getExpenseHours());
-			final Double amt2 = getAmountFromLine(billDto.getJourneyHours());
-			final Double amt3 = getAmountFromLine(billDto.getProjectHours());
-
-			billDto.setTotalAmount(amt1 + amt2 + amt3);
+			final Double amt = getAmountFromLine(billDto.getLines());
+			billDto.setTotalAmount(amt);
 		}
 
 		return rlist;
@@ -82,22 +157,16 @@ public class OrderGenerator {
 	}
 
 	private void cumulateLine(final BillDto bill, final ProjectLine pln) {
-		if (pln.getPrlWorkType().equals(LovState.WorkType.journey)) {  //Reisezeit
-			checkListEntry(bill.getJourneyHours(), pln);
-		} else if (pln.getPrlWorkType().equals(LovState.WorkType.expense)) {  //Spesen
-			checkListEntry(bill.getExpenseHours(), pln);
-		} else {
-			checkListEntry(bill.getProjectHours(), pln);
-		}
-	}
+		final Item itm = getItem(pln);
+		final List<BillLine> list = bill.getLines();
 
-	private void checkListEntry(final List<BillLine> list, final ProjectLine pln) {
 		BillLine line = null;
 		if (! list.isEmpty()) {
 			for (int i = 0; i < list.size(); i++) {
 				final BillLine tmp = list.get(i);
 				if (tmp.getRate().equals(pln.getPrlRate()) &&
-						tmp.getCostaccount().getCsaId().equals(pln.getPeriode().getCostAccount().getCsaId())) {
+						tmp.getCostaccount().getCsaId().equals(pln.getPeriode().getCostAccount().getCsaId()) &&
+						tmp.getItem().getItmId().equals(itm.getItmId())) {
 					line = list.get(i);
 					line.setHours(line.getHours() + pln.getPrlHours());
 				}
@@ -105,17 +174,54 @@ public class OrderGenerator {
 		}
 
 		if (line == null) {
-			list.add(getEmptyLine(pln));  //either empty or missing criteria
+			final String text = getLineText(bill, pln);
+			list.add(getEmptyLine(pln, itm, text));  //either empty or missing criteria
 		}
 
 	}
 
-	private BillLine getEmptyLine(final ProjectLine pln) {
+	private String getLineText(final BillDto billDto, final ProjectLine pln) {
+		String text = null;
+
+		if (pln.getPrlWorkType().equals(LovState.WorkType.journey)) {  //Reisezeit
+			text = this._guifld.getLineTextJourney();
+		} else if (pln.getPrlWorkType().equals(LovState.WorkType.expense)) {  //Spesen
+			text = this._guifld.getLineTextExpense();
+		} else {
+			text = this._guifld.getLineTextProject();
+		}
+
+		if (text == null) {
+			text = "no text!";
+		}
+
+		final String text2 = disolveLineText(billDto, pln.getPeriode().getCostAccount(), text);
+		return text2;
+	}
+
+	private Item getItem(final ProjectLine pln) {
+		Item itm = null;
+
+		if (pln.getPrlWorkType().equals(LovState.WorkType.journey)) {  //Reisezeit
+			itm = this._guifld.getItemJourney();
+		} else if (pln.getPrlWorkType().equals(LovState.WorkType.expense)) {  //Spesen
+			itm = this._guifld.getItemExpense();
+		} else {
+			itm = this._guifld.getItemProject();
+		}
+
+		return itm;
+	}
+
+
+	private BillLine getEmptyLine(final ProjectLine pln, final Item itm, final String text) {
 		final BillLine line = new BillLine();
 		line.setRate(pln.getPrlRate());
 		line.setWorkType(pln.getPrlWorkType());
 		line.setCostaccount(pln.getPeriode().getCostAccount());
 		line.setHours(pln.getPrlHours());
+		line.setItem(itm);
+		line.setText(text);
 
 		return line;
 	}
@@ -146,12 +252,10 @@ public class OrderGenerator {
 	}
 
 	private void createPositions(final Order hdr, final BillDto billDto) {
-		createPosition(hdr, billDto, billDto.getProjectHours(), 0);
-		createPosition(hdr, billDto, billDto.getJourneyHours(), 2);
-		createPosition(hdr, billDto, billDto.getExpenseHours(), 1);
+		createPosition(hdr, billDto, billDto.getLines());
 	}
 
-	private void createPosition(final Order hdr, final BillDto billDto, final List<BillLine> list, final int flag) {
+	private void createPosition(final Order hdr, final BillDto billDto, final List<BillLine> list) {
 		final OrderLineDAO dao = new OrderLineDAO();
 
 		if (list!= null && ! list.isEmpty()) {
@@ -164,21 +268,8 @@ public class OrderGenerator {
 				pos.setOdlPrice(tmp.getRate());
 				pos.setOdlQuantity(tmp.getHours());
 				pos.setOdlState(LovState.State.active);
-
-				switch (flag) {
-				case 0:
-					pos.setItem(this._guifld.getItemProject());
-					pos.setOdlText(disolveLineText(billDto, tmp, this._guifld.getLineTextProject()));
-					break;
-				case 1:
-					pos.setItem(this._guifld.getItemExpense());
-					pos.setOdlText(disolveLineText(billDto, tmp, this._guifld.getLineTextExpense()));
-					break;
-				case 2:
-					pos.setItem(this._guifld.getItemJourney());
-					pos.setOdlText(disolveLineText(billDto, tmp, this._guifld.getLineTextJourney()));
-					break;
-				}
+				pos.setItem(tmp.getItem());
+				pos.setOdlText(tmp.getText());
 
 				pos.setVat(hdr.getProject().getVat());
 				pos.setOdlNumber(this._calc.getNextLineNumber(hdr));
@@ -273,12 +364,12 @@ public class OrderGenerator {
 		return input.trim();
 	}
 
-	private String disolveLineText(final BillDto billDto, final BillLine tmp, String text) {
+	private String disolveLineText(final BillDto billDto, final CostAccount cst, String text) {
 		String monthText = LovState.Month.fromId(billDto.getPeriode().getPerMonth().getValue()).name();
 		monthText = monthText.substring(0, 1).toUpperCase() + monthText.substring(1);
 
-        text = text.replace("{csaName}", tmp.getCostaccount().getCsaName().trim());
-        text = text.replace("{csaCode}", tmp.getCostaccount().getCsaCode().trim());
+        text = text.replace("{csaName}", cst.getCsaName().trim());
+        text = text.replace("{csaCode}", cst.getCsaCode().trim());
         text = text.replace("{perYear}", billDto.getPeriode().getPerYear().toString());
         text = text.replace("{perMonth}", "" + billDto.getPeriode().getPerMonth().getValue());
         text = text.replace("{perMonthText}", monthText);
@@ -288,3 +379,13 @@ public class OrderGenerator {
 	}
 
 }
+
+//final class _HashDto {
+//	public long proId;
+//	public long perId;
+//
+//	public _HashDto(final long proId, final long perId) {
+//		this.proId = proId;
+//		this.perId = 1; //perId;
+//	}
+//}

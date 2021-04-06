@@ -1,4 +1,5 @@
 import ch.xwr.seicentobilling.entities.Project
+import ch.xwr.seicentobilling.entities.CostAccount
 
 findByName(String name)
 {
@@ -18,4 +19,9 @@ findAllActive()
 findAllChildren(Long id)
 {
 	select * from Project where project.proId = :id and proState = 1 order by proName asc
+}
+
+findByCostAccountActive(CostAccount cst)
+{
+	select * from Project where costAccount = :cst and proState = 1
 }
