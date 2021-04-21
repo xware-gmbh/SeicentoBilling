@@ -514,13 +514,14 @@ public class OrderTabView extends XdevView {
 		// reassign filter
 		this.containerFilterComponent.setFilterData(fd);
 
-		final Order bean = this.fieldGroup.getItemDataSource().getBean();
-		if (bean != null) {
-			//final boolean exi = this.table.containsId(bean);
-			//final com.vaadin.data.Item x = this.table.getItem(bean);
-			this.table.select(bean);
+		if (this.fieldGroup.getItemDataSource() != null) {
+			final Order bean = this.fieldGroup.getItemDataSource().getBean();
+			if (bean != null) {
+				//final boolean exi = this.table.containsId(bean);
+				//final com.vaadin.data.Item x = this.table.getItem(bean);
+				this.table.select(bean);
+			}
 		}
-
 	}
 
 	/**
