@@ -15,7 +15,11 @@ import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -28,6 +32,7 @@ import org.jfree.util.Log;
 import ch.xwr.seicentobilling.dal.CompanyDAO;
 import ch.xwr.seicentobilling.dal.EntityDAO;
 import ch.xwr.seicentobilling.dal.PeriodeDAO;
+import ch.xwr.seicentobilling.dal.ProjectDAO;
 import ch.xwr.seicentobilling.dal.RowObjectDAO;
 import ch.xwr.seicentobilling.dal.RowParameterDAO;
 import ch.xwr.seicentobilling.entities.Company;
@@ -35,6 +40,8 @@ import ch.xwr.seicentobilling.entities.Customer;
 import ch.xwr.seicentobilling.entities.Expense;
 import ch.xwr.seicentobilling.entities.Order;
 import ch.xwr.seicentobilling.entities.Periode;
+import ch.xwr.seicentobilling.entities.Project;
+import ch.xwr.seicentobilling.entities.ProjectAllocation;
 import ch.xwr.seicentobilling.entities.RowImage;
 import ch.xwr.seicentobilling.entities.RowObject;
 import ch.xwr.seicentobilling.entities.RowParameter;
@@ -209,35 +216,35 @@ public class JasperManager {
 		}
 		final String urlProject = getRestPdfUri(ProjectSummary1);
 
-		// compute URL for Project Report
-		resetParams();
-		final long perId = getPeriode(oBean);
-		if (oBean.getProject() != null && generateWorkReport) {
-			addParameter("Param_Periode", "" + perId); // Periode
-			addParameter("Param_ProjectId", "" + oBean.getProject().getProId());
-			addParameter("REKAP_Print", "false");
-		}
-		final String urlReport = getRestPdfUri(ProjectReport1);
-
+		// compute URL for Project Report (ProjectReport1)
+		final HashMap<String, String> wrepurls = getWorkReportUrl(oBean.getProject());
 		try {
 			//Rechnung
-			fileBill = getTempFileName4Zip(oBean, 0);
+			fileBill = getTempFileName4Zip(oBean, 0, "");
 			lst.add(new File(fileBill));
 			httpcode = streamToFile(urlBill, fileBill); // Rechnung
 			_logger.debug("PDF Rechnung erstellt..." + httpcode);
 			//Workreport
-			if (oBean.getProject() != null && perId > 0 && generateWorkReport) {
-				fileReport = getTempFileName4Zip(oBean, 3);
-				httpcode = streamToFile(urlReport, fileReport);
-				_logger.debug("PDF Arbeitsrapport erstellt... Code: " + httpcode);
+			if (oBean.getProject() != null && generateWorkReport) {
+				if (wrepurls.size() > 0) {
+				    final Iterator<Entry<String, String>> it = wrepurls.entrySet().iterator();
+				    while (it.hasNext()) {
+				        final Map.Entry<String, String> pair = it.next();
+				        System.out.println(pair.getKey() + " = " + pair.getValue());
 
-				if (httpcode == 200) { //ok
-					lst.add(new File(fileReport));
+						fileReport = getTempFileName4Zip(oBean, 3, pair.getKey());
+						httpcode = streamToFile(pair.getValue().toString(), fileReport);
+						_logger.debug("PDF Arbeitsrapport erstellt... Code: " + httpcode);
+
+						if (httpcode == 200) { //ok
+							lst.add(new File(fileReport));
+						}
+				    }
 				}
 			}
 			//ProjectSummary
 			if (oBean.getProject() != null && generateSummary) {
-				fileProject = getTempFileName4Zip(oBean, 1);
+				fileProject = getTempFileName4Zip(oBean, 1, "");
 				httpcode = streamToFile(urlProject, fileProject); // ProjectSummary
 				_logger.debug("PDF Projektsummary erstellt... Code: " + httpcode);
 
@@ -252,7 +259,7 @@ public class JasperManager {
 				lst.add(new File(mergePdf));
 			}
 
-			zipFile = getTempFileName4Zip(oBean, 2);
+			zipFile = getTempFileName4Zip(oBean, 2, "");
 			zip(lst, zipFile);
 
 		} catch (final Exception e) {
@@ -263,13 +270,69 @@ public class JasperManager {
 		return zipFile;
 	}
 
+	private HashMap<String, String> getWorkReportUrl(final Project project) {
+		final HashMap<String, String> urls = new HashMap<>();
+
+		final ProjectDAO dao = new ProjectDAO();
+		final Project pro = dao.find(project.getProId());
+
+		if (getSelectedPeriod() != null) {
+			final long perId = getSelectedPeriod().getPerId();
+
+			urls.put(getSelectedPeriod().getPerName(), getSingleWorkReportUrl(perId, project.getProId()));
+
+			if (project.getProOrdergenerationStrategy() == LovState.ProOrderStrategy.zusammenziehen ) {
+				final Set<ProjectAllocation> lst = pro.getProjectAllocations();
+				for (final Iterator<ProjectAllocation> itr = lst.iterator(); itr.hasNext();) {
+					final ProjectAllocation pra = itr.next();
+					if (!pra.getCostAccount().getCsaId().equals(getSelectedPeriod().getCostAccount().getCsaId())) { //prevent own double
+						final Periode per = getValidPeriodForCst(getSelectedPeriod(), pra);
+						//now we have the periode and the project
+						if (per != null) {
+							urls.put(per.getPerName(), getSingleWorkReportUrl(per.getPerId(), project.getProId()));
+						}
+					}
+				}
+
+			}
+		}
+
+		return urls;
+	}
+
+	private String getSingleWorkReportUrl(final long perId, final Long proId) {
+		resetParams();
+		addParameter("Param_Periode", "" + perId); // Periode
+		addParameter("Param_ProjectId", "" + proId);
+		addParameter("REKAP_Print", "false");
+
+		final String urlReport = getRestPdfUri(ProjectReport1);
+		return urlReport;
+
+	}
+
+	private Periode getValidPeriodForCst(final Periode inp, final ProjectAllocation pra) {
+		final PeriodeDAO pd = new PeriodeDAO();
+		final List<Periode> lsper = pd.findByCostAccountTop(pra.getCostAccount(), 5);
+		for (final Iterator<Periode> itrP = lsper.iterator(); itrP.hasNext();) {
+			final Periode per = itrP.next();
+
+			if (per.getPerMonth().getValue() == inp.getPerMonth().getValue() && per.getPerYear().equals(inp.getPerYear())) {
+				return per;
+			}
+		}
+
+		return null;  //no Periode found
+	}
+
+
 	private String mergeOnePdf(final List<File> lst, final Order oBean) {
     	final Customer cus = oBean.getCustomer();
     	String filename = "";
     	if (cus.getCusSinglepdf() == null || !cus.getCusSinglepdf().booleanValue()) {
     		return "";
     	} else {
-    		filename = getTempFileName4Zip(oBean, 4);
+    		filename = getTempFileName4Zip(oBean, 4, "");
     	    try {
     	        final PDFMergerUtility pdfmerger = new PDFMergerUtility();
     	        for (final File file : lst) {
@@ -287,9 +350,9 @@ public class JasperManager {
 		return filename;
 	}
 
-	private long getPeriode(final Order oBean) {
-		return getSelectedPeriod().getPerId();
-	}
+//	private long getPeriode(final Order oBean) {
+//		return getSelectedPeriod().getPerId();
+//	}
 
 	private void resetParams() {
 		this.keys.clear();
@@ -419,7 +482,7 @@ public class JasperManager {
 		return null;
 	}
 
-	private String getTempFileName4Zip(final Order bean, final int iflag) {
+	private String getTempFileName4Zip(final Order bean, final int iflag, final String name) {
 		//Default
 		String fileExt = ".pdf";
 		String prefix = "Rechnung_" + bean.getOrdNumber();
@@ -432,7 +495,7 @@ public class JasperManager {
 			prefix = "XWare_R" + bean.getOrdNumber() + "_" + getTimeStamp();
 		}
 		if (iflag == 3) {
-			prefix = "WorkReport_" + getSelectedPeriod().getPerName();
+			prefix = "WorkReport_" + name;
 		}
 		if (iflag == 4) {
 			prefix = "RechnungLang_" + bean.getOrdNumber();
