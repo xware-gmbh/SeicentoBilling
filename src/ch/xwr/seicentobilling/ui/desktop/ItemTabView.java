@@ -368,7 +368,7 @@ public class ItemTabView extends XdevView {
 		this.cmbVat.setContainerDataSource(Vat.class, DAOs.get(VatDAO.class).findAllActive());
 		this.cmbVat.setItemCaptionPropertyId("fullName");
 		this.lblItmPriceLevel.setDescription("Priorität für Preisermittlung");
-		this.lblItmPriceLevel.setValue("Preis Level");
+		this.lblItmPriceLevel.setValue("Preis Prio");
 		this.cbxPriceLevel.setRequired(true);
 		this.lblItmUnit.setValue(StringResourceUtils.optLocalizeString("{$lblItmUnit.value}", this));
 		this.lblItemGroup.setValue(StringResourceUtils.optLocalizeString("{$lblItemGroup.value}", this));

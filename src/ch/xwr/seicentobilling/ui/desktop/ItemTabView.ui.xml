@@ -133,7 +133,7 @@
                 </x:typeArguments>
                 <x:data methodName="findAllActive" />
             </XdevComboBox>
-            <XdevLabel description="Priorität für Preisermittlung" x:name="lblItmPriceLevel" value="Preis Level">
+            <XdevLabel description="Priorität für Preisermittlung" x:name="lblItmPriceLevel" value="Preis Prio">
                 <x:constraints gridx="1" gridy="5" weighty="0.0" weightx="0.0" width="0px" height="0px" />
             </XdevLabel>
             <XdevComboBox required="true" x:name="cbxPriceLevel">
