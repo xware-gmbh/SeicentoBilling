@@ -607,7 +607,7 @@ public class OrderTabView extends XdevView {
 		if (!this.fieldGroup.isModified()) {
 			return;
 		}
-		if (this.cmbPaymentCondition.getSelectedItem() != null) {
+		if (this.cmbPaymentCondition.getSelectedItem() != null && this.dateOrdDueDate.isEnabled()) {
 			// final PaymentCondition bean = (PaymentCondition)
 			// event.getProperty().getValue();
 			final PaymentCondition bean = this.cmbPaymentCondition.getSelectedItem().getBean();
@@ -615,6 +615,7 @@ public class OrderTabView extends XdevView {
 			final Calendar now = Calendar.getInstance(); // Gets the current date and time
 			now.setTime(this.dateOrdBillDate.getValue());
 			now.add(Calendar.DAY_OF_MONTH, bean.getPacNbrOfDays());
+
 			this.dateOrdDueDate.setValue(now.getTime());
 
 		}
