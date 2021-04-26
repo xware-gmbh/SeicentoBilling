@@ -1,5 +1,7 @@
 package ch.xwr.seicentobilling.ui.desktop;
 
+import java.util.List;
+
 import javax.persistence.PersistenceException;
 
 import com.vaadin.data.Property;
@@ -55,6 +57,7 @@ public class ItemTabView extends XdevView {
 		//Type
 		this.cbxState.addItems((Object[])LovState.State.values());
 		this.cbxUnit.addItems((Object[])LovState.Unit.values());
+		this.cbxPriceLevel.addItems((Object[])LovState.itmPriceLevel.values());
 
 		//set RO Fields
 		setROFields();
@@ -106,6 +109,9 @@ public class ItemTabView extends XdevView {
 
 		Notification.show("Save clicked", "Daten wurden gespeichert", Notification.Type.TRAY_NOTIFICATION);
 
+		if (isNew) {
+			cmdReload_buttonClick(event);
+		}
 	}
 
 	private void checkItemNumber(final boolean isNew, final boolean commitNbr) {
@@ -241,9 +247,11 @@ public class ItemTabView extends XdevView {
 	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
 	 */
 	private void cmdReload_buttonClick(final Button.ClickEvent event) {
+		this.table.removeAllItems();
+
 		this.table.refreshRowCache();
-		this.table.getBeanContainerDataSource().refresh();
-		this.table.sort();
+		final List<Item> lst = new ItemDAO().findAllSortedByName();
+		this.table.getBeanContainerDataSource().addAll(lst);
 	}
 
 	/**
@@ -301,13 +309,13 @@ public class ItemTabView extends XdevView {
 		this.txtItmName = new XdevTextField();
 		this.lblItmPrice1 = new XdevLabel();
 		this.txtItmPrice1 = new XdevTextField();
-		this.lblItmPrice2 = new XdevLabel();
-		this.txtItmPrice2 = new XdevTextField();
+		this.lblVat = new XdevLabel();
+		this.cmbVat = new XdevComboBox<>();
+		this.lblItmPriceLevel = new XdevLabel();
+		this.cbxPriceLevel = new XdevComboBox<>();
 		this.lblItmUnit = new XdevLabel();
 		this.lblItemGroup = new XdevLabel();
 		this.cmbItemGroup = new XdevComboBox<>();
-		this.lblVat = new XdevLabel();
-		this.cmbVat = new XdevComboBox<>();
 		this.lblAccount = new XdevLabel();
 		this.txtAccount = new XdevTextField();
 		this.lblItmState = new XdevLabel();
@@ -353,20 +361,20 @@ public class ItemTabView extends XdevView {
 		this.txtItmPrice1.setConverter(ConverterBuilder.stringToDouble().currency().build());
 		this.txtItmPrice1.setTabIndex(5);
 		this.txtItmPrice1.setRequired(true);
-		this.lblItmPrice2.setValue(StringResourceUtils.optLocalizeString("{$lblItmPrice2.value}", this));
-		this.txtItmPrice2.setConverter(ConverterBuilder.stringToDouble().currency().build());
-		this.txtItmPrice2.setTabIndex(6);
-		this.lblItmUnit.setValue(StringResourceUtils.optLocalizeString("{$lblItmUnit.value}", this));
-		this.lblItemGroup.setValue(StringResourceUtils.optLocalizeString("{$lblItemGroup.value}", this));
-		this.cmbItemGroup.setTabIndex(1);
-		this.cmbItemGroup.setContainerDataSource(ItemGroup.class, DAOs.get(ItemGroupDAO.class).findAll());
-		this.cmbItemGroup.setItemCaptionPropertyId(ItemGroup_.itgName.getName());
 		this.lblVat.setValue(StringResourceUtils.optLocalizeString("{$lblVat.value}", this));
 		this.cmbVat.setTabIndex(2);
 		this.cmbVat.setRequired(true);
 		this.cmbVat.setItemCaptionFromAnnotation(false);
 		this.cmbVat.setContainerDataSource(Vat.class, DAOs.get(VatDAO.class).findAllActive());
 		this.cmbVat.setItemCaptionPropertyId("fullName");
+		this.lblItmPriceLevel.setDescription("Priorität für Preisermittlung");
+		this.lblItmPriceLevel.setValue("Preis Prio");
+		this.cbxPriceLevel.setRequired(true);
+		this.lblItmUnit.setValue(StringResourceUtils.optLocalizeString("{$lblItmUnit.value}", this));
+		this.lblItemGroup.setValue(StringResourceUtils.optLocalizeString("{$lblItemGroup.value}", this));
+		this.cmbItemGroup.setTabIndex(1);
+		this.cmbItemGroup.setContainerDataSource(ItemGroup.class, DAOs.get(ItemGroupDAO.class).findAll());
+		this.cmbItemGroup.setItemCaptionPropertyId(ItemGroup_.itgName.getName());
 		this.lblAccount.setDescription("Externe BuHa Ertrags-Konto Nummer");
 		this.lblAccount.setValue("Konto#");
 		this.txtAccount.setConverter(ConverterBuilder.stringToDouble().groupingUsed(false).build());
@@ -383,10 +391,10 @@ public class ItemTabView extends XdevView {
 		this.fieldGroup.bind(this.txtItmIdent, Item_.itmIdent.getName());
 		this.fieldGroup.bind(this.txtItmName, Item_.itmName.getName());
 		this.fieldGroup.bind(this.txtItmPrice1, Item_.itmPrice1.getName());
-		this.fieldGroup.bind(this.txtItmPrice2, Item_.itmPrice2.getName());
 		this.fieldGroup.bind(this.cbxUnit, Item_.itmUnit.getName());
 		this.fieldGroup.bind(this.txtAccount, Item_.itmAccount.getName());
 		this.fieldGroup.bind(this.cbxState, Item_.itmState.getName());
+		this.fieldGroup.bind(this.cbxPriceLevel, Item_.itmPriceLevel.getName());
 
 		MasterDetail.connect(this.table, this.fieldGroup);
 
@@ -431,7 +439,7 @@ public class ItemTabView extends XdevView {
 		this.form.setColumns(2);
 		this.form.setRows(11);
 		this.cbxUnit.setSizeUndefined();
-		this.form.addComponent(this.cbxUnit, 1, 4);
+		this.form.addComponent(this.cbxUnit, 1, 5);
 		this.cbxState.setSizeUndefined();
 		this.form.addComponent(this.cbxState, 1, 8);
 		this.lblItmIdent.setSizeUndefined();
@@ -449,23 +457,22 @@ public class ItemTabView extends XdevView {
 		this.txtItmPrice1.setWidth(100, Unit.PERCENTAGE);
 		this.txtItmPrice1.setHeight(-1, Unit.PIXELS);
 		this.form.addComponent(this.txtItmPrice1, 1, 2);
-		this.lblItmPrice2.setSizeUndefined();
-		this.form.addComponent(this.lblItmPrice2, 0, 3);
-		this.txtItmPrice2.setWidth(100, Unit.PERCENTAGE);
-		this.txtItmPrice2.setHeight(-1, Unit.PIXELS);
-		this.form.addComponent(this.txtItmPrice2, 1, 3);
-		this.lblItmUnit.setSizeUndefined();
-		this.form.addComponent(this.lblItmUnit, 0, 4);
-		this.lblItemGroup.setSizeUndefined();
-		this.form.addComponent(this.lblItemGroup, 0, 5);
-		this.cmbItemGroup.setWidth(100, Unit.PERCENTAGE);
-		this.cmbItemGroup.setHeight(-1, Unit.PIXELS);
-		this.form.addComponent(this.cmbItemGroup, 1, 5);
 		this.lblVat.setSizeUndefined();
-		this.form.addComponent(this.lblVat, 0, 6);
+		this.form.addComponent(this.lblVat, 0, 3);
 		this.cmbVat.setWidth(100, Unit.PERCENTAGE);
 		this.cmbVat.setHeight(-1, Unit.PIXELS);
-		this.form.addComponent(this.cmbVat, 1, 6);
+		this.form.addComponent(this.cmbVat, 1, 3);
+		this.lblItmPriceLevel.setSizeUndefined();
+		this.form.addComponent(this.lblItmPriceLevel, 0, 4);
+		this.cbxPriceLevel.setSizeUndefined();
+		this.form.addComponent(this.cbxPriceLevel, 1, 4);
+		this.lblItmUnit.setSizeUndefined();
+		this.form.addComponent(this.lblItmUnit, 0, 5);
+		this.lblItemGroup.setSizeUndefined();
+		this.form.addComponent(this.lblItemGroup, 0, 6);
+		this.cmbItemGroup.setWidth(100, Unit.PERCENTAGE);
+		this.cmbItemGroup.setHeight(-1, Unit.PIXELS);
+		this.form.addComponent(this.cmbItemGroup, 1, 6);
 		this.lblAccount.setSizeUndefined();
 		this.form.addComponent(this.lblAccount, 0, 7);
 		this.txtAccount.setSizeUndefined();
@@ -499,7 +506,7 @@ public class ItemTabView extends XdevView {
 
 	// <generated-code name="variables">
 	private XdevButton cmdNew, cmdDelete, cmdReload, cmdInfo, cmdSave, cmdReset;
-	private XdevLabel lblItmIdent, lblItmName, lblItmPrice1, lblItmPrice2, lblItmUnit, lblItemGroup, lblVat, lblAccount,
+	private XdevLabel lblItmIdent, lblItmName, lblItmPrice1, lblVat, lblItmPriceLevel, lblItmUnit, lblItemGroup, lblAccount,
 			lblItmState;
 	private XdevFieldGroup<Item> fieldGroup;
 	private XdevGridLayout form;
@@ -508,8 +515,8 @@ public class ItemTabView extends XdevView {
 	private XdevComboBox<ItemGroup> cmbItemGroup;
 	private XdevHorizontalLayout actionLayout, horizontalLayout;
 	private XdevComboBox<Vat> cmbVat;
-	private XdevComboBox<?> cbxUnit, cbxState;
-	private XdevTextField txtItmIdent, txtItmName, txtItmPrice1, txtItmPrice2, txtAccount;
+	private XdevComboBox<?> cbxUnit, cbxState, cbxPriceLevel;
+	private XdevTextField txtItmIdent, txtItmName, txtItmPrice1, txtAccount;
 	private XdevVerticalLayout verticalLayout;
 	private XdevTable<Item> table;
 	// </generated-code>

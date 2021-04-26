@@ -5,9 +5,11 @@
 <?template BROWSER_XGA?>
 <?import ch.xwr.seicentobilling.entities.CostAccount?>
 <?import ch.xwr.seicentobilling.entities.Project?>
+<?import ch.xwr.seicentobilling.entities.ProjectAllocation?>
 <?import com.xdev.ui.XdevButton?>
 <?import com.xdev.ui.XdevHorizontalLayout?>
 <?import com.xdev.ui.XdevPanel?>
+<?import com.xdev.ui.XdevTabSheet?>
 <?import com.xdev.ui.XdevVerticalLayout?>
 <?import com.xdev.ui.XdevView?>
 <?import com.xdev.ui.entitycomponent.table.XdevTable?>
@@ -15,47 +17,91 @@
 <?import java.lang.Integer?>
 <?import java.lang.String?>
 <?import java.util.Date?>
-<XdevView xmlns:x="http://xml.xdev-software.com/xdevuiml" x:name="ProjectLookupPopup">
-    <x:constraints zpos="0" width="760px" height="520px" />
+<XdevView xmlns:x="http://xml.xdev-software.com/xdevuiml" x:name="ProjectLookupPopup" responsive="true">
+    <x:constraints width="900px" zpos="0" height="580px" />
     <XdevPanel caption="Lookup Projekt" tabIndex="0" x:name="panel">
-        <x:constraints gridHeight="1" gridx="3" zpos="0" gridy="1" weighty="0.0" weightx="0.0" width="100%" alignment="TOP_LEFT" gridWidth="1" height="-1px" />
-        <XdevVerticalLayout x:name="verticalLayout">
-            <x:constraints zpos="0" width="100%" height="100%" />
-            <XdevContainerFilterComponent x:searchableProperties="proName,proExtReference" x:name="containerFilterComponent" x:filterableProperties="proName,costAccount,customer,proState" x:container="table" prefixMatchOnly="false">
-                <x:constraints weighty="0.0" width="100%" alignment="MIDDLE_LEFT" height="-1px" />
-            </XdevContainerFilterComponent>
-            <XdevTable columnReorderingAllowed="true" x:name="table" pageLength="10" columnCollapsingAllowed="true" x:entity="Project" x:autoQuery="false">
-                <x:entityProperties>
-                    <entry type="String" property="proName" caption="Name" />
-                    <entry type="int" property="customer.cusNumber" caption="Kunde" collapsed="true" />
-                    <entry type="String" property="customer.shortname" caption="Kundenname" />
-                    <entry type="CostAccount" property="costAccount" caption="Kostenstelle" />
-                    <entry type="Date" property="proStartDate" caption="Startdatum">
-                        <converter dateStyle="DEFAULT" timeStyle="DEFAULT" currency="default" converterType="STRING_TO_DATE" locale="default" dateFormatType="DATE" />
-                    </entry>
-                    <entry type="double" property="proRate" caption="Ansatz" collapsed="true" />
-                    <entry type="Integer" property="proHours" caption="Stunden Soll" collapsed="true" />
-                    <entry type="Integer" property="proIntensityPercent" caption="Auslastung" collapsed="true" />
-                </x:entityProperties>
-                <x:constraints weighty="0.5" width="100%" alignment="MIDDLE_LEFT" height="320px" />
-                <x:typeArguments>
-                    <typeArgument type="Project" />
-                </x:typeArguments>
-                <x:data methodName="findAllActive" />
-                <x:event>itemClick.itemClick</x:event>
-            </XdevTable>
-            <XdevHorizontalLayout x:name="horizontalLayout" margin="rl">
-                <x:constraints weighty="0.3" width="-1px" height="100%" />
-                <XdevButton caption="Übernehmen" x:name="btnSelect" x:shortcut="ENTER">
-                    <x:constraints weightx="0.0" width="0px" height="100%" />
-                    <x:event>click.buttonClick</x:event>
-                </XdevButton>
-                <XdevButton caption="Schliessen" x:name="btnCancel" x:shortcut="ESCAPE">
-                    <x:constraints weightx="0.1" width="0px" height="100%" />
-                    <x:event>click.buttonClick</x:event>
-                </XdevButton>
-            </XdevHorizontalLayout>
-        </XdevVerticalLayout>
+        <x:constraints gridHeight="1" zpos="0" gridx="3" gridy="1" weighty="0.0" weightx="0.0" width="100%" alignment="TOP_LEFT" gridWidth="1" height="100%" />
+        <XdevTabSheet styleName="framed" x:name="tabSheet" x:selectedTabIndex="0">
+            <x:constraints zpos="0" weighty="1.0" width="100%" alignment="MIDDLE_CENTER" height="-1px" />
+            <XdevVerticalLayout caption="Main" x:name="verticalLayout">
+                <x:constraints gridHeight="1" gridx="1" gridy="1" weighty="0.0" weightx="0.0" width="-1px" alignment="TOP_LEFT" gridWidth="1" height="-1px" />
+                <XdevContainerFilterComponent x:searchableProperties="proName,proExtReference" x:name="containerFilterComponent" x:filterableProperties="proName,costAccount,customer,proState" x:container="table" prefixMatchOnly="false">
+                    <x:constraints weighty="0.1" width="100%" alignment="MIDDLE_LEFT" height="100%" />
+                </XdevContainerFilterComponent>
+                <XdevTable columnReorderingAllowed="true" x:name="table" pageLength="10" columnCollapsingAllowed="true" x:entity="Project" x:autoQuery="false">
+                    <x:entityProperties>
+                        <entry type="String" property="proName" caption="Name" />
+                        <entry type="int" property="customer.cusNumber" caption="Kunde" collapsed="true" />
+                        <entry type="String" property="customer.shortname" caption="Kundenname" />
+                        <entry type="CostAccount" property="costAccount" caption="Kostenstelle" />
+                        <entry type="Date" property="proStartDate" caption="Startdatum">
+                            <converter dateStyle="DEFAULT" timeStyle="DEFAULT" currency="default" converterType="STRING_TO_DATE" locale="default" dateFormatType="DATE" />
+                        </entry>
+                        <entry type="double" property="proRate" caption="Ansatz" collapsed="true" />
+                        <entry type="Integer" property="proHours" caption="Stunden Soll" collapsed="true" />
+                        <entry type="Integer" property="proIntensityPercent" caption="Auslastung" collapsed="true" />
+                    </x:entityProperties>
+                    <x:constraints weighty="0.1" width="100%" alignment="MIDDLE_LEFT" height="340px" />
+                    <x:typeArguments>
+                        <typeArgument type="Project" />
+                    </x:typeArguments>
+                    <x:data methodName="findAllActive" />
+                </XdevTable>
+                <XdevHorizontalLayout x:name="horizontalLayout" margin="rbl">
+                    <x:constraints weighty="0.1" width="-1px" height="100%" />
+                    <XdevButton caption="Übernehmen" x:name="btnSelect" x:shortcut="ENTER">
+                        <x:constraints weightx="0.0" width="0px" height="-1px" />
+                        <x:event>click.buttonClick</x:event>
+                    </XdevButton>
+                    <XdevButton caption="Schliessen" x:name="btnCancel" x:shortcut="ESCAPE">
+                        <x:constraints weightx="0.1" width="0px" height="-1px" />
+                        <x:event>click.buttonClick</x:event>
+                    </XdevButton>
+                </XdevHorizontalLayout>
+            </XdevVerticalLayout>
+            <XdevVerticalLayout caption="Ressourcen" x:name="verticalLayout2">
+                <x:constraints width="100%" height="100%" />
+                <XdevContainerFilterComponent x:searchableProperties="praRemark,costAccount.csaCode,project.proName,project.proExtReference" x:name="containerFilterComponent2" x:filterableProperties="costAccount,praStartDate,praEndDate" x:container="table2" prefixMatchOnly="false">
+                    <x:constraints gridHeight="1" gridx="1" gridy="1" weighty="0.1" weightx="1.0" width="100%" alignment="MIDDLE_LEFT" gridWidth="1" height="100%" />
+                </XdevContainerFilterComponent>
+                <XdevTable columnReorderingAllowed="true" x:name="table2" pageLength="10" columnCollapsingAllowed="true" x:entity="ProjectAllocation" x:autoQuery="false">
+                    <x:entityProperties>
+                        <entry type="String" property="project.proName" />
+                        <entry type="String" property="project.customer.shortname" />
+                        <entry type="String" property="costAccount.csaName" />
+                        <entry type="String" property="project.proExtReference" />
+                        <entry type="Date" property="praStartDate">
+                            <converter dateStyle="DEFAULT" timeStyle="DEFAULT" currency="default" converterType="STRING_TO_DATE" locale="default" dateFormatType="DATE" />
+                        </entry>
+                        <entry type="Date" property="praEndDate">
+                            <converter dateStyle="DEFAULT" timeStyle="DEFAULT" currency="default" converterType="STRING_TO_DATE" locale="default" dateFormatType="DATE" />
+                        </entry>
+                        <entry type="int" property="praHours" collapsed="true">
+                            <converter numberType="Double" numberFormatType="number" currency="default" converterType="STRING_TO_NUMBER" locale="default" />
+                        </entry>
+                        <entry type="double" property="praRate" collapsed="true" />
+                        <entry type="int" property="praIntensityPercent" collapsed="true" />
+                        <entry type="String" property="praRemark" collapsed="true" />
+                    </x:entityProperties>
+                    <x:constraints gridHeight="1" gridx="1" gridy="2" weighty="0.1" weightx="1.0" width="100%" alignment="MIDDLE_LEFT" gridWidth="1" height="340px" />
+                    <x:typeArguments>
+                        <typeArgument type="ProjectAllocation" />
+                    </x:typeArguments>
+                    <x:data methodName="findAllActiveProjects" />
+                </XdevTable>
+                <XdevHorizontalLayout x:name="horizontalLayout2" margin="rbl">
+                    <x:constraints gridHeight="1" gridx="1" gridy="3" weighty="0.1" weightx="0.0" width="0px" gridWidth="1" height="100%" />
+                    <XdevButton caption="Übernehmen" x:name="btnSelect2" x:shortcut="ENTER">
+                        <x:constraints weightx="0.0" width="0px" height="-1px" />
+                        <x:event>click.buttonClick</x:event>
+                    </XdevButton>
+                    <XdevButton caption="Schliessen" x:name="btnCancel2" x:shortcut="ESCAPE">
+                        <x:constraints weightx="0.1" width="0px" height="-1px" />
+                        <x:event>click.buttonClick</x:event>
+                    </XdevButton>
+                </XdevHorizontalLayout>
+            </XdevVerticalLayout>
+        </XdevTabSheet>
     </XdevPanel>
 </XdevView>
 

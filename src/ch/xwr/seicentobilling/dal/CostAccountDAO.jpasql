@@ -10,3 +10,8 @@ findAllActive()
 {
 	select * from CostAccount where csaState = 1 order by csaName asc	
 }
+
+findAllOrderByName()
+{
+	select * from CostAccount order by csaName asc	
+}

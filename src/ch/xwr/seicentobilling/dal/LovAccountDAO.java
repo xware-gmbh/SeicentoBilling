@@ -28,6 +28,7 @@ public class LovAccountDAO extends JPADAO<LovAccount, String> {
 		lst.add(new LovAccount("a.Werbung / Marketing", "Werbung u. Marketing"));
 		lst.add(new LovAccount("a.Mietaufwand", "Miete"));
 		lst.add(new LovAccount("a.EDV Unterhalt", "IT Unterhalt"));
+		lst.add(new LovAccount("a.Drittleistungen", "Drittleistungen"));
 
 		return lst;
 	}

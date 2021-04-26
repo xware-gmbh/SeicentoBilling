@@ -62,6 +62,8 @@ public class Project implements java.io.Serializable {
 	private String proContact;
 	private Address address;
 	private Boolean internal;
+	private LovState.ProOrderStrategy proOrdergenerationStrategy;
+	private Set<ProjectAllocation> projectAllocations = new HashSet<>(0);
 
 	public Project() {
 	}
@@ -356,6 +358,26 @@ public class Project implements java.io.Serializable {
 
 	public void setInternal(final Boolean internal) {
 		this.internal = internal;
+	}
+
+	@Caption("Rechnungsstrategie")
+	@Column(name = "proOrdergenerationStrategy", columnDefinition = "smallint")
+	public LovState.ProOrderStrategy getProOrdergenerationStrategy() {
+		return this.proOrdergenerationStrategy;
+	}
+
+	public void setProOrdergenerationStrategy(final LovState.ProOrderStrategy proOrdergenerationStrategy) {
+		this.proOrdergenerationStrategy = proOrdergenerationStrategy;
+	}
+
+	@Caption("Projektressourcen")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "project")
+	public Set<ProjectAllocation> getProjectAllocations() {
+		return this.projectAllocations;
+	}
+
+	public void setProjectAllocations(final Set<ProjectAllocation> projectAllocations) {
+		this.projectAllocations = projectAllocations;
 	}
 
 }

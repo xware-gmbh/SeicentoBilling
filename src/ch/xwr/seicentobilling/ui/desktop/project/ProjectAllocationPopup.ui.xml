@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+
+<?xdevuiml version="1.0"?>
+<?template BROWSER_XGA?>
+<?import ??>
+<?import ch.xwr.seicentobilling.entities.CostAccount?>
+<?import ch.xwr.seicentobilling.entities.Project?>
+<?import ch.xwr.seicentobilling.entities.ProjectAllocation?>
+<?import com.vaadin.data.validator.IntegerRangeValidator?>
+<?import com.xdev.ui.XdevButton?>
+<?import com.xdev.ui.XdevFieldGroup?>
+<?import com.xdev.ui.XdevGridLayout?>
+<?import com.xdev.ui.XdevHorizontalLayout?>
+<?import com.xdev.ui.XdevLabel?>
+<?import com.xdev.ui.XdevPanel?>
+<?import com.xdev.ui.XdevPopupDateField?>
+<?import com.xdev.ui.XdevTextField?>
+<?import com.xdev.ui.XdevView?>
+<?import com.xdev.ui.entitycomponent.combobox.XdevComboBox?>
+<?import java.lang.String?>
+<XdevView xmlns:x="http://xml.xdev-software.com/xdevuiml" x:name="ProjectAllocationPopup">
+    <x:constraints width="900px" zpos="0" height="520px" />
+    <XdevPanel caption="Projektressourcen" tabIndex="0" x:name="panel">
+        <x:constraints gridHeight="1" zpos="0" gridx="2" gridy="1" weighty="0.0" weightx="1.0" width="100%" alignment="TOP_LEFT" gridWidth="1" height="100%" />
+        <XdevGridLayout x:name="form">
+            <x:constraints zpos="0" width="100%" height="100%" />
+            <XdevFieldGroup x:name="fieldGroup" x:entityType="ProjectAllocation">
+                <x:typeArguments>
+                    <typeArgument type="ProjectAllocation" />
+                </x:typeArguments>
+                <x:fields>
+                    <entry name="" property="praId" />
+                    <entry name="datePraStartDate" property="praStartDate" />
+                    <entry name="datePraEndDate" property="praEndDate" />
+                    <entry name="txtPraHours" property="praHours" />
+                    <entry name="txtPraIntensityPercent" property="praIntensityPercent" />
+                    <entry name="txtPraRate" property="praRate" />
+                    <entry name="txtPraRemark" property="praRemark" />
+                    <entry name="comboBoxState" property="praState" />
+                    <entry name="cmbCostAccount" property="costAccount" />
+                    <entry name="cmbProject" property="project" />
+                </x:fields>
+            </XdevFieldGroup>
+            <XdevLabel x:name="lblProject" value="Projekt">
+                <x:constraints gridx="1" gridy="1" />
+            </XdevLabel>
+            <XdevComboBox tabIndex="10" x:name="cmbProject" x:entity="Project">
+                <x:constraints gridx="2" gridy="1" weightx="1.0" width="100%" />
+                <x:entityProperty>
+                    <entry type="String" property="proName" />
+                </x:entityProperty>
+                <x:typeArguments>
+                    <typeArgument type="Project" />
+                </x:typeArguments>
+                <x:data methodName="findAll" />
+            </XdevComboBox>
+            <XdevLabel x:name="lblCostAccount" value="Kostenstelle">
+                <x:constraints gridx="1" gridy="2" />
+            </XdevLabel>
+            <XdevComboBox tabIndex="9" required="true" itemCaptionFromAnnotation="false" x:name="cmbCostAccount" x:entity="CostAccount" x:autoQuery="false">
+                <x:constraints gridx="2" gridy="2" weightx="1.0" width="100%" />
+                <x:entityProperty>
+                    <entry type="String" property="csaName" />
+                </x:entityProperty>
+                <x:typeArguments>
+                    <typeArgument type="CostAccount" />
+                </x:typeArguments>
+                <x:data methodName="findAllActive" />
+            </XdevComboBox>
+            <XdevLabel x:name="lblPraStartDate" value="Projektstart">
+                <x:constraints gridx="1" gridy="3" />
+            </XdevLabel>
+            <XdevPopupDateField tabIndex="2" required="true" x:name="datePraStartDate">
+                <x:constraints gridx="2" gridy="3" weightx="1.0" width="-1px" />
+                <x:event>valueChange.valueChange</x:event>
+            </XdevPopupDateField>
+            <XdevLabel x:name="lblPraEndDate" value="Projektende">
+                <x:constraints gridx="3" gridy="3" />
+            </XdevLabel>
+            <XdevPopupDateField tabIndex="3" x:name="datePraEndDate">
+                <x:constraints gridx="4" gridy="3" weightx="1.0" width="100%" />
+                <x:event>valueChange.valueChange</x:event>
+            </XdevPopupDateField>
+            <XdevLabel x:name="lblPraHours" value="Stundensoll">
+                <x:constraints gridx="1" gridy="4" />
+            </XdevLabel>
+            <XdevTextField columns="5" tabIndex="4" required="true" x:name="txtPraHours">
+                <x:constraints gridx="2" gridy="4" weightx="1.0" width="-1px" />
+                <x:validator x:type="IntegerRangeValidator" message="Der Wert muss grösser 0 sein!" min="1" />
+            </XdevTextField>
+            <XdevLabel x:name="lblPraIntensityPercent" value="Intensität">
+                <x:constraints gridx="3" gridy="4" />
+            </XdevLabel>
+            <XdevTextField columns="5" tabIndex="5" x:name="txtPraIntensityPercent">
+                <x:constraints gridx="4" gridy="4" weightx="1.0" width="100%" />
+            </XdevTextField>
+            <XdevLabel x:name="lblPraRate" value="Ansatz">
+                <x:constraints gridx="1" gridy="5" />
+            </XdevLabel>
+            <XdevTextField columns="5" tabIndex="6" x:name="txtPraRate">
+                <x:constraints gridx="2" gridy="5" weightx="1.0" width="-1px" />
+            </XdevTextField>
+            <XdevLabel x:name="lblPraRemark" value="Bemerkung">
+                <x:constraints gridx="1" gridy="6" />
+            </XdevLabel>
+            <XdevTextField columns="5" tabIndex="7" x:name="txtPraRemark">
+                <x:constraints gridx="2" gridy="6" weightx="1.0" width="100%" />
+            </XdevTextField>
+            <XdevLabel x:name="lblPraState" value="Status">
+                <x:constraints gridx="1" gridy="7" />
+            </XdevLabel>
+            <XdevComboBox required="true" x:name="comboBoxState">
+                <x:constraints gridx="2" gridy="7" weighty="0.0" weightx="1.0" width="0px" height="0px" />
+                <x:typeArguments>
+                    <typeArgument type="?" />
+                </x:typeArguments>
+            </XdevComboBox>
+            <XdevHorizontalLayout x:name="horizontalLayout" margin="">
+                <x:constraints gridx="1" gridy="8" gridWidth="2" alignment="TOP_RIGHT" />
+                <XdevButton icon="FontAwesome.SAVE" caption="Speichern" x:name="cmdSave" x:shortcut="ENTER">
+                    <x:constraints weightx="0.0" width="0px" alignment="MIDDLE_LEFT" height="0px" />
+                    <x:event>click.buttonClick</x:event>
+                </XdevButton>
+                <XdevButton icon="FontAwesome.CLOSE" caption="Abbrechen" x:name="cmdCancel" x:shortcut="ESCAPE">
+                    <x:constraints weightx="0.0" width="0px" alignment="MIDDLE_LEFT" height="0px" />
+                    <x:event>click.buttonClick</x:event>
+                </XdevButton>
+            </XdevHorizontalLayout>
+        </XdevGridLayout>
+    </XdevPanel>
+</XdevView>
+

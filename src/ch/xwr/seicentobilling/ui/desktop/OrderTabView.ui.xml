@@ -127,13 +127,13 @@
                             </XdevLabel>
                             <XdevTextField columns="5" x:name="txtOrdNumber">
                                 <converter numberType="BigInteger" numberFormatType="number" currency="default" groupingUsed="false" converterType="STRING_TO_NUMBER" locale="default" />
-                                <x:constraints gridx="2" gridy="1" weighty="0.0" weightx="0.1" width="0px" height="0px" />
+                                <x:constraints gridx="2" gridy="1" weighty="0.0" weightx="0.2" width="0px" height="0px" />
                             </XdevTextField>
                             <XdevLabel x:name="lblCustomer" value="{$lblCustomer.value}">
                                 <x:constraints gridx="1" gridy="2" weighty="0.0" weightx="0.0" width="0px" height="0px" />
                             </XdevLabel>
                             <XdevHorizontalLayout x:name="horizontalLayoutCus" margin="">
-                                <x:constraints gridx="2" gridy="2" weighty="0.0" weightx="0.0" width="100%" gridWidth="3" height="0px" />
+                                <x:constraints gridx="2" gridy="2" weighty="0.0" weightx="0.2" width="100%" gridWidth="3" height="0px" />
                                 <XdevComboBox required="true" itemCaptionFromAnnotation="false" x:name="cmbCustomer" filteringMode="com.vaadin.shared.ui.combobox.FilteringMode.CONTAINS" x:entity="Customer" enabled="false" x:autoQuery="false">
                                     <x:constraints gridHeight="1" gridx="3" gridy="1" weighty="0.0" weightx="0.6" width="100%" alignment="TOP_LEFT" gridWidth="3" height="0px" />
                                     <x:entityProperty>
@@ -154,7 +154,7 @@
                                 <x:constraints gridx="1" gridy="3" weighty="0.0" weightx="0.0" width="0px" height="0px" />
                             </XdevLabel>
                             <XdevPopupDateField x:name="dateOrdBillDate">
-                                <x:constraints gridx="2" gridy="3" weighty="0.0" weightx="0.1" width="0px" height="0px" />
+                                <x:constraints gridx="2" gridy="3" weighty="0.0" weightx="0.2" width="0px" height="0px" />
                             </XdevPopupDateField>
                             <XdevLabel x:name="lblOrdOrderDate" value="{$lblOrdOrderDate.value}">
                                 <x:constraints gridx="3" gridy="3" weighty="0.0" weightx="0.0" width="0px" height="0px" />
@@ -166,25 +166,13 @@
                                 <x:constraints gridx="1" gridy="4" weighty="0.0" weightx="0.0" width="0px" height="0px" />
                             </XdevLabel>
                             <XdevTextArea columns="5" x:name="textArea" rows="2" maxLength="256">
-                                <x:constraints gridx="2" gridy="4" weighty="0.0" weightx="0.1" width="100%" gridWidth="3" height="0px" />
+                                <x:constraints gridx="2" gridy="4" weighty="0.0" weightx="0.2" width="100%" gridWidth="3" height="0px" />
                             </XdevTextArea>
-                            <XdevLabel x:name="lblProject" value="{$lblProject.value}">
+                            <XdevLabel x:name="lblPaymentCondition" value="{$lblPaymentCondition.value}">
                                 <x:constraints gridx="1" gridy="5" weighty="0.0" weightx="0.0" width="0px" height="0px" />
                             </XdevLabel>
-                            <XdevComboBox x:name="cmbProject" x:entity="Project">
-                                <x:constraints gridx="2" gridy="5" weighty="0.0" weightx="0.1" width="100%" height="0px" />
-                                <x:entityProperty>
-                                    <entry type="String" property="proName" />
-                                </x:entityProperty>
-                                <x:typeArguments>
-                                    <typeArgument type="Project" />
-                                </x:typeArguments>
-                            </XdevComboBox>
-                            <XdevLabel x:name="lblPaymentCondition" value="{$lblPaymentCondition.value}">
-                                <x:constraints gridx="3" gridy="5" weighty="0.0" weightx="0.0" width="0px" height="0px" />
-                            </XdevLabel>
                             <XdevComboBox required="true" itemCaptionFromAnnotation="false" x:name="cmbPaymentCondition" x:entity="PaymentCondition" x:autoQuery="false">
-                                <x:constraints gridx="4" gridy="5" weighty="0.0" weightx="0.1" width="100%" height="0px" />
+                                <x:constraints gridx="2" gridy="5" weighty="0.0" weightx="0.2" width="100%" height="0px" />
                                 <x:entityProperty>
                                     <entry type="String" property="pacName" />
                                 </x:entityProperty>
@@ -194,12 +182,32 @@
                                 <x:data methodName="findAllActive" />
                                 <x:event>valueChange.valueChange</x:event>
                             </XdevComboBox>
+                            <XdevLabel x:name="lblProject" value="{$lblProject.value}">
+                                <x:constraints gridx="3" gridy="5" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+                            </XdevLabel>
+                            <XdevHorizontalLayout x:name="horizontalLayoutPro" margin="">
+                                <x:constraints gridx="4" gridy="5" weighty="0.0" weightx="0.0" width="100%" height="-1px" />
+                                <XdevComboBox x:name="cmbProject" x:entity="Project" enabled="false" x:autoQuery="false">
+                                    <x:constraints gridHeight="1" gridx="5" gridy="5" weighty="0.0" weightx="0.4" width="100%" alignment="TOP_LEFT" gridWidth="1" height="0px" />
+                                    <x:entityProperty>
+                                        <entry type="String" property="proName" />
+                                    </x:entityProperty>
+                                    <x:typeArguments>
+                                        <typeArgument type="Project" />
+                                    </x:typeArguments>
+                                    <x:data methodName="findAll" />
+                                </XdevComboBox>
+                                <XdevButton icon="FontAwesome.SEARCH" caption="" description="Suchen..." x:name="btnSearchProject">
+                                    <x:constraints gridHeight="1" gridx="6" gridy="5" weighty="0.0" weightx="0.2" width="0px" alignment="TOP_LEFT" gridWidth="1" height="0px" />
+                                    <x:event>click.buttonClick</x:event>
+                                </XdevButton>
+                            </XdevHorizontalLayout>
                             <XdevLabel x:name="lblOrdAmountBrut" value="{$lblOrdAmountBrut.value}">
                                 <x:constraints gridx="1" gridy="6" top="30px" left="-1px" weighty="0.0" weightx="0.0" width="0px" height="0px" />
                             </XdevLabel>
                             <XdevTextField columns="5" x:name="txtOrdAmountBrut">
                                 <converter numberType="Double" numberFormatType="currency" currency="default" converterType="STRING_TO_NUMBER" locale="default" />
-                                <x:constraints gridx="2" gridy="6" weighty="0.0" weightx="0.1" width="0px" height="0px" />
+                                <x:constraints gridx="2" gridy="6" weighty="0.0" weightx="0.2" width="0px" height="0px" />
                             </XdevTextField>
                             <XdevLabel x:name="lblOrdAmountNet" value="{$lblOrdAmountNet.value}">
                                 <x:constraints gridx="3" gridy="6" weighty="0.0" weightx="0.0" width="0px" height="0px" />
@@ -213,7 +221,7 @@
                             </XdevLabel>
                             <XdevTextField columns="5" enabled="false" x:name="txtOrdAmountVat">
                                 <converter numberType="Double" numberFormatType="currency" currency="default" converterType="STRING_TO_NUMBER" locale="default" />
-                                <x:constraints gridx="2" gridy="7" top="42px" left="-1px" weighty="0.0" weightx="0.1" width="0px" height="0px" />
+                                <x:constraints gridx="2" gridy="7" top="42px" left="-1px" weighty="0.0" weightx="0.2" width="0px" height="0px" />
                             </XdevTextField>
                         </XdevGridLayout>
                         <XdevGridLayout caption="{$gridLayoutDetails.caption}" x:name="gridLayoutDetails" margin="trl">

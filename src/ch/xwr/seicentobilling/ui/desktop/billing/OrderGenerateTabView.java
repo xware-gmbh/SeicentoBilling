@@ -34,6 +34,7 @@ import com.xdev.ui.XdevView;
 import com.xdev.ui.entitycomponent.XdevBeanItemContainer;
 import com.xdev.ui.entitycomponent.combobox.XdevComboBox;
 
+import ch.xwr.seicentobilling.business.LovState;
 import ch.xwr.seicentobilling.business.LovState.BookingType;
 import ch.xwr.seicentobilling.business.OrderGenerator;
 import ch.xwr.seicentobilling.business.Seicento;
@@ -193,24 +194,17 @@ public class OrderGenerateTabView extends XdevView {
 			this.treeGrid.addItem(parent, icount);
 			final int iParent = icount;
 
-			detail = getDetailGridLine("Spesen", billDto.getExpenseHours());
-			if (detail != null) {
-				icount++;
-				this.treeGrid.addItem(detail, icount);
-				this.treeGrid.setParent(icount, iParent);
-
-			}
-			detail = getDetailGridLine("Reisezeit", billDto.getJourneyHours());
-			if (detail != null) {
-				icount++;
-				this.treeGrid.addItem(detail, icount);
-				this.treeGrid.setParent(icount, iParent);
-			}
-			detail = getDetailGridLine("Dienstleistung", billDto.getProjectHours());
-			if (detail != null) {
-				icount++;
-				this.treeGrid.addItem(detail, icount);
-				this.treeGrid.setParent(icount, iParent);
+			final List<BillLine> list = billDto.getLines();
+			if (list!= null && ! list.isEmpty()) {
+				for (int i = 0; i < list.size(); i++) {
+					final BillLine line = list.get(i);
+					detail = getDetailGridLine(line);
+					if (detail != null) {
+						icount++;
+						this.treeGrid.addItem(detail, icount);
+						this.treeGrid.setParent(icount, iParent);
+					}
+				}
 			}
 
 			icount++;
@@ -239,6 +233,14 @@ public class OrderGenerateTabView extends XdevView {
 			cbo.setValue(false);
 			cbo.setEnabled(false);
 		}
+		if (billDto.getProject().getProOrdergenerationStrategy() == LovState.ProOrderStrategy.zusammenziehen) {
+			if (!billDto.getProject().getCostAccount().getCsaId().equals(billDto.getCostaccount().getCsaId())) {
+				//will be billed by main CostAccount #426
+				cbo.setValue(false);
+				cbo.setEnabled(false);
+			}
+		}
+
 		final String cusName = billDto.getCustomer().getFullname();
 		final String proName = billDto.getProject().getProName();
 		final String amount = getAmtString(billDto.getTotalAmount(), true);
@@ -281,24 +283,17 @@ public class OrderGenerateTabView extends XdevView {
 	}
 
 
-	private Object[] getDetailGridLine(final String text, final List<BillLine> list) {
-		Double amt = new Double(0);
-		if (list!= null && ! list.isEmpty()) {
-			for (int i = 0; i < list.size(); i++) {
-				final BillLine tmp = list.get(i);
-				amt = amt + tmp.getAmount();
-			}
-		}
+	private Object[] getDetailGridLine(final BillLine line) {
+		final Double amt = line.getAmount();
 
 		if (amt > 0) {
 			final String samt = getAmtString(amt, false);
-			final Object[] retval = new Object[]{null, null, text, samt, null, null};
+			final Object[] retval = new Object[]{null, null, line.getText(), samt, null, null};
 			return retval;
 		}
 
 		return null;
 	}
-
 
 	/**
 	 * Event handler delegate method for the {@link XdevButton}
@@ -395,10 +390,11 @@ public class OrderGenerateTabView extends XdevView {
 			Notification.show("Rechnungen generieren", "Bitte Periode wählen", Notification.Type.WARNING_MESSAGE);
 			return;
 		}
+		isModelValid();  //just for text
 
 		final Periode per = this.comboBoxPeriode.getSelectedItem().getBean();
 		final OrderGenerator gen = new OrderGenerator();
-		final List<BillDto> lst = gen.proposeDraft(per);
+		final List<BillDto> lst = gen.proposeDraft(per, this.guifld);
 
 		if (per.getPerBookedProject().equals(BookingType.gebucht)) {
 			Notification.show("Rechnungsvorschlag", "Für diese Periode wurden bereits Rechnungen generiert!!", Notification.Type.WARNING_MESSAGE);

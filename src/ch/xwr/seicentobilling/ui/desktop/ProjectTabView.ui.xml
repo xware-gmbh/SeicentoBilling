@@ -4,11 +4,13 @@
 <?xdevuiml version="1.0"?>
 <?template BROWSER_XGA?>
 <?import ??>
+<?import ch.xwr.seicentobilling.business.LovState.State?>
 <?import ch.xwr.seicentobilling.entities.Address?>
 <?import ch.xwr.seicentobilling.entities.CostAccount?>
 <?import ch.xwr.seicentobilling.entities.Customer?>
 <?import ch.xwr.seicentobilling.entities.Order?>
 <?import ch.xwr.seicentobilling.entities.Project?>
+<?import ch.xwr.seicentobilling.entities.ProjectAllocation?>
 <?import ch.xwr.seicentobilling.entities.Vat?>
 <?import com.vaadin.data.validator.IntegerRangeValidator?>
 <?import com.xdev.ui.XdevButton?>
@@ -152,6 +154,7 @@
                     </XdevLabel>
                     <XdevPopupDateField required="true" x:name="dateProStartDate">
                         <x:constraints gridx="2" gridy="4" weighty="0.0" weightx="1.0" width="-1px" height="0px" />
+                        <x:event>valueChange.valueChange</x:event>
                     </XdevPopupDateField>
                     <XdevLabel x:name="lblProEndDate" value="Ende">
                         <x:constraints gridx="3" gridy="4" weighty="0.0" weightx="0.0" width="0px" height="0px" />
@@ -253,11 +256,20 @@
                     <XdevCheckBox caption="Internes Projekt" x:name="cbxInternal">
                         <x:constraints gridx="3" gridy="1" weighty="0.0" weightx="1.0" width="0px" height="0px" />
                     </XdevCheckBox>
-                    <XdevLabel x:name="lblProject" value="{$lblProject.value}">
+                    <XdevLabel x:name="lblProOrderStrategy" value="Rechnungsstrategie">
                         <x:constraints gridx="1" gridy="2" weighty="0.0" weightx="0.0" width="0px" height="0px" />
                     </XdevLabel>
+                    <XdevComboBox required="true" x:name="cbxProOrderStrategy">
+                        <x:constraints gridx="2" gridy="2" weighty="0.0" weightx="1.0" width="0px" height="0px" />
+                        <x:typeArguments>
+                            <typeArgument type="?" />
+                        </x:typeArguments>
+                    </XdevComboBox>
+                    <XdevLabel x:name="lblProject" value="{$lblProject.value}">
+                        <x:constraints gridx="1" gridy="3" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+                    </XdevLabel>
                     <XdevComboBox x:name="cmbProject" x:entity="Project" x:autoQuery="false">
-                        <x:constraints gridx="2" gridy="2" weighty="0.0" weightx="1.0" width="100%" gridWidth="2" height="0px" />
+                        <x:constraints gridx="2" gridy="3" weighty="0.0" weightx="1.0" width="100%" gridWidth="2" height="0px" />
                         <x:entityProperty>
                             <entry type="String" property="proName" />
                         </x:entityProperty>
@@ -267,32 +279,87 @@
                         <x:data methodName="findAllActive" />
                     </XdevComboBox>
                     <XdevLabel x:name="lblProDescription" value="{$lblProDescription.value}">
-                        <x:constraints gridx="1" gridy="3" weighty="0.0" weightx="0.0" width="0px" height="0px" />
-                    </XdevLabel>
-                    <XdevTextArea columns="5" x:name="textArea">
-                        <x:constraints gridx="2" gridy="3" weighty="0.0" weightx="1.0" width="100%" gridWidth="2" height="0px" />
-                    </XdevTextArea>
-                    <XdevLabel x:name="lblProRemark" value="{$lblProRemark.value}">
                         <x:constraints gridx="1" gridy="4" weighty="0.0" weightx="0.0" width="0px" height="0px" />
                     </XdevLabel>
-                    <XdevTextArea columns="5" x:name="textAreaRem" rows="2">
+                    <XdevTextArea columns="5" x:name="textArea">
                         <x:constraints gridx="2" gridy="4" weighty="0.0" weightx="1.0" width="100%" gridWidth="2" height="0px" />
                     </XdevTextArea>
-                    <XdevLabel x:name="lblProProjectState" value="{$lblProProjectState.value}">
+                    <XdevLabel x:name="lblProRemark" value="{$lblProRemark.value}">
                         <x:constraints gridx="1" gridy="5" weighty="0.0" weightx="0.0" width="0px" height="0px" />
                     </XdevLabel>
+                    <XdevTextArea columns="5" x:name="textAreaRem" rows="2">
+                        <x:constraints gridx="2" gridy="5" weighty="0.0" weightx="1.0" width="100%" gridWidth="2" height="0px" />
+                    </XdevTextArea>
+                    <XdevLabel x:name="lblProProjectState" value="{$lblProProjectState.value}">
+                        <x:constraints gridx="1" gridy="6" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+                    </XdevLabel>
                     <XdevComboBox x:name="cbxProState">
-                        <x:constraints gridx="2" gridy="5" weighty="0.0" weightx="1.0" width="0px" height="0px" />
+                        <x:constraints gridx="2" gridy="6" weighty="0.0" weightx="1.0" width="0px" height="0px" />
                         <x:typeArguments>
                             <typeArgument type="?" />
                         </x:typeArguments>
                     </XdevComboBox>
                     <XdevLabel x:name="lblProLastBill" value="{$lblProLastBill.value}">
-                        <x:constraints gridx="1" gridy="6" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+                        <x:constraints gridx="1" gridy="7" weighty="0.0" weightx="0.0" width="0px" height="0px" />
                     </XdevLabel>
                     <XdevPopupDateField x:name="dateProLastBill">
-                        <x:constraints gridx="2" gridy="6" weighty="0.0" weightx="1.0" width="100%" height="0px" />
+                        <x:constraints gridx="2" gridy="7" weighty="0.0" weightx="1.0" width="100%" height="0px" />
                     </XdevPopupDateField>
+                </XdevGridLayout>
+                <XdevGridLayout caption="Ressourcen" x:name="gridLayoutRess" margin="">
+                    <x:constraints width="100%" height="100%" />
+                    <XdevVerticalLayout x:name="verticalLayoutRess" margin="">
+                        <x:constraints splitPos="FIRST" gridx="1" gridy="2" weighty="0.1" weightx="0.1" width="100%" height="100%" />
+                        <XdevHorizontalLayout spacing="false" x:name="horizontalLayoutRess" margin="">
+                            <x:constraints weighty="0.0" width="100%" height="0px" />
+                            <XdevButton icon="FontAwesome.PLUS_CIRCLE" description="{$cmdNew.description}" x:name="cmdNewAddress">
+                                <x:constraints weightx="0.0" width="0px" height="0px" />
+                                <x:event>click.buttonClick</x:event>
+                            </XdevButton>
+                            <XdevButton icon="FontAwesome.MINUS_CIRCLE" x:name="cmdDeleteAddress">
+                                <x:constraints weightx="0.0" width="0px" height="0px" />
+                                <x:event>click.buttonClick</x:event>
+                            </XdevButton>
+                            <XdevButton icon="FontAwesome.PENCIL" x:name="cmdEditAddress">
+                                <x:constraints weightx="0.0" width="0px" height="0px" />
+                                <x:event>click.buttonClick</x:event>
+                            </XdevButton>
+                            <XdevButton icon="FontAwesome.REFRESH" x:name="cmdReloadAddress">
+                                <x:constraints weightx="0.0" width="0px" height="0px" />
+                                <x:event>click.buttonClick</x:event>
+                            </XdevButton>
+                            <XdevButton icon="FontAwesome.INFO_CIRCLE" x:name="cmdInfoAddress">
+                                <x:constraints weightx="0.0" width="0px" height="0px" />
+                                <x:event>click.buttonClick</x:event>
+                            </XdevButton>
+                        </XdevHorizontalLayout>
+                        <XdevTable columnReorderingAllowed="true" caption="Projekt Ressourcen" x:name="tableProjectAllocation" columnCollapsingAllowed="true" x:entity="ProjectAllocation" x:autoQuery="false">
+                            <x:entityProperties>
+                                <entry type="CostAccount" property="costAccount" />
+                                <entry type="Date" property="praStartDate">
+                                    <converter dateStyle="DEFAULT" timeStyle="DEFAULT" currency="default" converterType="STRING_TO_DATE" locale="default" dateFormatType="DATE" />
+                                </entry>
+                                <entry type="Date" property="praEndDate">
+                                    <converter dateStyle="DEFAULT" timeStyle="DEFAULT" currency="default" converterType="STRING_TO_DATE" locale="default" dateFormatType="DATE" />
+                                </entry>
+                                <entry type="int" property="praHours" alignment="RIGHT">
+                                    <converter numberType="Double" numberFormatType="number" currency="default" converterType="STRING_TO_NUMBER" locale="default" />
+                                </entry>
+                                <entry type="int" property="praIntensityPercent" alignment="RIGHT">
+                                    <converter numberType="Double" numberFormatType="number" currency="default" converterType="STRING_TO_NUMBER" locale="default" />
+                                </entry>
+                                <entry type="double" property="praRate" alignment="RIGHT">
+                                    <converter numberType="Double" numberFormatType="currency" currency="default" converterType="STRING_TO_NUMBER" locale="default" />
+                                </entry>
+                                <entry type="String" property="praRemark" />
+                                <entry type="State" property="praState" collapsed="true" />
+                            </x:entityProperties>
+                            <x:constraints gridHeight="1" gridx="2" gridy="2" weighty="0.0" weightx="1.0" width="100%" alignment="TOP_LEFT" gridWidth="1" height="-1px" />
+                            <x:typeArguments>
+                                <typeArgument type="ProjectAllocation" />
+                            </x:typeArguments>
+                        </XdevTable>
+                    </XdevVerticalLayout>
                 </XdevGridLayout>
                 <XdevGridLayout caption="Referenzen" x:name="gridLayoutRef" margin="">
                     <x:constraints width="100%" height="100%" />
@@ -375,6 +442,7 @@
                     <entry name="txtProContact" property="proContact" />
                     <entry name="cmbBillingAddress" property="address" />
                     <entry name="cbxInternal" property="internal" />
+                    <entry name="cbxProOrderStrategy" property="proOrdergenerationStrategy" />
                 </x:fields>
             </XdevFieldGroup>
         </XdevGridLayout>

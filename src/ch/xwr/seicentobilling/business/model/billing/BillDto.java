@@ -14,9 +14,7 @@ public class BillDto {
 	private Customer customer;
 	private CostAccount costaccount;
 	private Double totalAmount;
-	private List<BillLine> expenseHours = new ArrayList<>();
-	private List<BillLine> journeyHours = new ArrayList<>();
-	private List<BillLine> projectHours = new ArrayList<>();
+	private List<BillLine> lines = new ArrayList<>();
 	private Periode periode;
 
 
@@ -38,24 +36,6 @@ public class BillDto {
 	public void setCustomerNbr(final int customerNbr) {
 		this.customerNbr = customerNbr;
 	}
-	public List<BillLine> getExpenseHours() {
-		return this.expenseHours;
-	}
-	public void setExpenseHours(final List<BillLine> expenses) {
-		this.expenseHours = expenses;
-	}
-	public List<BillLine> getJourneyHours() {
-		return this.journeyHours;
-	}
-	public void setJourneyHours(final List<BillLine> journey) {
-		this.journeyHours = journey;
-	}
-	public List<BillLine> getProjectHours() {
-		return this.projectHours;
-	}
-	public void setProjectHours(final List<BillLine> project) {
-		this.projectHours = project;
-	}
 	public Project getProject() {
 		return this.project;
 	}
@@ -69,9 +49,15 @@ public class BillDto {
 		this.costaccount = costaccount;
 	}
 	public Periode getPeriode() {
-		return periode;
+		return this.periode;
 	}
-	public void setPeriode(Periode periode) {
+	public void setPeriode(final Periode periode) {
 		this.periode = periode;
+	}
+	public List<BillLine> getLines() {
+		return this.lines;
+	}
+	public void setLines(final List<BillLine> lines) {
+		this.lines = lines;
 	}
 }

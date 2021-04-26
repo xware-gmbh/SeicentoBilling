@@ -62,6 +62,7 @@ import ch.xwr.seicentobilling.dal.CustomerDAO;
 import ch.xwr.seicentobilling.dal.OrderDAO;
 import ch.xwr.seicentobilling.dal.OrderLineDAO;
 import ch.xwr.seicentobilling.dal.PaymentConditionDAO;
+import ch.xwr.seicentobilling.dal.ProjectDAO;
 import ch.xwr.seicentobilling.entities.City_;
 import ch.xwr.seicentobilling.entities.Customer;
 import ch.xwr.seicentobilling.entities.Customer_;
@@ -74,6 +75,7 @@ import ch.xwr.seicentobilling.entities.PaymentCondition_;
 import ch.xwr.seicentobilling.entities.Project;
 import ch.xwr.seicentobilling.entities.Project_;
 import ch.xwr.seicentobilling.ui.desktop.crm.CustomerLookupPopup;
+import ch.xwr.seicentobilling.ui.desktop.project.ProjectLookupPopup;
 
 public class OrderTabView extends XdevView {
 	OrderCalculator CALC = new OrderCalculator();
@@ -147,6 +149,7 @@ public class OrderTabView extends XdevView {
 		this.dateOrdPayDate.setEnabled(false);
 		this.dateOrdDueDate.setEnabled(false);
 		this.cmbCustomer.setEnabled(false);
+		this.cmbProject.setEnabled(false);
 
 		boolean hasData = true;
 		if (this.fieldGroup.getItemDataSource() == null) {
@@ -194,6 +197,7 @@ public class OrderTabView extends XdevView {
 		reloadTableLineList();
 
 		prepareCustomerCombo(bean2.getCustomer());
+		prepareProjectCombo(bean2.getProject());
 
 		setROFields();
 	}
@@ -510,13 +514,14 @@ public class OrderTabView extends XdevView {
 		// reassign filter
 		this.containerFilterComponent.setFilterData(fd);
 
-		final Order bean = this.fieldGroup.getItemDataSource().getBean();
-		if (bean != null) {
-			//final boolean exi = this.table.containsId(bean);
-			//final com.vaadin.data.Item x = this.table.getItem(bean);
-			this.table.select(bean);
+		if (this.fieldGroup.getItemDataSource() != null) {
+			final Order bean = this.fieldGroup.getItemDataSource().getBean();
+			if (bean != null) {
+				//final boolean exi = this.table.containsId(bean);
+				//final com.vaadin.data.Item x = this.table.getItem(bean);
+				this.table.select(bean);
+			}
 		}
-
 	}
 
 	/**
@@ -602,7 +607,7 @@ public class OrderTabView extends XdevView {
 		if (!this.fieldGroup.isModified()) {
 			return;
 		}
-		if (this.cmbPaymentCondition.getSelectedItem() != null) {
+		if (this.cmbPaymentCondition.getSelectedItem() != null && this.dateOrdDueDate.isEnabled()) {
 			// final PaymentCondition bean = (PaymentCondition)
 			// event.getProperty().getValue();
 			final PaymentCondition bean = this.cmbPaymentCondition.getSelectedItem().getBean();
@@ -610,6 +615,7 @@ public class OrderTabView extends XdevView {
 			final Calendar now = Calendar.getInstance(); // Gets the current date and time
 			now.setTime(this.dateOrdBillDate.getValue());
 			now.add(Calendar.DAY_OF_MONTH, bean.getPacNbrOfDays());
+
 			this.dateOrdDueDate.setValue(now.getTime());
 
 		}
@@ -953,12 +959,54 @@ public class OrderTabView extends XdevView {
 
 	}
 
+	private void popupProjectLookup() {
+		final Window win = ProjectLookupPopup.getPopupWindow();
+
+		final ProjectLookupPopup pop = (ProjectLookupPopup) win.getContent();
+		pop.setAllowNullSelection(true);
+
+		win.addCloseListener(new CloseListener() {
+			@Override
+			public void windowClose(final CloseEvent e) {
+				final Long beanId = (Long) UI.getCurrent().getSession().getAttribute("beanId");
+
+				if (beanId != null) {
+
+					if (beanId > 0) {
+						final Project bean = new ProjectDAO().find(beanId);
+						prepareProjectCombo(bean);
+					} else {
+						if (beanId < 0) {
+							prepareProjectCombo(null);
+						}
+					}
+				}
+
+			}
+
+		});
+		this.getUI().addWindow(win);
+
+	}
+
 	private void prepareCustomerCombo(final Customer bean) {
 		if (bean != null) {
 			this.fieldGroup.setReadOnly(false);
 
 			this.cmbCustomer.addItem(bean);
 			this.cmbCustomer.setValue(bean);
+		}
+	}
+
+	private void prepareProjectCombo(final Project bean) {
+		if (bean != null) {
+			this.fieldGroup.setReadOnly(false);
+
+			this.cmbProject.addItem(bean);
+			this.cmbProject.setValue(bean);
+		} else {
+			this.cmbProject.clear();
+			this.fieldGroup.getItemDataSource().getBean().setProject(null);
 		}
 	}
 
@@ -970,6 +1018,17 @@ public class OrderTabView extends XdevView {
 	 */
 	private void btnSearch_buttonClick(final Button.ClickEvent event) {
 		popupCustomerLookup();
+	}
+
+	/**
+	 * Event handler delegate method for the {@link XdevButton}
+	 * {@link #btnSearchProject}.
+	 *
+	 * @see Button.ClickListener#buttonClick(Button.ClickEvent)
+	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
+	 */
+	private void btnSearchProject_buttonClick(final Button.ClickEvent event) {
+		popupProjectLookup();
 	}
 
 	/*
@@ -1008,10 +1067,12 @@ public class OrderTabView extends XdevView {
 		this.dateOrdOrderDate = new XdevPopupDateField();
 		this.lblOrdText = new XdevLabel();
 		this.textArea = new XdevTextArea();
-		this.lblProject = new XdevLabel();
-		this.cmbProject = new XdevComboBox<>();
 		this.lblPaymentCondition = new XdevLabel();
 		this.cmbPaymentCondition = new XdevComboBox<>();
+		this.lblProject = new XdevLabel();
+		this.horizontalLayoutPro = new XdevHorizontalLayout();
+		this.cmbProject = new XdevComboBox<>();
+		this.btnSearchProject = new XdevButton();
 		this.lblOrdAmountBrut = new XdevLabel();
 		this.txtOrdAmountBrut = new XdevTextField();
 		this.lblOrdAmountNet = new XdevLabel();
@@ -1126,15 +1187,20 @@ public class OrderTabView extends XdevView {
 		this.lblOrdText.setValue(StringResourceUtils.optLocalizeString("{$lblOrdText.value}", this));
 		this.textArea.setRows(2);
 		this.textArea.setMaxLength(256);
-		this.lblProject.setValue(StringResourceUtils.optLocalizeString("{$lblProject.value}", this));
-		this.cmbProject.setContainerDataSource(Project.class);
-		this.cmbProject.setItemCaptionPropertyId(Project_.proName.getName());
 		this.lblPaymentCondition.setValue(StringResourceUtils.optLocalizeString("{$lblPaymentCondition.value}", this));
 		this.cmbPaymentCondition.setRequired(true);
 		this.cmbPaymentCondition.setItemCaptionFromAnnotation(false);
 		this.cmbPaymentCondition.setContainerDataSource(PaymentCondition.class,
 				DAOs.get(PaymentConditionDAO.class).findAllActive());
 		this.cmbPaymentCondition.setItemCaptionPropertyId(PaymentCondition_.pacName.getName());
+		this.lblProject.setValue(StringResourceUtils.optLocalizeString("{$lblProject.value}", this));
+		this.horizontalLayoutPro.setMargin(new MarginInfo(false));
+		this.cmbProject.setEnabled(false);
+		this.cmbProject.setContainerDataSource(Project.class, DAOs.get(ProjectDAO.class).findAll());
+		this.cmbProject.setItemCaptionPropertyId(Project_.proName.getName());
+		this.btnSearchProject.setIcon(FontAwesome.SEARCH);
+		this.btnSearchProject.setCaption("");
+		this.btnSearchProject.setDescription("Suchen...");
 		this.lblOrdAmountBrut.setValue(StringResourceUtils.optLocalizeString("{$lblOrdAmountBrut.value}", this));
 		this.txtOrdAmountBrut.setConverter(ConverterBuilder.stringToDouble().currency().build());
 		this.lblOrdAmountNet.setValue(StringResourceUtils.optLocalizeString("{$lblOrdAmountNet.value}", this));
@@ -1263,6 +1329,13 @@ public class OrderTabView extends XdevView {
 		this.btnSearch.setSizeUndefined();
 		this.horizontalLayoutCus.addComponent(this.btnSearch);
 		this.horizontalLayoutCus.setExpandRatio(this.btnSearch, 20.0F);
+		this.cmbProject.setWidth(100, Unit.PERCENTAGE);
+		this.cmbProject.setHeight(-1, Unit.PIXELS);
+		this.horizontalLayoutPro.addComponent(this.cmbProject);
+		this.horizontalLayoutPro.setExpandRatio(this.cmbProject, 40.0F);
+		this.btnSearchProject.setSizeUndefined();
+		this.horizontalLayoutPro.addComponent(this.btnSearchProject);
+		this.horizontalLayoutPro.setExpandRatio(this.btnSearchProject, 20.0F);
 		this.gridLayoutHdr.setColumns(4);
 		this.gridLayoutHdr.setRows(8);
 		this.lblOrdNumber.setSizeUndefined();
@@ -1287,16 +1360,16 @@ public class OrderTabView extends XdevView {
 		this.textArea.setWidth(100, Unit.PERCENTAGE);
 		this.textArea.setHeight(-1, Unit.PIXELS);
 		this.gridLayoutHdr.addComponent(this.textArea, 1, 3, 3, 3);
-		this.lblProject.setSizeUndefined();
-		this.gridLayoutHdr.addComponent(this.lblProject, 0, 4);
-		this.cmbProject.setWidth(100, Unit.PERCENTAGE);
-		this.cmbProject.setHeight(-1, Unit.PIXELS);
-		this.gridLayoutHdr.addComponent(this.cmbProject, 1, 4);
 		this.lblPaymentCondition.setSizeUndefined();
-		this.gridLayoutHdr.addComponent(this.lblPaymentCondition, 2, 4);
+		this.gridLayoutHdr.addComponent(this.lblPaymentCondition, 0, 4);
 		this.cmbPaymentCondition.setWidth(100, Unit.PERCENTAGE);
 		this.cmbPaymentCondition.setHeight(-1, Unit.PIXELS);
-		this.gridLayoutHdr.addComponent(this.cmbPaymentCondition, 3, 4);
+		this.gridLayoutHdr.addComponent(this.cmbPaymentCondition, 1, 4);
+		this.lblProject.setSizeUndefined();
+		this.gridLayoutHdr.addComponent(this.lblProject, 2, 4);
+		this.horizontalLayoutPro.setWidth(100, Unit.PERCENTAGE);
+		this.horizontalLayoutPro.setHeight(-1, Unit.PIXELS);
+		this.gridLayoutHdr.addComponent(this.horizontalLayoutPro, 3, 4);
 		this.lblOrdAmountBrut.setSizeUndefined();
 		this.gridLayoutHdr.addComponent(this.lblOrdAmountBrut, 0, 5);
 		this.txtOrdAmountBrut.setSizeUndefined();
@@ -1309,7 +1382,7 @@ public class OrderTabView extends XdevView {
 		this.gridLayoutHdr.addComponent(this.lblOrdAmountVat, 0, 6);
 		this.txtOrdAmountVat.setSizeUndefined();
 		this.gridLayoutHdr.addComponent(this.txtOrdAmountVat, 1, 6);
-		this.gridLayoutHdr.setColumnExpandRatio(1, 10.0F);
+		this.gridLayoutHdr.setColumnExpandRatio(1, 20.0F);
 		this.gridLayoutHdr.setColumnExpandRatio(3, 10.0F);
 		final CustomComponent gridLayoutHdr_vSpacer = new CustomComponent();
 		gridLayoutHdr_vSpacer.setSizeFull();
@@ -1418,6 +1491,7 @@ public class OrderTabView extends XdevView {
 		this.cmbCustomer.addValueChangeListener(event -> this.cmbCustomer_valueChange(event));
 		this.btnSearch.addClickListener(event -> this.btnSearch_buttonClick(event));
 		this.cmbPaymentCondition.addValueChangeListener(event -> this.cmbPaymentCondition_valueChange(event));
+		this.btnSearchProject.addClickListener(event -> this.btnSearchProject_buttonClick(event));
 		this.cmdNewLine.addClickListener(event -> this.cmdNewLine_buttonClick(event));
 		this.cmdDeleteLine.addClickListener(event -> this.cmdDeleteLine_buttonClick(event));
 		this.cmdReloadLine.addClickListener(event -> this.cmdReloadLine_buttonClick(event));
@@ -1430,20 +1504,21 @@ public class OrderTabView extends XdevView {
 
 	// <generated-code name="variables">
 	private XdevButton cmdNew, cmdDelete, cmdReload, cmdInfo, cmdCopy, cmdReport, cmdPdfReport, cmdAdmin, btnSearch,
-			cmdNewLine, cmdDeleteLine, cmdReloadLine, cmdInfoLine, cmdEditLine, cmdSave, cmdReset;
-	private XdevLabel lblOrdNumber, lblCustomer, lblOrdBillDate, lblOrdOrderDate, lblOrdText, lblProject,
-			lblPaymentCondition, lblOrdAmountBrut, lblOrdAmountNet, lblOrdAmountVat, lblOrdCreated, lblOrdPayDate,
-			lblOrdDueDate, lblOrdBookedOn, lblOrdState;
+			btnSearchProject, cmdNewLine, cmdDeleteLine, cmdReloadLine, cmdInfoLine, cmdEditLine, cmdSave, cmdReset;
+	private XdevLabel lblOrdCreated, lblOrdPayDate, lblOrdDueDate, lblOrdBookedOn, lblOrdState, lblOrdNumber, lblCustomer,
+			lblOrdBillDate, lblOrdOrderDate, lblOrdText, lblPaymentCondition, lblProject, lblOrdAmountBrut, lblOrdAmountNet,
+			lblOrdAmountVat;
 	private XdevComboBox<PaymentCondition> cmbPaymentCondition;
 	private XdevTabSheet tabSheet;
-	private XdevGridLayout form, gridLayoutHdr, gridLayoutDetails;
+	private XdevGridLayout form, gridLayoutDetails, gridLayoutHdr;
 	private XdevComboBox<Project> cmbProject;
 	private XdevHorizontalSplitPanel horizontalSplitPanel;
 	private XdevContainerFilterComponent containerFilterComponent;
-	private XdevHorizontalLayout actionLayout, horizontalLayoutCus, horizontalLayoutAction, horizontalLayout;
+	private XdevHorizontalLayout actionLayout, horizontalLayoutCus, horizontalLayoutPro, horizontalLayoutAction,
+			horizontalLayout;
 	private XdevVerticalSplitPanel verticalSplitPanel;
-	private XdevPopupDateField dateOrdBillDate, dateOrdOrderDate, dateOrdCreated, dateOrdPayDate, dateOrdDueDate,
-			dateOrdBookedOn;
+	private XdevPopupDateField dateOrdCreated, dateOrdPayDate, dateOrdDueDate, dateOrdBookedOn, dateOrdBillDate,
+			dateOrdOrderDate;
 	private XdevTextArea textArea;
 	private XdevTable<OrderLine> tableLine;
 	private XdevComboBox<?> comboBoxState;

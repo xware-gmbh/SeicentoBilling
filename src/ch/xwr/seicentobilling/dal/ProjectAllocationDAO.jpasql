@@ -1,0 +1,19 @@
+import ch.xwr.seicentobilling.entities.ProjectAllocation
+import ch.xwr.seicentobilling.entities.Project
+import ch.xwr.seicentobilling.entities.CostAccount
+
+findByProject(Project pro)
+{
+	select * from ProjectAllocation where project=:pro
+}
+
+findByCostAccount(CostAccount csa)
+{
+	select * from ProjectAllocation where costAccount=:csa
+}
+
+findAllActiveProjects()
+{
+	select * from ProjectAllocation where project.proState = 1 order by praStartDate desc
+	//, Project where proState = 1 order by praStartDate desc
+}

@@ -74,7 +74,7 @@
         <XdevGridLayout x:name="form">
             <x:constraints splitPos="SECOND" width="100%" height="100%" />
             <XdevComboBox x:name="cbxUnit">
-                <x:constraints gridx="2" gridy="5" weighty="0.0" weightx="1.0" width="0px" height="0px" />
+                <x:constraints gridx="2" gridy="6" weighty="0.0" weightx="1.0" width="0px" height="0px" />
                 <x:typeArguments>
                     <typeArgument type="?" />
                 </x:typeArguments>
@@ -95,10 +95,10 @@
                     <entry name="txtItmIdent" property="itmIdent" />
                     <entry name="txtItmName" property="itmName" />
                     <entry name="txtItmPrice1" property="itmPrice1" />
-                    <entry name="txtItmPrice2" property="itmPrice2" />
                     <entry name="cbxUnit" property="itmUnit" />
                     <entry name="txtAccount" property="itmAccount" />
                     <entry name="cbxState" property="itmState" />
+                    <entry name="cbxPriceLevel" property="itmPriceLevel" />
                 </x:fields>
             </XdevFieldGroup>
             <XdevLabel x:name="lblItmIdent" value="{$lblItmIdent.value}">
@@ -120,34 +120,11 @@
                 <converter numberType="Double" numberFormatType="currency" currency="default" converterType="STRING_TO_NUMBER" locale="default" />
                 <x:constraints gridx="2" gridy="3" weighty="0.0" weightx="1.0" width="100%" height="0px" />
             </XdevTextField>
-            <XdevLabel x:name="lblItmPrice2" value="{$lblItmPrice2.value}">
+            <XdevLabel x:name="lblVat" value="{$lblVat.value}">
                 <x:constraints gridx="1" gridy="4" weighty="0.0" weightx="0.0" width="0px" height="0px" />
             </XdevLabel>
-            <XdevTextField columns="5" tabIndex="6" x:name="txtItmPrice2">
-                <converter numberType="Double" numberFormatType="currency" currency="default" converterType="STRING_TO_NUMBER" locale="default" />
-                <x:constraints gridx="2" gridy="4" weighty="0.0" weightx="1.0" width="100%" height="0px" />
-            </XdevTextField>
-            <XdevLabel x:name="lblItmUnit" value="{$lblItmUnit.value}">
-                <x:constraints gridx="1" gridy="5" weighty="0.0" weightx="0.0" width="0px" height="0px" />
-            </XdevLabel>
-            <XdevLabel x:name="lblItemGroup" value="{$lblItemGroup.value}">
-                <x:constraints gridx="1" gridy="6" weighty="0.0" weightx="0.0" width="0px" height="0px" />
-            </XdevLabel>
-            <XdevComboBox tabIndex="1" x:name="cmbItemGroup" x:entity="ItemGroup">
-                <x:constraints gridx="2" gridy="6" weighty="0.0" weightx="1.0" width="100%" height="0px" />
-                <x:entityProperty>
-                    <entry type="String" property="itgName" />
-                </x:entityProperty>
-                <x:typeArguments>
-                    <typeArgument type="ItemGroup" />
-                </x:typeArguments>
-                <x:data methodName="findAll" />
-            </XdevComboBox>
-            <XdevLabel x:name="lblVat" value="{$lblVat.value}">
-                <x:constraints gridx="1" gridy="7" weighty="0.0" weightx="0.0" width="0px" height="0px" />
-            </XdevLabel>
             <XdevComboBox tabIndex="2" required="true" itemCaptionFromAnnotation="false" x:name="cmbVat" x:entity="Vat" x:autoQuery="false">
-                <x:constraints gridx="2" gridy="7" weighty="0.0" weightx="1.0" width="100%" height="0px" />
+                <x:constraints gridx="2" gridy="4" weighty="0.0" weightx="1.0" width="100%" height="0px" />
                 <x:entityProperty>
                     <entry type="String" property="fullName" />
                 </x:entityProperty>
@@ -155,6 +132,31 @@
                     <typeArgument type="Vat" />
                 </x:typeArguments>
                 <x:data methodName="findAllActive" />
+            </XdevComboBox>
+            <XdevLabel description="Priorität für Preisermittlung" x:name="lblItmPriceLevel" value="Preis Prio">
+                <x:constraints gridx="1" gridy="5" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+            </XdevLabel>
+            <XdevComboBox required="true" x:name="cbxPriceLevel">
+                <x:constraints gridx="2" gridy="5" weighty="0.0" weightx="1.0" width="0px" height="0px" />
+                <x:typeArguments>
+                    <typeArgument type="?" />
+                </x:typeArguments>
+            </XdevComboBox>
+            <XdevLabel x:name="lblItmUnit" value="{$lblItmUnit.value}">
+                <x:constraints gridx="1" gridy="6" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+            </XdevLabel>
+            <XdevLabel x:name="lblItemGroup" value="{$lblItemGroup.value}">
+                <x:constraints gridx="1" gridy="7" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+            </XdevLabel>
+            <XdevComboBox tabIndex="1" x:name="cmbItemGroup" x:entity="ItemGroup">
+                <x:constraints gridx="2" gridy="7" weighty="0.0" weightx="1.0" width="100%" height="0px" />
+                <x:entityProperty>
+                    <entry type="String" property="itgName" />
+                </x:entityProperty>
+                <x:typeArguments>
+                    <typeArgument type="ItemGroup" />
+                </x:typeArguments>
+                <x:data methodName="findAll" />
             </XdevComboBox>
             <XdevLabel description="Externe BuHa Ertrags-Konto Nummer" x:name="lblAccount" value="Konto#">
                 <x:constraints gridx="1" gridy="8" top="33px" left="-1px" weighty="0.0" weightx="0.0" width="0px" height="0px" />

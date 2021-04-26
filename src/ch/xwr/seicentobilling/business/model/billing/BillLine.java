@@ -2,6 +2,7 @@ package ch.xwr.seicentobilling.business.model.billing;
 
 import ch.xwr.seicentobilling.business.LovState;
 import ch.xwr.seicentobilling.entities.CostAccount;
+import ch.xwr.seicentobilling.entities.Item;
 
 public class BillLine {
 	private Double hours;
@@ -10,7 +11,8 @@ public class BillLine {
 	@SuppressWarnings("unused")
 	private Double amount;
 	private CostAccount costaccount;
-
+	private Item item;
+	private String text;
 
 
 	public Double getHours() {
@@ -35,9 +37,21 @@ public class BillLine {
 		return getHours() * getRate();
 	}
 	public CostAccount getCostaccount() {
-		return costaccount;
+		return this.costaccount;
 	}
-	public void setCostaccount(CostAccount costaccount) {
+	public void setCostaccount(final CostAccount costaccount) {
 		this.costaccount = costaccount;
+	}
+	public Item getItem() {
+		return this.item;
+	}
+	public void setItem(final Item item) {
+		this.item = item;
+	}
+	public String getText() {
+		return this.text;
+	}
+	public void setText(final String text) {
+		this.text = text;
 	}
 }

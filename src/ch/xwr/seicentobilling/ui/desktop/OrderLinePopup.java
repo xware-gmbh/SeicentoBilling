@@ -43,6 +43,7 @@ import ch.xwr.seicentobilling.entities.Order;
 import ch.xwr.seicentobilling.entities.OrderLine;
 import ch.xwr.seicentobilling.entities.OrderLine_;
 import ch.xwr.seicentobilling.entities.Order_;
+import ch.xwr.seicentobilling.entities.Project;
 import ch.xwr.seicentobilling.entities.Vat;
 import ch.xwr.seicentobilling.entities.VatLine;
 
@@ -69,6 +70,11 @@ public class OrderLinePopup extends XdevView {
 		Order obj = null;
 
 		if (beanId == null) {
+			this.cmbItem.clear();
+			this.cmbItem.addItems(new ItemDAO().findAllActiveSortedByName());
+
+			this.cmbCostAccount.clear();
+			this.cmbCostAccount.addItems(new CostAccountDAO().findAllActive());
 			// new
 			final OrderDAO objDao = new OrderDAO();
 			obj = objDao.find(objId);
@@ -82,6 +88,13 @@ public class OrderLinePopup extends XdevView {
 		} else {
 			final OrderLineDAO dao = new OrderLineDAO();
 			bean = dao.find(beanId.longValue());
+
+			this.cmbItem.clear();
+			this.cmbItem.addItems(new ItemDAO().findAllSortedByName());
+			//cmbItem.setData(dao);
+			this.cmbCostAccount.clear();
+			this.cmbCostAccount.addItems(new CostAccountDAO().findAllOrderByName());
+
 		}
 
 		setBeanGui(bean);
@@ -174,14 +187,22 @@ public class OrderLinePopup extends XdevView {
 		// if (event.getProperty().)
 		final Item itm = (Item) event.getProperty().getValue();
 
-		if (itm.getItmPrice1() != null) {
-			this.txtOdlPrice.setValue(itm.getItmPrice1().toString());
+		final Project proj = this.fieldGroup.getItemDataSource().getBean().getOrderhdr().getProject();
+		if (itm.getItmPriceLevel() == LovState.itmPriceLevel.project && proj != null ) {
+			if (proj.getProRate() > 0) {
+				this.txtOdlPrice.setValue("" + proj.getProRate());
+			}
+			if (proj.getVat() != null) {
+				this.cmbVat.setValue(proj.getVat());
+			}
+		} else {
+			if (itm.getItmPrice1() != null) {
+				this.txtOdlPrice.setValue(itm.getItmPrice1().toString());
+			}
+			if (itm.getVat() != null) {
+				this.cmbVat.setValue(itm.getVat());
+			}
 		}
-		if (itm.getVat() != null) {
-			this.cmbVat.setValue(itm.getVat());
-		}
-
-		// loadDataFromEmp(emp);
 	}
 
 	/**
@@ -306,7 +327,7 @@ public class OrderLinePopup extends XdevView {
 		this.cmbItem.setTabIndex(3);
 		this.cmbItem.setRequired(true);
 		this.cmbItem.setItemCaptionFromAnnotation(false);
-		this.cmbItem.setContainerDataSource(Item.class, DAOs.get(ItemDAO.class).findAll());
+		this.cmbItem.setContainerDataSource(Item.class, false);
 		this.cmbItem.setItemCaptionPropertyId("prpShortName");
 		this.lblVat.setValue(StringResourceUtils.optLocalizeString("{$lblVat.value}", this));
 		this.cmbVat.setTabIndex(4);
@@ -329,7 +350,7 @@ public class OrderLinePopup extends XdevView {
 		this.cmbCostAccount.setTabIndex(8);
 		this.cmbCostAccount.setRequired(true);
 		this.cmbCostAccount.setItemCaptionFromAnnotation(false);
-		this.cmbCostAccount.setContainerDataSource(CostAccount.class, DAOs.get(CostAccountDAO.class).findAll());
+		this.cmbCostAccount.setContainerDataSource(CostAccount.class, false);
 		this.cmbCostAccount.setItemCaptionPropertyId(CostAccount_.csaName.getName());
 		this.lblOdlAmountBrut.setValue(StringResourceUtils.optLocalizeString("{$lblOdlAmountBrut.value}", this));
 		this.txtOdlAmountBrut.setConverter(ConverterBuilder.stringToDouble().currency().build());
