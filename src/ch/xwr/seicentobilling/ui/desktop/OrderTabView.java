@@ -925,7 +925,7 @@ public class OrderTabView extends XdevView {
 			return;
 		}
 		// if (event.getProperty().)
-		if (this.cmbCustomer.getSelectedItem() != null) {
+		if (this.cmbCustomer.getSelectedItem() != null && this.cmbPaymentCondition.isEnabled()) {
 			// final Customer cus = (Customer) event.getProperty().getValue();
 			final Customer cus = this.cmbCustomer.getSelectedItem().getBean();
 			this.cmbPaymentCondition.setValue(cus.getPaymentCondition());
