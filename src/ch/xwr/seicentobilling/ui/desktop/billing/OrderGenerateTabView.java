@@ -401,6 +401,7 @@ public class OrderGenerateTabView extends XdevView {
 		}
 
 		// publish list to grid
+		this.guifld.setCostAccount(this.comboBoxCostAccount.getSelectedItem().getBean());
 		InitTreeGrid(lst);
 		// this.table.
 		final Collection<?> lsSize = this.treeGrid.getContainerDataSource().getItemIds();
