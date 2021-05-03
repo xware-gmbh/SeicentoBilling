@@ -234,7 +234,7 @@ public class OrderGenerateTabView extends XdevView {
 			cbo.setEnabled(false);
 		}
 		if (billDto.getProject().getProOrdergenerationStrategy() == LovState.ProOrderStrategy.zusammenziehen) {
-			if (!billDto.getProject().getCostAccount().getCsaId().equals(billDto.getCostaccount().getCsaId())) {
+			if (!billDto.getProject().getCostAccount().getCsaId().equals(this.guifld.getCostAccount().getCsaId())) {
 				//will be billed by main CostAccount #426
 				cbo.setValue(false);
 				cbo.setEnabled(false);
