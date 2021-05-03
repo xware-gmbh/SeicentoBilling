@@ -234,7 +234,7 @@ public class OrderGenerateTabView extends XdevView {
 			cbo.setEnabled(false);
 		}
 		if (billDto.getProject().getProOrdergenerationStrategy() == LovState.ProOrderStrategy.zusammenziehen) {
-			if (!billDto.getProject().getCostAccount().getCsaId().equals(this.guifld.getCostAccount().getCsaId())) {
+			if (!billDto.getProject().getCostAccount().getCsaId().equals(billDto.getCostaccount().getCsaId())) {
 				//will be billed by main CostAccount #426
 				cbo.setValue(false);
 				cbo.setEnabled(false);
@@ -401,7 +401,6 @@ public class OrderGenerateTabView extends XdevView {
 		}
 
 		// publish list to grid
-		this.guifld.setCostAccount(this.comboBoxCostAccount.getSelectedItem().getBean());
 		InitTreeGrid(lst);
 		// this.table.
 		final Collection<?> lsSize = this.treeGrid.getContainerDataSource().getItemIds();
