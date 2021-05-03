@@ -2,6 +2,7 @@ package ch.xwr.seicentobilling.business.model.billing;
 
 import java.util.Date;
 
+import ch.xwr.seicentobilling.entities.CostAccount;
 import ch.xwr.seicentobilling.entities.Item;
 
 public class GuiGeneratorFields {
@@ -13,7 +14,14 @@ public class GuiGeneratorFields {
 	Item itemExpense;
 	Item itemJourney;
 	Date billDate;
+	CostAccount costAccount;
 
+	public CostAccount getCostAccount() {
+		return this.costAccount;
+	}
+	public void setCostAccount(final CostAccount costAccount) {
+		this.costAccount = costAccount;
+	}
 	public String getBillText() {
 		return this.billText;
 	}
