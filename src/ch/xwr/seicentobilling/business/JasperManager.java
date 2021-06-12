@@ -188,6 +188,8 @@ public class JasperManager {
 
 		} catch(final IOException ioe) {
 			_logger.error("Can not write attachment", ioe);
+		} catch (final Exception e) {
+			_logger.error("Could not write attachment Id: " + fname);
 		}
 	}
 
