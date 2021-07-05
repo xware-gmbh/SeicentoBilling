@@ -44,6 +44,7 @@ public class Expense implements java.io.Serializable {
 	private double expAmount;
 	private Date expBooked;
 	private LovState.State expState;
+	private double expAmountWOTax;
 
 	public Expense() {
 	}
@@ -173,6 +174,16 @@ public class Expense implements java.io.Serializable {
 
 	public void setExpAmount(final double expAmount) {
 		this.expAmount = expAmount;
+	}
+
+	@Caption("Betrag exkl.")
+	@Column(name = "expAmountWOTax", nullable = false, columnDefinition = "decimal", precision = 6)
+	public double getExpAmountWOTax() {
+		return this.expAmountWOTax;
+	}
+
+	public void setExpAmountWOTax(final double expAmountWOTax) {
+		this.expAmountWOTax = expAmountWOTax;
 	}
 
 	@Caption("ExpBooked")

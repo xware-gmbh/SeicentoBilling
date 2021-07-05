@@ -45,6 +45,7 @@ import ch.xwr.seicentobilling.business.RowObjectManager;
 import ch.xwr.seicentobilling.business.Seicento;
 import ch.xwr.seicentobilling.business.UploadReceiver;
 import ch.xwr.seicentobilling.business.helper.SeicentoCrud;
+import ch.xwr.seicentobilling.business.helper.VatHelper;
 import ch.xwr.seicentobilling.business.svc.SaveFileToDb;
 import ch.xwr.seicentobilling.dal.ExpenseDAO;
 import ch.xwr.seicentobilling.dal.ExpenseTemplateDAO;
@@ -468,6 +469,7 @@ public class ExpensePopup extends XdevView {
 		UI.getCurrent().getSession().setAttribute(String.class, "cmdSave");
 
 		preSaveAccountAction();
+		preSaveCalcVatAction();
 		if (SeicentoCrud.doSave(this.fieldGroup)) {
 			try {
 				final RowObjectManager man = new RowObjectManager();
@@ -484,6 +486,22 @@ public class ExpensePopup extends XdevView {
 				e.printStackTrace();
 			}
 
+		}
+	}
+
+	private void preSaveCalcVatAction() {
+		//#435
+		if (! this.txtExpAmount.isEmpty()) {
+			final double amt1 = Double.parseDouble(this.txtExpAmount.getValue());
+			final Vat vat = this.cmbVat.getSelectedItem().getBean();
+			final Date expdate = this.dateExpDate.getValue();
+
+			if (vat != null && expdate != null) {
+				final VatHelper vhlp = new VatHelper();
+				final Double amtV = vhlp.getVatAmount(expdate, new Double(amt1), vat);
+
+				this.fieldGroup.getItemDataSource().getBean().setExpAmountWOTax(amt1 - amtV.doubleValue());
+			}
 		}
 	}
 

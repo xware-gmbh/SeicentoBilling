@@ -49,6 +49,10 @@
                     <x:constraints weightx="0.0" width="0px" height="0px" />
                     <x:event>click.buttonClick</x:event>
                 </XdevButton>
+                <XdevButton icon="FontAwesome.GEAR" description="Admin Modus" enabled="false" x:name="cmdAdmin" visible="false">
+                    <x:constraints weightx="0.0" width="0px" alignment="MIDDLE_RIGHT" height="0px" />
+                    <x:event>click.buttonClick</x:event>
+                </XdevButton>
             </XdevHorizontalLayout>
             <XdevTable x:connectedForm="fieldGroup" columnReorderingAllowed="true" x:name="table" columnCollapsingAllowed="true" x:entity="Company">
                 <x:entityProperties>
