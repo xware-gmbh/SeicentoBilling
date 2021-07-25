@@ -248,7 +248,7 @@
             <XdevComboBox itemCaptionFromAnnotation="false" x:name="cmbCostAccountCompany" x:entity="CostAccount" x:autoQuery="false">
                 <x:constraints gridx="4" gridy="7" weighty="0.0" weightx="0.7" width="0px" height="0px" />
                 <x:entityProperty>
-                    <entry type="String" property="csaCode" />
+                    <entry type="String" property="csaName" />
                 </x:entityProperty>
                 <x:typeArguments>
                     <typeArgument type="CostAccount" />

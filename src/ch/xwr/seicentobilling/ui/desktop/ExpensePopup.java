@@ -925,7 +925,7 @@ public class ExpensePopup extends XdevView {
 		this.cmbCostAccountCompany.setItemCaptionFromAnnotation(false);
 		this.cmbCostAccountCompany.setContainerDataSource(CostAccount.class,
 				DAOs.get(CostAccountDAO.class).findAllActiveCompanyCstOrderByName());
-		this.cmbCostAccountCompany.setItemCaptionPropertyId(CostAccount_.csaCode.getName());
+		this.cmbCostAccountCompany.setItemCaptionPropertyId(CostAccount_.csaName.getName());
 		this.fieldGroup.bind(this.cmbPeriode, Expense_.periode.getName());
 		this.fieldGroup.bind(this.dateExpBooked, Expense_.expBooked.getName());
 		this.fieldGroup.bind(this.dateExpDate, Expense_.expDate.getName());
