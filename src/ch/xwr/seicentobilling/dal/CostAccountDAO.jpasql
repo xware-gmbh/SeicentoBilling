@@ -15,3 +15,8 @@ findAllOrderByName()
 {
 	select * from CostAccount order by csaName asc	
 }
+
+findAllActiveCompanyCstOrderByName()
+{
+	select * from CostAccount where csaState = 1 and csaFlagCompany = 1 order by csaName asc	
+}

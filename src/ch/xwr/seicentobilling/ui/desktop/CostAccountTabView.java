@@ -13,6 +13,7 @@ import com.vaadin.ui.Window.CloseListener;
 import com.xdev.dal.DAOs;
 import com.xdev.res.StringResourceUtils;
 import com.xdev.ui.XdevButton;
+import com.xdev.ui.XdevCheckBox;
 import com.xdev.ui.XdevFieldGroup;
 import com.xdev.ui.XdevGridLayout;
 import com.xdev.ui.XdevHorizontalLayout;
@@ -231,6 +232,7 @@ public class CostAccountTabView extends XdevView {
 		this.cmdInfo = new XdevButton();
 		this.table = new XdevTable<>();
 		this.form = new XdevGridLayout();
+		this.checkBoxFlagCompany = new XdevCheckBox();
 		this.comboBoxState = new XdevComboBox<>();
 		this.lblCsaCode = new XdevLabel();
 		this.txtCsaCode = new XdevTextField();
@@ -240,6 +242,7 @@ public class CostAccountTabView extends XdevView {
 		this.cmbCostAccount = new XdevComboBox<>();
 		this.lblCsaExtRef = new XdevLabel();
 		this.txtCsaExtRef = new XdevTextField();
+		this.lblCsaCompanyFlag = new XdevLabel();
 		this.lblCsaState = new XdevLabel();
 		this.horizontalLayout2 = new XdevHorizontalLayout();
 		this.cmdSave = new XdevButton();
@@ -261,12 +264,14 @@ public class CostAccountTabView extends XdevView {
 		this.table.setColumnCollapsingAllowed(true);
 		this.table.setContainerDataSource(CostAccount.class, DAOs.get(CostAccountDAO.class).findAll());
 		this.table.setVisibleColumns(CostAccount_.csaCode.getName(), CostAccount_.csaName.getName(),
-				CostAccount_.csaState.getName(), CostAccount_.costAccount.getName());
+				CostAccount_.csaFlagCompany.getName(), CostAccount_.csaState.getName(), CostAccount_.costAccount.getName());
 		this.table.setColumnHeader("csaCode", "Code");
 		this.table.setColumnHeader("csaName", "Name");
+		this.table.setColumnHeader("csaFlagCompany", "Firma");
 		this.table.setColumnHeader("csaState", "Status");
 		this.table.setColumnHeader("costAccount", "Übergeordnet");
 		this.table.setColumnCollapsed("costAccount", true);
+		this.checkBoxFlagCompany.setCaption("");
 		this.lblCsaCode.setValue(StringResourceUtils.optLocalizeString("{$lblCsaCode.value}", this));
 		this.txtCsaCode.setInputPrompt("");
 		this.txtCsaCode.setTabIndex(1);
@@ -280,6 +285,7 @@ public class CostAccountTabView extends XdevView {
 		this.cmbCostAccount.setItemCaptionPropertyId(CostAccount_.csaCode.getName());
 		this.lblCsaExtRef.setValue("Externe Referenz");
 		this.txtCsaExtRef.setMaxLength(50);
+		this.lblCsaCompanyFlag.setValue("Firmen Kostenstelle");
 		this.lblCsaState.setValue(StringResourceUtils.optLocalizeString("{$lblCsaState.value}", this));
 		this.horizontalLayout2.setMargin(new MarginInfo(false));
 		this.cmdSave.setIcon(FontAwesome.SAVE);
@@ -293,11 +299,12 @@ public class CostAccountTabView extends XdevView {
 		this.fieldGroup.bind(this.cmbCostAccount, CostAccount_.costAccount.getName());
 		this.fieldGroup.bind(this.txtCsaExtRef, CostAccount_.csaExtRef.getName());
 		this.fieldGroup.bind(this.comboBoxState, CostAccount_.csaState.getName());
+		this.fieldGroup.bind(this.checkBoxFlagCompany, CostAccount_.csaFlagCompany.getName());
 
 		MasterDetail.connect(this.table, this.fieldGroup);
 
 		this.containerFilterComponent.setContainer(this.table.getBeanContainerDataSource(), "csaCode", "csaState",
-				"costAccount", "csaName");
+				"costAccount", "csaName", "csaFlagCompany", "csaExtRef");
 		this.containerFilterComponent.setSearchableProperties("csaCode", "csaName");
 
 		this.cmdNew.setSizeUndefined();
@@ -335,9 +342,11 @@ public class CostAccountTabView extends XdevView {
 		this.horizontalLayout2.addComponent(this.cmdReset);
 		this.horizontalLayout2.setComponentAlignment(this.cmdReset, Alignment.MIDDLE_LEFT);
 		this.form.setColumns(2);
-		this.form.setRows(7);
+		this.form.setRows(8);
+		this.checkBoxFlagCompany.setSizeUndefined();
+		this.form.addComponent(this.checkBoxFlagCompany, 1, 4);
 		this.comboBoxState.setSizeUndefined();
-		this.form.addComponent(this.comboBoxState, 1, 4);
+		this.form.addComponent(this.comboBoxState, 1, 5);
 		this.lblCsaCode.setSizeUndefined();
 		this.form.addComponent(this.lblCsaCode, 0, 0);
 		this.txtCsaCode.setWidth(100, Unit.PERCENTAGE);
@@ -358,16 +367,18 @@ public class CostAccountTabView extends XdevView {
 		this.txtCsaExtRef.setWidth(100, Unit.PERCENTAGE);
 		this.txtCsaExtRef.setHeight(-1, Unit.PIXELS);
 		this.form.addComponent(this.txtCsaExtRef, 1, 3);
+		this.lblCsaCompanyFlag.setSizeUndefined();
+		this.form.addComponent(this.lblCsaCompanyFlag, 0, 4);
 		this.lblCsaState.setSizeUndefined();
-		this.form.addComponent(this.lblCsaState, 0, 4);
+		this.form.addComponent(this.lblCsaState, 0, 5);
 		this.horizontalLayout2.setSizeUndefined();
-		this.form.addComponent(this.horizontalLayout2, 0, 5, 1, 5);
+		this.form.addComponent(this.horizontalLayout2, 0, 6, 1, 6);
 		this.form.setComponentAlignment(this.horizontalLayout2, Alignment.TOP_CENTER);
 		this.form.setColumnExpandRatio(1, 100.0F);
 		final CustomComponent form_vSpacer = new CustomComponent();
 		form_vSpacer.setSizeFull();
-		this.form.addComponent(form_vSpacer, 0, 6, 1, 6);
-		this.form.setRowExpandRatio(6, 1.0F);
+		this.form.addComponent(form_vSpacer, 0, 7, 1, 7);
+		this.form.setRowExpandRatio(7, 1.0F);
 		this.verticalLayout.setSizeFull();
 		this.horizontalSplitPanel.setFirstComponent(this.verticalLayout);
 		this.form.setSizeFull();
@@ -386,17 +397,18 @@ public class CostAccountTabView extends XdevView {
 
 	// <generated-code name="variables">
 	private XdevButton cmdNew, cmdDelete, cmdReload, cmdInfo, cmdSave, cmdReset;
-	private XdevLabel lblCsaCode, lblCsaName, lblCostAccount, lblCsaExtRef, lblCsaState;
+	private XdevLabel lblCsaCode, lblCsaName, lblCostAccount, lblCsaExtRef, lblCsaCompanyFlag, lblCsaState;
 	private XdevTable<CostAccount> table;
 	private XdevComboBox<CostAccount> cmbCostAccount;
-	private XdevHorizontalLayout horizontalLayout, horizontalLayout2;
-	private XdevComboBox<?> comboBoxState;
 	private XdevGridLayout form;
-	private XdevTextField txtCsaCode, txtCsaName, txtCsaExtRef;
-	private XdevVerticalLayout verticalLayout;
 	private XdevHorizontalSplitPanel horizontalSplitPanel;
 	private XdevContainerFilterComponent containerFilterComponent;
 	private XdevFieldGroup<CostAccount> fieldGroup;
+	private XdevHorizontalLayout horizontalLayout, horizontalLayout2;
+	private XdevComboBox<?> comboBoxState;
+	private XdevCheckBox checkBoxFlagCompany;
+	private XdevTextField txtCsaCode, txtCsaName, txtCsaExtRef;
+	private XdevVerticalLayout verticalLayout;
 	// </generated-code>
 
 }

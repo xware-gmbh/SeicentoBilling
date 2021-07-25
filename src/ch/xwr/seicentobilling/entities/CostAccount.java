@@ -46,6 +46,8 @@ public class CostAccount implements java.io.Serializable {
 	private Set<OrderLine> orderLines = new HashSet<>(0);
 	private String csaExtRef;
 	private List<AppUser> users = new ArrayList<>();
+	private Boolean csaFlagCompany;
+
 
 	public CostAccount() {
 	}
@@ -183,6 +185,17 @@ public class CostAccount implements java.io.Serializable {
 		getUsers().remove(user);
 		user.setCostAccount(null);
 		return user;
+	}
+
+
+	@Caption("Firmenkostenstelle")
+	@Column(name = "csaFlagCompany", columnDefinition = "bit")
+	public Boolean getCsaFlagCompany() {
+		return this.csaFlagCompany;
+	}
+
+	public void setCsaFlagCompany(final Boolean csaFlagCompany) {
+		this.csaFlagCompany = csaFlagCompany;
 	}
 
 

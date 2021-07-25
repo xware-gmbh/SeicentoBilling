@@ -4,6 +4,7 @@
 <?xdevuiml version="1.0"?>
 <?template BROWSER_XGA?>
 <?import ??>
+<?import ch.xwr.seicentobilling.entities.CostAccount?>
 <?import ch.xwr.seicentobilling.entities.Expense?>
 <?import ch.xwr.seicentobilling.entities.LovAccount?>
 <?import ch.xwr.seicentobilling.entities.Periode?>
@@ -181,6 +182,13 @@
                 </x:typeArguments>
                 <x:data methodName="findAllMine" />
             </XdevComboBox>
+            <XdevLabel x:name="lblExpFlagCostAccount" value="{$lblExpFlagCostAccount.value}">
+                <x:constraints gridx="3" gridy="6" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+            </XdevLabel>
+            <XdevCheckBox caption="" x:name="chkExpFlagCostAccount">
+                <x:constraints gridx="4" gridy="6" weighty="0.0" weightx="0.8" width="100%" height="0px" />
+                <x:event>valueChange.valueChange</x:event>
+            </XdevCheckBox>
             <XdevLabel x:name="lblExpFlagGeneric" value="{$lblExpFlagGeneric.value}">
                 <x:constraints gridx="1" gridy="7" weighty="0.0" weightx="0.0" width="0px" height="0px" />
             </XdevLabel>
@@ -190,12 +198,9 @@
                     <typeArgument type="?" />
                 </x:typeArguments>
             </XdevComboBox>
-            <XdevLabel x:name="lblExpFlagCostAccount" value="{$lblExpFlagCostAccount.value}">
+            <XdevLabel x:name="lblExpCostAccountCompany" value="Kostenstelle Firma">
                 <x:constraints gridx="3" gridy="7" weighty="0.0" weightx="0.0" width="0px" height="0px" />
             </XdevLabel>
-            <XdevCheckBox caption="" x:name="chkExpFlagCostAccount">
-                <x:constraints gridx="4" gridy="7" weighty="0.0" weightx="0.8" width="100%" height="0px" />
-            </XdevCheckBox>
             <XdevLabel x:name="lblExpUnit" value="{$lblExpUnit.value}">
                 <x:constraints gridx="1" gridy="8" weighty="0.0" weightx="0.0" width="0px" height="0px" />
             </XdevLabel>
@@ -237,8 +242,19 @@
                     <entry name="comboBoxUnit" property="expUnit" />
                     <entry name="txtExpQuantity" property="expQuantity" />
                     <entry name="comboBoxState" property="expState" />
+                    <entry name="cmbCostAccountCompany" property="costAccountCompany" />
                 </x:fields>
             </XdevFieldGroup>
+            <XdevComboBox itemCaptionFromAnnotation="false" x:name="cmbCostAccountCompany" x:entity="CostAccount" x:autoQuery="false">
+                <x:constraints gridx="4" gridy="7" weighty="0.0" weightx="0.7" width="0px" height="0px" />
+                <x:entityProperty>
+                    <entry type="String" property="csaCode" />
+                </x:entityProperty>
+                <x:typeArguments>
+                    <typeArgument type="CostAccount" />
+                </x:typeArguments>
+                <x:data methodName="findAllActiveCompanyCstOrderByName" />
+            </XdevComboBox>
         </XdevGridLayout>
         <XdevHorizontalLayout x:name="horizontalLayout" margin="rbl">
             <x:constraints gridx="2" gridy="10" weighty="0.0" weightx="0.0" width="100%" alignment="TOP_RIGHT" gridWidth="3" height="0px" />
