@@ -46,12 +46,14 @@ import ch.xwr.seicentobilling.business.Seicento;
 import ch.xwr.seicentobilling.business.helper.ProjectLineHelper;
 import ch.xwr.seicentobilling.business.helper.SeicentoCrud;
 import ch.xwr.seicentobilling.dal.PeriodeDAO;
+import ch.xwr.seicentobilling.dal.ProjectAllocationDAO;
 import ch.xwr.seicentobilling.dal.ProjectDAO;
 import ch.xwr.seicentobilling.dal.ProjectLineDAO;
 import ch.xwr.seicentobilling.dal.ProjectLineTemplateDAO;
 import ch.xwr.seicentobilling.entities.Periode;
 import ch.xwr.seicentobilling.entities.Periode_;
 import ch.xwr.seicentobilling.entities.Project;
+import ch.xwr.seicentobilling.entities.ProjectAllocation;
 import ch.xwr.seicentobilling.entities.ProjectLine;
 import ch.xwr.seicentobilling.entities.ProjectLineTemplate;
 import ch.xwr.seicentobilling.entities.ProjectLine_;
@@ -223,13 +225,30 @@ public class ProjectLinePopup extends XdevView {
 					final Project bean = new ProjectDAO().find(beanId);
 					prepareProjectCombo(bean);
 
-					//nur setzene bei neuem Record
+					//nur setzen bei neuem Record
 					if (ProjectLinePopup.this.fieldGroup.getItemDataSource().getBean().getPrlId() == null) {
-						ProjectLinePopup.this.txtPrlRate.setValue("" + bean.getProRate());
+						ProjectLinePopup.this.txtPrlRate.setValue(getProRate(bean));
 					}
 
 					//ProjectLinePopup.this.fieldGroupProject.setItemDataSource(bean);
 				}
+			}
+
+			private String getProRate(final Project bean) {
+				final ProjectAllocationDAO dao = new ProjectAllocationDAO();
+				final List<ProjectAllocation> lst = dao.findByProject(bean);
+
+				for (final Iterator<ProjectAllocation> iterator = lst.iterator(); iterator.hasNext();) {
+					final ProjectAllocation projectAllocation = iterator.next();
+
+					if (projectAllocation.getCostAccount().equals(Seicento.getLoggedInCostAccount())) {
+						if (projectAllocation.getPraRate() > 0.) {
+							return "" + projectAllocation.getPraRate();
+						}
+					}
+				}
+
+				return "" + bean.getProRate();
 			}
 		});
 		this.getUI().addWindow(win);

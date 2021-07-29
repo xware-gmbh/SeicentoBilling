@@ -2,6 +2,7 @@ package ch.xwr.seicentobilling.ui.phone;
 
 import java.io.File;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -47,6 +48,7 @@ import ch.xwr.seicentobilling.business.LovState;
 import ch.xwr.seicentobilling.business.RowObjectManager;
 import ch.xwr.seicentobilling.business.Seicento;
 import ch.xwr.seicentobilling.business.UploadReceiver;
+import ch.xwr.seicentobilling.business.helper.VatHelper;
 import ch.xwr.seicentobilling.business.svc.SaveFileToDb;
 import ch.xwr.seicentobilling.dal.ExpenseDAO;
 import ch.xwr.seicentobilling.dal.ExpenseTemplateDAO;
@@ -215,6 +217,7 @@ public class ExpenseView extends XdevView {
 	private void cmdSave_buttonClick(final Button.ClickEvent event) {
 		try {
 			preSaveAccountAction();
+			preSaveCalcVatAction();
 			this.fieldGroup.save();
 			final RowObjectManager man = new RowObjectManager();
 			man.updateObject(this.fieldGroup.getItemDataSource().getBean().getExpId(),
@@ -235,6 +238,22 @@ public class ExpenseView extends XdevView {
 			final LovAccount lov = this.comboBoxAccount.getSelectedItem().getBean();
 			if (lov != null) {
 				this.fieldGroup.getItemDataSource().getBean().setExpAccount(lov.getId());
+			}
+		}
+	}
+
+	private void preSaveCalcVatAction() {
+		//#435
+		if (! this.txtExpAmount.isEmpty()) {
+			final double amt1 = Double.parseDouble(this.txtExpAmount.getValue());
+			final Vat vat = this.cmbVat.getSelectedItem().getBean();
+			final Date expdate = this.dateExpDate.getValue();
+
+			if (vat != null && expdate != null) {
+				final VatHelper vhlp = new VatHelper();
+				final Double amtV = vhlp.getVatAmount(expdate, new Double(amt1), vat);
+
+				this.fieldGroup.getItemDataSource().getBean().setExpAmountWOTax(amt1 - amtV.doubleValue());
 			}
 		}
 	}

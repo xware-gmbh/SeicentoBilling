@@ -28,6 +28,7 @@ import com.xdev.ui.entitycomponent.combobox.XdevComboBox;
 import ch.xwr.seicentobilling.business.LovState;
 import ch.xwr.seicentobilling.business.RowObjectManager;
 import ch.xwr.seicentobilling.business.Seicento;
+import ch.xwr.seicentobilling.business.helper.SeicentoCrud;
 import ch.xwr.seicentobilling.dal.CostAccountDAO;
 import ch.xwr.seicentobilling.dal.ProjectAllocationDAO;
 import ch.xwr.seicentobilling.dal.ProjectDAO;
@@ -147,17 +148,23 @@ public class ProjectAllocationPopup extends XdevView {
 	private void cmdSave_buttonClick(final Button.ClickEvent event) {
 		UI.getCurrent().getSession().setAttribute(String.class, "cmdSave");
 
-		try {
-			this.fieldGroup.save();
-			final RowObjectManager man = new RowObjectManager();
-			man.updateObject(this.fieldGroup.getItemDataSource().getBean().getPraId(),
-					this.fieldGroup.getItemDataSource().getBean().getClass().getSimpleName());
+		if (!this.fieldGroup.isValid()){
+			SeicentoCrud.validateField(this.fieldGroup);
+			return;
+		}
 
-			((Window) this.getParent()).close();
-			Notification.show("Save clicked", "Daten wurden gespeichert", Notification.Type.TRAY_NOTIFICATION);
-		} catch (final Exception e) {
-			Notification.show("Fehler beim Speichern", e.getMessage(), Notification.Type.ERROR_MESSAGE);
-			e.printStackTrace();
+		if (SeicentoCrud.doSave(this.fieldGroup)) {
+			try {
+				final RowObjectManager man = new RowObjectManager();
+				man.updateObject(this.fieldGroup.getItemDataSource().getBean().getPraId(),
+						this.fieldGroup.getItemDataSource().getBean().getClass().getSimpleName());
+
+				((Window) this.getParent()).close();
+				Notification.show("Save clicked", "Daten wurden gespeichert", Notification.Type.TRAY_NOTIFICATION);
+			} catch (final Exception e) {
+				e.printStackTrace();
+			}
+
 		}
 	}
 
@@ -244,6 +251,7 @@ public class ProjectAllocationPopup extends XdevView {
 		this.datePraStartDate.setRequired(true);
 		this.lblPraEndDate.setValue("Projektende");
 		this.datePraEndDate.setTabIndex(3);
+		this.datePraEndDate.setRequired(true);
 		this.lblPraHours.setValue("Stundensoll");
 		this.txtPraHours.setTabIndex(4);
 		this.txtPraHours.setRequired(true);

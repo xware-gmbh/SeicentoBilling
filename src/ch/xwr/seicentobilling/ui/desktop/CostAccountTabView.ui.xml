@@ -6,6 +6,7 @@
 <?import ??>
 <?import ch.xwr.seicentobilling.entities.CostAccount?>
 <?import com.xdev.ui.XdevButton?>
+<?import com.xdev.ui.XdevCheckBox?>
 <?import com.xdev.ui.XdevFieldGroup?>
 <?import com.xdev.ui.XdevGridLayout?>
 <?import com.xdev.ui.XdevHorizontalLayout?>
@@ -17,6 +18,7 @@
 <?import com.xdev.ui.entitycomponent.combobox.XdevComboBox?>
 <?import com.xdev.ui.entitycomponent.table.XdevTable?>
 <?import com.xdev.ui.filter.XdevContainerFilterComponent?>
+<?import java.lang.Boolean?>
 <?import java.lang.Short?>
 <?import java.lang.String?>
 <XdevView xmlns:x="http://xml.xdev-software.com/xdevuiml" x:name="CostAccountTabView">
@@ -25,7 +27,7 @@
         <x:constraints zpos="0" width="100%" height="100%" />
         <XdevVerticalLayout x:name="verticalLayout" margin="">
             <x:constraints splitPos="FIRST" width="100%" height="100%" />
-            <XdevContainerFilterComponent x:searchableProperties="csaCode,csaName" x:name="containerFilterComponent" x:filterableProperties="csaCode,csaState,costAccount,csaName" x:container="table" prefixMatchOnly="false">
+            <XdevContainerFilterComponent x:searchableProperties="csaCode,csaName" x:name="containerFilterComponent" x:filterableProperties="csaCode,csaState,costAccount,csaName,csaFlagCompany,csaExtRef" x:container="table" prefixMatchOnly="false">
                 <x:constraints weighty="0.0" width="100%" height="0%" />
             </XdevContainerFilterComponent>
             <XdevHorizontalLayout spacing="false" x:name="horizontalLayout" margin="">
@@ -51,6 +53,7 @@
                 <x:entityProperties>
                     <entry type="String" property="csaCode" caption="Code" />
                     <entry type="String" property="csaName" caption="Name" />
+                    <entry type="Boolean" property="csaFlagCompany" caption="Firma" />
                     <entry type="Short" property="csaState" caption="Status" />
                     <entry type="CostAccount" property="costAccount" caption="Übergeordnet" collapsed="true" />
                 </x:entityProperties>
@@ -63,8 +66,11 @@
         </XdevVerticalLayout>
         <XdevGridLayout x:name="form">
             <x:constraints splitPos="SECOND" width="100%" height="100%" />
-            <XdevComboBox x:name="comboBoxState">
+            <XdevCheckBox caption="" x:name="checkBoxFlagCompany">
                 <x:constraints gridx="2" gridy="5" weighty="0.0" weightx="1.0" width="0px" height="0px" />
+            </XdevCheckBox>
+            <XdevComboBox x:name="comboBoxState">
+                <x:constraints gridx="2" gridy="6" weighty="0.0" weightx="1.0" width="0px" height="0px" />
                 <x:typeArguments>
                     <typeArgument type="?" />
                 </x:typeArguments>
@@ -79,6 +85,7 @@
                     <entry name="cmbCostAccount" property="costAccount" />
                     <entry name="txtCsaExtRef" property="csaExtRef" />
                     <entry name="comboBoxState" property="csaState" />
+                    <entry name="checkBoxFlagCompany" property="csaFlagCompany" />
                 </x:fields>
             </XdevFieldGroup>
             <XdevLabel x:name="lblCsaCode" value="{$lblCsaCode.value}">
@@ -112,11 +119,14 @@
             <XdevTextField columns="5" x:name="txtCsaExtRef" maxLength="50">
                 <x:constraints gridx="2" gridy="4" top="46px" left="-1px" weighty="0.0" weightx="1.0" width="100%" height="0px" />
             </XdevTextField>
+            <XdevLabel x:name="lblCsaCompanyFlag" value="Firmen Kostenstelle">
+                <x:constraints gridx="1" gridy="5" top="33px" left="-1px" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+            </XdevLabel>
             <XdevLabel x:name="lblCsaState" value="{$lblCsaState.value}">
-                <x:constraints gridx="1" gridy="5" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+                <x:constraints gridx="1" gridy="6" weighty="0.0" weightx="0.0" width="0px" height="0px" />
             </XdevLabel>
             <XdevHorizontalLayout x:name="horizontalLayout2" margin="">
-                <x:constraints gridx="1" gridy="6" weighty="0.0" weightx="0.0" width="0px" alignment="TOP_CENTER" gridWidth="2" height="0px" />
+                <x:constraints gridx="1" gridy="7" weighty="0.0" weightx="0.0" width="0px" alignment="TOP_CENTER" gridWidth="2" height="0px" />
                 <XdevButton icon="FontAwesome.SAVE" caption="{$cmdSave.caption}" tabIndex="7" x:name="cmdSave">
                     <x:constraints weightx="0.0" width="0px" alignment="MIDDLE_LEFT" height="0px" />
                     <x:event>click.buttonClick</x:event>

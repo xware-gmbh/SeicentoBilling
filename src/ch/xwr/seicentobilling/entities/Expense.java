@@ -44,6 +44,9 @@ public class Expense implements java.io.Serializable {
 	private double expAmount;
 	private Date expBooked;
 	private LovState.State expState;
+	private double expAmountWOTax;
+	private CostAccount costaccount;
+
 
 	public Expense() {
 	}
@@ -175,6 +178,16 @@ public class Expense implements java.io.Serializable {
 		this.expAmount = expAmount;
 	}
 
+	@Caption("Betrag exkl.")
+	@Column(name = "expAmountWOTax", nullable = false, columnDefinition = "decimal", precision = 6)
+	public double getExpAmountWOTax() {
+		return this.expAmountWOTax;
+	}
+
+	public void setExpAmountWOTax(final double expAmountWOTax) {
+		this.expAmountWOTax = expAmountWOTax;
+	}
+
 	@Caption("ExpBooked")
 	@Temporal(TemporalType.DATE)
 	@Column(name = "expBooked", columnDefinition = "date", length = 10)
@@ -194,6 +207,18 @@ public class Expense implements java.io.Serializable {
 
 	public void setExpState(final LovState.State expState) {
 		this.expState = expState;
+	}
+
+
+	@Caption("Kostenstelle Firma")
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "expcsaIdCompany", nullable = false, columnDefinition = "bigint")
+	public CostAccount getCostAccountCompany() {
+		return this.costaccount;
+	}
+
+	public void setCostAccountCompany(final CostAccount costAccountcompany) {
+		this.costaccount = costAccountcompany;
 	}
 
 }
