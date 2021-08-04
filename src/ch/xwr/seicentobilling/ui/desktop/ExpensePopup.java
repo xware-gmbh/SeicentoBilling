@@ -502,7 +502,7 @@ public class ExpensePopup extends XdevView {
 	private void preSaveCalcVatAction() {
 		//#435
 		if (! this.txtExpAmount.isEmpty()) {
-			final double amt1 = Double.parseDouble(this.txtExpAmount.getValue());
+			final double amt1 = (double) this.txtExpAmount.getConvertedValue();
 			final Vat vat = this.cmbVat.getSelectedItem().getBean();
 			final Date expdate = this.dateExpDate.getValue();
 
