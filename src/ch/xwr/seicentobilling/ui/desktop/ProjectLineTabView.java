@@ -143,7 +143,7 @@ public class ProjectLineTabView extends XdevView {
 			@Override
 			public void windowClose(final CloseEvent e) {
 				reloadTableLineList();
-				//ProjectLineTabView.this.cmdNewLine.focus();
+				ProjectLineTabView.this.cmdNewLine.focus();  //wenn popup mit Enter geschlossen wird geht der Focus verloren!
 			}
 		});
 		this.getUI().addWindow(win);
