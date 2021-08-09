@@ -805,14 +805,16 @@ public class ExpenseTabView extends XdevView {
 		this.tableLine.setColumnReorderingAllowed(true);
 		this.tableLine.setColumnCollapsingAllowed(true);
 		this.tableLine.setContainerDataSource(Expense.class, false, NestedProperty.of(Expense_.vat, Vat_.vatSign),
-				NestedProperty.of(Expense_.vat, Vat_.vatName), NestedProperty.of(Expense_.project, Project_.proName));
+				NestedProperty.of(Expense_.vat, Vat_.vatName), NestedProperty.of(Expense_.project, Project_.proName),
+				NestedProperty.of(Expense_.project, Project_.costAccount, CostAccount_.csaCode));
 		this.tableLine.addGeneratedColumn("generated", new FunctionExpenseAttachmentDownload.Generator());
 		this.tableLine.setVisibleColumns(Expense_.expDate.getName(), Expense_.expAccount.getName(),
 				Expense_.expFlagCostAccount.getName(), Expense_.expFlagGeneric.getName(), Expense_.expAmount.getName(),
 				NestedProperty.path(Expense_.vat, Vat_.vatSign), NestedProperty.path(Expense_.vat, Vat_.vatName),
 				Expense_.expText.getName(), NestedProperty.path(Expense_.project, Project_.proName),
 				Expense_.expState.getName(), Expense_.expUnit.getName(), Expense_.expQuantity.getName(),
-				Expense_.expBooked.getName(), "generated");
+				Expense_.expBooked.getName(),
+				NestedProperty.path(Expense_.project, Project_.costAccount, CostAccount_.csaCode), "generated");
 		this.tableLine.setColumnHeader("expDate", "Datum");
 		this.tableLine.setConverter("expDate", ConverterBuilder.stringToDate().dateOnly().build());
 		this.tableLine.setColumnHeader("expAccount", "Konto");
@@ -837,6 +839,8 @@ public class ExpenseTabView extends XdevView {
 		this.tableLine.setColumnCollapsed("expQuantity", true);
 		this.tableLine.setColumnHeader("expBooked", "Gebucht");
 		this.tableLine.setColumnCollapsed("expBooked", true);
+		this.tableLine.setColumnHeader("project.costAccount.csaCode", "KstFirma");
+		this.tableLine.setColumnCollapsed("project.costAccount.csaCode", true);
 		this.tableLine.setColumnHeader("generated", "Beleg");
 
 		this.containerFilterComponent.setContainer(this.table.getBeanContainerDataSource(), "perYear", "perMonth",
