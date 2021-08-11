@@ -11,3 +11,8 @@ findByProject(Project dao)
 {
 	select * from ProjectLine where project = :dao order by prlReportDate desc, prlTimeFrom asc
 }
+
+findByPeriodeAndProject(Periode dao, Project pro)
+{
+	select * from ProjectLine where periode = :dao and project =: pro order by prlReportDate desc, prlTimeFrom asc
+}

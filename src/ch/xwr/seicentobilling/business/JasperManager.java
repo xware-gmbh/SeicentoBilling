@@ -33,6 +33,7 @@ import ch.xwr.seicentobilling.dal.CompanyDAO;
 import ch.xwr.seicentobilling.dal.EntityDAO;
 import ch.xwr.seicentobilling.dal.PeriodeDAO;
 import ch.xwr.seicentobilling.dal.ProjectDAO;
+import ch.xwr.seicentobilling.dal.ProjectLineDAO;
 import ch.xwr.seicentobilling.dal.RowObjectDAO;
 import ch.xwr.seicentobilling.dal.RowParameterDAO;
 import ch.xwr.seicentobilling.entities.Company;
@@ -290,7 +291,7 @@ public class JasperManager {
 					if (!pra.getCostAccount().getCsaId().equals(getSelectedPeriod().getCostAccount().getCsaId())) { //prevent own double
 						final Periode per = getValidPeriodForCst(getSelectedPeriod(), pra);
 						//now we have the periode and the project
-						if (per != null) {
+						if (per != null && hasReportLines(per, project)) {
 							urls.put(per.getPerName(), getSingleWorkReportUrl(per.getPerId(), project.getProId()));
 						}
 					}
@@ -300,6 +301,16 @@ public class JasperManager {
 		}
 
 		return urls;
+	}
+
+	//AB#476
+	private boolean hasReportLines(final Periode per, final Project project) {
+		final ProjectLineDAO dao = new ProjectLineDAO();
+		if (dao.findByPeriodeAndProject(per, project).size() > 0) {
+			return true;
+		}
+
+		return false;
 	}
 
 	private String getSingleWorkReportUrl(final long perId, final Long proId) {
