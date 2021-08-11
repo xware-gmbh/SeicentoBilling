@@ -459,6 +459,12 @@ public class ExpenseTabView extends XdevView {
 			final Long beanId = obj.getExpId();
 			final Long objId = null;
 
+			//AB#477
+			final Expense x1 = new ExpenseDAO().find(beanId);
+			if (x1 == null) {
+				this.cmdReload_buttonClick(null);
+			}
+
 			UI.getCurrent().getSession().setAttribute("beanId", beanId);
 			UI.getCurrent().getSession().setAttribute("objId", objId);
 
