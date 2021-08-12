@@ -536,7 +536,10 @@ public class JasperManager {
 
     	if (cus.getCusBillingReport() != null) {
     		if (key.equalsIgnoreCase("reportWork")) {
-    			if (hasNoReports()) {
+    			final PeriodeDAO dao = new PeriodeDAO();
+    			final Periode per = dao.find(getSelectedPeriod().getPerId());
+
+    			if (!hasReportLines(per, obean.getProject())) {
     				return false;
     			}
     			if (cus.getCusBillingReport() == LovCrm.BillReport.working) {
@@ -576,17 +579,6 @@ public class JasperManager {
 		}
         return false;
     }
-
-	private boolean hasNoReports() {
-		final PeriodeDAO dao = new PeriodeDAO();
-		final Periode per = dao.find(getSelectedPeriod().getPerId());
-
-		if (per.getProjectLines().size() > 0) {
-			return false;  //has data
-		}
-		// No data to print
-		return true;
-	}
 
 	private String getRowParameter(final RowObject objRoot, final String group, final String subgroup, final String key)
     {
