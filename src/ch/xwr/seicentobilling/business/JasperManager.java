@@ -282,7 +282,10 @@ public class JasperManager {
 		if (getSelectedPeriod() != null) {
 			final long perId = getSelectedPeriod().getPerId();
 
-			urls.put(getSelectedPeriod().getPerName(), getSingleWorkReportUrl(perId, project.getProId()));
+			if (hasReportLines(getSelectedPeriod(), pro)) {
+				//add main Cst
+				urls.put(getSelectedPeriod().getPerName(), getSingleWorkReportUrl(perId, project.getProId()));
+			}
 
 			if (project.getProOrdergenerationStrategy() == LovState.ProOrderStrategy.zusammenziehen ) {
 				final Set<ProjectAllocation> lst = pro.getProjectAllocations();
@@ -536,12 +539,12 @@ public class JasperManager {
 
     	if (cus.getCusBillingReport() != null) {
     		if (key.equalsIgnoreCase("reportWork")) {
-    			final PeriodeDAO dao = new PeriodeDAO();
-    			final Periode per = dao.find(getSelectedPeriod().getPerId());
-
-    			if (!hasReportLines(per, obean.getProject())) {
-    				return false;
-    			}
+//    			final PeriodeDAO dao = new PeriodeDAO();
+//    			final Periode per = dao.find(getSelectedPeriod().getPerId());
+//
+//    			if (!hasReportLines(per, obean.getProject())) {
+//    				return false;
+//    			}
     			if (cus.getCusBillingReport() == LovCrm.BillReport.working) {
 					return true;
 				}
