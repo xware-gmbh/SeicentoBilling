@@ -31,6 +31,7 @@ import org.jfree.util.Log;
 
 import ch.xwr.seicentobilling.dal.CompanyDAO;
 import ch.xwr.seicentobilling.dal.EntityDAO;
+import ch.xwr.seicentobilling.dal.ExpenseDAO;
 import ch.xwr.seicentobilling.dal.PeriodeDAO;
 import ch.xwr.seicentobilling.dal.ProjectDAO;
 import ch.xwr.seicentobilling.dal.ProjectLineDAO;
@@ -155,8 +156,9 @@ public class JasperManager {
 	private void loopAttachments(final Periode per) {
 		//get all Attachments of a specific expense Periode and write it to local file system
 		final Periode bean = new PeriodeDAO().find(per.getPerId());
+		final ExpenseDAO dao = new ExpenseDAO();
+		final List<Expense> lst = dao.findByPeriode(bean);
 
-		final Set<Expense> lst = bean.getExpenses();
 		for (final Expense expense : lst) {
 			lookupAttachments(expense);
 		}
