@@ -133,10 +133,12 @@ public class Periode implements java.io.Serializable {
 		this.perState = perState;
 	}
 
+	//Scheint 0 zurück zu geben, obwohl vorhanden. Query löst das Problem. Gleiches Verhalten in Quarkus.
 	@Caption("Expenses")
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "periode")
-	public Set<Expense> getExpenses() {
-		return this.expenses;
+	public Set<Expense> getExpenses() throws Exception {
+		throw new Exception("do not use! Use DAO.");
+		//return this.expenses;
 	}
 
 	public void setExpenses(final Set<Expense> expenses) {

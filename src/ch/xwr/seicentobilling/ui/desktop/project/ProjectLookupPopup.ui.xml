@@ -18,9 +18,9 @@
 <?import java.lang.String?>
 <?import java.util.Date?>
 <XdevView xmlns:x="http://xml.xdev-software.com/xdevuiml" x:name="ProjectLookupPopup" responsive="true">
-    <x:constraints width="900px" zpos="0" height="580px" />
+    <x:constraints zpos="0" width="900px" height="580px" />
     <XdevPanel caption="Lookup Projekt" tabIndex="0" x:name="panel">
-        <x:constraints gridHeight="1" zpos="0" gridx="3" gridy="1" weighty="0.0" weightx="0.0" width="100%" alignment="TOP_LEFT" gridWidth="1" height="100%" />
+        <x:constraints gridHeight="1" gridx="3" zpos="0" gridy="1" weighty="0.0" weightx="0.0" width="100%" alignment="TOP_LEFT" gridWidth="1" height="100%" />
         <XdevTabSheet styleName="framed" x:name="tabSheet" x:selectedTabIndex="0">
             <x:constraints zpos="0" weighty="1.0" width="100%" alignment="MIDDLE_CENTER" height="-1px" />
             <XdevVerticalLayout caption="Main" x:name="verticalLayout">
@@ -46,6 +46,7 @@
                         <typeArgument type="Project" />
                     </x:typeArguments>
                     <x:data methodName="findAllActive" />
+                    <x:event>itemClick.itemClick</x:event>
                 </XdevTable>
                 <XdevHorizontalLayout x:name="horizontalLayout" margin="rbl">
                     <x:constraints weighty="0.1" width="-1px" height="100%" />
@@ -88,6 +89,7 @@
                         <typeArgument type="ProjectAllocation" />
                     </x:typeArguments>
                     <x:data methodName="findAllActiveProjects" />
+                    <x:event>itemClick.itemClick</x:event>
                 </XdevTable>
                 <XdevHorizontalLayout x:name="horizontalLayout2" margin="rbl">
                     <x:constraints gridHeight="1" gridx="1" gridy="3" weighty="0.1" weightx="0.0" width="0px" gridWidth="1" height="100%" />

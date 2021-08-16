@@ -31,8 +31,10 @@ import org.jfree.util.Log;
 
 import ch.xwr.seicentobilling.dal.CompanyDAO;
 import ch.xwr.seicentobilling.dal.EntityDAO;
+import ch.xwr.seicentobilling.dal.ExpenseDAO;
 import ch.xwr.seicentobilling.dal.PeriodeDAO;
 import ch.xwr.seicentobilling.dal.ProjectDAO;
+import ch.xwr.seicentobilling.dal.ProjectLineDAO;
 import ch.xwr.seicentobilling.dal.RowObjectDAO;
 import ch.xwr.seicentobilling.dal.RowParameterDAO;
 import ch.xwr.seicentobilling.entities.Company;
@@ -154,8 +156,9 @@ public class JasperManager {
 	private void loopAttachments(final Periode per) {
 		//get all Attachments of a specific expense Periode and write it to local file system
 		final Periode bean = new PeriodeDAO().find(per.getPerId());
+		final ExpenseDAO dao = new ExpenseDAO();
+		final List<Expense> lst = dao.findByPeriode(bean);
 
-		final Set<Expense> lst = bean.getExpenses();
 		for (final Expense expense : lst) {
 			lookupAttachments(expense);
 		}
@@ -281,7 +284,10 @@ public class JasperManager {
 		if (getSelectedPeriod() != null) {
 			final long perId = getSelectedPeriod().getPerId();
 
-			urls.put(getSelectedPeriod().getPerName(), getSingleWorkReportUrl(perId, project.getProId()));
+			if (hasReportLines(getSelectedPeriod(), pro)) {
+				//add main Cst
+				urls.put(getSelectedPeriod().getPerName(), getSingleWorkReportUrl(perId, project.getProId()));
+			}
 
 			if (project.getProOrdergenerationStrategy() == LovState.ProOrderStrategy.zusammenziehen ) {
 				final Set<ProjectAllocation> lst = pro.getProjectAllocations();
@@ -290,7 +296,7 @@ public class JasperManager {
 					if (!pra.getCostAccount().getCsaId().equals(getSelectedPeriod().getCostAccount().getCsaId())) { //prevent own double
 						final Periode per = getValidPeriodForCst(getSelectedPeriod(), pra);
 						//now we have the periode and the project
-						if (per != null) {
+						if (per != null && hasReportLines(per, project)) {
 							urls.put(per.getPerName(), getSingleWorkReportUrl(per.getPerId(), project.getProId()));
 						}
 					}
@@ -300,6 +306,16 @@ public class JasperManager {
 		}
 
 		return urls;
+	}
+
+	//AB#476
+	private boolean hasReportLines(final Periode per, final Project project) {
+		final ProjectLineDAO dao = new ProjectLineDAO();
+		if (dao.findByPeriodeAndProject(per, project).size() > 0) {
+			return true;
+		}
+
+		return false;
 	}
 
 	private String getSingleWorkReportUrl(final long perId, final Long proId) {
@@ -525,9 +541,12 @@ public class JasperManager {
 
     	if (cus.getCusBillingReport() != null) {
     		if (key.equalsIgnoreCase("reportWork")) {
-    			if (hasNoReports()) {
-    				return false;
-    			}
+//    			final PeriodeDAO dao = new PeriodeDAO();
+//    			final Periode per = dao.find(getSelectedPeriod().getPerId());
+//
+//    			if (!hasReportLines(per, obean.getProject())) {
+//    				return false;
+//    			}
     			if (cus.getCusBillingReport() == LovCrm.BillReport.working) {
 					return true;
 				}
@@ -565,17 +584,6 @@ public class JasperManager {
 		}
         return false;
     }
-
-	private boolean hasNoReports() {
-		final PeriodeDAO dao = new PeriodeDAO();
-		final Periode per = dao.find(getSelectedPeriod().getPerId());
-
-		if (per.getProjectLines().size() > 0) {
-			return false;  //has data
-		}
-		// No data to print
-		return true;
-	}
 
 	private String getRowParameter(final RowObject objRoot, final String group, final String subgroup, final String key)
     {
