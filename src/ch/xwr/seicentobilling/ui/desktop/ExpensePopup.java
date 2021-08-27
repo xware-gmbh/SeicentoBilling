@@ -789,6 +789,8 @@ public class ExpensePopup extends XdevView {
 			this.cmbCostAccountCompany.setRequired(true);
 		} else {
 			this.cmbCostAccountCompany.setRequired(false);
+			this.cmbCostAccountCompany.setNullSelectionAllowed(true);
+			this.cmbCostAccountCompany.setValue(null);
 		}
 
 
