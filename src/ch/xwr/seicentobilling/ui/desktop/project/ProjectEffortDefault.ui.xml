@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+
+<?xdevuiml version="1.0"?>
+<?template BROWSER_XGA?>
+<?import com.vaadin.data.validator.IntegerRangeValidator?>
+<?import com.xdev.ui.XdevButton?>
+<?import com.xdev.ui.XdevGridLayout?>
+<?import com.xdev.ui.XdevHorizontalLayout?>
+<?import com.xdev.ui.XdevLabel?>
+<?import com.xdev.ui.XdevPanel?>
+<?import com.xdev.ui.XdevPopupDateField?>
+<?import com.xdev.ui.XdevTextField?>
+<?import com.xdev.ui.XdevView?>
+<XdevView xmlns:x="http://xml.xdev-software.com/xdevuiml" x:name="ProjectEffortDefault">
+    <x:constraints width="840px" zpos="0" height="340px" />
+    <XdevPanel caption="Vorschlag berechnen" x:name="panel">
+        <x:constraints zpos="0" width="100%" height="100%" />
+        <XdevGridLayout x:name="gridLayout">
+            <x:constraints zpos="0" width="100%" height="100%" />
+            <XdevLabel x:name="lblPraStartDate" value="Projektstart">
+                <x:constraints gridx="1" gridy="1" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+            </XdevLabel>
+            <XdevPopupDateField required="true" x:name="datePraStartDate">
+                <x:constraints gridx="2" gridy="1" weighty="0.0" weightx="1.0" width="0px" height="0px" />
+            </XdevPopupDateField>
+            <XdevLabel x:name="lblPraEndDate" value="Projektende">
+                <x:constraints gridx="3" gridy="1" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+            </XdevLabel>
+            <XdevHorizontalLayout x:name="hlEndDate" margin="">
+                <x:constraints gridx="4" gridy="1" weighty="0.0" weightx="1.0" width="-1px" height="-1px" />
+                <XdevPopupDateField x:name="datePraEndDate">
+                    <x:constraints gridHeight="1" gridx="4" gridy="4" weighty="0.0" weightx="1.0" width="0px" alignment="TOP_LEFT" gridWidth="1" height="0px" />
+                </XdevPopupDateField>
+                <XdevButton icon="FontAwesome.ANGLE_DOUBLE_LEFT" x:name="cmdEndDate">
+                    <x:constraints weightx="0.0" width="0px" height="0px" />
+                    <x:event>click.buttonClick</x:event>
+                </XdevButton>
+            </XdevHorizontalLayout>
+            <XdevLabel x:name="lblHoursDay" value="Arbeitstag Std">
+                <x:constraints gridx="1" gridy="2" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+            </XdevLabel>
+            <XdevTextField columns="5" x:name="txtHoursWorkDay" value="8">
+                <converter numberType="Integer" numberFormatType="number" currency="default" converterType="STRING_TO_NUMBER" locale="default" />
+                <x:constraints gridx="2" gridy="2" top="93px" left="-1px" weighty="0.0" weightx="1.0" width="-1px" height="0px" />
+                <x:validator x:type="IntegerRangeValidator" message="" min="1" max="24" />
+            </XdevTextField>
+            <XdevLabel x:name="lblDaysOff" value="Tage abziehen">
+                <x:constraints gridx="3" gridy="2" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+            </XdevLabel>
+            <XdevTextField columns="5" x:name="txtDaysOff" value="0">
+                <converter numberType="Integer" numberFormatType="number" currency="default" converterType="STRING_TO_NUMBER" locale="default" />
+                <x:constraints gridx="4" gridy="2" top="46px" left="-1px" weighty="0.0" weightx="1.0" width="-1px" height="0px" />
+            </XdevTextField>
+            <XdevLabel x:name="lblPraHours" value="Stundensoll">
+                <x:constraints gridx="1" gridy="3" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+            </XdevLabel>
+            <XdevHorizontalLayout x:name="hlHours" margin="">
+                <x:constraints gridx="2" gridy="3" weighty="0.0" weightx="1.0" width="-1px" height="-1px" />
+                <XdevTextField columns="5" x:name="txtPraHours" value="0">
+                    <converter numberType="Integer" numberFormatType="number" currency="default" converterType="STRING_TO_NUMBER" locale="default" />
+                    <x:constraints gridHeight="1" gridx="4" gridy="4" weighty="0.0" weightx="1.0" width="0px" alignment="TOP_LEFT" gridWidth="1" height="0px" />
+                </XdevTextField>
+                <XdevButton icon="FontAwesome.ANGLE_DOUBLE_LEFT" x:name="cmdPraHours">
+                    <x:constraints weightx="0.0" width="0px" height="0px" />
+                    <x:event>click.buttonClick</x:event>
+                </XdevButton>
+            </XdevHorizontalLayout>
+            <XdevLabel x:name="lblPraIntensityPercent" value="Intensität">
+                <x:constraints gridx="3" gridy="3" weighty="0.0" weightx="0.0" width="0px" height="0px" />
+            </XdevLabel>
+            <XdevHorizontalLayout x:name="hlPraIntensity" margin="">
+                <x:constraints gridx="4" gridy="3" weighty="0.0" weightx="1.0" width="-1px" height="-1px" />
+                <XdevTextField columns="5" x:name="txtPraIntensityPercent" value="100">
+                    <converter numberType="Integer" numberFormatType="number" currency="default" converterType="STRING_TO_NUMBER" locale="default" />
+                    <x:constraints gridHeight="1" gridx="4" gridy="4" weighty="0.0" weightx="1.0" width="0px" alignment="TOP_LEFT" gridWidth="1" height="0px" />
+                </XdevTextField>
+                <XdevButton icon="FontAwesome.ANGLE_DOUBLE_LEFT" x:name="cmdPraPercent">
+                    <x:constraints weightx="0.0" width="0px" height="0px" />
+                    <x:event>click.buttonClick</x:event>
+                </XdevButton>
+            </XdevHorizontalLayout>
+            <XdevHorizontalLayout x:name="horizontalLayout" margin="t">
+                <x:constraints gridx="1" gridy="4" weighty="0.0" weightx="0.0" width="0px" alignment="TOP_RIGHT" gridWidth="2" height="0px" />
+                <XdevButton icon="FontAwesome.CHECK_CIRCLE" caption="Übernehmen" x:name="cmdDone" x:shortcut="ENTER">
+                    <x:constraints weightx="0.0" width="0px" alignment="MIDDLE_LEFT" height="0px" />
+                    <x:event>click.buttonClick</x:event>
+                </XdevButton>
+                <XdevButton icon="FontAwesome.CLOSE" caption="Abbrechen" x:name="cmdCancel" x:shortcut="ESCAPE">
+                    <x:constraints weightx="0.0" width="0px" alignment="MIDDLE_LEFT" height="0px" />
+                    <x:event>click.buttonClick</x:event>
+                </XdevButton>
+            </XdevHorizontalLayout>
+        </XdevGridLayout>
+    </XdevPanel>
+</XdevView>
+
