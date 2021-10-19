@@ -785,7 +785,7 @@ public class ExpensePopup extends XdevView {
 	 */
 	private void chkExpFlagCostAccount_valueChange(final Property.ValueChangeEvent event) {
 		final Boolean val  = (Boolean) event.getProperty().getValue();
-		if (! val.booleanValue()) {
+		if (val != null && ! val.booleanValue()) {
 			this.cmbCostAccountCompany.setRequired(true);
 		} else {
 			this.cmbCostAccountCompany.setRequired(false);
