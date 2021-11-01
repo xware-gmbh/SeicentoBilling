@@ -62,6 +62,7 @@
             </XdevVerticalLayout>
             <XdevVerticalLayout caption="Ressourcen" x:name="verticalLayout2">
                 <x:constraints width="100%" height="100%" />
+                <x:event>contextClick.contextClick</x:event>
                 <XdevContainerFilterComponent x:searchableProperties="praRemark,costAccount.csaCode,project.proName,project.proExtReference" x:name="containerFilterComponent2" x:filterableProperties="costAccount,praStartDate,praEndDate" x:container="table2" prefixMatchOnly="false">
                     <x:constraints gridHeight="1" gridx="1" gridy="1" weighty="0.1" weightx="1.0" width="100%" alignment="MIDDLE_LEFT" gridWidth="1" height="100%" />
                 </XdevContainerFilterComponent>

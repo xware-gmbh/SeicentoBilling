@@ -1,13 +1,8 @@
 package ch.xwr.seicentobilling.ui.desktop;
 
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
-import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.List;
 
@@ -15,7 +10,6 @@ import javax.persistence.PersistenceException;
 
 import org.apache.poi.ss.formula.functions.T;
 
-import com.google.common.collect.Lists;
 import com.vaadin.data.Property;
 import com.vaadin.data.validator.IntegerRangeValidator;
 import com.vaadin.event.ItemClickEvent;
@@ -89,6 +83,7 @@ import ch.xwr.seicentobilling.entities.Project_;
 import ch.xwr.seicentobilling.entities.Vat;
 import ch.xwr.seicentobilling.ui.desktop.crm.CustomerLookupPopup;
 import ch.xwr.seicentobilling.ui.desktop.project.ProjectAllocationPopup;
+import ch.xwr.seicentobilling.ui.desktop.project.ProjectEffortDefault;
 
 public class ProjectTabView extends XdevView {
 	/** Logger initialized */
@@ -257,8 +252,6 @@ public class ProjectTabView extends XdevView {
 
 		this.fieldGroup.setItemDataSource(bean);
 		setROFields();
-
-		calculateTargetHours();
 	}
 
 	/**
@@ -625,55 +618,6 @@ public class ProjectTabView extends XdevView {
 		ProjectTabView.this.cmbCustomer.setValue(bean);
 	}
 
-	private void calculateTargetHours() {
-		if (this.dateProStartDate.isValid() && this.dateProEndDate.isValid()) {
-			final long days = getBusinessDaysDifference(this.dateProStartDate.getValue(), this.dateProEndDate.getValue());
-			int ihours = (int) (days * 8);
-
-			int ipercent= 0;
-			try {
-				ipercent = Integer.parseInt(this.txtProIntensityPercent.getValue());
-			} catch (final Exception e) {
-				//ignore
-			}
-
-			if (ipercent > 0) {
-				ihours = ihours * ipercent / 100;
-			}
-			if (ihours < 1) {
-				ihours = 1;
-			}
-
-			this.txtProHours.setValue("" + ihours);
-			//System.out.println("set hours: " + ihours);
-		}
-	}
-
-	private long getBusinessDaysDifference(final Date dFrom, final Date dTo) {
-
-		final LocalDate startDate = convertToLocalDateViaInstant(dFrom);
-		final LocalDate endDate = convertToLocalDateViaInstant(dTo);
-
-	    final EnumSet<DayOfWeek> weekend = EnumSet.of(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY);
-	    final List<LocalDate> list = Lists.newArrayList();
-
-	    LocalDate start = startDate;
-	    while (start.isBefore(endDate)) {
-	        list.add(start);
-	        start = start.plus(1, ChronoUnit.DAYS);
-	    }
-
-	    final long numberOfDays = list.stream().filter(d -> !weekend.contains(d.getDayOfWeek())).count();
-
-	    return numberOfDays;
-	}
-
-	public LocalDate convertToLocalDateViaInstant(final Date dateToConvert) {
-		final java.util.Date utilDate = new java.util.Date(dateToConvert.getTime());
-	    return utilDate.toInstant()
-	      .atZone(ZoneId.systemDefault())
-	      .toLocalDate();
-	}
 
 	/**
 	 * Event handler delegate method for the {@link XdevPopupDateField}
@@ -684,10 +628,6 @@ public class ProjectTabView extends XdevView {
 	 */
 	private void dateProEndDate_valueChange(final Property.ValueChangeEvent event) {
 		validateDateFromTo();
-
-		if (this.dateProEndDate.isModified()) {
-			calculateTargetHours();
-		}
 
 	}
 
@@ -701,19 +641,6 @@ public class ProjectTabView extends XdevView {
 			}
 		}
 
-	}
-
-	/**
-	 * Event handler delegate method for the {@link XdevTextField}
-	 * {@link #txtProIntensityPercent}.
-	 *
-	 * @see Property.ValueChangeListener#valueChange(Property.ValueChangeEvent)
-	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
-	 */
-	private void txtProIntensityPercent_valueChange(final Property.ValueChangeEvent event) {
-		if (this.txtProIntensityPercent.isModified()) {
-			calculateTargetHours();
-		}
 	}
 
 	/**
@@ -896,6 +823,43 @@ public class ProjectTabView extends XdevView {
 		validateDateFromTo();
 	}
 
+	/**
+	 * Event handler delegate method for the {@link XdevButton} {@link #cmdHours}.
+	 *
+	 * @see Button.ClickListener#buttonClick(Button.ClickEvent)
+	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
+	 */
+	private void cmdHours_buttonClick(final Button.ClickEvent event) {
+		final Project proDao = new Project();
+		proDao.setProStartDate(this.dateProStartDate.getValue());
+		proDao.setProEndDate(this.dateProEndDate.getValue());
+		proDao.setProIntensityPercent((Integer) this.txtProIntensityPercent.getConvertedValue());
+		proDao.setProHours((Integer) this.txtProHours.getConvertedValue());
+
+		UI.getCurrent().getSession().setAttribute("ProjectDao", proDao);
+
+		popupProjectEffortDefault();
+	}
+
+	private void popupProjectEffortDefault() {
+		final Window win = ProjectEffortDefault.getPopupWindow();
+
+		win.addCloseListener(new CloseListener() {
+			@Override
+			public void windowClose(final CloseEvent e) {
+				final Project proDao = (Project) UI.getCurrent().getSession().getAttribute("ProjectDao");
+
+				ProjectTabView.this.txtProHours.setValue(proDao.getProHours().toString());
+				ProjectTabView.this.dateProEndDate.setValue(proDao.getProEndDate());
+				ProjectTabView.this.txtProIntensityPercent.setValue(proDao.getProIntensityPercent().toString());
+
+			}
+
+		});
+		this.getUI().addWindow(win);
+
+	}
+
 	/*
 	 * WARNING: Do NOT edit!<br>The content of this method is always regenerated by
 	 * the UI designer.
@@ -932,7 +896,6 @@ public class ProjectTabView extends XdevView {
 		this.dateProEndDate = new XdevPopupDateField();
 		this.lblProIntensityPercent = new XdevLabel();
 		this.txtProIntensityPercent = new XdevTextField();
-		this.label4 = new XdevLabel();
 		this.lblProHours = new XdevLabel();
 		this.txtProHours = new XdevTextField();
 		this.lblProHoursEffective = new XdevLabel();
@@ -981,6 +944,7 @@ public class ProjectTabView extends XdevView {
 		this.horizontalLayout = new XdevHorizontalLayout();
 		this.cmdSave = new XdevButton();
 		this.cmdReset = new XdevButton();
+		this.cmdHours = new XdevButton();
 		this.fieldGroup = new XdevFieldGroup<>(Project.class);
 
 		this.horizontalSplitPanel.setStyleName("large");
@@ -1065,8 +1029,6 @@ public class ProjectTabView extends XdevView {
 		this.dateProEndDate.setRequired(true);
 		this.lblProIntensityPercent
 				.setValue(StringResourceUtils.optLocalizeString("{$lblProIntensityPercent.value}", this));
-		this.label4.setIcon(FontAwesome.INFO_CIRCLE);
-		this.label4.setDescription("Stunden Soll wird vorgeschlagen, sobald Datum oder Intensität verändert wird.");
 		this.lblProHours.setValue("Stunden Soll");
 		this.txtProHours
 				.setConverter(ConverterBuilder.stringToDouble().minimumFractionDigits(2).maximumFractionDigits(2).build());
@@ -1168,6 +1130,8 @@ public class ProjectTabView extends XdevView {
 		this.cmdSave.setCaption(StringResourceUtils.optLocalizeString("{$cmdSave.caption}", this));
 		this.cmdReset.setIcon(FontAwesome.UNDO);
 		this.cmdReset.setCaption(StringResourceUtils.optLocalizeString("{$cmdReset.caption}", this));
+		this.cmdHours.setIcon(FontAwesome.CLOCK_O);
+		this.cmdHours.setCaption("Stunden...");
 		this.fieldGroup.bind(this.cmbCustomer, Project_.customer.getName());
 		this.fieldGroup.bind(this.txtProName, Project_.proName.getName());
 		this.fieldGroup.bind(this.txtProExtReference, Project_.proExtReference.getName());
@@ -1271,9 +1235,6 @@ public class ProjectTabView extends XdevView {
 		this.gridLayout.addComponent(this.lblProIntensityPercent, 0, 4);
 		this.txtProIntensityPercent.setSizeUndefined();
 		this.gridLayout.addComponent(this.txtProIntensityPercent, 1, 4);
-		this.label4.setWidth(100, Unit.PERCENTAGE);
-		this.label4.setHeight(-1, Unit.PIXELS);
-		this.gridLayout.addComponent(this.label4, 2, 4);
 		this.lblProHours.setSizeUndefined();
 		this.gridLayout.addComponent(this.lblProHours, 0, 5);
 		this.txtProHours.setSizeUndefined();
@@ -1383,11 +1344,11 @@ public class ProjectTabView extends XdevView {
 		this.verticalLayoutRess.addComponent(verticalLayoutRess_spacer);
 		this.verticalLayoutRess.setExpandRatio(verticalLayoutRess_spacer, 1.0F);
 		this.gridLayoutRess.setColumns(1);
-		this.gridLayoutRess.setRows(2);
+		this.gridLayoutRess.setRows(1);
 		this.verticalLayoutRess.setSizeFull();
-		this.gridLayoutRess.addComponent(this.verticalLayoutRess, 0, 1);
+		this.gridLayoutRess.addComponent(this.verticalLayoutRess, 0, 0);
 		this.gridLayoutRess.setColumnExpandRatio(0, 10.0F);
-		this.gridLayoutRess.setRowExpandRatio(1, 10.0F);
+		this.gridLayoutRess.setRowExpandRatio(0, 10.0F);
 		this.tableOrder.setSizeFull();
 		this.verticalLayoutBill.addComponent(this.tableOrder);
 		this.verticalLayoutBill.setComponentAlignment(this.tableOrder, Alignment.MIDDLE_CENTER);
@@ -1421,6 +1382,9 @@ public class ProjectTabView extends XdevView {
 		this.cmdReset.setSizeUndefined();
 		this.horizontalLayout.addComponent(this.cmdReset);
 		this.horizontalLayout.setComponentAlignment(this.cmdReset, Alignment.MIDDLE_CENTER);
+		this.cmdHours.setSizeUndefined();
+		this.horizontalLayout.addComponent(this.cmdHours);
+		this.horizontalLayout.setComponentAlignment(this.cmdHours, Alignment.MIDDLE_CENTER);
 		this.gridLayoutData.setColumns(1);
 		this.gridLayoutData.setRows(2);
 		this.tabSheet.setSizeFull();
@@ -1451,7 +1415,6 @@ public class ProjectTabView extends XdevView {
 		this.btnSearch.addClickListener(event -> this.btnSearch_buttonClick(event));
 		this.dateProStartDate.addValueChangeListener(event -> this.dateProStartDate_valueChange(event));
 		this.dateProEndDate.addValueChangeListener(event -> this.dateProEndDate_valueChange(event));
-		this.txtProIntensityPercent.addValueChangeListener(event -> this.txtProIntensityPercent_valueChange(event));
 		this.cmdNewAddress.addClickListener(event -> this.cmdNewAddress_buttonClick(event));
 		this.cmdDeleteAddress.addClickListener(event -> this.cmdDeleteAddress_buttonClick(event));
 		this.cmdEditAddress.addClickListener(event -> this.cmdEditAddress_buttonClick(event));
@@ -1459,13 +1422,14 @@ public class ProjectTabView extends XdevView {
 		this.cmdInfoAddress.addClickListener(event -> this.cmdInfoAddress_buttonClick(event));
 		this.cmdSave.addClickListener(event -> this.cmdSave_buttonClick(event));
 		this.cmdReset.addClickListener(event -> this.cmdReset_buttonClick(event));
+		this.cmdHours.addClickListener(event -> this.cmdHours_buttonClick(event));
 	} // </generated-code>
 
 	// <generated-code name="variables">
 	private XdevButton cmdNew, cmdDelete, cmdReload, cmdPlan, cmdReport, cmdInfo, btnSearch, cmdNewAddress,
-			cmdDeleteAddress, cmdEditAddress, cmdReloadAddress, cmdInfoAddress, cmdSave, cmdReset;
+			cmdDeleteAddress, cmdEditAddress, cmdReloadAddress, cmdInfoAddress, cmdSave, cmdReset, cmdHours;
 	private XdevLabel lblCustomer, lblProName, lblProExtReference, lblProContact, lblProStartDate, lblProEndDate,
-			lblProIntensityPercent, label4, lblProHours, lblProHoursEffective, lblProRate, lblVat, lblCostAccount,
+			lblProIntensityPercent, lblProHours, lblProHoursEffective, lblProRate, lblVat, lblCostAccount,
 			lblBillingAddress, lblProState, lblProModel, lblProOrderStrategy, lblProject, lblProDescription, lblProRemark,
 			lblProProjectState, lblProLastBill;
 	private XdevComboBox<CostAccount> cmbCostAccount;

@@ -201,6 +201,9 @@ public class PeriodeDialogPopup extends XdevView {
 		final XdevCheckBox kst = new XdevCheckBox();
 		kst.setValue(expObj.getExpFlagCostAccount().booleanValue());
 		kst.setEnabled(false);
+		if (expObj.getExpFlagGeneric() == null) {
+			expObj.setExpFlagGeneric(LovState.ExpType.standard);
+		}
 		final XdevLabel type = new XdevLabel(expObj.getExpFlagGeneric().name());
 		final XdevLabel text = new XdevLabel(expObj.getExpText());
 
