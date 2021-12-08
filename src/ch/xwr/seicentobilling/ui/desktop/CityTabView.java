@@ -311,6 +311,7 @@ public class CityTabView extends XdevView {
 		this.txtCtyName.setRequired(true);
 		this.lblCtyCountry.setValue(StringResourceUtils.optLocalizeString("{$lblCtyCountry.value}", this));
 		this.txtCtyCountry.setTabIndex(2);
+		this.txtCtyCountry.setMaxLength(4);
 		this.lblCtyRegion.setValue(StringResourceUtils.optLocalizeString("{$lblCtyRegion.value}", this));
 		this.txtCtyRegion.setTabIndex(3);
 		this.lblCtyGeoCoordinates.setValue(StringResourceUtils.optLocalizeString("{$lblCtyGeoCoordinates.value}", this));
