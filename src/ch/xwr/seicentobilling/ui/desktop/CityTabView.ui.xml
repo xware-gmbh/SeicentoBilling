@@ -100,7 +100,7 @@
             <XdevLabel x:name="lblCtyCountry" value="{$lblCtyCountry.value}">
                 <x:constraints gridx="1" gridy="2" weighty="0.0" weightx="0.0" width="0px" height="0px" />
             </XdevLabel>
-            <XdevTextField columns="5" tabIndex="2" x:name="txtCtyCountry">
+            <XdevTextField columns="5" tabIndex="2" x:name="txtCtyCountry" maxLength="4">
                 <x:constraints gridx="2" gridy="2" weighty="0.0" weightx="1.0" width="100%" height="0px" />
             </XdevTextField>
             <XdevLabel x:name="lblCtyRegion" value="{$lblCtyRegion.value}">
