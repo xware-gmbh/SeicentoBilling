@@ -262,6 +262,8 @@ public class JasperManager {
 			if (!mergePdf.isEmpty()) {
 				lst.clear();
 				lst.add(new File(mergePdf));
+				//AB#509 no Zip necessary, since all in one PDF
+				return mergePdf;
 			}
 
 			zipFile = getTempFileName4Zip(oBean, 2, "");
@@ -503,7 +505,7 @@ public class JasperManager {
 	private String getTempFileName4Zip(final Order bean, final int iflag, final String name) {
 		//Default
 		String fileExt = ".pdf";
-		String prefix = "Rechnung_" + bean.getOrdNumber();
+		String prefix = "Rechnung_" + bean.getOrdNumber() + "_" + getTimeStamp();
 
 		if (iflag == 1) {
 			prefix = "ProjectSummary_#" + bean.getProject().getProId();
@@ -516,7 +518,7 @@ public class JasperManager {
 			prefix = "WorkReport_" + name;
 		}
 		if (iflag == 4) {
-			prefix = "RechnungLang_" + bean.getOrdNumber();
+			prefix = "RechnungMitAnhang_" + bean.getOrdNumber() + "_" + getTimeStamp();
 		}
 
 		return getTempFileName4Zip(prefix, fileExt);
