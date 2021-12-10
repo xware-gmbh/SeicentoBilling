@@ -50,6 +50,7 @@ import ch.xwr.seicentobilling.dal.ProjectAllocationDAO;
 import ch.xwr.seicentobilling.dal.ProjectDAO;
 import ch.xwr.seicentobilling.dal.ProjectLineDAO;
 import ch.xwr.seicentobilling.dal.ProjectLineTemplateDAO;
+import ch.xwr.seicentobilling.entities.CostAccount;
 import ch.xwr.seicentobilling.entities.Periode;
 import ch.xwr.seicentobilling.entities.Periode_;
 import ch.xwr.seicentobilling.entities.Project;
@@ -238,10 +239,15 @@ public class ProjectLinePopup extends XdevView {
 				final ProjectAllocationDAO dao = new ProjectAllocationDAO();
 				final List<ProjectAllocation> lst = dao.findByProject(bean);
 
+				final CostAccount cst = ProjectLinePopup.this.fieldGroup.getItemDataSource().getBean().getPeriode().getCostAccount();
+				if (cst == null) {
+					Seicento.getLoggedInCostAccount();
+				}
+
 				for (final Iterator<ProjectAllocation> iterator = lst.iterator(); iterator.hasNext();) {
 					final ProjectAllocation projectAllocation = iterator.next();
 
-					if (projectAllocation.getCostAccount().equals(Seicento.getLoggedInCostAccount())) {
+					if (projectAllocation.getCostAccount().equals(cst)) {
 						if (projectAllocation.getPraRate() > 0.) {
 							return "" + projectAllocation.getPraRate();
 						}
