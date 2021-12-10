@@ -247,7 +247,7 @@ public class ProjectLinePopup extends XdevView {
 				for (final Iterator<ProjectAllocation> iterator = lst.iterator(); iterator.hasNext();) {
 					final ProjectAllocation projectAllocation = iterator.next();
 
-					if (projectAllocation.getCostAccount().equals(cst)) {
+					if (projectAllocation.getCostAccount().getCsaCode().equals(cst.getCsaCode())) {
 						if (projectAllocation.getPraRate() > 0.) {
 							return "" + projectAllocation.getPraRate();
 						}
