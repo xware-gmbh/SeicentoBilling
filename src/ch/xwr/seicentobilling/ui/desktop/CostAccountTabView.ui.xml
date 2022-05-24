@@ -62,6 +62,7 @@
                     <typeArgument type="CostAccount" />
                 </x:typeArguments>
                 <x:data methodName="findAll" />
+                <x:event>valueChange.valueChange</x:event>
             </XdevTable>
         </XdevVerticalLayout>
         <XdevGridLayout x:name="form">
@@ -91,13 +92,13 @@
             <XdevLabel x:name="lblCsaCode" value="{$lblCsaCode.value}">
                 <x:constraints gridx="1" gridy="1" weighty="0.0" weightx="0.0" width="0px" height="0px" />
             </XdevLabel>
-            <XdevTextField columns="5" inputPrompt="" tabIndex="1" x:name="txtCsaCode" maxLength="5">
+            <XdevTextField columns="5" inputPrompt="" tabIndex="1" required="true" x:name="txtCsaCode" maxLength="5">
                 <x:constraints gridx="2" gridy="1" weighty="0.0" weightx="1.0" width="100%" height="0px" />
             </XdevTextField>
             <XdevLabel x:name="lblCsaName" value="{$lblCsaName.value}">
                 <x:constraints gridx="1" gridy="2" weighty="0.0" weightx="0.0" width="0px" height="0px" />
             </XdevLabel>
-            <XdevTextField columns="5" tabIndex="2" x:name="txtCsaName" maxLength="50">
+            <XdevTextField columns="5" tabIndex="2" required="true" x:name="txtCsaName" maxLength="50">
                 <x:constraints gridx="2" gridy="2" weighty="0.0" weightx="1.0" width="100%" height="0px" />
             </XdevTextField>
             <XdevLabel x:name="lblCostAccount" value="{$lblCostAccount.value}">

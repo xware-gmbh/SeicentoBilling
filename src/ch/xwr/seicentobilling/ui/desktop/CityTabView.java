@@ -1,12 +1,17 @@
 package ch.xwr.seicentobilling.ui.desktop;
 
+import java.util.Collection;
+import java.util.Iterator;
+
 import javax.persistence.PersistenceException;
 
 import org.apache.log4j.LogManager;
+import org.apache.poi.ss.formula.functions.T;
 
 import com.vaadin.data.Property;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.ui.MarginInfo;
+import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CustomComponent;
@@ -56,12 +61,35 @@ public class CityTabView extends XdevView {
 		//State
 		this.comboBoxState.addItems((Object[])LovState.State.values());
 
-		if (Seicento.hasRole("BillingAdmin")) {
+
+		setROFields();
+	}
+
+	private void setROFields() {
+
+		boolean hasData = true;
+		if (this.fieldGroup.getItemDataSource() == null || this.fieldGroup.getItemDataSource().getBean() == null ) {
+			hasData = false;
+		}
+
+		setROComponents(hasData);
+	}
+
+	private void setROComponents(final boolean state) {
+		this.cmdSave.setEnabled(state);
+		this.cmdReset.setEnabled(state);
+		this.form.setEnabled(state);
+
+		if (Seicento.hasRole("BillingAdmin") && state) {
 			this.cmdImport.setEnabled(true);
 			this.cmdImport.setVisible(true);
+		} else {
+			this.cmdImport.setEnabled(false);
+			this.cmdImport.setVisible(false);
 		}
 
 	}
+
 
 	/**
 	 * Event handler delegate method for the {@link XdevButton} {@link #cmdReset}.
@@ -80,6 +108,10 @@ public class CityTabView extends XdevView {
 	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
 	 */
 	private void cmdSave_buttonClick(final Button.ClickEvent event) {
+		if (!AreFieldsValid()) {
+			return;
+		}
+
 		final boolean isNew = isNew();
 
 		if (SeicentoCrud.doSave(this.fieldGroup)) {
@@ -96,6 +128,30 @@ public class CityTabView extends XdevView {
 			cmdReload_buttonClick(null);
 		}
 
+	}
+
+	@SuppressWarnings("unchecked")
+	private boolean AreFieldsValid() {
+		if (this.fieldGroup.isValid()) {
+			return true;
+		}
+		AbstractField<T> fld = null;
+		try {
+			final Collection<?> flds = this.fieldGroup.getFields();
+			for (final Iterator<?> iterator = flds.iterator(); iterator.hasNext();) {
+				fld = (AbstractField<T>) iterator.next();
+				if (!fld.isValid()) {
+					fld.focus();
+					fld.validate();
+				}
+			}
+
+		} catch (final Exception e) {
+			final Object prop = this.fieldGroup.getPropertyId(fld);
+			Notification.show("Feld ist ungültig", prop.toString(), Notification.Type.ERROR_MESSAGE);
+		}
+
+		return false;
 	}
 
 	private boolean isNew() {
@@ -120,6 +176,8 @@ public class CityTabView extends XdevView {
 		bean.setCtyState(LovState.State.active);
 
 		this.fieldGroup.setItemDataSource(bean);
+		setROFields();
+
 	}
 
 	/**
@@ -240,6 +298,7 @@ public class CityTabView extends XdevView {
 	private void table_valueChange(final Property.ValueChangeEvent event) {
 		if (this.table.getSelectedItem() != null) {
 			//this.fieldGroup.setItemDataSource(this.table.getSelectedItem().getBean());
+			setROFields();
 		}
 
 	}
