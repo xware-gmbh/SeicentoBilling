@@ -365,6 +365,7 @@ public class CityTabView extends XdevView {
 		this.table.setColumnHeader("ctyState", "Status");
 		this.table.setColumnHeader("ctyGeoCoordinates", "Koordinaten");
 		this.table.setColumnCollapsed("ctyGeoCoordinates", true);
+		this.comboBoxState.setTabIndex(6);
 		this.lblCtyName.setValue(StringResourceUtils.optLocalizeString("{$lblCtyName.value}", this));
 		this.txtCtyName.setTabIndex(1);
 		this.txtCtyName.setRequired(true);
@@ -383,7 +384,7 @@ public class CityTabView extends XdevView {
 		this.horizontalLayout2.setMargin(new MarginInfo(false));
 		this.cmdSave.setIcon(FontAwesome.SAVE);
 		this.cmdSave.setCaption(StringResourceUtils.optLocalizeString("{$cmdSave.caption}", this));
-		this.cmdSave.setTabIndex(9);
+		this.cmdSave.setTabIndex(7);
 		this.cmdReset.setIcon(FontAwesome.UNDO);
 		this.cmdReset.setCaption(StringResourceUtils.optLocalizeString("{$cmdReset.caption}", this));
 		this.cmdReset.setTabIndex(8);

@@ -339,6 +339,8 @@ public class CostAccountTabView extends XdevView {
 		this.table.setColumnHeader("costAccount", "Übergeordnet");
 		this.table.setColumnCollapsed("costAccount", true);
 		this.checkBoxFlagCompany.setCaption("");
+		this.checkBoxFlagCompany.setTabIndex(5);
+		this.comboBoxState.setTabIndex(6);
 		this.lblCsaCode.setValue(StringResourceUtils.optLocalizeString("{$lblCsaCode.value}", this));
 		this.txtCsaCode.setInputPrompt("");
 		this.txtCsaCode.setTabIndex(1);
@@ -353,6 +355,7 @@ public class CostAccountTabView extends XdevView {
 		this.cmbCostAccount.setContainerDataSource(CostAccount.class, DAOs.get(CostAccountDAO.class).findAllActive());
 		this.cmbCostAccount.setItemCaptionPropertyId(CostAccount_.csaCode.getName());
 		this.lblCsaExtRef.setValue("Externe Referenz");
+		this.txtCsaExtRef.setTabIndex(4);
 		this.txtCsaExtRef.setMaxLength(50);
 		this.lblCsaCompanyFlag.setValue("Firmen Kostenstelle");
 		this.lblCsaState.setValue(StringResourceUtils.optLocalizeString("{$lblCsaState.value}", this));
@@ -362,7 +365,7 @@ public class CostAccountTabView extends XdevView {
 		this.cmdSave.setTabIndex(7);
 		this.cmdReset.setIcon(FontAwesome.UNDO);
 		this.cmdReset.setCaption(StringResourceUtils.optLocalizeString("{$cmdReset.caption}", this));
-		this.cmdReset.setTabIndex(6);
+		this.cmdReset.setTabIndex(8);
 		this.fieldGroup.bind(this.txtCsaCode, CostAccount_.csaCode.getName());
 		this.fieldGroup.bind(this.txtCsaName, CostAccount_.csaName.getName());
 		this.fieldGroup.bind(this.cmbCostAccount, CostAccount_.costAccount.getName());
