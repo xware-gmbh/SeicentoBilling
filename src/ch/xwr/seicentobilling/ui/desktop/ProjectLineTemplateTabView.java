@@ -1,11 +1,18 @@
 package ch.xwr.seicentobilling.ui.desktop;
 
+import java.util.Collection;
+import java.util.Iterator;
+
+import org.apache.poi.ss.formula.functions.T;
+
 import com.vaadin.data.Property;
+import com.vaadin.data.validator.IntegerRangeValidator;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.external.org.slf4j.Logger;
 import com.vaadin.external.org.slf4j.LoggerFactory;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.ui.MarginInfo;
+import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CustomComponent;
@@ -71,13 +78,36 @@ public class ProjectLineTemplateTabView extends XdevView {
 
 		//RO
 		//set RO Fields
-		this.fieldGroup.setItemDataSource(getNewDaoWithDefaults());
+		//this.fieldGroup.setItemDataSource(getNewDaoWithDefaults());
 		setROFields();
 	}
 
+
 	private void setROFields() {
+
+		boolean hasData = true;
+		if (this.fieldGroup.getItemDataSource() == null || this.fieldGroup.getItemDataSource().getBean() == null ) {
+			hasData = false;
+		}
+
+		setROComponents(hasData);
+
 		this.cmbCostAccount.setEnabled(false);
 	}
+
+	private void setROComponents(final boolean state) {
+		this.cmdSave.setEnabled(state);
+		this.cmdReset.setEnabled(state);
+		this.form.setEnabled(state);
+
+		if (Seicento.hasRole("BillingAdmin") && state) {
+			//this.txtCsaExtRef.setEnabled(true);
+		} else {
+			//this.txtCsaExtRef.setEnabled(false);
+		}
+
+	}
+
 
 	private void setDefaultFilter() {
 		final CostAccount bean = Seicento.getLoggedInCostAccount();
@@ -108,6 +138,11 @@ public class ProjectLineTemplateTabView extends XdevView {
 	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
 	 */
 	private void cmdSave_buttonClick(final Button.ClickEvent event) {
+		if (!AreFieldsValid()) {
+			return;
+		}
+
+
 		if (SeicentoCrud.doSave(this.fieldGroup)) {
 			try {
 				final RowObjectManager man = new RowObjectManager();
@@ -123,6 +158,30 @@ public class ProjectLineTemplateTabView extends XdevView {
 				LOG.error("could not save ObjRoot", e);
 			}
 		}
+	}
+
+	@SuppressWarnings("unchecked")
+	private boolean AreFieldsValid() {
+		if (this.fieldGroup.isValid()) {
+			return true;
+		}
+		AbstractField<T> fld = null;
+		try {
+			final Collection<?> flds = this.fieldGroup.getFields();
+			for (final Iterator<?> iterator = flds.iterator(); iterator.hasNext();) {
+				fld = (AbstractField<T>) iterator.next();
+				if (!fld.isValid()) {
+					fld.focus();
+					fld.validate();
+				}
+			}
+
+		} catch (final Exception e) {
+			final Object prop = this.fieldGroup.getPropertyId(fld);
+			Notification.show("Feld ist ungültig", prop.toString(), Notification.Type.ERROR_MESSAGE);
+		}
+
+		return false;
 	}
 
 	/**
@@ -145,6 +204,7 @@ public class ProjectLineTemplateTabView extends XdevView {
 		final ProjectLineTemplate dao = new ProjectLineTemplate();
 		dao.setPrtState(LovState.State.active);
 		dao.setCostAccount(bean);
+		dao.setPrtKeyNumber(10);
 
 		return dao;
 	}
@@ -321,10 +381,11 @@ public class ProjectLineTemplateTabView extends XdevView {
 		this.cmbCostAccount.setContainerDataSource(CostAccount.class, DAOs.get(CostAccountDAO.class).findAll());
 		this.cmbCostAccount.setItemCaptionPropertyId(CostAccount_.csaCode.getName());
 		this.lblPrtKeyNumber.setValue("Nummer");
-		this.txtPrtKeyNumber.setDescription("Possible Values 1-6");
+		this.txtPrtKeyNumber.setDescription("Possible Values 1-10");
 		this.txtPrtKeyNumber.setInputPrompt("Values 1-10");
 		this.txtPrtKeyNumber.setTabIndex(1);
 		this.txtPrtKeyNumber.setRequired(true);
+		this.txtPrtKeyNumber.addValidator(new IntegerRangeValidator("Wert muss zwischen 1 und 10 liegen.", 1, 10));
 		this.lblPrtProject.setValue("Projekt");
 		this.comboBoxProject.setTabIndex(2);
 		this.comboBoxProject.setRequired(true);

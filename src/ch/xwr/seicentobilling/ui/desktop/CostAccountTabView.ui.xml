@@ -62,14 +62,15 @@
                     <typeArgument type="CostAccount" />
                 </x:typeArguments>
                 <x:data methodName="findAll" />
+                <x:event>valueChange.valueChange</x:event>
             </XdevTable>
         </XdevVerticalLayout>
         <XdevGridLayout x:name="form">
             <x:constraints splitPos="SECOND" width="100%" height="100%" />
-            <XdevCheckBox caption="" x:name="checkBoxFlagCompany">
+            <XdevCheckBox caption="" tabIndex="5" x:name="checkBoxFlagCompany">
                 <x:constraints gridx="2" gridy="5" weighty="0.0" weightx="1.0" width="0px" height="0px" />
             </XdevCheckBox>
-            <XdevComboBox x:name="comboBoxState">
+            <XdevComboBox tabIndex="6" x:name="comboBoxState">
                 <x:constraints gridx="2" gridy="6" weighty="0.0" weightx="1.0" width="0px" height="0px" />
                 <x:typeArguments>
                     <typeArgument type="?" />
@@ -91,13 +92,13 @@
             <XdevLabel x:name="lblCsaCode" value="{$lblCsaCode.value}">
                 <x:constraints gridx="1" gridy="1" weighty="0.0" weightx="0.0" width="0px" height="0px" />
             </XdevLabel>
-            <XdevTextField columns="5" inputPrompt="" tabIndex="1" x:name="txtCsaCode" maxLength="5">
+            <XdevTextField columns="5" inputPrompt="" tabIndex="1" required="true" x:name="txtCsaCode" maxLength="5">
                 <x:constraints gridx="2" gridy="1" weighty="0.0" weightx="1.0" width="100%" height="0px" />
             </XdevTextField>
             <XdevLabel x:name="lblCsaName" value="{$lblCsaName.value}">
                 <x:constraints gridx="1" gridy="2" weighty="0.0" weightx="0.0" width="0px" height="0px" />
             </XdevLabel>
-            <XdevTextField columns="5" tabIndex="2" x:name="txtCsaName" maxLength="50">
+            <XdevTextField columns="5" tabIndex="2" required="true" x:name="txtCsaName" maxLength="50">
                 <x:constraints gridx="2" gridy="2" weighty="0.0" weightx="1.0" width="100%" height="0px" />
             </XdevTextField>
             <XdevLabel x:name="lblCostAccount" value="{$lblCostAccount.value}">
@@ -116,7 +117,7 @@
             <XdevLabel x:name="lblCsaExtRef" value="Externe Referenz">
                 <x:constraints gridx="1" gridy="4" top="33px" left="-1px" weighty="0.0" weightx="0.0" width="0px" height="0px" />
             </XdevLabel>
-            <XdevTextField columns="5" x:name="txtCsaExtRef" maxLength="50">
+            <XdevTextField columns="5" tabIndex="4" x:name="txtCsaExtRef" maxLength="50">
                 <x:constraints gridx="2" gridy="4" top="46px" left="-1px" weighty="0.0" weightx="1.0" width="100%" height="0px" />
             </XdevTextField>
             <XdevLabel x:name="lblCsaCompanyFlag" value="Firmen Kostenstelle">
@@ -131,7 +132,7 @@
                     <x:constraints weightx="0.0" width="0px" alignment="MIDDLE_LEFT" height="0px" />
                     <x:event>click.buttonClick</x:event>
                 </XdevButton>
-                <XdevButton icon="FontAwesome.UNDO" caption="{$cmdReset.caption}" tabIndex="6" x:name="cmdReset">
+                <XdevButton icon="FontAwesome.UNDO" caption="{$cmdReset.caption}" tabIndex="8" x:name="cmdReset">
                     <x:constraints weightx="0.0" width="0px" alignment="MIDDLE_LEFT" height="0px" />
                     <x:event>click.buttonClick</x:event>
                 </XdevButton>

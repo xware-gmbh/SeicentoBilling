@@ -3,12 +3,16 @@ package ch.xwr.seicentobilling.ui.desktop;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.apache.poi.ss.formula.functions.T;
+
 import com.vaadin.data.Property;
+import com.vaadin.data.validator.IntegerRangeValidator;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.external.org.slf4j.Logger;
 import com.vaadin.external.org.slf4j.LoggerFactory;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.ui.MarginInfo;
+import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CustomComponent;
@@ -79,9 +83,9 @@ public class ExpenseTemplateTabView extends XdevView {
 		setDefaultFilter();
 
 		//New Action + set RO Fields
-		this.fieldGroup.setItemDataSource(getNewDaoWithDefaults());
+		//this.fieldGroup.setItemDataSource(getNewDaoWithDefaults());
 		setROFields();
-		postLoadAccountAction(this.fieldGroup.getItemDataSource().getBean());
+		//postLoadAccountAction(this.fieldGroup.getItemDataSource().getBean());
 	}
 
 	private void postLoadAccountAction(final ExpenseTemplate bean) {
@@ -107,7 +111,8 @@ public class ExpenseTemplateTabView extends XdevView {
 		this.cmbCostAccount.setEnabled(false);
 
 		boolean hasData = true;
-		if (this.fieldGroup.getItemDataSource() == null) {
+		if (this.fieldGroup.getItemDataSource() == null || this.fieldGroup.getItemDataSource().getBean() == null ) {
+
 			hasData = false;
 		}
 		setROComponents(hasData);
@@ -151,6 +156,10 @@ public class ExpenseTemplateTabView extends XdevView {
 	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
 	 */
 	private void cmdSave_buttonClick(final Button.ClickEvent event) {
+		if (!AreFieldsValid()) {
+			return;
+		}
+
 		preSaveAccountAction();
 		this.fieldGroup.save();
 
@@ -162,6 +171,30 @@ public class ExpenseTemplateTabView extends XdevView {
 
 		reloadMainTable();
 		setROFields();
+	}
+
+	@SuppressWarnings("unchecked")
+	private boolean AreFieldsValid() {
+		if (this.fieldGroup.isValid()) {
+			return true;
+		}
+		AbstractField<T> fld = null;
+		try {
+			final Collection<?> flds = this.fieldGroup.getFields();
+			for (final Iterator<?> iterator = flds.iterator(); iterator.hasNext();) {
+				fld = (AbstractField<T>) iterator.next();
+				if (!fld.isValid()) {
+					fld.focus();
+					fld.validate();
+				}
+			}
+
+		} catch (final Exception e) {
+			final Object prop = this.fieldGroup.getPropertyId(fld);
+			Notification.show("Feld ist ungültig", prop.toString(), Notification.Type.ERROR_MESSAGE);
+		}
+
+		return false;
 	}
 
 	private void preSaveAccountAction() {
@@ -193,6 +226,7 @@ public class ExpenseTemplateTabView extends XdevView {
 		final ExpenseTemplate dao = new ExpenseTemplate();
 		dao.setExtState(LovState.State.active);
 		dao.setCostAccount(bean);
+		dao.setExtKeyNumber(10);
 
 		return dao;
 	}
@@ -379,10 +413,11 @@ public class ExpenseTemplateTabView extends XdevView {
 		this.cmbCostAccount.setContainerDataSource(CostAccount.class, DAOs.get(CostAccountDAO.class).findAll());
 		this.cmbCostAccount.setItemCaptionPropertyId(CostAccount_.csaCode.getName());
 		this.lblPrtKeyNumber.setValue("Nummer");
-		this.txtPrtKeyNumber.setDescription("Possible Values 1-6");
-		this.txtPrtKeyNumber.setInputPrompt("Values 1-6");
+		this.txtPrtKeyNumber.setDescription("Shortcutnumber Ctrl-+<Number>");
+		this.txtPrtKeyNumber.setInputPrompt("Values 1-10");
 		this.txtPrtKeyNumber.setTabIndex(1);
 		this.txtPrtKeyNumber.setRequired(true);
+		this.txtPrtKeyNumber.addValidator(new IntegerRangeValidator("Wert muss zwischen 1-10 sein.", 1, 10));
 		this.lblPrtText.setValue("Text");
 		this.txtPrtText.setTabIndex(2);
 		this.lblExtAmount.setValue("Betrag");

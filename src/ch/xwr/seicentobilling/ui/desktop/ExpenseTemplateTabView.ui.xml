@@ -10,6 +10,7 @@
 <?import ch.xwr.seicentobilling.entities.LovAccount?>
 <?import ch.xwr.seicentobilling.entities.Project?>
 <?import ch.xwr.seicentobilling.entities.Vat?>
+<?import com.vaadin.data.validator.IntegerRangeValidator?>
 <?import com.xdev.ui.XdevButton?>
 <?import com.xdev.ui.XdevCheckBox?>
 <?import com.xdev.ui.XdevFieldGroup?>
@@ -112,8 +113,9 @@
             <XdevLabel x:name="lblPrtKeyNumber" value="Nummer">
                 <x:constraints gridx="1" gridy="2" weighty="0.0" weightx="0.0" width="0px" height="0px" />
             </XdevLabel>
-            <XdevTextField columns="5" description="Possible Values 1-6" inputPrompt="Values 1-6" tabIndex="1" required="true" x:name="txtPrtKeyNumber">
+            <XdevTextField columns="5" description="Shortcutnumber Ctrl-+&lt;Number&gt;" inputPrompt="Values 1-10" tabIndex="1" required="true" x:name="txtPrtKeyNumber">
                 <x:constraints gridx="2" gridy="2" weighty="0.0" weightx="1.0" width="-1px" height="0px" />
+                <x:validator x:type="IntegerRangeValidator" message="Wert muss zwischen 1-10 sein." min="1" max="10" />
             </XdevTextField>
             <XdevLabel x:name="lblPrtText" value="Text">
                 <x:constraints gridx="1" gridy="3" weighty="0.0" weightx="0.0" width="0px" height="0px" />

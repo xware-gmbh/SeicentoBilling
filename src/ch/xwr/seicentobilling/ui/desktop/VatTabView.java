@@ -1,9 +1,15 @@
 package ch.xwr.seicentobilling.ui.desktop;
 
+import java.util.Collection;
+import java.util.Iterator;
+
+import org.apache.poi.ss.formula.functions.T;
+
 import com.vaadin.data.Property;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.ui.MarginInfo;
+import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CustomComponent;
@@ -71,7 +77,20 @@ public class VatTabView extends XdevView {
 	}
 
 	private void setROFields() {
-		if (Seicento.hasRole("BillingAdmin")) {
+		boolean hasData = true;
+		if (this.fieldGroup.getItemDataSource() == null || this.fieldGroup.getItemDataSource().getBean() == null ) {
+			hasData = false;
+		}
+
+		setROComponents(hasData);
+	}
+
+	private void setROComponents(final boolean state) {
+		this.cmdSave.setEnabled(state);
+		this.cmdReset.setEnabled(state);
+		this.form.setEnabled(state);
+
+		if (Seicento.hasRole("BillingAdmin") && state) {
 			this.txtVatExtRef.setEnabled(true);
 		} else {
 			this.txtVatExtRef.setEnabled(false);
@@ -101,6 +120,10 @@ public class VatTabView extends XdevView {
 	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
 	 */
 	private void cmdSave_buttonClick(final Button.ClickEvent event) {
+		if (!AreFieldsValid()) {
+			return;
+		}
+
 		this.fieldGroup.save();
 
 		final RowObjectManager man = new RowObjectManager();
@@ -108,6 +131,30 @@ public class VatTabView extends XdevView {
 
 		Notification.show("Save clicked", "Daten wurden gespeichert", Notification.Type.TRAY_NOTIFICATION);
 		cmdReload_buttonClick(event);
+	}
+
+	@SuppressWarnings("unchecked")
+	private boolean AreFieldsValid() {
+		if (this.fieldGroup.isValid()) {
+			return true;
+		}
+		AbstractField<T> fld = null;
+		try {
+			final Collection<?> flds = this.fieldGroup.getFields();
+			for (final Iterator<?> iterator = flds.iterator(); iterator.hasNext();) {
+				fld = (AbstractField<T>) iterator.next();
+				if (!fld.isValid()) {
+					fld.focus();
+					fld.validate();
+				}
+			}
+
+		} catch (final Exception e) {
+			final Object prop = this.fieldGroup.getPropertyId(fld);
+			Notification.show("Feld ist ungültig", prop.toString(), Notification.Type.ERROR_MESSAGE);
+		}
+
+		return false;
 	}
 
 	/**
@@ -121,6 +168,8 @@ public class VatTabView extends XdevView {
 		vat.setVatState(LovState.State.active);
 		vat.setVatInclude(false);
 		this.fieldGroup.setItemDataSource(vat);
+
+		setROFields();
 	}
 
 	/**
@@ -226,6 +275,7 @@ public class VatTabView extends XdevView {
 	private void table_valueChange(final Property.ValueChangeEvent event) {
 
 		reloadTableLineList();
+		setROFields();
 	}
 
 	/**
@@ -432,8 +482,10 @@ public class VatTabView extends XdevView {
 		this.verticalLayout2.setMargin(new MarginInfo(true, false, false, true));
 		this.gridLayout2.setMargin(new MarginInfo(false));
 		this.lblVatName.setValue("Name");
+		this.txtVatName.setRequired(true);
 		this.txtVatName.setMaxLength(40);
 		this.lblVatSign.setValue("Zeichen");
+		this.txtVatSign.setRequired(true);
 		this.txtVatSign.setMaxLength(5);
 		this.lblVatInclude.setValue("Inklusiv");
 		this.chkVatInclude.setCaption("");

@@ -564,6 +564,10 @@ public class ProjectLinePopup extends XdevView {
 			final int nbr = tpl.getPrtKeyNumber();
 			item = getMnItem(nbr);
 
+			if (item == null) {
+				continue; //AB#529
+			}
+
 			item.setEnabled(true);
 			item.setVisible(true);
 
