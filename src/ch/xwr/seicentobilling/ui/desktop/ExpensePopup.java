@@ -686,7 +686,7 @@ public class ExpensePopup extends XdevView {
 	 * @eventHandlerDelegate Do NOT delete, used by UI designer!
 	 */
 	private void cmd10_buttonClick(final Button.ClickEvent event) {
-		loadTemplate(0);
+		loadTemplate(10);
 
 	}
 
