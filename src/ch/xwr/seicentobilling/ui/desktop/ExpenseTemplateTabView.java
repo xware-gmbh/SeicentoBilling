@@ -409,6 +409,7 @@ public class ExpenseTemplateTabView extends XdevView {
 		this.checkBox.setCaption("");
 		this.checkBox.setTabIndex(7);
 		this.comboBoxState.setTabIndex(11);
+		this.comboBoxState.setRequired(true);
 		this.lblCostAccount.setValue("Mitarbeiter");
 		this.cmbCostAccount.setContainerDataSource(CostAccount.class, DAOs.get(CostAccountDAO.class).findAll());
 		this.cmbCostAccount.setItemCaptionPropertyId(CostAccount_.csaCode.getName());
@@ -439,6 +440,7 @@ public class ExpenseTemplateTabView extends XdevView {
 		this.lblExtCostAccount.setValue("Kostenstelle");
 		this.lblExtUnit.setValue("Einheit");
 		this.comboBoxUnit.setTabIndex(8);
+		this.comboBoxUnit.setRequired(true);
 		this.lblPrtProject.setValue("Projekt");
 		this.comboBoxProject.setTabIndex(9);
 		this.comboBoxProject.setRequired(true);

@@ -73,7 +73,7 @@
             <XdevCheckBox caption="" tabIndex="7" x:name="checkBox">
                 <x:constraints gridx="2" gridy="8" weighty="0.0" weightx="1.0" width="0px" height="0px" />
             </XdevCheckBox>
-            <XdevComboBox tabIndex="11" x:name="comboBoxState">
+            <XdevComboBox tabIndex="11" required="true" x:name="comboBoxState">
                 <x:constraints gridx="2" gridy="12" weighty="0.0" weightx="1.0" width="0px" height="0px" />
                 <x:typeArguments>
                     <typeArgument type="?" />
@@ -170,7 +170,7 @@
             <XdevLabel x:name="lblExtUnit" value="Einheit">
                 <x:constraints gridx="1" gridy="9" top="234px" left="-1px" weighty="0.0" weightx="0.0" width="0px" height="0px" />
             </XdevLabel>
-            <XdevComboBox tabIndex="8" x:name="comboBoxUnit">
+            <XdevComboBox tabIndex="8" required="true" x:name="comboBoxUnit">
                 <x:constraints gridx="2" gridy="9" top="234px" left="-1px" weighty="0.0" weightx="1.0" width="0px" height="0px" />
                 <x:typeArguments>
                     <typeArgument type="?" />
