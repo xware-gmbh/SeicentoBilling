@@ -514,7 +514,7 @@ public class OrderGenerateTabView extends XdevView {
 		this.label2.setValue("Periode wählen");
 		this.comboBoxPeriode.setContainerDataSource(Periode.class, false);
 		this.label3.setValue("Rechnungsdatum");
-		this.checkBoxTextLast.setCaption("Text von letzer Rechnung");
+		this.checkBoxTextLast.setCaption("Text von letzter Rechnung");
 		this.cmdPropose.setCaption("Vorschlag generieren");
 		this.cmdGenerate.setCaption("Rechnungen erstellen");
 		this.cmdGenerate.setEnabled(false);

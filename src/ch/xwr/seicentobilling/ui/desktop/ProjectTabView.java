@@ -239,6 +239,7 @@ public class ProjectTabView extends XdevView {
 		bean.setProHoursEffective(new Double(0.));
 		bean.setProIntensityPercent(new Integer(80));
 		bean.setProModel(LovState.ProModel.undefined);
+		bean.setProOrdergenerationStrategy(LovState.ProOrderStrategy.exklusiv);
 
 		if (this.vatdefault != null) {
 			bean.setVat(this.vatdefault);
@@ -252,6 +253,10 @@ public class ProjectTabView extends XdevView {
 
 		this.fieldGroup.setItemDataSource(bean);
 		setROFields();
+
+		this.tableProjectAllocation.removeAllItems();
+		this.tableOrder.removeAllItems();
+		this.tableProject.removeAllItems();
 	}
 
 	/**

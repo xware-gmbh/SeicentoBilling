@@ -89,6 +89,12 @@
                     <XdevMenuItem x:name="menuCity" text="Ortschaft">
                         <x:event>menuSelected.menuSelected</x:event>
                     </XdevMenuItem>
+                    <XdevMenuItem x:name="mnuSeperator3" text="Seperator" x:separator="true">
+                        <x:constraints top="19px" left="-1px" />
+                    </XdevMenuItem>
+                    <XdevMenuItem x:name="menuLabelDef" text="Labels">
+                        <x:event>menuSelected.menuSelected</x:event>
+                    </XdevMenuItem>
                 </XdevMenuItem>
                 <XdevMenuItem x:name="mnuOption" text="Optionen">
                     <XdevMenuItem x:name="mnuCompany" text="Firma">

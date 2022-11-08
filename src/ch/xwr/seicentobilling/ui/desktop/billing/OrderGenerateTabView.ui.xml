@@ -55,7 +55,7 @@
                         <XdevPopupDateField x:name="dateBilldate">
                             <x:constraints gridx="2" gridy="3" weighty="0.0" weightx="0.0" width="0px" height="0px" />
                         </XdevPopupDateField>
-                        <XdevCheckBox caption="Text von letzer Rechnung" x:name="checkBoxTextLast">
+                        <XdevCheckBox caption="Text von letzter Rechnung" x:name="checkBoxTextLast">
                             <x:constraints gridx="2" gridy="4" weighty="0.0" weightx="0.0" width="0px" height="0px" />
                         </XdevCheckBox>
                         <XdevButton caption="Vorschlag generieren" x:name="cmdPropose">
